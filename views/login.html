@@ -1,0 +1,29 @@
+
+    <div class="notMain">
+    <h2 class="orangeH2 loginH2">欢迎登录网站</h2>
+    <div id="log">
+    <div class="warn" id="loginWarn"><%= warn %></div>
+    <form id="loginForm" action="/checkLogin" method="post">
+        <p class="loginInput">
+        <label for="userEmail">邮箱：</label>
+        <input type="text" id="userEmail" class="inputText" name="userEmail">
+        </p>
+        <br />
+        <p class = "loginInput">
+        <label for="passWord">密码：</label>
+        <input type="password" id="password" class="inputText" name="password">
+        <p class = "loginInputCheck">
+<input id="autoLogin" name="autoLogin" type="checkbox" value="true" />        <label id="autoLoginText" for="autoLogin">下次自动登录</label>
+        </p>
+        <p class="loginInputCheck">
+        <input class = "r3px button_orange submit"type="submit" value="登录">
+        </p>
+        <div class="separator"></div>
+    </form>
+    <p class="noCount">
+    还没有开通您的网站帐号？<a href="/regist">立即注册</a>
+    </p>
+    </div>
+    </div>
+
+    <script type="text/javascript" src="scripts/login.js"></script>

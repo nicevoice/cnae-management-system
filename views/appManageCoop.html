@@ -1,0 +1,103 @@
+   <div id="navigation">
+    	<ul>
+    	<li><a href="/application">我的应用</a></li>
+    	<li><a href="/userCenter">个人中心</a></li>
+      	<li><a href="/feedback">反馈信息</a></li>
+    	<li><a href="/logout">退出</a></li>
+    	<li class="nickName"><%=nickName%>,欢迎登录！<li>
+    	</ul>
+    </div>
+    <div id="appManage" class="clearfix">
+    	<div class="left borderRadius5">
+    		<ul id="sidebar">
+    		<li><h3>应用信息</h3></li>
+    		<li><a href="<%=url%>/sum">汇总信息</a></li>
+    		<li><a href="<%=url%>/report">资源报表</a></li>
+    		<li><a href="<%=url%>/stat">服务状态</a></li>
+    		<li><h3>应用管理</h3></li>
+    		<li><a href="<%=url%>/appmng">应用设置</a></li>
+    		<li><a href="<%=url%>/coopmng">成员管理</a></li>
+    		<li><a href="<%=url%>/vermng">代码管理</a></li>
+    		<li><a href="<%=url%>/mnglog">管理记录</a></li>
+    		<li><h3>应用调优</h3></li>
+    		<li><a href="<%=url%>/applog">日志中心</a></li>
+    		<li><h3>服务管理</h3></li>
+    		<li><a href="<%=url%>/mysqlmng">MySQL</a></li>
+    		<li><a href="<%=url%>/cronmng">Cron</a></li>
+    		</ul>
+    	</div>
+    	<div class="right borderRadius5">
+ 		<div class="subTitle"><img src="/images/arrow.gif"></img>
+    	<span id="appDomain"><%=own.appDomain%></span><img src="/images/arrow.gif"></img>成员管理
+    	</div>
+    	<div>
+    		<table>
+    		<tr>
+    		<th>NAE帐号</th><th>状态</th><th>操作</th><th>权限</th>
+    		</tr>
+    		<% for(var i=0, len=mems.length; i!=len; ++i){
+    			var mem = mems[i];
+    		%>
+    		<tr id="<%=mem.email%>Tr">
+    		<td><%=mem.email%></td><td><%= mem.active==1?"Active":"Inactive"%></td>
+    		<td>
+    		<%if(mem.role==0){%>
+    		无法删除应用创建者
+    		<%}else if(own.deleteRight==1){%>
+    		<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>">删除此参与者</a>
+    		<%}else{%>
+    		没有权限进行操作
+    		<%}%>
+    		</td>
+    		<td>
+    		<%
+    		var role;
+    		switch(mem.role){
+    			case 0: role = "创建者";break;
+    			case 1: role = "管理者";break;
+    			case 2: role = "参与者";break;
+    			case 3: role = "观察者";break;
+    			default:role = "";
+    		}
+    		%>
+    		<%if(own.role==0){%>
+    		<%if(mem.role==0){%>
+    			<%=role%>
+    		<%}else{%>
+    		<select id="<%=mem.email%>Role">
+            	<option value="1"<%if(mem.role==1){%> selected<%}%>>管理者</option>
+            	<option value="2"<%if(mem.role==2){%> selected<%}%>>参与者</option>
+            	<option value="3"<%if(mem.role==3){%> selected<%}%>>观察者</option>
+            </select>
+            <%}}else{%>
+            <%=role%>
+            <%}%>
+    		</td>
+    		</tr>
+    		<%}%>
+    		</table>
+    	</div>
+    	<%if(own.role===0){%>
+    	<div class="borderRadius5 subContent">
+    	    	<strong>邀请朋友加入开发，我们会将邀请通过电子邮件发送给他。</strong>
+	    	<form method="post" action="<%=url%>/coopmng">
+				<p>邮 箱：<input type="text" id="inviteEmail" name="inviteEmail"></p>
+	    		<input type="text" style="display:none">
+	    		<p>角 色：<select id="roles" name="roles">
+                    <option value = "1" selected>管理者</option>
+                    <option value = "2" >参与者</option>
+                    <option value = "3" >观察者</option>
+                    </select>
+                    <span id="rights"></span>
+                </p>
+	    		<p>邀请语:</p>
+      			<p><textarea rows="3" class="newLongInput" name="inviteWords" id="inviteWords"
+      				></textarea></p>
+	    		<p><input id="submitInvite" type="button" class="button_orange r3px" value="邀请">
+	    		<input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">
+	    	</form>
+	    	</div>
+    	<%}%>
+    </div>
+    <script type="text/javascript" src="/scripts/coopManage.js"></script>    
+    

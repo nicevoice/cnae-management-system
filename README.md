@@ -1,8 +1,8 @@
 # TaoJob Web System base on [Nodejs](http://nodejs.org).
 
 ## Requires:
- use node version:0.5.2, mongoDB version:1.4.4
- Node_modules
+ * use node version:0.5.2, mongoDB version:1.4.4
+ * Node_modules
  * [express](http://expressjs.com), web application.
  * [ejs](https://github.com/visionmedia/ejs), html template engine.
  * [node-mongoskin](https://github.com/guileen/node-mongoskin), db client to connect the mongoskin.

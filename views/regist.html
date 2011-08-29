@@ -1,0 +1,26 @@
+<div class="notMain" id="regist">
+
+  <form action="/checkRegist" method="post">
+    <h2 class="orangeH2 registH2">用户注册</h2>
+    <div id="newAccount">
+   <div id="registWarn">
+   <p id="emailWarn"></p>
+   <p id="nameWarn"></p>
+   <p id="passwordWarn"></p>
+   </div>
+    <p><label for="newEmail">邮 箱</label>
+    <input type="text" id="newEmail" name="newEmail"></p>
+    <p><label for="newUserName">昵 称</label>
+    <input type="text" id = "newUserName" name="newUserName"></p>
+    <p><label for="newPassword">密 码</label>
+    <input type="password" id="newPassword" name="newPassword"></p>
+    <p><label for="passwordCon">确 认</label>
+    <input type="password" id="passwordCon" name="passwordCon"></p>
+
+    <p><input type="submit" class = "r3px button_orange submit"value="提交">
+    <input type="button" class="r3px button_orange" id="registCancer" onclick="javascript: history.back();" value="取消"></p>
+  
+  </form>
+</div>
+</div>
+<script type="text/javascript" src="scripts/regist.js"></script>
