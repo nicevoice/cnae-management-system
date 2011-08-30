@@ -8,7 +8,7 @@ $(function(){
 	data:{domain:$("#appDomain").html()},
 	error:function(){},
 	success:function(data){
-		if(data.active===0 || data.role>2){//如果是观察者
+		if(data.active===0 || data.role>1){//如果不是管理者或者创建者
 			$("#controlApp").attr("disabled","true");
 		}
 	}
