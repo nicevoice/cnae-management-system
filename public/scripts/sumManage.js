@@ -1,5 +1,18 @@
 $(function(){
 	$("#controlApp").click(controlApp);
+	$.ajax({
+	cache:false,
+	url:"/getOwnAuthInfo",
+	type:"post",
+	dataType:"json",
+	data:{domain:$("#appDomain").html()},
+	error:function(){},
+	success:function(data){
+		if(data.active===0 || data.role>2){//如果是观察者
+			$("#controlApp").attr("disabled","true");
+		}
+	}
+	});
 })
 
 controlApp = function(){
