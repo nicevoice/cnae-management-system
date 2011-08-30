@@ -1,4 +1,4 @@
-# TaoJob Web System base on [Nodejs](http://nodejs.org).
+# CNAE Management Web System base on [Nodejs](http://nodejs.org).
 
 ## Requires:
  * use node version:0.5.2, mongoDB version:1.4.4
