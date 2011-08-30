@@ -23,6 +23,7 @@ exports.db_app_mem = "nae_app_members";
  */
 exports.db_app_basic ="nae_app_basic_infos";
 exports.db_app_records = "nae_app_manage_records";
+exports.db_inviteCode = "nae_inviteCode";
 //cookie
 exports.cookies_timeOut = 3600000*24*14;
 exports.cookies_skey = "s3s3f3s1diz08fn3"
@@ -30,9 +31,12 @@ exports.cookies_skey = "s3s3f3s1diz08fn3"
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.ERROR, './my.log');
 //mail的配置
-exports.mailTitle =  'NAE协作邀请函';
-exports.mailContent = fs.readFileSync("mailTemplate.html", "utf-8");
-
+//协作邀请邮件的模板
+exports.mailTitle =  'CNode App Engine协作邀请函';
+exports.mailContent = fs.readFileSync("./mailTemplate/coopInviteMail.html", "utf-8");
+//发送邀请函邮件的模板
+exports.inviteMailTitle = "CNode App Engine邀请码";
+exports.inviteMailContent = fs.readFileSync("./mailTemplate/inviteCodeMail.html", "utf-8");
 exports.admin = "dead_horse@qq.com";
 exports.smtp = {
     host: 'smtp.gmail.com',
@@ -52,6 +56,10 @@ exports.resAjax = function(res, data){
 		"Content/length":body.length});
 		res.end(body);
 }
+
+//管理员帐号表
+exports.admins = ["cnaeAdmin@gmail.com",
+				  "user01@gmail.com"];
 
 //操作应用上下线的请求参数 todo
 exports.options = {

@@ -43,7 +43,7 @@
     		<td>
     		<%if(mem.role==0){%>
     		无法删除应用创建者
-    		<%}else if(own.deleteRight==1){%>
+    		<%}else if(own.role===0){%>
     		<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>">删除此参与者</a>
     		<%}else{%>
     		没有权限进行操作

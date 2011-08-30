@@ -118,3 +118,32 @@ color:#F00;
   width:250px;
   height:50px;
 }
+#invite{
+	position:relative;
+	left:27%;
+	width:40%;
+	border:1px solid #CCC;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-radius-left: 5px;
+	border-radius-right: 5px;
+	-o-border-radius-left: 5px;
+	-o-border-radius-right: 5px;
+	padding:20px 20px 20px;
+	background:#f0f5f8;
+	text-align:left;
+}
+#invite p{
+padding:5px;
+}
+#invite table{
+margin:3px;
+}
+.inviteH2{
+	position:relative;
+	left:27%;
+	width:40%;
+	padding:0px 20px 0px;
+}

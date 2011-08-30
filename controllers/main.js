@@ -5,12 +5,18 @@ var config = require('../config')
   , app_basic = db.collection(config.db_app_basic)
   , users = db.collection(config.db_user)
   , records = db.collection(config.db_app_records)
+  , inviteCode = db.collection(config.db_inviteCode)
   , resAjax = config.resAjax
+  , randomString = require('../lib/randomString').getRandomString
   , urlMoudle = require('url')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
   , uploadDir = config.uploadDir
-  , exec  = require('child_process').exec;
+  , exec  = require('child_process').exec
+  , sendMail = require('../controllers/sendMail')
+  , mails = sendMail.mails
+  , mailEvent =sendMail.mailEvent
+  , nodemailer = config.nodemailer;
   /***
    * 显示主页面
    * @param {} req
@@ -285,6 +291,70 @@ exports.getOwnAuthInfo = function(req, res){
 			}
 		}
 	})
+}
+/***
+ * 显示生成邀请码页面
+ * @param {} req
+ * @param {} res
+ */
+exports.showInviteCode = function(req, res){
+	res.render("inviteCode", {nickName:req.session.nickName||''});
+}
+/***
+ * 生成邀请码
+ * @param {} req
+ * @param {} res
+ */
+exports.generateInviteCode = function(req, res){
+	var num=1;
+	inviteCode.find({},{id:1}).toArray(function(err, data){
+		if(err){
+			log.error(err);
+			return resAjax(res, {done:false});
+		}
+		if(!data||data.length<1){
+			num=1;
+		}else{
+			var max=0;
+			for(var i=0, len=data.length; i<len; ++i){
+				if(data[i].id>max){
+				max = data[i].id;	
+				}
+			}
+			num = max+1;
+		}
+		var code = num.toString()+randomString(10);
+		console.log(code);
+		inviteCode.save({id:num, code:code},function(){
+			if(err){
+			log.error(err);
+			return resAjax(res, {done:false});
+			}else{
+				return resAjax(res, {done:true, code:code});	
+			}
+		})
+	})
+}
+
+/***
+ * 给指定邮箱发送邀请码
+ * @param {} req
+ * @param {} res
+ */
+exports.sendInviteCode = function(req, res){
+	var title = config.inviteMailTitle||'',
+		content = config.inviteMailContent||'',
+		email = req.body.email,
+		code = req.body.code;
+	mails.push({
+    sender: 'NAE CNAEMail@gmail.com',
+    to : email,
+    subject: title,
+    html: content+code,
+    debug: true
+	});
+	mailEvent.fire("getMail");
+	return resAjax(res, {done:true});
 }
 /***
  * 当输入无效页面的时候，返回到主页面

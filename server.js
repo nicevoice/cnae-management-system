@@ -11,7 +11,8 @@ var express = require('express'),
 	form = require('connect-form'),
 	log = config.logWithFile,
 	users = config.db.collection(config.db_user),
-	app_mem = config.db.collection(config.db_app_mem);
+	app_mem = config.db.collection(config.db_app_mem),
+	admins = config.admins;	
 //创建httpServer
 var app = express.createServer(
 	form({ uploadDir: config.uploadDir, keepExtensions: true })
@@ -193,6 +194,18 @@ function checkChangeAuth(role) {
   }
 }
 
+function isAdmin(req, res, next){
+	var email = req.session.email||'';
+	for(var i=0, len=admins.length; i!=len; ++i){
+		if(email === admins[i])
+		{
+			return next();
+		}
+	}
+	res.redirect("/");
+}
+
+
 //routing
 //登录模块
 app.get("/", hasLogin, main.show);
@@ -247,7 +260,13 @@ app.post("/feedBack",hasLogin, feedback.postFeed);
 
 //获取权限
 app.post("/getOwnAuthInfo", hasLogin, main.getOwnAuthInfo);
+
+app.get("/inviteCode", hasLogin, isAdmin, main.showInviteCode);
+app.post("/inviteCode", hasLogin, isAdmin, main.generateInviteCode);
+app.post("/sendInviteCode", hasLogin, isAdmin, main.sendInviteCode);
+
 app.get("*", main.pageNotFound);
+
 
 app.listen(config.port);
 console.log("server start http://localhost:" + config.port);

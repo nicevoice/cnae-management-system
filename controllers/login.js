@@ -3,6 +3,7 @@ log = config.logWithFile;
 md5 = require('../lib/md5').hex_md5,
 EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
+inviteCode = config.db.collection(config.db_inviteCode)
 resAjax = config.resAjax;
 /***
  * 显示登录页面
@@ -30,7 +31,6 @@ exports.checkLogin = function(req, res){
 	var userEmail = req.body.userEmail,
 		password = req.body.password,
 		autoLogin = req.body.autoLogin;
-		console.log(req.body);
 	//验证用户输入
 	var regEmail = /^[a-zA-Z](\w+)@(\w+).com$/;
 	if(!regEmail.exec(userEmail))
@@ -89,7 +89,8 @@ exports.checkRegist = function(req, res){
 	var userEmail = req.body.newEmail
 	, userNickName = req.body.newUserName
 	, userPassword = req.body.newPassword
-	, userPasswordCon = req.body.passwordCon;
+	, userPasswordCon = req.body.passwordCon
+	, code = req.body.inviteCode;
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
 	var regEmail = /^[a-zA-Z0-9](\w+)@(\w+).com$/;
@@ -106,12 +107,14 @@ exports.checkRegist = function(req, res){
 		
 	//检查是否数据库中已经存在
 	console.log("start assign");
-	checkEventProxy.assign("checkName", "checkEmail", function(goodName, goodEmail){
+	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
 		console.log(goodName);
 		if(!goodName)
 			return res.render("error", {message:"昵称已经被注册"});
 		if(!goodEmail)
 			return res.render("error", {message:"email已经被注册"});
+		if(!goodCode)
+			return res.render("error", {message:"邀请码不正确"});
 		else{
 			users.save({email:userEmail, nickName:userNickName, password:userPassword}, function(err){
 				if(err){
@@ -149,6 +152,25 @@ exports.checkRegist = function(req, res){
 			else
 				checkEventProxy.trigger("checkName", true);
 		}
+	});
+	//检查邀请码是否正确
+	console.log("code"+code);
+	inviteCode.findOne({code:code}, function(err, item){
+		if(err){
+			log.error(err);
+			checkEventProxy.trigger("checkCode", false);
+		}else{
+			if(!item)
+				checkEventProxy.trigger("checkCode", false);
+			else
+				checkEventProxy.trigger("checkCode", true);
+				//删除改邀请码
+				inviteCode.remove({code:code}, function(err){
+					if(err){
+						log.error(err);
+					}
+				});
+		}	
 	});
 	}
 /***

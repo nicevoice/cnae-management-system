@@ -1,0 +1,26 @@
+<div class="notMain" id="regist">
+
+  <form action="/inviteCode" method="post">
+    <h2 class="orangeH2 inviteH2">生成邀请码</h2>
+    <div id="invite">
+    <p>请先生成邀请码，之后可以选择发送到指定邮箱。</p>
+    <table>
+    <tr>
+    <td>邀请码：</td>
+    <td><span id="inviteCode">请点击生成按钮</span></td>
+    <td><input type="button" class = "r3px button_orange submit" id="generateInviteCode"  value="生成"></td>
+    </tr>
+    <tr>
+    <td><label for="email">邮箱：</label></td>
+    <td><input type="text" id="email"></td>
+    <td><input type="button" class="r3px button_orange" id="sendInviteCode" value="发送"></td>
+    </tr>
+    <tr>
+    <td></td><td></td>
+    <td><input type="button" class="r3px button_orange" id="generateCancel" onclick="javascript: history.back();" value="取消"></td>
+  	</tr>
+  	</table>
+  	</div>
+  </form>
+</div>
+<script type="text/javascript" src="/scripts/inviteCode.js"></script>    
