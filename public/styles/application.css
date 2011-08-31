@@ -31,9 +31,7 @@
 #navigation ul {
   width: 100%;
   overflow: hidden;
-  border-left-width: .1em;
-  border-left-style: solid;
-  border-color: #99a;
+
 }
 #navigation li {
   display: inline;
@@ -42,7 +40,6 @@
   display: block;
   float: left;
   padding: .5em 2em;
-  border-right: .1em solid;
   text-decoration: none;
   font-weight: bold;
 }

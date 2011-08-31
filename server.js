@@ -9,6 +9,7 @@ var express = require('express'),
 	EventProxy = require('EventProxy.js').EventProxy,
 	md5 = require('./lib/md5').hex_md5,
 	form = require('connect-form'),
+	inviteCode = require('./controllers/inviteCode'),
 	log = config.logWithFile,
 	users = config.db.collection(config.db_user),
 	app_mem = config.db.collection(config.db_app_mem),
@@ -261,10 +262,10 @@ app.post("/feedBack",hasLogin, feedback.postFeed);
 //获取权限
 app.post("/getOwnAuthInfo", hasLogin, main.getOwnAuthInfo);
 
-app.get("/inviteCode", hasLogin, isAdmin, main.showInviteCode);
-app.post("/inviteCode", hasLogin, isAdmin, main.generateInviteCode);
-app.post("/sendInviteCode", hasLogin, isAdmin, main.sendInviteCode);
-
+app.get("/inviteCode", hasLogin, isAdmin, inviteCode.showInviteCode);
+app.post("/inviteCode", hasLogin, isAdmin, inviteCode.generateInviteCode);
+app.post("/sendInviteCode", hasLogin, isAdmin, inviteCode.sendInviteCode);
+app.post("/deleteInviteCode", hasLogin, isAdmin, inviteCode.deleteInviteCode);
 app.get("*", main.pageNotFound);
 
 

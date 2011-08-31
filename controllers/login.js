@@ -3,7 +3,8 @@ log = config.logWithFile;
 md5 = require('../lib/md5').hex_md5,
 EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
-inviteCode = config.db.collection(config.db_inviteCode)
+inviteCode = config.db.collection(config.db_inviteCode),
+urlMoudle = require('url'),
 resAjax = config.resAjax;
 /***
  * 显示登录页面
@@ -19,7 +20,11 @@ exports.show = function(req, res){
  * @param {} res
  */
 exports.regist = function(req, res){
-	res.render("regist");
+	var queryString = urlMoudle.parse(req.url, true).query,
+		email = queryString.email||'',
+		code = queryString.code||'';
+	console.log(code);
+	res.render("regist",{email:email,code:code});
 }
 /***
  * 检测登录请求
@@ -32,7 +37,7 @@ exports.checkLogin = function(req, res){
 		password = req.body.password,
 		autoLogin = req.body.autoLogin;
 	//验证用户输入
-	var regEmail = /^[a-zA-Z](\w+)@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
 	if(!regEmail.exec(userEmail))
 		return res.render("login", {warn:"用户名格式不正确"});
 	var regPassword = /^(\w){6,20}$/;
@@ -93,7 +98,7 @@ exports.checkRegist = function(req, res){
 	, code = req.body.inviteCode;
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
-	var regEmail = /^[a-zA-Z0-9](\w+)@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
 	if(!regEmail.exec(userEmail))
 		return res.render("error", {message:"请输入合法的email地址"});
 	var regName = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/;
@@ -181,7 +186,7 @@ exports.checkRegist = function(req, res){
  */
 exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
-	var regEmail = /^[a-zA-Z0-9](\w+)@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
 	if(!regEmail.exec(userEmail))
 		return resAjax(res, {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){

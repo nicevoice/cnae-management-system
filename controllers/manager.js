@@ -34,7 +34,7 @@ exports.sum = function(req, res){
 		else if(data){
 			return res.render("appManageSum", {url:url, domain:domain,
 			appName:data.appName,appDes:data.appDes,
-			appState:data.appState,nickName:req.session.nickName});
+			appState:data.appState,nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -91,7 +91,7 @@ exports.report = function(req, res){
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	return res.render("appManageReport", {url:url, domain:domain
-	, nickName:req.session.nickName});
+	, nickName:req.session.nickName, email:req.session.email});
 }
 
 exports.stat = function(req, res){};
@@ -107,7 +107,8 @@ exports.appmng = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("appManageInfo", {appInfo:data, nickName:req.session.nickName, url:url});
+			res.render("appManageInfo", {appInfo:data, 
+			nickName:req.session.nickName, url:url, email:req.session.email});
 		}
 	})
 };
@@ -170,7 +171,7 @@ exports.coopmng = function(req, res){
 	var coopEvent = new EventProxy();
 	coopEvent.assign("getMems", "getOwn", function(){
 		return res.render("appManageCoop", {url:url, nickName:req.session.nickName,
-		mems:arguments[0], own:arguments[1]});	
+		mems:arguments[0], own:arguments[1], email:req.session.email});	
 	});
 	app_mem.find({appDomain:domain}).toArray(function(err, data){
 		if(err){
@@ -218,7 +219,7 @@ exports.doCoopmng = function(req, res){
 		words = req.body.inviteWords||'',
 		role = req.body.role,
 		domain = req.params.id,
-		regEmail = /^[a-zA-Z0-9](\w+)@(\w+).com$/m,
+		regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
 		body;
 	//未输入
 	if(!email){
@@ -307,7 +308,8 @@ exports.vermng = function(req, res){
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	var domain = req.params.id||'';
-	res.render("appManageCode", {domain:domain,url:url, nickName:req.session.nickName});
+	res.render("appManageCode", {domain:domain,url:url,
+	nickName:req.session.nickName, email:req.session.email});
 };
 
 
@@ -390,7 +392,8 @@ exports.mnglog = function(req, res){
 				}else{
 			
 					return res.render("appManageRecords", {records:data,
-					domain:domain, nickName:req.session.nickName, url:url, pages:totalPage, page:page});
+					domain:domain, nickName:req.session.nickName,
+					url:url, pages:totalPage, page:page, email:req.session.email});
 				}
 			})	
 		}

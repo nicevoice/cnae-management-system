@@ -23,7 +23,7 @@ exports.userInfo = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("userInfo", {user:data, nickName:req.session.nickName});
+			res.render("userInfo", {user:data, nickName:req.session.nickName, email:req.session.email});
 		}		
 	})
 }
@@ -39,7 +39,7 @@ exports.changeInfo = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("changeInfo", {user:data, nickName:req.session.nickName});
+			res.render("changeInfo", {user:data, nickName:req.session.nickName, email:req.session.email});
 		}		
 	})
 }
@@ -49,7 +49,7 @@ exports.changeInfo = function(req, res){
  * @param {} res
  */
 exports.changePassword = function(req, res){
-	res.render("changePassword", {nickName:req.session.nickName});
+	res.render("changePassword", {nickName:req.session.nickName, email:req.session.email});
 }
 /***
  * 处理修改信息请求
