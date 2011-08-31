@@ -51,6 +51,19 @@ p { line-height:1.5em; }
 table{width:100%;margin:30px;}
 th{padding:4px;}
 tr{padding:4px;}
+pre {
+width: 700px;
+height: 200px;
+border: 1px solid black;
+margin: 10px;
+padding: 4px;
+line-height: 110%;
+font-size: 12px;
+font-family: mono;
+background-color: #EEE;
+overflow: scroll;
+display:block;
+}
 .page {
 width:1000px; 
 margin:10px auto;

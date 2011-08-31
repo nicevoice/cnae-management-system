@@ -18,7 +18,7 @@
     </div>
     <div id="appManage" class="clearfix">
     	<div class="left borderRadius5">
-    		<ul id="sidebar">
+     		<ul id="sidebar">
     		<li><h3>应用信息</h3></li>
     		<li><a href="<%=url%>/sum">汇总信息</a></li>
     		<li><h3>应用管理</h3></li>
@@ -30,22 +30,14 @@
     		<li><a href="<%=url%>/applog">日志中心</a></li>
     		</ul>
     	</div>
-    	<div class="right borderRadius5">
- 		<div class="subTitle"><img src="/images/arrow.gif"></img>
-    	<span id="appDomain"><%=domain%></span><img src="/images/arrow.gif"></img>代码管理
-    	</div>
-    	<div id="upload" class="borderRadius5 subContent">
-    	    	<p><strong style="font-size:18px">上传代码</strong>
-    	    	<span style="color:red">提交你的代码，将所有代码文件打包上传。采用压缩包(gz/zip)方式。如果多次上传，将覆盖同名文件！</span>
-    	    	</p>
-    	<form id="uploadForm" action="<%=url%>/upload" enctype="multipart/form-data" method="post">    
-    	<p><input type="file" id="getFile" name="upload" multiple="multiple">
-    	<input type="submit" class="button_orange r3px" id="submitUpload" value="上传"></p>
-    	</form>
-    	<div id="uploading">
-    	正在上传中...
-    	</div>
-    	</div>
+    <div class="right borderRadius5">
+	<div class="std_msg">
+	STDOUT:
+	<pre id="stdout" class="borderRadius5"><%=stdout%></pre>
+	STDERR:
+	<pre id="stderr" class="borderRadius5"><%=stderr%></pre>
+	</div>
+
     </div>
-    <script type="text/javascript" src="/scripts/codeManage.js"></script>    
+    <script type="text/javascript" src="/scripts/infoManage.js"></script>    
     

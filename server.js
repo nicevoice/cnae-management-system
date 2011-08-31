@@ -241,6 +241,7 @@ app.get("/application/manage/:id/mnglog", hasLogin, checkAuth, manager.mnglog);
 app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
 app.get("/application/manage/:id/mysqlmng", hasLogin, checkAuth, manager.mysqlmng);
 app.get("/application/manage/:id/cornmng", hasLogin,checkAuth, manager.cornmng);
+app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
 
 app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), manager.doAppmng);
 app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manager.doCoopmng);

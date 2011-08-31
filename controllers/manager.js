@@ -4,7 +4,8 @@ var config = require('../config')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
-  , sendSocket = require('../lib/socket').sendSocket
+  , onOff = require('../lib/socket').onOff
+  , getLog = require('../lib/socket').getLog
   , child
   , db = config.db
   , log = config.logWithFile
@@ -33,9 +34,9 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
-			sendSocket("status", domain, function(data){
+			onOff("status", domain, function(socketRes){
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			appState:data.running,nickName:req.session.nickName, email:req.session.email});
+			appState:socketRes.running,nickName:req.session.nickName, email:req.session.email});
 			})
 		}
 		else{
@@ -52,7 +53,7 @@ exports.doControlApp = function(req, res){
 	}else{
 		action = "stop";
 	}
-	sendSocket(action, domain, function(data){
+	onOff(action, domain, function(data){
 		resAjax(res, data);
 	})
 	//todo 添加启动停止
@@ -388,12 +389,30 @@ exports.mnglog = function(req, res){
 					return res.render("appManageRecords", {records:data,
 					domain:domain, nickName:req.session.nickName,
 					url:url, pages:totalPage, page:page, email:req.session.email});
+				
 				}
 			})	
 		}
 	})
 
 };
-exports.applog = function(req, res){};
+exports.applog = function(req, res){
+	var url = req.url,
+		domain = req.params.id||'';
+	url = url.slice(0, url.lastIndexOf('/'));
+	var getLogsEvent = new EventProxy();
+	getLogsEvent.assign("out", "err", function(stdout, stderr){
+	stdout = stdout||'';
+	stderr = stderr||'';
+	res.render("appLogManage", {url:url, nickName:req.session.nickName,
+	email:req.session.email, stdout:stdout, stderr:stderr});
+	});
+	getLog("stdout", domain, 1000, function(data){
+		getLogsEvent.fire("out", data);
+	});
+	getLog("stderr", domain, 1000, function(data){
+		getLogsEvent.fire("err", data);
+	})
+};
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};
