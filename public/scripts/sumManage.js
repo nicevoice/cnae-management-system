@@ -29,7 +29,7 @@ controlApp = function(){
 		sAlert("警告","操作失败");
 	},
 	success:function(data){
-		if(data.done){
+		if(data.status==="ok"){
 			sAlert("","操作成功");
 			if(thisApp.val()==="上线"){
 				thisApp.val("下线");
@@ -38,6 +38,7 @@ controlApp = function(){
 			}else{
 				thisApp.val("上线");
 				stateDes.html("未启动");
+				sAlert("警告",data.msg);
 			}
 		}else{
 			sAlert("警告", "操作失败");

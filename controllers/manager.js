@@ -49,17 +49,12 @@ exports.doControlApp = function(req, res){
 	var domain = req.params.id,
 		action = req.body.action;
 	if(action === "上线"){
-		action = 1;
+		action = "start";
 	}else{
-		action = 0;
+		action = "stop";
 	}
-	switch(action){
-		case 0: options.path = "/app/"+domain+"/stop";break;
-		case 1: options.path = "/app/"+domain+"/run";break;
-		default:options.path = "/app/"+domain+"/stop";
-	}
-	httpReq(options, function(data){
-		console.log(data);
+	sendSocket(action, domain, function(data){
+		resAjax(res, data);
 	})
 	//todo 添加启动停止
 	/*var controlEvent = new EventProxy();
