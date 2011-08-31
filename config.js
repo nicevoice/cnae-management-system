@@ -58,8 +58,8 @@ exports.resAjax = function(res, data){
 }
 
 //管理员帐号表
-exports.admins = ["cnaeAdmin@gmail.com",
-				  "user01@gmail.com"];
+exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com"];
+
 //邀请码注册链接
 exports.inviteHref = "http://www.cnodejs.net/regist?code=";
 //操作应用上下线的请求参数 todo
