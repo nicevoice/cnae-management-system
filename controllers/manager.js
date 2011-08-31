@@ -4,7 +4,7 @@ var config = require('../config')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
-  , httpReq = require('../lib/httpReq').httpReq
+  , sendSocket = require('../lib/socket').sendSocket
   , child
   , db = config.db
   , log = config.logWithFile
@@ -33,15 +33,10 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
-			var qOpt = options;
-			qOpt.path = "/app/"+domain;
-			httpReq(qOpt, function(data){
-				if(data.running===true){
+			sendSocket("status", domain, function(data){
 			return res.render("appManageSum", {url:url, domain:domain,
 			appName:data.appName,appDes:data.appDes,
-			appState:appState,nickName:req.session.nickName, email:req.session.email});
-
-				}
+			appState:data.running,nickName:req.session.nickName, email:req.session.email});
 			})
 		}
 		else{
