@@ -33,9 +33,14 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
+			httpReq(options, function(data){
+				if(data.running===true){
 			return res.render("appManageSum", {url:url, domain:domain,
 			appName:data.appName,appDes:data.appDes,
-			appState:data.appState,nickName:req.session.nickName, email:req.session.email});
+			appState:,nickName:req.session.nickName, email:req.session.email});
+
+				}
+			})
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -52,9 +57,9 @@ exports.doControlApp = function(req, res){
 		action = 0;
 	}
 	switch(action){
-		case 0: options.url = "/app/"+domain+"/stop";break;
-		case 1: options.url = "/app/"+domain+"/run";break;
-		default:options.url = "/app/"+domain+"/stop";
+		case 0: options.path = "/app/"+domain+"/stop";break;
+		case 1: options.path = "/app/"+domain+"/run";break;
+		default:options.path = "/app/"+domain+"/stop";
 	}
 	httpReq(options, function(data){
 		console.log(data);
