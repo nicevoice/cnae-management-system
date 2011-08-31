@@ -30,7 +30,6 @@ controlApp = function(){
 	},
 	success:function(data){
 		if(data.status==="ok"){
-			sAlert("","操作成功");
 			if(thisApp.val()==="上线"){
 				thisApp.val("下线");
 				stateDes.html("已启动");
@@ -38,10 +37,9 @@ controlApp = function(){
 			}else{
 				thisApp.val("上线");
 				stateDes.html("未启动");
-				sAlert("警告",data.msg);
 			}
 		}else{
-			sAlert("警告", "操作失败");
+			sAlert("警告", data.msg);
 		}
 	}
 	})

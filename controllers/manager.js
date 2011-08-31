@@ -34,8 +34,7 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			sendSocket("status", domain, function(data){
-			return res.render("appManageSum", {url:url, domain:domain,
-			appName:data.appName,appDes:data.appDes,
+			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
 			appState:data.running,nickName:req.session.nickName, email:req.session.email});
 			})
 		}
