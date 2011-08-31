@@ -4,6 +4,7 @@ var config = require('../config')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
+  , httpReq = require('../lib/httpReq').httpReq
   , child
   , db = config.db
   , log = config.logWithFile
@@ -55,6 +56,9 @@ exports.doControlApp = function(req, res){
 		case 1: options.url = "/app/"+domain+"/run";break;
 		default:options.url = "/app/"+domain+"/stop";
 	}
+	httpReq(options, function(data){
+		console.log(data);
+	})
 	//todo 添加启动停止
 	/*var controlEvent = new EventProxy();
 	var req = http.request(options, function(res){
@@ -77,13 +81,7 @@ exports.doControlApp = function(req, res){
 	}).on('error', function(e){
 	console.log("got error:" + e.message);
 	});*/
-		app_basic.update({appDomain: domain}, {$set:{appState:action}}, function(err){
-		if(err){
-			return resAjax(res, {done:false});
-		}else{
-			return resAjax(res, {done:true});
-		}
-	})
+	
 }
 //资源报表
 exports.report = function(req, res){

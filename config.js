@@ -48,7 +48,7 @@ exports.smtp = {
     debug: true
 };
 
-exports. uploadDir = "/home/deadhorse/code/nae/apps";
+exports. uploadDir = "/home/admin/cnae/git/cnode-app-engine/apps";
 //发送json格式
 exports.resAjax = function(res, data){
 		body = new Buffer(JSON.stringify(data));
