@@ -27,7 +27,6 @@ exports.sum = function(req, res){
 	var domain = req.params.id;
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
-	console.log(domain);
 	app_basic.findOne({appDomain:domain}, function(err, data){
 		if(err){
 			log.error(err);
@@ -36,7 +35,8 @@ exports.sum = function(req, res){
 		else if(data){
 			onOff("status", domain, function(socketRes){
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			appState:socketRes.running,nickName:req.session.nickName, email:req.session.email});
+			appState:socketRes.running, appPorts:socketRes.ports
+			,nickName:req.session.nickName, email:req.session.email});
 			})
 		}
 		else{

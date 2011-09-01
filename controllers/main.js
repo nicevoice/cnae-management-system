@@ -149,7 +149,7 @@ var config = require('../config')
  			checkRepetition.fire("checkDomain", true);
  		}
  	});
- 	app_basic.find({email:req.session.userEmail}).count(function(err, data){
+ 	app_mem.find({email:req.session.userEmail, role:0}).count(function(err, data){
  		console.log("应用数目:"+data);
  		if(err){
  			log.error(err);

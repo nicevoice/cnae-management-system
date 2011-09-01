@@ -1,5 +1,6 @@
 $(function(){
 	$("#controlApp").click(controlApp);
+	$("#controlAppRestart").click(restart);
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -43,4 +44,26 @@ controlApp = function(){
 		}
 	}
 	})
+}
+
+restart = function(){
+	var domain = $("#appDomain").html(),
+		stateDes = $("#appStateDes");
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/controlApp",
+	dataType:"json",
+	data:{action:"restart"},
+	error:function(){
+		sAlert("警告","操作失败");
+	},
+	success:function(data){
+		if(data.status==="ok"){
+			sAlert("","应用已重启");
+		}else{
+			sAlert("警告", data.msg);	
+		}
+	}
+	});
 }

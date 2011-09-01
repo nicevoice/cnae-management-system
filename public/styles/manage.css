@@ -74,7 +74,11 @@ margin:8px;
 }
 #controlApp{
 position:relative;
-left:70%
+left:50%
+}
+#controlAppRestart{
+position:relative;
+left:55%
 }
 #records{
   height:250px;

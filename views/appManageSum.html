@@ -36,7 +36,8 @@
     	</div>
     	    	    <div id="appInfos" class="borderRadius5">
     		<table>
-    		<tr><td>应用域名：</td><td><a href="http://<%=domain||''%>.cnodejs.net"  target="_blank"><%=domain||''%></td></tr>
+    		<tr><td>应用域名：</td>
+    		<td><a href="http://<%=domain||''%>.cnodejs.net"  target="_blank"><%=domain||''%>.cnodejs.net</td></tr>
     		<tr><td>应用名称：</td><td><%=appName||''%></td></tr>
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes">
@@ -50,6 +51,8 @@
    		<input type="button" class="button_orange r3px" id="controlApp" 
    		<%if(appState===true){%> value="下线"
    		<%}else{%> value="上线"<%}%>>
+    	<input type="button" class="button_orange r3px" id="controlAppRestart"
+    	value="重启"> 
     	</div>
     </div>
     <script type="text/javascript" src="/scripts/sumManage.js"></script>    
