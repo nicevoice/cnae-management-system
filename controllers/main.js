@@ -10,6 +10,7 @@ var config = require('../config')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
   , uploadDir = config.uploadDir
+  , onOff = require('../socket').onOff
   , exec  = require('child_process').exec;
   /***
    * 显示主页面
@@ -211,6 +212,7 @@ exports.deleteApp = function(req, res){
 				deleteEvent.fire("deletedRecords", true);
 			}
 		});
+		onOff("stop", delDomain, function(){
 		exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
 		if(err){
 			console.log(err);
@@ -218,8 +220,8 @@ exports.deleteApp = function(req, res){
 		}else{
 			deleteEvent.fire("deleteDir", true);
 		}
-		})
-	}
+		});
+	});
 }
 /***
  * 处理参加应用请求
