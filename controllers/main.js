@@ -213,15 +213,16 @@ exports.deleteApp = function(req, res){
 			}
 		});
 		onOff("stop", delDomain, function(){
-		exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
-		if(err){
-			console.log(err);
-			deleteEvent.fire("deleteDir", true);
-		}else{
-			deleteEvent.fire("deleteDir", true);
-		}
+			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
+			if(err){
+				console.log(err);
+				deleteEvent.fire("deleteDir", true);
+			}else{
+				deleteEvent.fire("deleteDir", true);
+			}
+			});
 		});
-	});
+	}
 }
 /***
  * 处理参加应用请求
