@@ -106,13 +106,10 @@ function sAlert(strTitle,strContent){
     document.getElementById("msgDiv").appendChild(txt); 
     title.focus();
     document.onkeydown = function(e){ 
-    var ev = document.all ? window.event : e;
-    if(ev.keyCode==13||ev.keyCode==27) {
     document.body.removeChild(bgObj); 
     document.getElementById("msgDiv").removeChild(title); 
     document.body.removeChild(msgObj); 
     document.onkeydown = function(e){};
-    }
 }
 } 
 /*

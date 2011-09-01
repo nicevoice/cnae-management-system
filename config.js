@@ -57,6 +57,8 @@ exports.resAjax = function(res, data){
 		res.end(body);
 }
 
+exports.socketPort = 1128;
+
 //管理员帐号表
 exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com"];
 
