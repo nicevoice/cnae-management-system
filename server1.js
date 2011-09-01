@@ -281,6 +281,5 @@ app.post('/editor/:id/deldir', editor.deldir); // 删除目录
 
 app.get("*", main.pageNotFound);
 
-
 app.listen(config.port);
 console.log("server start http://localhost:" + config.port);

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NAE在线编辑器</title>
+<link href="/styles/editor.css" rel="stylesheet" type="text/css" />
+<script src="/scripts/head.load.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/ace/theme-textmate.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/ace/mode-textile.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/editor.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="domain" style="display: none;"><%=domain%></div>
+<div id="sidebar">
+    <div id="app-info">
+        <p class="item">
+            应用：<span id="appname"><%=domain%></span>
+			<a href="#">上线</a>
+        </p>
+        <p class="item">
+        	当前路径：<div id="currentPath"></div>
+        </p>
+    </div>
+    <div id="file-explorer">
+        <div id="tool-bar">
+            <ul>
+            	<li id="tb-home"><img src="/images/icon_home.png" title="返回根目录" /></li>
+                <li id="tb-newf"><img src="/images/icon_file_add.png" title="新建文件" /></li>
+                <li id="tb-newd"><img src="/images/icon_folder_add.png" title="新建文件夹" /></li>
+                <li id="tb-fresh"><img src="/images/icon_refresh.png" title="刷新" /></li>
+            </ul>
+        </div>
+        <div id="file-list"></div>
+    </div>
+</div>
+<div id="wrapper">
+    <div id="content">
+    	<div id="nav">
+            <ul>
+                <li id="nav-save">保存</li>
+				<li>运行</li>
+				<li>调试</li>
+                <!--<li>关闭</li>-->
+            </ul>
+            <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
+        </div>
+        <div id="editor-panel">
+            <div id="editor"></div>
+        </div>
+    </div>
+</div>
+<div id="console" class="clearfix">
+    <textarea readonly="readonly" id="stdout">standard output here..</textarea>
+    <textarea readonly="readonly" id="stderr">standard error here..</textarea>
+</div>
+<div id="msg"></div>
+</body>
+</html>
