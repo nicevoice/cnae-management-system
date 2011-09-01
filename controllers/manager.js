@@ -401,21 +401,21 @@ exports.applog = function(req, res){
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
 	var getLogsEvent = new EventProxy();
-	getLogsEvent.assign("out", "err", function(stdout, stderr){
+	getLogsEvent.assign("out", function(stdout, stderr){
 	stdout = stdout||'';
 	stderr = stderr||'';
 	console.log("render");
 	res.render("appLogManage", {url:url, nickName:req.session.nickName,
 	email:req.session.email, stdout:stdout, stderr:stderr});
 	});
-//	getLog("stdout", domain, 100, function(data){
-//		console.log("fire out");
-//		getLogsEvent.fire("out", data);
-//	});
-	getLog("stderr", domain, 100, function(data){
-		console.log("fire err");
-		getLogsEvent.fire("err", data);
-	})
-};
+	getLog("stdout", domain, 100, function(data){
+		console.log("fire out");
+		getLogsEvent.fire("out", data);
+	});
+//	getLog("stderr", domain, 100, function(data){
+//		console.log("fire err");
+//		getLogsEvent.fire("err", data);
+//	})
+//};
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};
