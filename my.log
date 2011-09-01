@@ -67,3 +67,6 @@
 2011-09-01-20:27:24 [ERROR][lib/socket.js:7]ECONNREFUSED, Connection refused
 2011-09-01-20:27:24 [ERROR][lib/socket.js:7]ECONNREFUSED, Connection refused
 2011-09-01-20:27:24 [ERROR][lib/socket.js:7]ECONNREFUSED, Connection refused
+2011-09-01-20:33:27 [ERROR][lib/socket.js:24]ECONNREFUSED, Connection refused
+2011-09-01-20:33:27 [ERROR][lib/socket.js:24]ECONNREFUSED, Connection refused
+2011-09-01-20:33:28 [ERROR][lib/socket.js:7]ECONNREFUSED, Connection refused

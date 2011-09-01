@@ -34,9 +34,12 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			onOff("status", domain, function(socketRes){
-			if(socketRes.msg)
+			if(socketRes.msg){
 				socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
+			}else{
+			socketRes.last = new Date(socketRes.last).format("MM/DD  hh:mm:ss");
+			}
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
 			status:socketRes,nickName:req.session.nickName, email:req.session.email});
 			})
