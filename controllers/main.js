@@ -21,7 +21,6 @@ var config = require('../config')
  	var getAppEvent = new EventProxy();
  	//当获取到自己的应用和参与的应用之后，才进行页面跳转
  	getAppEvent.assign("getOwns","getOthers",function(owns, others){
- 		console.log(owns[0]);
  		res.render("main", {ownApps:owns, otherApps:others, nickName:req.session.nickName, email:req.session.email});
  	});
  	//从app_mem中查找自己的应用
@@ -81,7 +80,25 @@ var config = require('../config')
  			var now = new Date().format("YYYY-MM-dd hh:mm:ss");
  			var createAppEvent = new EventProxy();
  			createAppEvent.assign("savedBasic", "savedMem", "saveRecord", function(){
- 				console.log("done");
+ 				var saveDir = uploadDir+"/"+newAppDomain;
+ 				var initFile = __dirname.slice(0, __dirname.lastIndexOf('/')+1)+"init.tar.gz";
+ 				console.log(initFile+"~~");						
+ 				console.log(saveDir+"~~");
+				fs.mkdir(saveDir, '777', function(err){
+					console.log("mkdir");
+					if(err){
+						console.log("创建应用文件夹失败");
+					}else{
+						var initFile = __dirname.slice(0, __dirname.lastIndexOf('/')+1)+"init.tar.gz";
+						console.log(initFile);
+						console.log(saveDir);
+						exec('tar -xf '+ initFile + ' -C '+ saveDir, function(err){
+						if(err){
+							console.log("初始文件夹失败");
+						}
+					}); 
+				}
+			});
  				res.redirect("/application");
  			})
  			//执行插入
@@ -115,6 +132,7 @@ var config = require('../config')
  					createAppEvent.fire("saveRecord", true);
  				}
  			})
+ 			
  		}
  	})
  	app_mem.findOne({appDomain:newAppDomain.toString()},function(err, item){
@@ -128,10 +146,10 @@ var config = require('../config')
  				checkRepetition.fire("checkDomain", false);
  			}
  			checkRepetition.fire("checkDomain", true);
- 			console.log("checkDomain");
  		}
  	});
- 	users.find({email:req.session.userEmail}).count(function(err, data){
+ 	app_basic.find({email:req.session.userEmail}).count(function(err, data){
+ 		console.log("应用数目:"+data);
  		if(err){
  			log.error(err);
  			checkRepetition.unbind();
@@ -141,7 +159,6 @@ var config = require('../config')
  			checkRepetition.fire("checkNumbers", false);
  		else
  			checkRepetition.fire("checkNumbers", true);
- 		console.log("checkNumbers");
  	});
 }
 /***

@@ -330,7 +330,7 @@ exports.doUpload = function(req, res){
 						log.error(err);
 						return res.render("error", {message:"修改权限错误"});
 						}
-						child = exec('tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain, 
+						exec('tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain, 
 						function(err, stdout, stderr){
 							console.log(stdout);
 							console.log(stderr);
