@@ -407,10 +407,10 @@ exports.applog = function(req, res){
 	res.render("appLogManage", {url:url, nickName:req.session.nickName,
 	email:req.session.email, stdout:stdout, stderr:stderr});
 	});
-	getLog("stdout", domain, 1000, function(data){
+	getLog("stdout", domain, 500, function(data){
 		getLogsEvent.fire("out", data);
 	});
-	getLog("stderr", domain, 1000, function(data){
+	getLog("stderr", domain, 500, function(data){
 		getLogsEvent.fire("err", data);
 	})
 };
