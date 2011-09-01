@@ -61,6 +61,8 @@ restart = function(){
 	success:function(data){
 		if(data.status==="ok"){
 			sAlert("","应用已重启");
+			thisApp.val("下线");
+			stateDes.html("已启动");			
 		}else{
 			sAlert("警告", data.msg);	
 		}
