@@ -37,7 +37,17 @@
     	    	    <div id="appInfos" class="borderRadius5">
     		<table>
     		<tr><td>应用域名：</td>
-    		<td><a href="http://<%=domain||''%>.cnodejs.net"  target="_blank"><%=domain||''%>.cnodejs.net</td></tr>
+    		<td>
+    		<%for(var i=0, len=ports.length; i<len; ++i{
+    			var port = ports[i];
+    			if(port==80){
+    				port = "";
+    			}else{
+    				port = ":"+port;
+    			}
+    		%>
+    		<a href="http://<%=domain||''%>.cnodejs.net<%=port%>"  target="_blank">
+    		<%=domain||''%>.cnodejs.net<%=port%><br /></td></tr>
     		<tr><td>应用名称：</td><td><%=appName||''%></td></tr>
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes">
