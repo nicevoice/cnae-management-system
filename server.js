@@ -270,14 +270,14 @@ app.post("/sendInviteCode", hasLogin, isAdmin, inviteCode.sendInviteCode);
 app.post("/deleteInviteCode", hasLogin, isAdmin, inviteCode.deleteInviteCode);
 
 // 编辑器
-app.get('/editor/:id', editor.index);
-app.post('/editor/:id/filelist', editor.listfile); // 文件列表
-app.post('/editor/:id/readfile', editor.readfile); // 读文件
-app.post('/editor/:id/writefile', editor.writefile); // 写文件
-app.post('/editor/:id/renamefile', editor.renamefile); // 文件重命名
-app.post('/editor/:id/delfile', editor.delfile); // 删除文件
-app.post('/editor/:id/mkdir', editor.mkdir); // 创建目录
-app.post('/editor/:id/deldir', editor.deldir); // 删除目录
+app.get('/editor/:id', hasLogin, checkChangeAuth(2), editor.index);
+app.post('/editor/:id/filelist', hasLogin, checkChangeAuth(2), editor.listfile); // 文件列表
+app.post('/editor/:id/readfile', hasLogin, checkChangeAuth(2), editor.readfile); // 读文件
+app.post('/editor/:id/writefile', hasLogin, checkChangeAuth(2), editor.writefile); // 写文件
+app.post('/editor/:id/renamefile', hasLogin, checkChangeAuth(2), editor.renamefile); // 文件重命名
+app.post('/editor/:id/delfile', hasLogin, checkChangeAuth(2), editor.delfile); // 删除文件
+app.post('/editor/:id/mkdir', hasLogin, checkChangeAuth(2), editor.mkdir); // 创建目录
+app.post('/editor/:id/deldir', hasLogin, checkChangeAuth(2), editor.deldir); // 删除目录
 
 app.get("*", main.pageNotFound);
 

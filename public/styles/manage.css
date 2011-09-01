@@ -83,7 +83,14 @@ left:55%
 #records{
   height:250px;
 }
-
+#upload{
+    width:60%;
+}
 #uploading{
 display:none;
+}
+
+#submitUpload, #editor{
+    position:relative;
+    left:70%;
 }

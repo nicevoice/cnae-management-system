@@ -1,5 +1,6 @@
 $(function(){
 	$("#submitUpload").click(upload);
+	$("#editor").click(popEditor);
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -27,4 +28,9 @@ upload = function(){
 		return false;
 	}
 	$("#uploading").css("display", "block");
+}
+popEditor = function(){
+	var domain = $("#appDomain").html();
+	var url = "http://"+location.host+"/editor/"+domain;
+	window.open(url);
 }
