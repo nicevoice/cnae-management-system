@@ -38,8 +38,8 @@
     		<table>
     		<tr><td>应用域名：</td>
     		<td>
-    		<%for(var i=0, len=ports.length; i<len; ++i){
-    			var port = ports[i];
+    		<%for(var i=0, len=status.ports.length; i<len; ++i){
+    			var port = status.ports[i];
     			if(port==80){
     				port = "";
     			}else{
@@ -53,15 +53,24 @@
     		<tr><td>应用名称：</td><td><%=appName||''%></td></tr>
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes">
-   			<%if(appState===true){%>
+   			<%if(status.running===true){%>
    				已启动
    			<%}else{%>
    				未启动
    			<%}%>
    			</td></tr>
    		</table>
+   		<table id="status">
+   			<tr>
+   			<th>rss</th><th>heap</th><th>uptime</th><th>last</th><th>pid</th>
+   			</tr>
+   			<tr>
+   			<td></td><%=status.rss%><td><%=status.heap%></td><td><%=status.uptime%></td>
+   			<td><%=status.last%></td><td><%=status.pid%></td>
+   			</tr>
+   		</table>
    		<input type="button" class="button_orange r3px" id="controlApp" 
-   		<%if(appState===true){%> value="下线"
+   		<%if(status.running===true){%> value="下线"
    		<%}else{%> value="上线"<%}%>>
     	<input type="button" class="button_orange r3px" id="controlAppRestart"
     	value="重启"> 

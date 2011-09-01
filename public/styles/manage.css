@@ -60,7 +60,7 @@
 }
 #appInfos{
 line-height:18px;
-padding:20px;
+padding:50px;
 color:#666971;
 padding-left:50px;
 width:60%;
@@ -93,4 +93,11 @@ display:none;
 #submitUpload, #editor{
     position:relative;
     left:70%;
+}
+#status{
+position:relative;
+left:-10%;
+}
+#status, #status td, #status th{
+border:1px solid #aaa;
 }

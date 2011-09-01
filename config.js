@@ -60,7 +60,8 @@ exports.resAjax = function(res, data){
 exports.socketPort = 1128;
 
 //管理员帐号表
-exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com","kunfirst@gmail.com"];
+exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com",
+				  "kunfirst@gmail.com", "q3boy1@gmail.com"];
 
 //邀请码注册链接
 exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";

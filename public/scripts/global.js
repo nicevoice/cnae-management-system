@@ -92,11 +92,13 @@ function sAlert(strTitle,strContent){
     title.style.cursor="pointer"; 
     title.title = "点击关闭"; 
     title.innerHTML="<p align='left'>"+ strTitle +"</p>"; 
-    title.onclick=function(){ 
+    var deleteFunc = function(){ 
     document.body.removeChild(bgObj); 
     document.getElementById("msgDiv").removeChild(title); 
     document.body.removeChild(msgObj); 
-    } 
+    } ;
+    title.onclick=deleteFunc;
+    
     document.body.appendChild(msgObj); 
     document.getElementById("msgDiv").appendChild(title); 
     var txt=document.createElement("p"); 
@@ -105,12 +107,17 @@ function sAlert(strTitle,strContent){
     txt.innerHTML=strContent; 
     document.getElementById("msgDiv").appendChild(txt); 
     title.focus();
-    document.onkeydown = function(e){ 
-    document.body.removeChild(bgObj); 
-    document.getElementById("msgDiv").removeChild(title); 
-    document.body.removeChild(msgObj); 
-    document.onkeydown = function(e){};
-}
+    document.onkeydown = function(e){
+    	deleteFunc();
+	    document.onkeydown = function(e){};
+	}
+	document.onclick = function(e){
+		deleteFunc();
+		document.body.removeChild(bgObj); 
+	    document.getElementById("msgDiv").removeChild(title); 
+	    document.body.removeChild(msgObj); 
+	    document.onmousedown = function(e){};
+	}
 } 
 /*
 function highlightPage() {

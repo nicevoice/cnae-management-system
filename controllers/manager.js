@@ -34,10 +34,11 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			onOff("status", domain, function(socketRes){
-			var ports = socketRes.ports || [80];
+			if(socketRes.msg)
+				socketRes={rss:"", heap:"",uptime:"",
+			last:"",pid:"",autorun:"",running:"", ports:[80]};
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			appState:socketRes.running, ports:ports
-			,nickName:req.session.nickName, email:req.session.email});
+			status:socketRes,nickName:req.session.nickName, email:req.session.email});
 			})
 		}
 		else{
