@@ -412,10 +412,12 @@ exports.applog = function(req, res){
 		console.log("fire out");
 		getLogsEvent.fire("out", data);
 	});
+	getLogsEvent.on("out", function(){
 	getLog("stderr", domain, 100, function(data){
 		console.log("fire err");
 		getLogsEvent.fire("err", data);
-	})
+		})
+	});
 };
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};
