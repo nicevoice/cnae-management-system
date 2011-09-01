@@ -2,7 +2,7 @@ var mongo = require("mongoskin");
 var fs = require('fs');
 //exports.session_secret = 'tsoedsosisession_secretonsheecfrxedta';
 exports.session_secret = "keyboard cat";
-exports.port = 8080;
+var port = exports.port = 2012;
 exports.email = "heyiyu.deadhore@gmail.com";
 exports.site_name = "Node App Engine";
 exports.site_desc = '';
@@ -60,10 +60,10 @@ exports.resAjax = function(res, data){
 exports.socketPort = 1128;
 
 //管理员帐号表
-exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com"];
+exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com","kunfirst@gmail.com"];
 
 //邀请码注册链接
-exports.inviteHref = "http://www.cnodejs.net/regist?code=";
+exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
 //操作应用上下线的请求参数 todo
 exports.options = {
 host: '127.0.0.1',
