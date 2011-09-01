@@ -401,7 +401,7 @@ exports.applog = function(req, res){
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
 	var getLogsEvent = new EventProxy();
-	getLogsEvent.assign("out", function(stdout, stderr){
+	getLogsEvent.assign("out", "err", function(stdout, stderr){
 	stdout = stdout||'';
 	stderr = stderr||'';
 	console.log("render");
@@ -412,10 +412,10 @@ exports.applog = function(req, res){
 		console.log("fire out");
 		getLogsEvent.fire("out", data);
 	});
-//	getLog("stderr", domain, 100, function(data){
-//		console.log("fire err");
-//		getLogsEvent.fire("err", data);
-//	})
+	getLog("stderr", domain, 100, function(data){
+		console.log("fire err");
+		getLogsEvent.fire("err", data);
+	})
 };
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};
