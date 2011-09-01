@@ -50,7 +50,7 @@ exports.doControlApp = function(req, res){
 		action = req.body.action;
 	if(action === "上线"){
 		action = "start";
-	}else{
+	}else if(action==="下线"){
 		action = "stop";
 	}
 	onOff(action, domain, function(data){
