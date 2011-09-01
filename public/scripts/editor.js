@@ -1,24 +1,11 @@
+var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currPath = ROOT_PATH; // 当前路径
 var currFile; // 当前文件
 var currNode; // 当前文件DOM
 var changed = false; // 当前文件被改变的标记
-var domain; // 应用二级域名
 
 window.onload = function() {
-	
-	// 初始化应用域名
-	domain = $("#domain").html();
-	url = {
-		listfile: "/editor/" + domain + "/filelist",
-		readfile: "/editor/" + domain + "/readfile",
-		writefile: "/editor/" + domain + "/writefile",
-		delfile: "/editor/" + domain + "/delfile",
-		mkdir: "/editor/" + domain + "/mkdir",
-		deldir: "/editor/" + domain + "/deldir",
-		renamefile: "/editor/" + domain + "/renamefile",
-		
-	};
 	
 	// 初始化编辑器
 	editor = ace.edit("editor");
@@ -52,6 +39,19 @@ window.onload = function() {
 	editor.getSession().on('change', function() {
 		changed = true;
 	});
+	
+	// 初始化应用域名
+	DOMAIN = $("#domain").html();
+	url = {
+		listfile: "/editor/" + DOMAIN + "/filelist",
+		readfile: "/editor/" + DOMAIN + "/readfile",
+		writefile: "/editor/" + DOMAIN + "/writefile",
+		delfile: "/editor/" + DOMAIN + "/delfile",
+		mkdir: "/editor/" + DOMAIN + "/mkdir",
+		deldir: "/editor/" + DOMAIN + "/deldir",
+		renamefile: "/editor/" + DOMAIN + "/renamefile",
+		
+	};
 	
 	// 支持的文件类型
 	modes = Array();
@@ -368,7 +368,6 @@ function saveFile(filePath) {
 	var content = editor.getSession().getValue();
 	writeFile(filePath, content, function(status, msg) {
 		if(status) {
-			showMsg("保存成功");
 			changed = false; // 重置文件修改标记
 			// TODO:更新文件的mtime
 		} else {
