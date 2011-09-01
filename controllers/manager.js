@@ -408,11 +408,11 @@ exports.applog = function(req, res){
 	res.render("appLogManage", {url:url, nickName:req.session.nickName,
 	email:req.session.email, stdout:stdout, stderr:stderr});
 	});
-	getLog("stdout", domain, 100, function(data){
+	getLog("stdout", domain, 1000, function(data){
 		console.log("fire out");
 		getLogsEvent.fire("out", data);
 	});
-	getLog("stderr", domain, 100, function(data){
+	getLog("stderr", domain, 1000, function(data){
 		console.log("fire err");
 		getLogsEvent.fire("err", data);
 		})
