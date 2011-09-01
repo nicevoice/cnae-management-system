@@ -369,6 +369,7 @@ function saveFile(filePath) {
 	writeFile(filePath, content, function(status, msg) {
 		if(status) {
 			showMsg("保存成功");
+			changed = false; // 重置文件修改标记
 			// TODO:更新文件的mtime
 		} else {
 			showMsg(msg + "，请稍后再尝试");
@@ -555,7 +556,7 @@ function dyCreateFileUI(that, that_div, dt) {
 		showMsg("文件名不能为空");
 	} else {
 		var filePath = currPath + fileName;
-		var content = editor.getSession().getValue();
+		var content = "";
 		writeFile(filePath, content, function(status, msg) {
 			$(that).remove(); // 移除该<input>元素
 			if(status) { // 成功
@@ -563,10 +564,15 @@ function dyCreateFileUI(that, that_div, dt) {
 				var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
 				_t.append(setSubmenu(_file));
 				dt.html(fileName);
+				// 公共事件更新
+				changed = false; // 重置文件修改标记
+				setEditorMode(getFileExt(filePath));
+				currFile = filePath;
 			} else { // 失败
 				that_div.remove();
 				showMsg(msg + "，请稍后再尝试");
 			}
+			editor.getSession().setValue("");
 		});
 	}
 	$(".item-name").live("click", itemActionCb); // 重新为dt注册事件
