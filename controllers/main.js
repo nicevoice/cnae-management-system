@@ -10,7 +10,7 @@ var config = require('../config')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
   , uploadDir = config.uploadDir
-  , onOff = require('../socket').onOff
+  , onOff = require('../lib/socket').onOff
   , exec  = require('child_process').exec;
   /***
    * 显示主页面
