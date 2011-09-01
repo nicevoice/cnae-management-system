@@ -416,6 +416,6 @@ exports.applog = function(req, res){
 //		console.log("fire err");
 //		getLogsEvent.fire("err", data);
 //	})
-//};
+};
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};
