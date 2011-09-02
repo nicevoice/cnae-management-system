@@ -4,10 +4,10 @@ $(function(){
 	getOutput("stderr");
 	outTimer = window.setInterval(function(){
 		getOutput("stdout");
-	}, 20000);
+	}, 10000);
 	errTimer = window.setInterval(function(){
 		getOutput("stderr");
-	}, 20000);	
+	}, 10000);	
 })
 
 function getOutput(action){
