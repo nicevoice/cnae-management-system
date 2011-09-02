@@ -7,7 +7,7 @@ $(function(){
 
 emailBlur = function(){
 	var email = $("#newEmail").val()||'';
-	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_\.\-]+@(\w+)\.(\w){2,4}$/;
 	if(!regEmail.exec(email)){
 		$("#emailWarn").html("请输入合法的email地址"); 
 		return false;
@@ -30,7 +30,7 @@ emailFocus = function(){
 
 nameBlur = function(){
 	var name = $("#newUserName").val()||'';
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 	if(!regName.exec(name)){
 		$("#nameWarn").html("昵称由2～20个字母/数字组成"); 
 		return false;
@@ -54,7 +54,7 @@ nameFocus = function(){
 
 passBlur = function(){
 	var password = $("#newPassword").val()||'';
-	var regPass = /^(\w){6,20}$/;
+	var regPass = /^(\w){6,20}$/
 	if(!regPass.exec(password)){
 		$("#passwordWarn").html("密码必须为6～20位字符和数字"); 
 		return false;

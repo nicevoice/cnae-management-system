@@ -178,7 +178,7 @@ var config = require('../config')
  * @param {} res
  */
 exports.showNewApp = function(req, res){
-  res.render("newApp", {nickName:req.session.nickName, email:req.session.email});
+  res.render("newApp", {layout:"layoutMain",nickName:req.session.nickName, email:req.session.email});
 }
 
 exports.deleteApp = function(req, res){

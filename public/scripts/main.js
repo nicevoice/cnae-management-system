@@ -63,6 +63,7 @@ $.ajax({
       else{
 		$("#coop"+domain + " img").attr('src', '/images/arrow.gif');
       	$("#active"+domain).css("display", "none");
+      	$("#inactived"+domain).removeClass("inactiveApp");
       	}
    	}
 });	
@@ -87,6 +88,15 @@ $.ajax({
       else{
 	      var deleteNode = document.getElementById("coop"+domain);
 	      deleteNode.parentNode.removeChild(deleteNode);
+	      	$('div .otherApp').each(function(index) {
+			$(this).unbind("mouseenter").unbind("mouseleave");
+			$(this).mouseenter(function() {
+			$('.otherApp span:eq(' + index + ')').css("display", "block");
+			});
+			$(this).mouseleave(function() {
+			$('.otherApp span:eq(' + index + ')').css("display", "none");
+			});
+	});
       	}
    	}
 });	
