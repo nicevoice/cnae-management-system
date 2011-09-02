@@ -420,7 +420,7 @@ exports.getStatus = function(req, res){
 	var domain = req.params.domain||'';
 	console.log(domain);
 	onOff("status", domain, function(socketRes){
-		log.info(socketRes);
+		console.log(socketRes);
 		if(socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
