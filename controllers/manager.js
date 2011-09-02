@@ -322,19 +322,17 @@ exports.doUpload = function(req, res){
 					}
 					fs.chmod(savePath, '444', function(err){
 						if(err){
-						log.error(err);
 						return res.render("error", {message:"修改权限错误"});
 						}
 						exec('tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain, 
 						function(err, stdout, stderr){
-							log.error(stderr);
 							exec('rm -rf '+savePath, function(err){
 								if(err){
-									log.error("exec delete error:"+err);
+									console.log(err);
 								}
 							})
 							if(err){
-								log.error("exec ungzip error:"+err);
+								console.log(err);
 							}
 						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
