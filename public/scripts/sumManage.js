@@ -61,15 +61,20 @@ function setStatus(){
 			appStatusInfo="",//显示应用状态信息
 			appButtonName="";//显示button的名字
 		//填入域名信息
-		for(var i=0, len=status.ports.length; i<len; ++i){
-			var port = status.ports[i];
-			if(port==80){
-				port = "";
-			}else{
-				port = ":" + port;
+		if(status.ports.length == 0){
+			appDomains = '<a href="http://'+domain+'.cnodejs.net'+port+
+				'" target="_blank">'+domain+'.cnodejs.net</a> <span class="redText">未启动</sapn>';
+		}else{
+			for(var i=0, len=status.ports.length; i<len; ++i){
+				var port = status.ports[i];
+				if(port==80){
+					port = "";
+				}else{
+					port = ":" + port;
+				}
+				appDomains+='<a href="http://'+domain+'.cnodejs.net'+port+
+				'" target="_blank">'+domain+'.cnodejs.net'+port+'</a><br />';
 			}
-			appDomains+='<a href="http://'+domain+'.cnodejs.net'+port+
-			'"  target="_blank">'+domain+'.cnodejs.net'+port+'<br />';
 		}
 		//填入是否启用信息
 		if(status.running===true){
