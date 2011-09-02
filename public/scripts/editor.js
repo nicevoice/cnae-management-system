@@ -170,7 +170,7 @@ function restart(){
 				$.ajax({
 					cache:false,
 					type:"post",
-					url:"/application/manage/"+domain+"/controlApp",
+					url:"/application/manage/"+DOMAIN+"/controlApp",
 					dataType:"json",
 					data:{action:"start"},
 					error:function(){
