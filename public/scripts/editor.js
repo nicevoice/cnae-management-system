@@ -163,8 +163,6 @@ function restart(){
 		showMsg2("重启失败");
 	},
 	success:function(data){
-		getOutput("stdout");
-		getOutput("stderr");
 		if(data.satus!=="ok"){
 			if(data.code==202){	//not found错误，则改为上线
 				$.ajax({
@@ -206,6 +204,8 @@ function restart(){
 				getOutput("stderr");
 			}, 3000);
 		}
+		getOutput("stdout");
+		getOutput("stderr");
 	}
 	});	
 }
