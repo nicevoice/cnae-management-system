@@ -52,7 +52,7 @@ function generate(){
 			sAlert("警告","生成错误，请稍后再试");
 		}else{
 		$("#inviteCode").html($("#inviteCode").attr("class")+data.code);
-		$("#sendInviteByEmail").show(");
+		$("#sendInviteByEmail").show();
 		}
 	}
 	});
