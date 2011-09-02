@@ -104,7 +104,7 @@ function verifyCookie(req, res){
 				if(code !== infos[2])
 					return checkCookieEvent.fire("checked", false);
 				else{
-					req.session.nickName = data.nickName;
+					req.session.nickName = data.nickName.toString();
 					req.session.email = data.email;
 					req.session.cookie.expires = false;
 					return checkCookieEvent.fire("checked", true);
@@ -188,8 +188,8 @@ function hasNotLogin(req, res, next){
 
 //检测是否有权限访问这个应用
 function checkAuth(req, res, next){
-	var domain = req.params.id;
-	var email = req.session.email;
+	var domain = req.params.id||"";
+	var email = req.session.email||"";
 	app_mem.findOne({appDomain: domain.toString(), email:email.toString()}, 
 	function(err , data){
 		if(err){
@@ -280,6 +280,10 @@ app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAu
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 app.post("/application/manage/:id/controlApp", hasLogin, checkChangeAuth(2), manager.doControlApp);
+app.post("/application/manage/:id/getStdOutput", hasLogin,checkAuth, manager.getStdOutput);
+//app.post("/application/manage/:id/getStatus", hasLogin, manager.getStatus);
+app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getStatus);
+
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);

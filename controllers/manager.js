@@ -1,5 +1,5 @@
 var config = require('../config')
-  , sendMail = require('../controllers/sendMail')
+  , sendMail = require('../lib/sendMail')
   , fs = require('fs')
   , path = require('path')
   , util = require('util')
@@ -405,22 +405,28 @@ exports.applog = function(req, res){
 	var url = req.url,
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
-	var getLogsEvent = new EventProxy();
-	getLogsEvent.assign("out", "err", function(stdout, stderr){
-	stdout = stdout||'';
-	stderr = stderr||'';
-	console.log("render");
 	res.render("appLogManage", {url:url, nickName:req.session.nickName,
-	email:req.session.email, stdout:stdout, stderr:stderr});
-	});
-	getLog("stdout", domain, 1000, function(data){
-		console.log("fire out");
-		getLogsEvent.fire("out", data);
-	});
-	getLog("stderr", domain, 1000, function(data){
-		console.log("fire err");
-		getLogsEvent.fire("err", data);
-		})
+	email:req.session.email,domain:domain});
 };
+exports.getStdOutput = function(req, res){
+	var domain = req.params.domain,
+		action = req.body.action;
+	getLog(action, domain, 1000, function(data){
+		return resAjax(res, {output:data});
+	});
+}
+
+exports.getStatus = function(req, res){
+	var domain = req.params.domain;
+	onOff(domain, "status", function(socketRes){
+		if(socketRes.msg){
+			socketRes={rss:"", heap:"",uptime:"",
+			last:"",pid:"",autorun:"",running:"", ports:[80]};
+		}else{
+		socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
+		}
+		return resAjax(res, socketRes);
+	})
+	}
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};

@@ -1,5 +1,5 @@
 var config = require('../config'),
-	sendMail = require('../controllers/sendMail'),
+	sendMail = require('../lib/sendMail'),
 	mails = sendMail.mails,
 	mailEvent =sendMail.mailEvent,
 	nodemailer = config.nodemailer,	

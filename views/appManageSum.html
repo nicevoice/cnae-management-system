@@ -37,27 +37,11 @@
     	    	    <div id="appInfos" class="borderRadius5">
     		<table>
     		<tr><td>应用域名：</td>
-    		<td>
-    		<%for(var i=0, len=status.ports.length; i<len; ++i){
-    			var port = status.ports[i];
-    			if(port==80){
-    				port = "";
-    			}else{
-    				port = ":"+port;
-    			}
-    		%>
-    		<a href="http://<%=domain||''%>.cnodejs.net<%=port%>"  target="_blank">
-    		<%=domain||''%>.cnodejs.net<%=port%><br />
-    		<%}%>
+    		<td id="appDomains">
     		</td></tr>
     		<tr><td>应用名称：</td><td><%=appName||''%></td></tr>
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes">
-   			<%if(status.running===true){%>
-   				已启动
-   			<%}else{%>
-   				未启动
-   			<%}%>
    			</td></tr>
    		</table>
    		<h3>应用状态信息</h3>
@@ -65,14 +49,10 @@
    			<tr>
    			<th>rss</th><th>heap</th><th>uptime</th><th>last</th><th>pid</th>
    			</tr>
-   			<tr>
-   			<td><%=status.rss%></td><td><%=status.heap%></td><td><%=status.uptime%></td>
-   			<td><%=status.last%></td><td><%=status.pid%></td>
+   			<tr id="statusInfo">
    			</tr>
    		</table>
-   		<input type="button" class="button_orange r3px" id="controlApp" 
-   		<%if(status.running===true){%> value="下线"
-   		<%}else{%> value="上线"<%}%>>
+   		<input type="button" class="button_orange r3px" id="controlApp">
     	<input type="button" class="button_orange r3px" id="controlAppRestart"
     	value="重启"> 
     	</div>

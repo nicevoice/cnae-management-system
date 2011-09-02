@@ -4,9 +4,13 @@ var currPath = ROOT_PATH; // 当前路径
 var currFile; // 当前文件
 var currNode; // 当前文件DOM
 var changed = false; // 当前文件被改变的标记
-
+var domain;	//当前项目
+var outTimer, errTimer;	//获取stdoutput的定时器，点击重启应用以后开始每10s获取一次
 window.onload = function() {
-	
+	//获取当前项目
+	domain = $("#appname").html();
+	//绑定重启事件
+	$('#restart').click(restart);
 	// 初始化编辑器
 	editor = ace.edit("editor");
 	canon = require("pilot/canon");
@@ -49,7 +53,7 @@ window.onload = function() {
 		delfile: "/editor/" + DOMAIN + "/delfile",
 		mkdir: "/editor/" + DOMAIN + "/mkdir",
 		deldir: "/editor/" + DOMAIN + "/deldir",
-		renamefile: "/editor/" + DOMAIN + "/renamefile",
+		renamefile: "/editor/" + DOMAIN + "/renamefile"
 		
 	};
 	
@@ -96,6 +100,54 @@ window.onload = function() {
 	setNavAction();
 	setToolbarAction();
 };
+//重启应用
+function restart(){
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/controlApp",
+	dataType:"json",
+	data:{action:"restart"},
+	error:function(){
+		sAlert("警告","操作失败");
+	},
+	success:function(data){
+		getOutput("stdout");
+		getOutput("stderr");
+		if(data.status!=="ok"){
+			sAlert("警告",data.msg)
+		}else{
+			sAlert("","成功启动")
+			window.clearInterval(outTimer);
+			window.clearInterval(errTimer);
+			outTimer = window.setInterval(function(){
+				getOutput("stdout");
+			}, 10000);
+			errTimer = window.setInterval(function(){
+				getOutput("stderr");
+			}, 10000);
+		}
+	}
+	});	
+}
+//获取stdErr和stdOut
+function getOutput(action){
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/getStdOutput",
+	dataType:"json",
+	data:{action:action},
+	error:function(){
+		$("#"+action).html(action + "获取失败");
+	},
+	success:function(data){
+		$("#"+action).html(data.output);
+	}
+	});	
+}
+
+
 
 function showMsg(content) {
 	var msger = $("#msg");
