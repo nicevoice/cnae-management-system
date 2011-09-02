@@ -23,7 +23,6 @@ $(function(){
 //设置应用信息
 function setStatus(){
 	var domain = $("#appDomain").html()||'';
-	alert(domain);
 	$.ajax({
 	cache:false,
 	type:"post",
