@@ -20,6 +20,25 @@ $(function(){
 	}
 	});
 })
+function formatUptime(uptime){
+	uptime = Math.round(uptime);
+	var cut = [86400, 3600, 60, 1];
+	var name = ['天', '小时', '分钟', '秒']
+	var res = [], num;
+	for (var i = 0; i < cut.length; i++) {
+		if (uptime == 0){
+			break;
+		}
+		num = cut[i];
+		if (uptime < num) {
+			continue;
+		}
+		res.push(Math.floor(uptime / num) + name[i]);
+		uptime = uptime % num;
+	}
+	return res.join(' ');
+}
+
 //设置应用信息
 function setStatus(){
 	var domain = $("#appDomain").html()||'';
@@ -56,9 +75,9 @@ function setStatus(){
 			appButtonName = "上线";
 		}
 		//填入详细应用信息
-		appStatusInfo =  '<td>'+status.rss+'</td>' +
-						 '<td>'+status.heap+'</td>' +
-						 '<td>'+status.uptime+'</td>' +
+		appStatusInfo =  '<td>'+parseFloat((status.rss / 1048576).toFixed(2))+'MB</td>' +
+						 '<td>'+parseFloat((status.heap / 1048576).toFixed(2))+'MB</td>' +
+						 '<td>'+formatUptime(status.uptime)+'</td>' +
 						 '<td>'+status.last+'</td>' +
 						 '<td>'+status.pid+'</td>';
 		$("#appDomains").html(appDomains);

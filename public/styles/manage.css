@@ -96,6 +96,7 @@ display:none;
 #status{
 position:relative;
 left:-10%;
+width:600px;
 }
 #status, #status td, #status th{
 border:1px solid #aaa;
