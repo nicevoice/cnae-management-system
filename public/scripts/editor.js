@@ -121,6 +121,8 @@ window.onbeforeunload = function() {
 
 //重启应用
 function restart(){
+	$("#stdout").html("standard output here..");
+	$("#stderr").html("standard error here..");
 	$.ajax({
 	cache:false,
 	type:"post",

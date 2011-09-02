@@ -52,7 +52,7 @@ function generate(){
 			sAlert("警告","生成错误，请稍后再试");
 		}else{
 		$("#inviteCode").html($("#inviteCode").attr("class")+data.code);
-		$("#sendInviteByEmail").show("slow");
+		$("#sendInviteByEmail").show(");
 		}
 	}
 	});
@@ -96,7 +96,7 @@ function sendThisInvite(which){
 	var code = id.split("&")[1];
 	if(!code) return false;
 	$("#inviteCode").html(code);
-	$("#sendInviteByEmail").show("slow");	
+	$("#sendInviteByEmail").show();	
 }
 
 function deleteInvite(which){
