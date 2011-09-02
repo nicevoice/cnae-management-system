@@ -211,7 +211,7 @@ exports.doCoopmng = function(req, res){
 		words = req.body.inviteWords||'',
 		role = req.body.role,
 		domain = req.params.id,
-		regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
+		regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
 		body;
 	//未输入
 	if(!email){

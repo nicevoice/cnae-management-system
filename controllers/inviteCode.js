@@ -83,7 +83,7 @@ exports.sendInviteCode = function(req, res){
 		content = config.inviteMailContent||'',
 		email = req.body.email||'',
 		code = req.body.code||'';
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(email)){
 		return resAjax(res, {done:false, warn:"请输入合法的email地址"}) 
 	}

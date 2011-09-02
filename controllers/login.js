@@ -37,7 +37,7 @@ exports.checkLogin = function(req, res){
 		password = req.body.password,
 		autoLogin = req.body.autoLogin;
 	//验证用户输入
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
 		return res.render("login", { warn:"用户名格式不正确"});
 	var regPassword = /^(\w){6,20}$/;
@@ -98,7 +98,7 @@ exports.checkRegist = function(req, res){
 	, code = req.body.inviteCode;
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
 		return res.render("error", {message:"请输入合法的email地址"});
 	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
@@ -186,7 +186,7 @@ exports.checkRegist = function(req, res){
  */
 exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
 		return resAjax(res, {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){

@@ -42,10 +42,8 @@ exports.smtp = {
     host: 'smtp.gmail.com',
     port: 465,
     use_authentication: true,
-    ssl: true,
     user: "heyiyu.deadhorse@gmail.com",
-    pass: "heyiyuaaqq12",
-    debug: true
+    pass: "heyiyuaaqq12"
 };
 
 exports. uploadDir = "/home/admin/cnae/git/cnode-app-engine/apps";

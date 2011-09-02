@@ -12,6 +12,16 @@ var config = require('../config')
   , uploadDir = config.uploadDir
   , onOff = require('../lib/socket').onOff
   , exec  = require('child_process').exec;
+  
+  /***
+   * 临时用来显示文档中心。（暂时不存在）
+   * @param {} req
+   * @param {} res
+   */
+  exports.showDoc = function(req, res){
+  	 res.render("doc", {layout:"layoutMain", nickName:req.session.nickName, email:req.session.email});
+  }
+
   /***
    * 显示主页面
    * @param {} req

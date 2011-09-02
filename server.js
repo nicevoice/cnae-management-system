@@ -257,10 +257,12 @@ app.post("/join", hasLogin, main.joinApp);
 app.post("/deleteCoop", hasLogin, main.deleteCoop)
 app.post("/checkAppDomain", hasLogin, main.checkAppDomain);
 app.post("/checkAppName", hasLogin, main.checkAppDomain);
-//联系
+//反馈
 app.get("/feedback", hasLogin, feedback.show);
-//应用管理模块
+//文档中心
+app.get("/doc", hasLogin, main.showDoc);
 
+//应用管理模块
 app.get("/application/manage/:id", function(req, res, next){next();});
 app.get("/application/manage/:id/sum", hasLogin, checkAuth, manager.sum);
 app.get("/application/manage/:id/report", hasLogin, checkAuth, manager.report);

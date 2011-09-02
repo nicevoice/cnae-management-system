@@ -29,7 +29,7 @@
   background-color: #799;
 }
 #navigation ul {
-  width: 100%;
+  //width: 100%;
   overflow: hidden;
 
 }
@@ -38,17 +38,31 @@
 }
 #navigation li a {
   display: block;
-  float: left;
   padding: .5em 2em;
   text-decoration: none;
   font-weight: bold;
 }
-
+#leftNav{
+position:relative;
+float:left;
+width:60%;
+}
+#leftNav a{
+float: left;
+}
+#rightNav{
+position:relative;
+float:right;
+width:30%;
+}
+#rightNav a, #rightNav li{
+float:right;
+}   
 .nickName{
-color:#eee;
-font-size:14px;
-line-height:200%;
-margin-left: 20%;
+  color:#eef;
+  padding: .5em 2em;
+  text-decoration: none;
+  font-weight: bold;
 }
 #appH2{
   padding: 10px;
