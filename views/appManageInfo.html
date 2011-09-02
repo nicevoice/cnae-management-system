@@ -1,40 +1,8 @@
-   <div id="navigation">
-    	<ul>
-    	<li><a href="/application">我的应用</a></li>
-    	<li><a href="/userCenter">个人中心</a></li>
-      	<li><a href="/feedback">反馈信息</a></li>
-       	<%var isAdmin = false;
-      	for(var i=0, len=config.admins.length; i<len; ++i){
-      		if(email == config.admins[i]){
-      			isAdmin = true;
-      		}
-      	}
-      	if(isAdmin){%>
-      	<li><a href="/inviteCode">发出邀请</a></li>
-      	<%}%>
-    	<li><a href="/logout">退出</a></li>
-    	<li class="nickName"><%=nickName%>,欢迎登录！<li>
-    	</ul>
-    </div>
-    <div id="appManage" class="clearfix">
-    	<div class="left borderRadius5">
-     		<ul id="sidebar">
-    		<li><h3>应用信息</h3></li>
-    		<li><a href="<%=url%>/sum">汇总信息</a></li>
-    		<li><h3>应用管理</h3></li>
-    		<li><a href="<%=url%>/appmng">应用设置</a></li>
-    		<li><a href="<%=url%>/coopmng">成员管理</a></li>
-    		<li><a href="<%=url%>/vermng">代码管理</a></li>
-    		<li><a href="<%=url%>/mnglog">管理记录</a></li>
-    		<li><h3>应用调优</h3></li>
-    		<li><a href="<%=url%>/applog">日志中心</a></li>
-    		</ul>
-    	</div>
-    	<div class="right borderRadius5">
+
     	<div class="subTitle"><img src="/images/arrow.gif"></img>
     	<span id="appDomain"><%=appInfo.appDomain%></span><img src="/images/arrow.gif"></img>应用设置
     	</div>
-    		    	<div class="borderRadius5 subContent">
+    		    	<div class=" subContent">
 	    	<form method="post" action="<%=url%>/appmng">
 	    		<p>子域名：<span id="submitAppDomain"> <%=appInfo.appDomain||''%></span></p>
 				<p>应用名：<input type="text" id="newAppName" name="newAppName" value="<%=appInfo.appName||''%>"></p>
@@ -46,6 +14,5 @@
 	    		<input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">
 	    	</form>
 	    	</div>
-    </div>
     <script type="text/javascript" src="/scripts/infoManage.js"></script>    
     

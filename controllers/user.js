@@ -23,7 +23,7 @@ exports.userInfo = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("userInfo", {user:data, nickName:req.session.nickName, email:req.session.email});
+			res.render("userInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
 		}		
 	})
 }
@@ -39,7 +39,7 @@ exports.changeInfo = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("changeInfo", {user:data, nickName:req.session.nickName, email:req.session.email});
+			res.render("changeInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
 		}		
 	})
 }
@@ -49,7 +49,7 @@ exports.changeInfo = function(req, res){
  * @param {} res
  */
 exports.changePassword = function(req, res){
-	res.render("changePassword", {nickName:req.session.nickName, email:req.session.email});
+	res.render("changePassword", {layout:"layoutUser", nickName:req.session.nickName, email:req.session.email});
 }
 /***
  * 处理修改信息请求
@@ -61,7 +61,7 @@ exports.doChangeInfo = function(req, res){
 		newRealName = req.body.changeRealName||'',
 		newTelNumber = req.body.changeTelNumber||'',
 		newMainPage = req.body.changeMainPage||'';
-	var regName = /^([a-zA-Z0-9]|[._]){5,20}$/;
+	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
 	if(!regName.exec(newNickName)){
 		return resAjax(res,{done:false, message:"请输入合法的昵称"});
 	}
@@ -99,7 +99,7 @@ exports.doChangePassword = function(req, res){
 	var oldPassword = req.body.oldPassword,
 		newPassword = req.body.changePassword,
 		confirmation = req.body.changeConfirmation;
-	var regPass = /^([a-zA-Z0-9]){6,20}$/;
+	var regPass = /^(\w){6,20}$/;
 	if(!regPass.exec(newPassword)){
 			return resAjax(res,{done:false, message:"密码必须为6～20位字符或者数字"});
 	}

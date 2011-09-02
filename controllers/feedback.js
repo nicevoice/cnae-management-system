@@ -11,7 +11,7 @@ var config = require('../config'),
  * @param {} res
  */
 exports.show = function(req, res){
-	res.render("feedBack",{nickName:req.session.nickName, email:req.session.email});	
+	res.render("feedBack",{layout:"layoutMain",nickName:req.session.nickName, email:req.session.email});	
 }
 /***
  * 处理反馈提交

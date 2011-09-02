@@ -37,21 +37,21 @@ exports.checkLogin = function(req, res){
 		password = req.body.password,
 		autoLogin = req.body.autoLogin;
 	//验证用户输入
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
-		return res.render("login", {warn:"用户名格式不正确"});
+		return res.render("login", { warn:"用户名格式不正确"});
 	var regPassword = /^(\w){6,20}$/;
 	if(!regPassword.exec(password))
-		return res.render("login", {warn:"密码须为6～20个字母或者数字组成"});
+		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
 	users.findOne({email:userEmail.toString(), password:password.toString()}, function(err, item){
 		if(err){
 			log.error(err);
-			return res.render("login", {warn:"用户名或密码错误"});
+			return res.render("login", { warn:"用户名或密码错误"});
 		}
 		else{
 			if(!item)
-				return res.render("login", {warn:"用户名或密码错误"});
+				return res.render("login", { warn:"用户名或密码错误"});
 			else{
 				console.log("login");
 				if(autoLogin){
@@ -98,12 +98,12 @@ exports.checkRegist = function(req, res){
 	, code = req.body.inviteCode;
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
 		return res.render("error", {message:"请输入合法的email地址"});
-	var regName = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/;
+	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
 	if(!regName.exec(userNickName))
-		return res.render("error", {message:"昵称必须为5～20个字母开头，可以带数字_.的字符串"});
+		return res.render("error", {message:"昵称由2～20个字母/数字/._组成"});
 	if(userPassword != userPasswordCon)
 		return res.render("error", {message:"两次密码输入不一致"});
 	var regPassword = /^(\w){6,20}$/;
@@ -186,7 +186,7 @@ exports.checkRegist = function(req, res){
  */
 exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(userEmail))
 		return resAjax(res, {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){
@@ -209,9 +209,9 @@ exports.checkEmail = function(req, res){
  */
 exports.checkName = function(req, res){
 	var name = req.body.name;
-	var regName = /^([a-zA-Z0-9]|[._]){5,20}$/;
+	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
 	if(!regName.exec(name))
-		return resAjax(res, {warn:"昵称为5～20个字符或数字"});
+		return resAjax(res, {warn:"昵称为2～20个字符或数字或._"});
 	if(req.session.nickName && req.session.nickName===name)
 		return resAjax(res, {warn:""});
 	users.findOne({nickName:name}, function(err, data){

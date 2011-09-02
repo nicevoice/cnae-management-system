@@ -33,7 +33,7 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
-			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
+			return res.render("appManageSum", {layout:"layoutApp", url:url, domain:domain,appName:data.appName,appDes:data.appDes,
 			nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
@@ -82,7 +82,7 @@ exports.report = function(req, res){
 	var domain = req.params.id;
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
-	return res.render("appManageReport", {url:url, domain:domain
+	return res.render("appManageReport", {layout:"layoutApp", url:url, domain:domain
 	, nickName:req.session.nickName, email:req.session.email});
 }
 
@@ -99,7 +99,7 @@ exports.appmng = function(req, res){
 			log.error(err);
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("appManageInfo", {appInfo:data, 
+			res.render("appManageInfo", {layout:"layoutApp", appInfo:data, 
 			nickName:req.session.nickName, url:url, email:req.session.email});
 		}
 	})
@@ -162,7 +162,7 @@ exports.coopmng = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	var coopEvent = new EventProxy();
 	coopEvent.assign("getMems", "getOwn", function(){
-		return res.render("appManageCoop", {url:url, nickName:req.session.nickName,
+		return res.render("appManageCoop", {layout:"layoutApp", url:url, nickName:req.session.nickName,
 		mems:arguments[0], own:arguments[1], email:req.session.email});	
 	});
 	app_mem.find({appDomain:domain}).toArray(function(err, data){
@@ -211,7 +211,7 @@ exports.doCoopmng = function(req, res){
 		words = req.body.inviteWords||'',
 		role = req.body.role,
 		domain = req.params.id,
-		regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+		regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 		body;
 	//未输入
 	if(!email){
@@ -300,7 +300,7 @@ exports.vermng = function(req, res){
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	var domain = req.params.id||'';
-	res.render("appManageCode", {domain:domain,url:url,
+	res.render("appManageCode", {layout:"layoutApp", domain:domain,url:url,
 	nickName:req.session.nickName, email:req.session.email});
 };
 
@@ -383,7 +383,7 @@ exports.mnglog = function(req, res){
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
 			
-					return res.render("appManageRecords", {records:data,
+					return res.render("appManageRecords", {layout:"layoutApp", records:data,
 					domain:domain, nickName:req.session.nickName,
 					url:url, pages:totalPage, page:page, email:req.session.email});
 				
@@ -397,7 +397,7 @@ exports.applog = function(req, res){
 	var url = req.url,
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
-	res.render("appLogManage", {url:url, nickName:req.session.nickName,
+	res.render("appLogManage", {layout:"layoutApp", url:url, nickName:req.session.nickName,
 	email:req.session.email,domain:domain});
 };
 exports.getStdOutput = function(req, res){

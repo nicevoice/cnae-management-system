@@ -22,7 +22,7 @@ var config = require('../config')
  	var getAppEvent = new EventProxy();
  	//当获取到自己的应用和参与的应用之后，才进行页面跳转
  	getAppEvent.assign("getOwns","getOthers",function(owns, others){
- 		res.render("main", {ownApps:owns, otherApps:others, nickName:req.session.nickName, email:req.session.email});
+ 		res.render("main", {layout:"layoutMain",ownApps:owns, otherApps:others, nickName:req.session.nickName, email:req.session.email});
  	});
  	//从app_mem中查找自己的应用
  	app_mem.find({email:req.session.email.toString(), 

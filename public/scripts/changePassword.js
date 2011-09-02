@@ -6,7 +6,7 @@ $(function(){
 
 passBlur = function(){
 	var password = $("#changePassword").val()||'';
-	var regPass = /^([a-zA-Z0-9]){6,20}$/;
+	var regPass = /^(\w){6,20}$/;
 	if(!regPass.exec(password)){
 		$("#passwordWarn").html("密码必须为6～20位字符和数字"); 
 	}else{
@@ -40,7 +40,7 @@ submitChangePassword = function(){
 	var oldPassword= $("#oldPassword").val();
 	var changePassword = $("#changePassword").val();
 	var changeConfirmation = $("#changeConfirmation").val();
-	var regPass = /^([a-zA-Z0-9]){6,20}$/;
+	var regPass = /^(\w){6,20}$/;
 	if(!regPass.exec(changePassword)){
 			sAlert("警告","密码必须为6～20位字符或者数字");
 			return false;

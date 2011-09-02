@@ -30,7 +30,7 @@ exports.showInviteCode = function(req, res){
 				log.error(err);
 				res.render("error", {message:"数据库查询错误"});
 			}
-			res.render("inviteCode", {nickName:req.session.nickName||'',
+			res.render("inviteCode", {layout:"layoutMain", nickName:req.session.nickName||'',
 			codes:data, pages:totalPage, page:page, email:req.session.email});
 			});
 		}
@@ -83,7 +83,7 @@ exports.sendInviteCode = function(req, res){
 		content = config.inviteMailContent||'',
 		email = req.body.email||'',
 		code = req.body.code||'';
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(email)){
 		return resAjax(res, {done:false, warn:"请输入合法的email地址"}) 
 	}

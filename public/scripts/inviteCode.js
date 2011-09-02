@@ -62,11 +62,13 @@ function sendInvite(){
 	var code = $("#inviteCode").html(),
 		email  =$("#email").val()||'';
 	if(code==="请点击生成按钮"){
-		return sAlert("警告","请先生成邀请码！");
+		sAlert("警告","请先生成邀请码！");
+		return false; 
 	}
-	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).com$/;
+	var regEmail = /^[a-zA-Z0-9][a-zA-Z0-9_/.]+@(\w+).(\w){2,4}$/;
 	if(!regEmail.exec(email)){
-		return sAlert("警告","请输入合法的email地址"); 
+		sAlert("警告","请输入合法的email地址");
+		return false;
 	}
 	$.ajax({
     cache:false,

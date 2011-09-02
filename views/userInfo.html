@@ -1,34 +1,7 @@
-   <div id="navigation">
-    	<ul>
-    	<li><a href="/application">我的应用</a></li>
-    	<li><a href="/userCenter">个人中心</a></li>
-      	<li><a href="/feedback">反馈信息</a></li>
-       	<%var isAdmin = false;
-      	for(var i=0, len=config.admins.length; i<len; ++i){
-      		if(email == config.admins[i]){
-      			isAdmin = true;
-      		}
-      	}
-      	if(isAdmin){%>
-      	<li><a href="/inviteCode">发出邀请</a></li>
-      	<%}%>
-    	<li><a href="/logout">退出</a></li>
-    	<li class="nickName"><%=nickName%>,欢迎登录！<li>
-    	</ul>
-    </div>
-    <div id="appManage" class="clearfix">
-    	<div class="left borderRadius5">
-    		<ul id="sidebar">	
-    		<li><a href="/userCenter/userInfo">我的信息</a></li>
-    		<li><a href="/userCenter/changeInfo">修改信息</a></li>
-    		<li><a href="/userCenter/changePassword">修改密码</a></li>
-    		</ul>
-    	</div>
-    	<div class="right borderRadius5">
-    	<div class="subTitle">
+     	<div class="subTitle">
     	<img src="/images/arrow.gif"></img>我的信息
     	</div>
-    	<div id="myInfos" class="borderRadius5 subContent">
+    	<div id="myInfos" class=" subContent">
     		<table>
     		<tr><td>昵称：<td/><td><%=user.nickName%></td></tr>
     		<tr><td>邮箱：<td/><td><%=user.email%></td></tr>
@@ -37,5 +10,3 @@
     		<tr><td>主页：<td/><td><%=user.mainPage||''%></td></tr>
     		</table>
     	</div>
-    	</div>
-    </div>
