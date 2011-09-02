@@ -96,7 +96,6 @@ Date.prototype.format = function(format){
 //路由中间件
 
 function hasLogin(req, res, next){
-	console.log("hasLogin");
 	//如果session不存在，
 	if(!req.session.email || !req.session.nickName){
 		return res.redirect("/login");
@@ -105,7 +104,6 @@ function hasLogin(req, res, next){
 	}
 }
 function hasNotLogin(req, res, next){
-	console.log("hasNotLogin");
 	//如果session存在
 	if(!req.session.email || !req.session.nickName){
 		return next();
