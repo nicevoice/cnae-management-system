@@ -24,8 +24,12 @@ exports.db_app_mem = "nae_app_members";
 exports.db_app_basic ="nae_app_basic_infos";
 exports.db_app_records = "nae_app_manage_records";
 exports.db_inviteCode = "nae_inviteCode";
-//cookie
+//session
 exports.session_timeOut = 3600000*24*14;
+//正则
+exports.regEmail = /^[a-zA-Z0-9_\.\-]+@(\w+)\.(\w){2,4}$/;
+exports.regPass = /^(\w){6,20}$/;
+exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.ERROR, './my.log');
