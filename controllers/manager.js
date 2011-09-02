@@ -33,7 +33,6 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
-			onOff("status", domain, function(socketRes){
 			if(socketRes.msg){
 				socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
@@ -42,7 +41,6 @@ exports.sum = function(req, res){
 			}
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
 			status:socketRes,nickName:req.session.nickName, email:req.session.email});
-			})
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -412,6 +410,7 @@ exports.getStdOutput = function(req, res){
 	var domain = req.params.id||'',
 		action = req.body.action;
 	getLog(action, domain, 1000, function(data){
+		console.log("resAjax");
 		return resAjax(res, {output:data});
 	});
 }
