@@ -43,6 +43,13 @@
   text-decoration: none;
   font-weight: bold;
 }
+
+.nickName{
+color:#eee;
+font-size:14px;
+line-height:200%;
+margin-left: 20%;
+}
 #appH2{
   padding: 10px;
   margin: 30px 20px 0px 20px;

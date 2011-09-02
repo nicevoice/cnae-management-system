@@ -1,30 +1,40 @@
 var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currPath = ROOT_PATH; // 当前路径
-var currFile; // 当前文件
+var currFilePath; // 当前文件
 var currNode; // 当前文件DOM
 var changed = false; // 当前文件被改变的标记
-var domain;	//当前项目
 var outTimer, errTimer;	//获取stdoutput的定时器，点击重启应用以后开始每10s获取一次
+/*
+ * 动态设定编辑器尺寸
+ */
+function setEditorSize(h, w) {
+	if(typeof h == "undefined")
+		h = document.documentElement.clientHeight - (80 + 120);
+	if(typeof w == "undefined")
+		w = document.documentElement.clientWidth - 260;
+	$('#editor').css("height", h).css("width", w);
+}
+
+$(window).resize(function(){
+	// 编辑器尺寸自适应
+	setEditorSize();
+});
+
 window.onload = function() {
-	//获取当前项目
-	domain = $("#appname").html();
 	//绑定重启事件
 	$('#restart').click(restart);
+	// 定义编辑器尺寸
+	setEditorSize();
 	// 初始化编辑器
 	editor = ace.edit("editor");
 	canon = require("pilot/canon");
 	Renderer = require("ace/virtual_renderer").VirtualRenderer;
-
+	
 	// 初始化编辑器配色方案
 	editor.setTheme("ace/theme/textmate");
 	editor.renderer.getShowPrintMargin(true);
 	editor.renderer.setHScrollBarAlwaysVisible(false);
-		
-	// 动态计算编辑器的尺寸
-	var editorHeight = document.documentElement.clientHeight - (80 + 120);
-	var editorWidth = document.documentElement.clientWidth - 300;
-	$('#editor').css("height", editorHeight).css("width", editorWidth);
 	
 	// 绑定编辑器快捷键
 	canon.addCommand({
@@ -35,13 +45,20 @@ window.onload = function() {
 			sender: 'editor'
 		},
 		exec: function(env, args, request) {
-			saveFile(currFile);
+			saveFile(currFilePath);
 		}
 	});
 	
 	// 绑定编辑器事件
 	editor.getSession().on('change', function() {
 		changed = true;
+		var filename;
+		if(typeof currFilePath == "undefined") { // 
+			filename = "未命名";
+		} else {
+			filename = getFileName(currFilePath);
+		}
+		$("#tabs").html('<div class="tab">' + filename + '*</div>');
 	});
 	
 	// 初始化应用域名
@@ -54,7 +71,6 @@ window.onload = function() {
 		mkdir: "/editor/" + DOMAIN + "/mkdir",
 		deldir: "/editor/" + DOMAIN + "/deldir",
 		renamefile: "/editor/" + DOMAIN + "/renamefile"
-		
 	};
 	
 	// 支持的文件类型
@@ -84,48 +100,51 @@ window.onload = function() {
 	// 加载根目录文件列表
 	listFiles(currPath);
 	
-	// 边栏高亮样式
-	$(".list-item, .sub-menu-item").live({
-		"mouseenter": function() {
-			$(this).addClass("flhover");
-		},
-		"mouseleave": function() {
-			$(this).removeClass("flhover");
-		}
-	});
-	
 	// 注册事件
 	setSubmenuAction();
 	setItemAction();
 	setNavAction();
 	setToolbarAction();
+	
+	// 加载样式
+	setSidebarUI();
 };
+
+window.onbeforeunload = function() {
+	// 用户离开网页给出提示
+	if(changed) { // 文件被修改过
+		if(confirm("文件被修改过，是否保存？")) {
+			saveFile(currFilePath);
+		}
+	}
+}
+
 //重启应用
 function restart(){
 	$.ajax({
 	cache:false,
 	type:"post",
-	url:"/application/manage/"+domain+"/controlApp",
+	url:"/application/manage/"+DOMAIN+"/controlApp",
 	dataType:"json",
 	data:{action:"restart"},
 	error:function(){
-		sAlert("警告","操作失败");
+		showMsg("重启失败");
 	},
 	success:function(data){
 		getOutput("stdout");
 		getOutput("stderr");
 		if(data.status!=="ok"){
-			sAlert("警告",data.msg)
+			showMsg(data.msg);
 		}else{
-			sAlert("","成功启动")
+		    showMsg("重启成功");
 			window.clearInterval(outTimer);
 			window.clearInterval(errTimer);
 			outTimer = window.setInterval(function(){
 				getOutput("stdout");
-			}, 10000);
+			}, 3000);
 			errTimer = window.setInterval(function(){
 				getOutput("stderr");
-			}, 10000);
+			}, 3000);
 		}
 	}
 	});	
@@ -135,7 +154,7 @@ function getOutput(action){
 	$.ajax({
 	cache:false,
 	type:"post",
-	url:"/application/manage/"+domain+"/getStdOutput",
+	url:"/application/manage/"+DOMAIN+"/getStdOutput",
 	dataType:"json",
 	data:{action:action},
 	error:function(){
@@ -147,12 +166,28 @@ function getOutput(action){
 	});	
 }
 
-
-
+/*
+ * 显示顶部提示信息
+ */
 function showMsg(content) {
 	var msger = $("#msg");
-	msger.html(content).slideDown(2200, function() {
+	msger.html(content).slideDown(1200, function() {
 		msger.slideUp(600);
+	});
+}
+
+/*
+ * 设置边栏样式
+ */
+function setSidebarUI() {
+	// 鼠标划过高亮
+	$(".list-item, .sub-menu-item").live({
+		"mouseenter": function() {
+			$(this).addClass("flhover");
+		},
+		"mouseleave": function() {
+			$(this).removeClass("flhover");
+		}
 	});
 }
 
@@ -360,6 +395,19 @@ function getFileExt(str) {
 }
 
 /*
+ * 从文件路径获取文件名
+ */
+function getFileName(filePath) {
+	var fileName = "";
+	try {
+		var reg = /[^\\\/]*[\\\/]+/g; //xxx\或者是xxx/
+		fileName = filePath.replace(reg, "");
+		
+	} catch(e) {}
+	return fileName;
+}
+
+/*
  * 根据文件后缀名动态更换编辑器的语法检查模式
  */
 function setEditorMode(ext) {
@@ -389,43 +437,110 @@ function setEditorMode(ext) {
 	});
 }
 
+function createFile(fileContent) {
+	var file_list = $("#file-list");
+	$(".item-name").die(); // 暂时解除所有dt的事件
+	// 首先隐藏所有的二级目录
+	$(".sub-menu").hide(200);
+	var html = '<div class="list-item"><dl class="f clearfix" name="f">';
+		html += '<dt class="item-name"></dt>';
+		html += '<dd><div class="menu-btn"><img src="/images/icon_menu.png" /></div></dd>';
+		html += '</dl></div>';
+	var this_div = $(html);
+	this_div.appendTo(file_list);
+	var dt = this_div.children("dl").children("dt");
+	var input = '<input name="filename" value="" type="text" class="input" />';
+	$(input)
+		.appendTo(dt)
+		.focus() // 把焦点移到该元素上
+		.blur(function() {
+			createFileAfter(this, this_div, dt, fileContent);
+		})
+		.keyup(function(e) {
+			if(e.which == 13) {
+				createFileAfter(this, this_div, dt, fileContent);
+			}
+		});
+}
+
+function createFileAfter(that, that_div, dt, fileContent) {
+	var fileName = $(that).val(); // 取出<input>元素此时的值
+	if(fileName == null || fileName == "") {
+		that_div.remove();
+		showMsg("文件名不能为空");
+	} else {
+		var filePath = currPath + fileName;
+		var content = (typeof fileContent == "undefined") ? "" : fileContent;
+		writeFile(filePath, content, function(status, msg) {
+			$(that).remove(); // 移除该<input>元素
+			if(status) { // 成功
+				var _t = that_div.children("dl").children("dd").children(".menu-btn");
+				var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
+				_t.append(setSubmenu(_file));
+				dt.html(fileName);
+				// 公共事件更新
+				setEditorMode(getFileExt(filePath));
+				currFilePath = filePath;
+			} else { // 失败
+				that_div.remove();
+				showMsg(msg + "，请稍后再尝试");
+			}
+			editor.getSession().setValue(content);
+			if(status) { // 因为setValue会引起编辑器change事件，所以要把这两句放到setValue的后面
+				changed = false; // 重置文件修改标记
+				$("#tabs").html('<div class="tab">' + fileName + '</div>');
+			}
+		});
+	}
+	$(".item-name").live("click", itemActionCb); // 重新为dt注册事件
+}
+
 /*
  * 打开文件
  */
-function openFile(filePath) {
-	if(changed) { // 文件被修改过
-		if(confirm("文件被修改过，是否保存？")) saveFile(currFile);
-	}
+function openFile(name) {
+	var filePath = currPath + name;
 	var e = editor.getSession();
+	if(changed) { // 文件被修改过
+		if(confirm("文件被修改过，是否保存？")) saveFile(currFilePath);
+	}
 	e.setValue("");
 	readFile(filePath, function(status, content) {
 		if(status) {
 			// 依据文件后缀名更改编辑器的语法模式
 			setEditorMode(getFileExt(filePath));
 			e.setValue(content);
-			currFile = filePath;
+			currFilePath = filePath;
 			changed = false; // 重置文件修改标记
+			$("#tabs").html('<div class="tab" id="activing-tab">' + name + '</div>');
 		} else {
 			showMsg(content + "，请稍后再尝试");
 		}
 	});
-	
 }
 
 /*
  * 保存文件
  */
 function saveFile(filePath) {
-	var filePath = filePath.trim();
 	var content = editor.getSession().getValue();
-	writeFile(filePath, content, function(status, msg) {
-		if(status) {
-			changed = false; // 重置文件修改标记
-			// TODO:更新文件的mtime
-		} else {
-			showMsg(msg + "，请稍后再尝试");
-		}
-	});
+	// 判断是否要创建新文件
+	if(typeof filePath == "undefined") {
+		// 新文件
+		createFile(content);
+	} else {
+		var fileName = getFileName(filePath);
+		var filePath = filePath;
+		writeFile(filePath, content, function(status, msg) {
+			if(status) {
+				changed = false; // 重置文件修改标记
+				$("#tabs").html('<div class="tab">' + fileName + '</div>');
+				// TODO:更新文件的mtime
+			} else {
+				showMsg(msg + "，请稍后再尝试");
+			}
+		});
+	}
 }
 
 /*
@@ -438,7 +553,11 @@ function rmFile(filePath, node) {
 		if(status) { // 删除成功
 			// 删除 DOM 结点
 			node.hide(200);
-			if (filePath == currFile) e.setValue("");
+			if (filePath == currFilePath) {
+				e.setValue("");
+				$("#tabs").html("");
+				changed = false;
+			}
 		} else {
 			showMsg(msg + "，请稍后再尝试");
 		}
@@ -460,23 +579,6 @@ function rmDir(dirPath, node) {
 		}
 	});
 }
-
-/*
- * 查找
- */
-function finds() {
-	$needle = prompt("请输入要查找的内容：");
-	editor.find($needle, {
-		backwards: false,
-		wrap: false,
-		caseSensitive: false,
-		wholeWord: false,
-		regExp: true // 支持正则表达式
-	});
-	editor.findNext();
-//	editor.findPrevious();
-}
-
 
 /*
  * 边栏二级菜单显示/隐藏效果
@@ -504,8 +606,7 @@ function itemActionCb() {
 	var type = $(this).parent().attr("name");
 	var curPathDiv = $("#currentPath");
 	if(type == "f") { // is a file
-		var filePath = currPath + name;
-		openFile(filePath);
+		openFile(name);
 		currNode = $(this);
 	} else if (type == "d") { // is a directory
 		currPath = currPath + name + "/";
@@ -530,6 +631,11 @@ function dyRenameUI(that, oriName, dt) {
 		$(that).remove(); // 移除该<input>元素
 		if(status) { // 成功
 			dt.html(newName);
+			// 如果重命名的文件就是当前正在编辑的文件
+			if(oriPath == currFilePath) {
+				currFilePath = newPath;
+				$("#tabs").html('<div class="tab">' + newName + '</div>');
+			}
 		} else { // 失败
 			showMsg(errMsg);
 			dt.html(oriName);
@@ -596,37 +702,8 @@ function setItemAction() {
  */
 function setNavAction() {
 	$("#nav-save").click(function() {
-		saveFile(currFile);
+		saveFile(currFilePath);
 	});
-}
-
-function dyCreateFileUI(that, that_div, dt) {
-	var fileName = $(that).val(); // 取出<input>元素此时的值
-	if(fileName == null || fileName == "") {
-		that_div.remove();
-		showMsg("文件名不能为空");
-	} else {
-		var filePath = currPath + fileName;
-		var content = "";
-		writeFile(filePath, content, function(status, msg) {
-			$(that).remove(); // 移除该<input>元素
-			if(status) { // 成功
-				var _t = that_div.children("dl").children("dd").children(".menu-btn");
-				var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
-				_t.append(setSubmenu(_file));
-				dt.html(fileName);
-				// 公共事件更新
-				changed = false; // 重置文件修改标记
-				setEditorMode(getFileExt(filePath));
-				currFile = filePath;
-			} else { // 失败
-				that_div.remove();
-				showMsg(msg + "，请稍后再尝试");
-			}
-			editor.getSession().setValue("");
-		});
-	}
-	$(".item-name").live("click", itemActionCb); // 重新为dt注册事件
 }
 
 function dyCreateDirUI(that, that_div, dt) {
@@ -670,30 +747,10 @@ function setToolbarAction() {
 	});
 	// 创建新文件
 	$("#tb-newf").click(function() {
-		var file_list = $("#file-list");
-		$(".item-name").die(); // 暂时解除所有dt的事件
-		// 首先隐藏所有的二级目录
-		$(".sub-menu").hide(200);
-		var html = '<div class="list-item"><dl class="f clearfix" name="f">';
-			html += '<dt class="item-name"></dt>';
-			html += '<dd><div class="menu-btn"><img src="/images/icon_menu.png" /></div></dd>';
-			html += '</dl></div>';
-		var this_div = $(html);
-		this_div.appendTo(file_list);
-		var dt = this_div.children("dl").children("dt");
-		var input = '<input name="filename" value="" type="text" class="input" />';
-		$(input)
-			.appendTo(dt)
-			.focus() // 把焦点移到该元素上
-			.blur(function() {
-				dyCreateFileUI(this, this_div, dt);
-			})
-			.keyup(function(e) {
-				if(e.which == 13) {
-					dyCreateFileUI(this, this_div, dt);
-				}
-			});
-		
+		if(changed) { // 文件被修改过
+			if(confirm("文件被修改过，是否保存？")) saveFile(currFilePath);
+		}
+		createFile();
 	});
 	// 创建新目录
 	$("#tb-newd").click(function() {

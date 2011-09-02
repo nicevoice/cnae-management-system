@@ -2,12 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>NAE在线编辑器</title>
+<title><%=domain%> - 在线编辑</title>
 <link href="/styles/editor.css" rel="stylesheet" type="text/css" />
 <script src="/scripts/head.load.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/ace/theme-textmate.js" type="text/javascript" charset="utf-8"></script>
-<script src="/scripts/ace/mode-textile.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/global.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/editor.js" type="text/javascript" charset="utf-8"></script>
@@ -18,7 +17,7 @@
 <div id="sidebar">
     <div id="app-info">
         <p class="item">
-            应用：<span id="appname"><%=domain%></span>
+            应用：<span id="appname"><a href="http://<%=domain%>.cnodjs.net" target="_blank"><%=domain%></a></span>
         </p>
         <p class="item">
         	当前路径：<div id="currentPath"></div>
@@ -48,6 +47,7 @@
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
         </div>
         <div id="editor-panel">
+        	<div id="tabs"></div>
             <div id="editor"></div>
         </div>
     </div>

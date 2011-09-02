@@ -2,13 +2,13 @@
 /* CSS Document */
 
 * { margin: 0; padding: 0; }
-body { font-family: Verdana, Geneva, sans-serif; font-size: 13px; line-height: 1.6; background: #E8E8E8; }
+body { font-family: Verdana, Geneva, sans-serif; font-size: 13px; line-height: 1.6; background: #CCCCCC; }
 .clearfix:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
 .clearfix { display: inline-block; }
 html[xmlns] .clearfix { display: block; }
 * html .clearfix { height: 1%; }
 #msg { position: absolute; top:0; left: 0; width: 100%; height: 30px; background: #FFC; border-bottom: #FDCC39 1px solid; line-height: 28px; text-align: center; display: none; }
-#sidebar { position: absolute; top: 0; left: 0; width: 220px; min-height: 420px; }
+#sidebar { position: absolute; top: 0; left: 0; width: 220px; background-color: #E8E8E8; }
 #wrapper { margin-left: 220px; }
 #content { }
 #app-info { background: #22252C; padding: 8px 5px; color: rgba(255, 255, 255, 0.7); text-shadow: 0 1px 1px #000; }
@@ -19,7 +19,7 @@ html[xmlns] .clearfix { display: block; }
 #tool-bar { margin-bottom: 10px; }
 #tool-bar ul { list-style: none; padding: 3px; }
 #tool-bar ul li { display: inline; border-right: #ccc 1px solid; padding: 3px; cursor: pointer; }
-#file-explorer { border-right: #999 1px solid; }
+#file-explorer { border-right: #999 1px solid; border-bottom: #999 1px solid; }
 #file-list { text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7); }
 #file-list dl { padding: 5px; border-bottom: #ccc 1px solid; }
 #file-list .d { background: url(../images/icon_folder.png) 3px 4px no-repeat; }
@@ -32,14 +32,16 @@ html[xmlns] .clearfix { display: block; }
 #file-list dl dd .sub-menu { background: #fff; border: #ccc 1px solid; width: 180px; position: absolute; top: 5px; right: 16px; display: none; font-size: 11px; }
 #file-list dl dd .sub-menu ul { list-style: none; }
 #file-list dl dd .sub-menu ul li { border-bottom: #ccc 1px solid;  padding: 3px 5px; color: #333; cursor: pointer; }
-.flhover { background: #ccc; }
+.flhover { background: #999; }
 #nav { background: #22252C; height: 30px; overflow: hidden; }
 #nav ul { margin-left: 10px; list-style: none; }
 #wrapper #content #nav ul li { float: left; margin-right: 25px; height: 30px; color: rgba(255, 255, 255, 0.7); text-shadow: 0 1px 1px #000; text-decoration: none; line-height: 28px; cursor: pointer; }
 #wrapper #content #nav ul li:hover { color: rgba(255, 255, 255, 0.3); text-decoration: none; }
 #wrapper #content #nav #logo { float: right; }
 #wrapper #content #editor-panel { clear: both; min-height: 400px; background: url(../images/workpanel-left-top.png) left top no-repeat; }
-#wrapper #content #editor-panel #editor { background: #fff; position: relative; top: 20px; left: 20px; }
+#wrapper #content #editor-panel #tabs { height: 30px; margin-left: 70px; }
+#wrapper #content #editor-panel #tabs .tab { background-color: #E8E8E8; width: 150px; height: 30px; line-height: 30px; text-align: center; }
+#wrapper #content #editor-panel #editor { background: #fff; position: relative; left: 20px; border: #aaa 1px solid; }
 #console { background-color: #fff; border-top: #999 2px solid; position: absolute; left: 0; bottom: 0; width: 100%; height: 130px; }
 #console #stdout, #console #stderr { background-color: #000; border: #999 1px solid; height: 110px; width: 49%; resize: none; color: #fff; margin-top: 5px; }
 #console #stdout { float: left; margin-left: 5px; }
