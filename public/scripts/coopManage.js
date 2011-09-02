@@ -1,15 +1,19 @@
 $(function(){
-	$("#submitInvite").click(submitInvite);
+	
 		$.ajax({
 		cache:false,
 		url:"/getOwnAuthInfo",
 		type:"post",
 		dataType:"json",
 		data:{domain:$("#appDomain").html()},
-		error:function(){},
+		error:function(){
+			$("#submitInvite").click(submitInvite);
+		},
 		success:function(data){
 			if(data.active===0 || data.role>0){//如果不是创建者
-				$("#submitInvite").attr("disabled","true");
+				$("#submitInvite").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+			}else{
+				$("#submitInvite").click(submitInvite);
 			}
 		}
 	});
