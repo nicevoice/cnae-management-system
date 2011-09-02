@@ -417,7 +417,8 @@ exports.getStdOutput = function(req, res){
 }
 
 exports.getStatus = function(req, res){
-	var domain = req.params.domain;
+	var domain = req.params.domain||'';
+	console.log(domain);
 	onOff(domain, "status", function(socketRes){
 		if(socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
@@ -425,6 +426,7 @@ exports.getStatus = function(req, res){
 		}else{
 		socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
+		console.log(socketRes);
 		return resAjax(res, socketRes);
 	})
 	}
