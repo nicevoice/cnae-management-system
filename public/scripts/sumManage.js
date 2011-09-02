@@ -102,6 +102,7 @@ controlApp = function(){
 	},
 	success:function(data){
 		if(data.status==="ok"){
+			setStatus();
 			if(thisApp.val()==="上线"){
 				thisApp.val("下线");
 				stateDes.html("已启用");
@@ -131,6 +132,7 @@ restart = function(){
 	},
 	success:function(data){
 		if(data.status==="ok"){
+			setStatus();
 			sAlert("","应用已重启");
 			$("#controlApp").val("下线");
 			stateDes.html("已启用");			
