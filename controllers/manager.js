@@ -403,10 +403,7 @@ exports.applog = function(req, res){
 exports.getStdOutput = function(req, res){
 	var domain = req.params.id||'',
 		action = req.body.action;
-		console.log("output");
-		console.log(domain + action);
 	getLog(action, domain, 1000, function(data){
-		console.log("resAjax "+action);
 		try{
 		return resAjax(res, {output:data});
 		}catch(e){console.log(e.message)};
@@ -416,7 +413,6 @@ exports.getStdOutput = function(req, res){
 exports.getStatus = function(req, res){
 	var domain = req.params.id||'';
 	onOff("status", domain, function(socketRes){
-		console.log(socketRes);
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
