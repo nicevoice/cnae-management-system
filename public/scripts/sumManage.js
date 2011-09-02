@@ -50,10 +50,10 @@ function setStatus(){
 		//填入是否启用信息
 		if(status.running===true){
 			appRunning = "已启用";
-			appButtonName = "上线";
+			appButtonName = "下线";
 		}else{
 			appRunning = "未启用";
-			appButtonName = "下线";
+			appButtonName = "上线";
 		}
 		//填入详细应用信息
 		appStatusInfo =  '<td>'+status.rss+'</td>' +
