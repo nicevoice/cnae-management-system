@@ -1,13 +1,24 @@
+var pathutil = require('path');
+
 var mongo = require("mongoskin");
 var fs = require('fs');
-//exports.session_secret = 'tsoedsosisession_secretonsheecfrxedta';
+
+var debug = exports.debug = true;
+
+var root_dir = pathutil.dirname(__dirname)
+  , cnae_dir = pathutil.join(root_dir, 'cnode-app-engine');
+
+// proxy config
+exports.proxy_sock = pathutil.join(cnae_dir, 'run', 'proxy.sock');
+exports.listen_sock_dir = pathutil.dirname(exports.proxy_sock);
+
 exports.session_secret = "sakjfewf_cnaemngm";
 var port = exports.port = 2012;
 exports.email = "heyiyu.deadhore@gmail.com";
 exports.site_name = "Node App Engine";
 exports.site_desc = '';
 
-exports.db_url = "localhost:27017/nae_db";
+exports.db_url = "127.0.0.1:27017/nae_db";
 exports.db = mongo.db(this.db_url);
 /***
  * 用户信息：email,nickName,password,realName,telNumber,mainPage
@@ -46,14 +57,13 @@ exports.smtp = {
     pass: "heyiyuaaqq12"
 };
 
-exports. uploadDir = "/home/admin/cnae/git/cnode-app-engine/apps";
+exports.uploadDir = pathutil.join(cnae_dir, 'apps');
 //发送json格式
 exports.resAjax = function(res, data){
-		body = new Buffer(JSON.stringify(data));
-		res.writeHead(200, {"Content/type":"text/json",
-		"Content/length":body.length});
-		res.end(body);
-}
+	body = new Buffer(JSON.stringify(data));
+	res.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
+	res.end(body);
+};
 
 exports.socketPort = 1128;
 
@@ -65,8 +75,12 @@ exports.admins = ["dead_horse@qq.com","fengmk2@gmail.com",
 exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
 //操作应用上下线的请求参数 todo
 exports.options = {
-host: '127.0.0.1',
-port: 1127,
-method: 'post'
+    host: '127.0.0.1',
+    port: 1127,
+    method: 'post'
 };	
 
+if(!debug) {
+    exports.port = 80;
+    exports.inviteHref = "http://cnodejs.net/regist?code=";
+}

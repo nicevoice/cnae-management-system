@@ -1,6 +1,11 @@
+var config = require('./config');
+if(!config.debug) {
+    // patch net module for connect to proxy
+    require('./lib/net_patch');
+}
+
 var express = require('express'),
 	ejs = require('ejs'),
-	config = require('./config'),
 	login = require('./controllers/login'),
 	manager = require('./controllers/manager'),
 	user = require('./controllers/user'),
@@ -41,7 +46,7 @@ app.use(express.static(__dirname+'/public',{maxAge:3600000*24*30}));
 app.use(express.cookieParser());
 app.use(express.session({
 	secret: config.session_secret,
-	store : new RedisStore
+	store : new RedisStore()
 }));
 
 //post
