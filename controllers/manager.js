@@ -307,10 +307,8 @@ exports.vermng = function(req, res){
 
 exports.doUpload = function(req, res){
 	var domain = req.params.id||'';
-	console.log(req.url);
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
-	console.log(filePath);
 	//解压文件
 	if(filePath){
 		var type = filePath.slice(filePath.lastIndexOf('.')+1);
@@ -329,8 +327,7 @@ exports.doUpload = function(req, res){
 						}
 						exec('tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain, 
 						function(err, stdout, stderr){
-							console.log(stdout);
-							console.log(stderr);
+							log.error(stderr);
 							exec('rm -rf '+savePath, function(err){
 								if(err){
 									log.error("exec delete error:"+err);
@@ -338,7 +335,6 @@ exports.doUpload = function(req, res){
 							})
 							if(err){
 								log.error("exec ungzip error:"+err);
-							    console.log('exec error: ' + error);
 							}
 						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
@@ -362,7 +358,6 @@ exports.doUpload = function(req, res){
  * @param {} res
  */
 exports.mnglog = function(req, res){
-	console.log("mg");
 	var domain = req.params.id||'';
 	var url = req.url;
 	var page = urlMoudle.parse(url, true).query.page||'1';
@@ -373,13 +368,11 @@ exports.mnglog = function(req, res){
 			return res.render("error", {message:"数据库查询错误"});
 		}else{
 			totalPage = Math.ceil(count/pageNum);
-				console.log(page);
-				console.log(totalPage);
 			records.find({appDomain:domain},
 				{sort:[['recordTime', -1]],skip:pageNum*(page-1), limit:pageNum}).toArray(
 			function(err, data){
 				if(err){
-					console.log(err);
+					log.error(err);
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
 			
@@ -406,7 +399,7 @@ exports.getStdOutput = function(req, res){
 	getLog(action, domain, 1000, function(data){
 		try{
 		return resAjax(res, {output:data});
-		}catch(e){console.log(e.message)};
+		}catch(e){};
 	});
 }
 
@@ -419,7 +412,6 @@ exports.getStatus = function(req, res){
 		}else{
 		socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
-		console.log(socketRes);
 		return resAjax(res, socketRes);
 	})
 	}
