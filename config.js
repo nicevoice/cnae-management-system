@@ -40,7 +40,8 @@ exports.inviteMailContent = fs.readFileSync("./mailTemplate/inviteCodeMail.html"
 exports.admin = "dead_horse@qq.com";
 exports.smtp = {
     host: 'smtp.gmail.com',
-    port: 465,
+    port: 587,
+    ssl: false,
     use_authentication: true,
     user: "heyiyu.deadhorse@gmail.com",
     pass: "heyiyuaaqq12"

@@ -87,17 +87,15 @@ exports.sendInviteCode = function(req, res){
 	if(!regEmail.exec(email)){
 		return resAjax(res, {done:false, warn:"请输入合法的email地址"}) 
 	}
+	var inviteNickName = email.split('@')[0];
 	code+="&email="+email;
 	var codeHtml = "<a href="+code+">"+code+"</a>";
 	mails.push({
-    sender: 'NAE CNAEMail@gmail.com',
-    to : email,
+    sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+    to : inviteNickName + " <"+email + ">",
     subject: title,
     html: content+codeHtml,
-    debug: true,
-    headers: {
-    	"Content-Type":"text/html"
-        }
+    debug: true
 	});
 	mailEvent.fire("getMail");
 	return resAjax(res, {done:true});

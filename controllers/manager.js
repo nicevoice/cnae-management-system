@@ -193,7 +193,7 @@ function send(email, words){
 	var inviteNickName = email.split('@')[0];
 
 	mails.push({
-    sender: 'NAE <heyiyu.deadhorse@gmail.com>',
+    sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
     to : inviteNickName+" <" + email + ">",
     subject: mailTitle,
     html: mailContent + words,
