@@ -53,18 +53,14 @@ exports.checkLogin = function(req, res){
 			if(!item)
 				return res.render("login", { warn:"用户名或密码错误"});
 			else{
-				console.log("login");
+				req.session.email =userEmail;
+				req.session.nickName = item.nickName;
 				if(autoLogin){
-					var loginTimestamp = Date.now();
-					var checkCode = md5(userEmail + password +
-					loginTimestamp + config.cookies_skey);
-					res.cookie('user', userEmail+","+ loginTimestamp + ","+ checkCode,
-					{ maxAge: config.cookies_timeOut });
-					console.log("cookie");
+					var timeOut = config.session_timeOut;
+					req.session.cookie.expires = new Date(Date.now() + timeOut);
+					req.session.cookie.maxAge = timeOut;
 				}
 				else{
-					req.session.email =userEmail;
-					req.session.nickName = item.nickName;
 					req.session.cookie.expires = false;
 				}
 				res.redirect("/application");

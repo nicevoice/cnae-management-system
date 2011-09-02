@@ -10,6 +10,7 @@ var express = require('express'),
 	EventProxy = require('EventProxy.js').EventProxy,
 	md5 = require('./lib/md5').hex_md5,
 	form = require('connect-form'),
+	RedisStore = require('connect-redis')(express),
 	inviteCode = require('./controllers/inviteCode'),
 	log = config.logWithFile,
 	users = config.db.collection(config.db_user),
@@ -39,7 +40,8 @@ app.use(express.static(__dirname+'/public',{maxAge:3600000*24*30}));
 //session和cookie
 app.use(express.cookieParser());
 app.use(express.session({
-	secret: config.session_secret
+	secret: config.session_secret,
+	store : new RedisStore
 }));
 
 //post
@@ -87,102 +89,23 @@ Date.prototype.format = function(format){
 }
 
 //路由中间件
-var checkCookieEvent = new EventProxy();
-function verifyCookie(req, res){
-		console.log(req.cookies.user);
-		if(!req.cookies.user)
-			return checkCookieEvent.fire("checked", false);
-		var infos = req.cookies.user.split(',');
-		//如果超时
-		if(Date.now()-parseInt(infos[1])>config.cookies_timeOut)
-			return checkCookieEvent.fire("checked", false);
-		var getUserInfoEvent = new EventProxy();
-		getUserInfoEvent.on("getData", function(data){
-			if(data){
-				var code = md5(infos[0]+data.password+infos[1]+config.cookies_skey);
-				console.log(code);
-				if(code !== infos[2])
-					return checkCookieEvent.fire("checked", false);
-				else{
-					req.session.nickName = data.nickName.toString();
-					req.session.email = data.email;
-					req.session.cookie.expires = false;
-					return checkCookieEvent.fire("checked", true);
-				}
-			}
-			else{
-				checkCookieEvent.fire("checked", false);
-			}
-		})
-		users.findOne({email:infos[0].toString()}, function(err, data){
-			getUserInfoEvent.fire("getData", data);
-		});	
-}
 
 function hasLogin(req, res, next){
+	console.log("hasLogin");
+	//如果session不存在，
 	if(!req.session.email || !req.session.nickName){
-		//检查cookie
-/*		console.log(req.cookies.user);
-		if(req.cookies.user){
-			var infos = req.cookies.user.split(',');
-			//如果超时了，删除掉cookie
-			if(Date.now()-parseInt(infos[1])>config.cookies_timeOut)
-			{
-				return res.redirect("/login");
-			}
-			else{//如果未超时，检查code，如果正确，则设置session
-				var checkCookie = new EventProxy();
-				checkCookie.on("checkCookie", function(data){
-					if(data){
-						var code = md5(infos[0]+data.password+infos[1]+config.cookies_skey);
-						console.log(code);
-						if(code !== infos[2])
-							return res.redirect("/login");
-						else{
-							console.log("session!");
-							req.session.email = data.email;
-							req.session.nickName = data.nickName;
-							next();
-						}
-					}
-					else{
-						return res.redirect("/login");
-					}
-				});
-				users.findOne({email:infos[0]}, function(err, data){
-						checkCookie.fire("checkCookie", data);
-					});
-			}
-		}
-		else{
 		return res.redirect("/login");
-		}//console.log("then");*/
-		checkCookieEvent.once("checked", function(ok){
-			if(ok){
-				next();
-			}else{
-				return res.redirect("/login");
-			}
-		});
-		verifyCookie(req, res);
-	}
-	else{
-		next();
+	}else{	//如果session存在
+		return next();
 	}
 }
 function hasNotLogin(req, res, next){
-	if(req.session.email && req.session.nickName){
+	console.log("hasNotLogin");
+	//如果session存在
+	if(!req.session.email || !req.session.nickName){
+		return next();
+	}else{
 		return res.redirect("/");
-	}
-	else{
-		checkCookieEvent.once("checked", function(ok){
-			console.log("notlogin");
-			if(ok)
-				return res.redirect("/");
-			else
-				next();
-		});
-		verifyCookie(req, res);
 	}
 }
 

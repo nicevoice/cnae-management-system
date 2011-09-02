@@ -1,7 +1,7 @@
 var mongo = require("mongoskin");
 var fs = require('fs');
 //exports.session_secret = 'tsoedsosisession_secretonsheecfrxedta';
-exports.session_secret = "keyboard cat";
+exports.session_secret = "sakjfewf_cnaemngm";
 var port = exports.port = 2012;
 exports.email = "heyiyu.deadhore@gmail.com";
 exports.site_name = "Node App Engine";
@@ -25,8 +25,7 @@ exports.db_app_basic ="nae_app_basic_infos";
 exports.db_app_records = "nae_app_manage_records";
 exports.db_inviteCode = "nae_inviteCode";
 //cookie
-exports.cookies_timeOut = 3600000*24*14;
-exports.cookies_skey = "s3s3f3s1diz08fn3"
+exports.session_timeOut = 3600000*24*14;
 //log
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.ERROR, './my.log');
@@ -70,3 +69,4 @@ host: '127.0.0.1',
 port: 1127,
 method: 'post'
 };	
+
