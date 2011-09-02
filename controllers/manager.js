@@ -419,7 +419,7 @@ exports.getStatus = function(req, res){
 	var domain = req.params.id||'';
 	onOff("status", domain, function(socketRes){
 		console.log(socketRes);
-		if(socketRes.msg){
+		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
 		}else{
