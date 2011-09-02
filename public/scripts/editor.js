@@ -165,8 +165,36 @@ function restart(){
 	success:function(data){
 		getOutput("stdout");
 		getOutput("stderr");
-		if(data.status!=="ok"){
-			showMsg2(data.msg);
+		if(data.satus!=="ok"){
+			if(data.code==202){	//not found错误，则改为上线
+				$.ajax({
+					cache:false,
+					type:"post",
+					url:"/application/manage/"+domain+"/controlApp",
+					dataType:"json",
+					data:{action:"start"},
+					error:function(){
+						showMsg2("重启失败");
+					},
+					success:function(data){
+						if(data.status==="ok"){
+						    showMsg2("重启成功");
+							window.clearInterval(outTimer);
+							window.clearInterval(errTimer);
+							outTimer = window.setInterval(function(){
+								getOutput("stdout");
+							}, 3000);
+							errTimer = window.setInterval(function(){
+								getOutput("stderr");
+							}, 3000);	
+						}else{
+							showMsg2("重启失败:"+data.msg);
+						}
+					}
+				})
+			}else{
+				showMsg2("重启失败:"+data.msg);
+			}
 		}else{
 		    showMsg2("重启成功");
 			window.clearInterval(outTimer);
