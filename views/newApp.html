@@ -1,21 +1,3 @@
-      <div id="navigation">
-    	<ul>
-    	<li><a href="/application">我的应用</a></li>
-    	<li><a href="/userCenter">个人中心</a></li>
-      	<li><a href="/feedback">反馈信息</a></li>
-       	<%var isAdmin = false;
-      	for(var i=0, len=config.admins.length; i<len; ++i){
-      		if(email == config.admins[i]){
-      			isAdmin = true;
-      		}
-      	}
-      	if(isAdmin){%>
-      	<li><a href="/inviteCode">发出邀请</a></li>
-      	<%}%>
-    	<li><a href="/logout">退出</a></li>
-    	<li class="nickName"><%=nickName%>,欢迎登录！<li>
-    	</ul>
-    </div>
    <div class="notMain">
   <h2 class="orangeH2 loginH2">创建应用</h2>
   <div id="newApp">

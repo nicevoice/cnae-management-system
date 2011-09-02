@@ -61,7 +61,7 @@ exports.doChangeInfo = function(req, res){
 		newRealName = req.body.changeRealName||'',
 		newTelNumber = req.body.changeTelNumber||'',
 		newMainPage = req.body.changeMainPage||'';
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = config.regName;
 	if(!regName.exec(newNickName)){
 		return resAjax(res,{done:false, message:"请输入合法的昵称"});
 	}
@@ -99,7 +99,7 @@ exports.doChangePassword = function(req, res){
 	var oldPassword = req.body.oldPassword,
 		newPassword = req.body.changePassword,
 		confirmation = req.body.changeConfirmation;
-	var regPass = /^(\w){6,20}$/;
+	var regPass = config.regPass;
 	if(!regPass.exec(newPassword)){
 			return resAjax(res,{done:false, message:"密码必须为6～20位字符或者数字"});
 	}

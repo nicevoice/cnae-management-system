@@ -102,13 +102,13 @@ color:#F30;
   float:right;
   display:none;
 }
-.appActive{
-  color:#03C;
-  position:relative;
-  left:70%;
-}
+
+
 .appActions a{
-  color:#aaa;
+  color:#aaa;  
+}
+.appActions .appActive{
+  color:red;
 }
 #createApp{
   text-align:right;
@@ -123,4 +123,7 @@ width:50%;
 }
 .appDivTitle{
 margin: 0px 20px 10px;
+}
+.inactiveApp{
+color:#333;
 }

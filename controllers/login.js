@@ -37,7 +37,8 @@ exports.checkLogin = function(req, res){
 		password = req.body.password,
 		autoLogin = req.body.autoLogin;
 	//验证用户输入
-	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
+	var regEmail = config.regEmail;
+	console.log(regEmail);
 	if(!regEmail.exec(userEmail))
 		return res.render("login", { warn:"用户名格式不正确"});
 	var regPassword = /^(\w){6,20}$/;
@@ -94,10 +95,10 @@ exports.checkRegist = function(req, res){
 	, code = req.body.inviteCode;
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
-	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
+	var regEmail = config.regEmail;
 	if(!regEmail.exec(userEmail))
 		return res.render("error", {message:"请输入合法的email地址"});
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 	if(!regName.exec(userNickName))
 		return res.render("error", {message:"昵称由2～20个字母/数字/._组成"});
 	if(userPassword != userPasswordCon)
@@ -155,7 +156,16 @@ exports.checkRegist = function(req, res){
 		}
 	});
 	//检查邀请码是否正确
-	console.log("code"+code);
+	var isAdmin = false;
+	for(var i=0, len=config.admins.length; i<len; ++i){
+		if(userEmail === config.admins[i]){
+			isAdmin = true;
+			break;
+		}
+	}
+	if(isAdmin){
+		checkEventProxy.trigger("checkCode", true);
+	}else{
 	inviteCode.findOne({code:code}, function(err, item){
 		if(err){
 			log.error(err);
@@ -174,6 +184,7 @@ exports.checkRegist = function(req, res){
 		}	
 	});
 	}
+	}
 /***
  * 检测email是否已被注册
  * @param {} req
@@ -182,7 +193,7 @@ exports.checkRegist = function(req, res){
  */
 exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
-	var regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
+	var regEmail = config.regEmail;
 	if(!regEmail.exec(userEmail))
 		return resAjax(res, {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){
@@ -205,7 +216,7 @@ exports.checkEmail = function(req, res){
  */
 exports.checkName = function(req, res){
 	var name = req.body.name;
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = config.regName;
 	if(!regName.exec(name))
 		return resAjax(res, {warn:"昵称为2～20个字符或数字或._"});
 	if(req.session.nickName && req.session.nickName===name)

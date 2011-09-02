@@ -5,7 +5,7 @@ $(function(){
 
 nickBlur = function(){
 	var name = $("#changeNickName").val()||'';
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 	if(!regName.exec(name)){
 		return $("#nickNameWarn").html("昵称由2～20个字母或者数字或者._组成"); 
 	}

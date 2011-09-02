@@ -211,7 +211,7 @@ exports.doCoopmng = function(req, res){
 		words = req.body.inviteWords||'',
 		role = req.body.role,
 		domain = req.params.id,
-		regEmail = /^[a-zA-Z0-9_/./-]+@(\w+).(\w){2,4}$/;
+		regEmail = config.regEmail;
 		body;
 	//未输入
 	if(!email){
@@ -219,7 +219,7 @@ exports.doCoopmng = function(req, res){
 	}else
 	//输入不合法
 	 	if(!regEmail.exec(email)){
-	 		resAjax(res, {done:false, why:"请输入合格的email地址"})
+	 		resAjax(res, {done:false, why:"请输入合法的email地址"})
 		}
 	else
 	//输入自身
