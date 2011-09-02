@@ -401,6 +401,7 @@ exports.applog = function(req, res){
 	email:req.session.email,domain:domain});
 };
 exports.getStdOutput = function(req, res){
+	console.log(req);
 	var domain = req.params.id||'',
 		action = req.body.action;
 		console.log("output");
