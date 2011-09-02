@@ -163,7 +163,7 @@ function restart(){
 		showMsg2("重启失败");
 	},
 	success:function(data){
-		if(data.staus!=="ok"){
+		if(data.status!=="ok"){
 			if(data.code==202){	//not found错误，则改为上线
 				$.ajax({
 					cache:false,
