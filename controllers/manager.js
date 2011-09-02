@@ -409,7 +409,7 @@ exports.applog = function(req, res){
 	email:req.session.email,domain:domain});
 };
 exports.getStdOutput = function(req, res){
-	var domain = req.params.domain,
+	var domain = req.params.id||'',
 		action = req.body.action;
 	getLog(action, domain, 1000, function(data){
 		return resAjax(res, {output:data});
