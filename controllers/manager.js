@@ -34,7 +34,7 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			return res.render("appManageSum", {url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			status:socketRes,nickName:req.session.nickName, email:req.session.email});
+			nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
