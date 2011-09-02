@@ -1,15 +1,15 @@
 var outTimer, errTimer;	//获取日志定时器id
 $(function(){
 	getOutput("stdout");
-	//getOutput("stderr");
+	getOutput("stderr");
 	window.clearInterval(outTimer);
 	window.clearInterval(errTimer);
 	outTimer = window.setInterval(function(){
 		getOutput("stdout");
 	}, 10000);
-//	errTimer = window.setInterval(function(){
-//		getOutput("stderr");
-//	}, 10000);	
+	errTimer = window.setInterval(function(){
+		getOutput("stderr");
+	}, 10000);	
 })
 
 function getOutput(action){
