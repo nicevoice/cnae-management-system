@@ -13,6 +13,7 @@ $(function(){
 })
 
 function getOutput(action){
+	alert("getOut");
 	var domain = $("#appDomain").html();
 	$.ajax({
 	cache:false,
