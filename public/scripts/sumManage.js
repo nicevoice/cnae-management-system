@@ -131,12 +131,7 @@ restart = function(){
 		sAlert("警告","操作失败");
 	},
 	success:function(data){
-		if(data.status==="ok"){
-			setStatus();
-			sAlert("","应用已重启");
-			$("#controlApp").val("下线");
-			stateDes.html("已启用");			
-		}else{
+		if(data.status!=="ok"){
 			if(data.code==202){	//not found错误，则改为上线
 				$.ajax({
 					cache:false,
@@ -161,6 +156,12 @@ restart = function(){
 			}else{
 			sAlert("警告", data.msg);
 			}
+		}else
+			{
+			setStatus();
+			sAlert("","应用已重启");
+			$("#controlApp").val("下线");
+			stateDes.html("已启用");			
 		}
 	}
 	});
