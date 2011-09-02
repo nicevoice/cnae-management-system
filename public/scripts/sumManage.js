@@ -1,7 +1,5 @@
 var statusTimer;	//获取状态信息的定时器
 $(function(){
-	$("#controlApp").click(controlApp);
-	$("#controlAppRestart").click(restart);
 	setStatus();
 	window.setInterval(function(){
 		setStatus();
@@ -12,10 +10,17 @@ $(function(){
 	type:"post",
 	dataType:"json",
 	data:{domain:$("#appDomain").html()},
-	error:function(){},
+	error:function(){
+			$("#controlApp").click(controlApp);
+			$("#controlAppRestart").click(restart);
+		},
 	success:function(data){
-		if(data.active===0 || data.role>1){//如果不是管理者或者创建者
-			$("#controlApp").attr("disabled","true");
+		if(data.active===0 || data.role>2){//如果是观察者或者未激活
+			$("#controlApp").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+			$("#controlAppRestart").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+		}else{
+			$("#controlApp").click(controlApp);
+			$("#controlAppRestart").click(restart);
 		}
 	}
 	});
