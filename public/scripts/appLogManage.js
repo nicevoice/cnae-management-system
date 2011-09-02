@@ -14,6 +14,7 @@ $(function(){
 
 function getOutput(action){
 	var domain = $("#appDomain").html();
+	alert(action);
 	$.ajax({
 	cache:false,
 	type:"post",

@@ -403,6 +403,7 @@ exports.applog = function(req, res){
 exports.getStdOutput = function(req, res){
 	var domain = req.params.id||'',
 		action = req.body.action;
+		console.log("output");
 		console.log(domain + action);
 	getLog(action, domain, 1000, function(data){
 		console.log("resAjax "+action);
