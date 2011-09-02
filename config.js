@@ -29,7 +29,7 @@ exports.cookies_timeOut = 3600000*24*14;
 exports.cookies_skey = "s3s3f3s1diz08fn3"
 //log
 var log = require("./lib/log");
-exports.logWithFile = log.create(log.ERROR, './my.log');
+exports.logWithFile = log.create(log.INFO, './my.log');
 //mail的配置
 //协作邀请邮件的模板
 exports.mailTitle =  'CNode App Engine协作邀请函';
