@@ -417,8 +417,7 @@ exports.getStdOutput = function(req, res){
 }
 
 exports.getStatus = function(req, res){
-	var domain = req.params.domain||'';
-	console.log(domain);
+	var domain = req.params.id||'';
 	onOff("status", domain, function(socketRes){
 		console.log(socketRes);
 		if(socketRes.msg){
