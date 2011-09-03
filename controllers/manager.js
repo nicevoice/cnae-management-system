@@ -333,6 +333,8 @@ exports.doUpload = function(req, res){
 						console.log(unCompress);
 						exec(unCompress, 
 						function(err, stdout, stderr){
+							console.log(stdout);
+							console.log(stderr);
 							exec('rm -rf '+savePath, function(err){
 								if(err){
 									console.log(err);
