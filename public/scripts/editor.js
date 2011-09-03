@@ -562,29 +562,29 @@ function createFileAfter(fileName, this_div, content) {
 	if(fileName == null || fileName == "") {
 		this_div.remove();
 		showMsg("文件名不能为空");
-		return false;
+	} else {
+		var filePath = currPath + fileName;
+		if(typeof content == "undefined") content = "";
+		writeFile(filePath, content, function(status, msg) {
+			if(status) { // 成功
+				var _t = this_div.children("dl").children("dd").children(".menu-btn");
+				var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
+				_t.append(setSubmenu(_file));
+				// 公共事件更新
+				setEditorMode(getFileExt(filePath));
+				currFilePath = filePath;
+				setStatusBar(2, fileName);
+			} else { // 失败
+				this_div.remove();
+				showMsg(msg + "，请稍后再尝试");
+			}
+			editor.getSession().setValue(content);
+			if(status) { // 因为setValue会引起编辑器change事件，所以要把这两句放到setValue的后面
+				changed = false; // 重置文件修改标记
+				$("#tabs").html('<div class="tab">' + fileName + '</div>');
+			}
+		});
 	}
-	var filePath = currPath + fileName;
-	if(typeof content == "undefined") content = "";
-	writeFile(filePath, content, function(status, msg) {
-		if(status) { // 成功
-			var _t = this_div.children("dl").children("dd").children(".menu-btn");
-			var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
-			_t.append(setSubmenu(_file));
-			// 公共事件更新
-			setEditorMode(getFileExt(filePath));
-			currFilePath = filePath;
-			setStatusBar(2, fileName);
-		} else { // 失败
-			this_div.remove();
-			showMsg(msg + "，请稍后再尝试");
-		}
-		editor.getSession().setValue(content);
-		if(status) { // 因为setValue会引起编辑器change事件，所以要把这两句放到setValue的后面
-			changed = false; // 重置文件修改标记
-			$("#tabs").html('<div class="tab">' + fileName + '</div>');
-		}
-	});
 	$(".item-name").live("click", itemActionCb); // 重新为dt注册事件
 };
 

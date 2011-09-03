@@ -41,20 +41,25 @@
             <ul>
                 <li id="nav-save">保存</li>
 				<li id="restart">重启</li>
-				<!--<li>调试</li>
-               	<li>关闭</li>-->
             </ul>
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
         </div>
         <div id="editor-panel">
         	<div id="tabs"></div>
             <div id="editor"></div>
+            <div id="statbar"></div>
         </div>
     </div>
 </div>
 <div id="console" class="clearfix">
-    <textarea readonly="readonly" id="stdout">standard output here..</textarea>
-    <textarea readonly="readonly" id="stderr">standard error here..</textarea>
+    <div id="stdout-panel">
+    	<div class="console-label">Standard output</div>
+    	<textarea readonly="readonly" id="stdout"></textarea>
+    </div>
+    <div id="stderr-panel">
+    	<div class="console-label">Standard error</div>
+    	<textarea readonly="readonly" id="stderr"></textarea>
+    </div>
 </div>
 <div id="msg"></div>
 </body>
