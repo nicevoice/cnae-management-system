@@ -330,7 +330,7 @@ exports.doUpload = function(req, res){
 //						}else{
 //							unCompress = 'unzip '+ savePath;
 //						}
-						exec('unzip '+savePath, function(err, stdout, stderr){
+						exec('unzip '+savePath+' -d '+uploadDir+ '/'+domain, function(err, stdout, stderr){
 							if(err)console.log(err);
 							console.log("unzip");
 							exec('rm -rf '+savePath, function(err){
