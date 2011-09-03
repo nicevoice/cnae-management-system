@@ -8,14 +8,21 @@ function highlightPage() {
   if (!document.getElementById("navigation")) return false;
   var nav = document.getElementById("navigation");
   var links = nav.getElementsByTagName("a");
+  var hasHere = false;
   for (var i=0; i<links.length; i++) {
     var linkurl = links[i].getAttribute("href");
     var currenturl = window.location.href;
     if (currenturl.indexOf(linkurl) != -1) {
+  	  hasHere = true;    
       links[i].className = "here";
       var linktext = links[i].lastChild.nodeValue.toLowerCase();
       document.body.setAttribute("id",linktext);
     }
+  }
+  if(!hasHere){
+  	links[0].className= "here";
+    var linktext = links[0].lastChild.nodeValue.toLowerCase();
+    document.body.setAttribute("id",linktext);
   }
 }
 //侧边栏
