@@ -328,7 +328,7 @@ exports.doUpload = function(req, res){
 						if(type==="gz"){
 							unCompress = 'tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain;
 						}else{
-							unCompress = 'unzip '+ savePath +" " + uploadDir+ '/'+domain;
+							unCompress = 'unzip '+ savePath;
 						}
 						console.log(unCompress);
 						exec(unCompress, 
