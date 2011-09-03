@@ -127,12 +127,12 @@ controlApp = function(){
 			if(thisApp.val()==="上线"){
 				thisApp.val("下线");
 				stateDes.html("已启用");
-				
+				addRecord(domain, "应用上线");
 			}else{
 				thisApp.val("上线");
 				stateDes.html("未启用");
+				addRecord(domain, "应用下线");
 			}
-			addRecord(domain, "应用"+thisApp.val());
 		}else{
 			sAlert("警告", data.msg);
 		}
