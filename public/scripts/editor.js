@@ -11,7 +11,7 @@ var outTimer, errTimer;	//获取stdoutput的定时器，点击重启应用以后
  */
 function setEditorSize(h, w) {
 	if(typeof h == "undefined") {
-		h = document.body.clientHeight - (80 + 130);
+		h = document.documentElement.clientHeight - (80 + 130);
 	}
 	if(typeof w == "undefined") {
 		w = document.body.clientWidth - 260;
