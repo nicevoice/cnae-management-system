@@ -320,7 +320,7 @@ exports.doUpload = function(req, res){
 						log.error(err);
 						return res.render("error",{message:"创建文件错误"});
 					}
-					fs.chmod(savePath, '777', function(err){
+					fs.chmod(savePath, '444', function(err){
 						if(err){
 						return res.render("error", {message:"修改权限错误"});
 						}
@@ -331,7 +331,7 @@ exports.doUpload = function(req, res){
 							unCompress = 'unzip '+ savePath;
 						}
 						console.log(unCompress);
-						exec(unCompress, function(err, stdout, stderr){
+						exec("unzip /home/admin/cnae/git/cnode-app-engine/apps/ffffffffff/code.zip", function(err, stdout, stderr){
 							console.log("unzip");
 							exec('rm -rf '+savePath, function(err){
 								if(err){
