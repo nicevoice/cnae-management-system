@@ -413,5 +413,14 @@ exports.getStatus = function(req, res){
 		return resAjax(res, socketRes);
 	})
 	}
+
+exports.addRecord = function(req, res){
+	var action = req.body.action||'',
+		domain = req.params.id||'';
+	records.save({appDomain:domain.toString(), email:req.session.email.toString(),
+						action:action, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){
+						resAjax(res, {});
+						});
+}
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};

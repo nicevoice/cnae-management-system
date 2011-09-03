@@ -147,7 +147,18 @@ function showMsg2(content, waiting, speed) {
 	msger.html(content);
 	setTimeout(function() { msger.slideUp(speed); }, waiting);
 }
-
+//添加记录
+addRecord = function(domain, action){
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/addRecord",
+	dataType:"json",
+	data:{action:action},
+	error:function(){},
+	success:function(){}
+	});
+}
 //重启应用
 function restart(){
 	$.ajax({
@@ -184,7 +195,8 @@ function restart(){
 							}, 3000);
 							errTimer = window.setInterval(function(){
 								getOutput("stderr");
-							}, 3000);	
+							}, 3000);
+							addRecord(domain, "应用重启");
 						}else{
 							showMsg2("重启失败:"+data.msg);
 						}
@@ -203,6 +215,7 @@ function restart(){
 			errTimer = window.setInterval(function(){
 				getOutput("stderr");
 			}, 3000);
+			addRecord(domain, "应用重启");
 		}
 		getOutput("stdout");
 		getOutput("stderr");

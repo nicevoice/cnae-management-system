@@ -209,9 +209,8 @@ app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 app.post("/application/manage/:id/controlApp", hasLogin, checkChangeAuth(2), manager.doControlApp);
 app.post("/application/manage/:id/getStdOutput", hasLogin,checkAuth, manager.getStdOutput);
-//app.post("/application/manage/:id/getStatus", hasLogin, manager.getStatus);
 app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getStatus);
-
+app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, manager.addRecord);
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);
