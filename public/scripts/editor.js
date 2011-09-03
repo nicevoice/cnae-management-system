@@ -11,10 +11,10 @@ var outTimer, errTimer;	//获取stdoutput的定时器，点击重启应用以后
  */
 function setEditorSize(h, w) {
 	if(typeof h == "undefined") {
-		h = document.documentElement.clientHeight - (80 + 130);
+		h = document.body.clientHeight - (80 + 130);
 	}
 	if(typeof w == "undefined") {
-		w = document.documentElement.clientWidth - 260;
+		w = document.body.clientWidth - 260;
 	}
 	$('#editor').css("height", h).css("width", w);
 }
@@ -24,7 +24,7 @@ function setEditorSize(h, w) {
  */
 function setConsoleSize(w) {
 	if(typeof w == "undefined")
-		w = (document.documentElement.clientWidth - 25) / 2;
+		w = (document.body.clientWidth - 25) / 2;
 	$('#stdout').css("width", w);
 	$('#stderr').css("width", w);
 }
