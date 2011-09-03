@@ -330,8 +330,8 @@ exports.doUpload = function(req, res){
 						}else{
 							unCompress = 'unzip '+ savePath;
 						}
-						console.log(unCompress);
-						exec("unzip /home/admin/cnae/git/cnode-app-engine/apps/ffffffffff/code.zip", function(err, stdout, stderr){
+						exec(unCompress, function(err, stdout, stderr){
+							if(err)console.log(err);
 							console.log("unzip");
 							exec('rm -rf '+savePath, function(err){
 								if(err){
