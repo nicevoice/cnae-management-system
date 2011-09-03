@@ -196,7 +196,7 @@ function restart(){
 							errTimer = window.setInterval(function(){
 								getOutput("stderr");
 							}, 3000);
-							addRecord(domain, "应用重启");
+							addRecord(DOMAIN, "应用重启");
 						}else{
 							showMsg2("重启失败:"+data.msg);
 						}
@@ -215,7 +215,7 @@ function restart(){
 			errTimer = window.setInterval(function(){
 				getOutput("stderr");
 			}, 3000);
-			addRecord(domain, "应用重启");
+			addRecord(DOMAIN, "应用重启");
 		}
 		getOutput("stdout");
 		getOutput("stderr");

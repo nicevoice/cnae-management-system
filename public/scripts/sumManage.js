@@ -132,7 +132,7 @@ controlApp = function(){
 				thisApp.val("上线");
 				stateDes.html("未启用");
 			}
-			addRecord(domain, "应用上线");
+			addRecord(domain, "应用"+thisApp.val());
 		}else{
 			sAlert("警告", data.msg);
 		}
