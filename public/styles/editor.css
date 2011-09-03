@@ -48,4 +48,4 @@ html[xmlns] .clearfix { display: block; }
 #console #stdout-panel { float: left; margin-left: 5px; }
 #console #stderr-panel { float: right; margin-right: 5px; }
 #console .console-label { height: 20px; width: 200px; }
-#console #stdout, #console #stderr { background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 95px;  }
+#console #stdout, #console #stderr { background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 95px; width: 48%; }
