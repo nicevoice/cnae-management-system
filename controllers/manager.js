@@ -331,10 +331,8 @@ exports.doUpload = function(req, res){
 							unCompress = 'unzip '+ savePath;
 						}
 						console.log(unCompress);
-						exec(unCompress, 
-						function(err, stdout, stderr){
-							console.log(stdout);
-							console.log(stderr);
+						exec(unCompress, function(err, stdout, stderr){
+							console.log("unzip");
 							exec('rm -rf '+savePath, function(err){
 								if(err){
 									console.log(err);
