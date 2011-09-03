@@ -320,7 +320,7 @@ exports.doUpload = function(req, res){
 						log.error(err);
 						return res.render("error",{message:"创建文件错误"});
 					}
-					fs.chmod(savePath, '444', function(err){
+					fs.chmod(savePath, '777', function(err){
 						if(err){
 						return res.render("error", {message:"修改权限错误"});
 						}
