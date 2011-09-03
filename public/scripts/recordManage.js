@@ -1,5 +1,9 @@
 $(function(){
 	//分页
+	pagination();
+});
+
+function pagination(){
 	var url = window.location.href;
 	var prev = $("li.prev"), next = $("li.next");
 	if(!url.split("?")[1]){
@@ -25,8 +29,9 @@ $(function(){
 	}else{
 		prev.children("a").attr("href",temps[0]+"="+(page-1));	
 	}
-	next.children("a").attr("href",temps[0]+"="+(page+1));	
-	if($("div .pagination li").eq("-2").attr("class").indexOf("active")!=-1){
+	next.children("a").attr("href",temps[0]+"="+(page+1));
+	var sLastClass = $("div .pagination li").eq("-2").attr("class");
+	if(sLastClass && sLastClass.indexOf("active")!=-1){
 		next.addClass("disabled").click(function(){return false;});
 	}
-});
+}
