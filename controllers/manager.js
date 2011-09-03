@@ -324,13 +324,13 @@ exports.doUpload = function(req, res){
 						if(err){
 						return res.render("error", {message:"修改权限错误"});
 						}
-//						var unCompress = "";
-//						if(type==="gz"){
-//							unCompress = 'tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain;
-//						}else{
-//							unCompress = 'unzip '+ savePath;
-//						}
-						exec('unzip '+savePath+' -d '+uploadDir+ '/'+domain, function(err, stdout, stderr){
+						var unCompress = "";
+						if(type==="gz"){
+							unCompress = 'tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain;
+						}else{
+							unCompress = 'unzip '+savePath+' -d '+uploadDir+ '/'+domain
+						}
+						exec(unCompress, function(err, stdout, stderr){
 							if(err)console.log(err);
 							console.log("unzip");
 							exec('rm -rf '+savePath, function(err){
