@@ -97,6 +97,17 @@ function setStatus(){
 	}
 	});	
 }
+addRecord = function(domain, action){
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/addRecord",
+	dataType:"json",
+	data:{action:action},
+	error:function(){},
+	success:function(){}
+	});
+}
 controlApp = function(){
 	var domain = $("#appDomain").html(),
 	thisApp = $(this),
@@ -121,6 +132,7 @@ controlApp = function(){
 				thisApp.val("上线");
 				stateDes.html("未启用");
 			}
+			addRecord(domain, "应用上线");
 		}else{
 			sAlert("警告", data.msg);
 		}
@@ -157,7 +169,8 @@ restart = function(){
 						setStatus();
 						sAlert("","应用已重启");
 						$("#controlApp").val("下线");
-						stateDes.html("已启用");			
+						stateDes.html("已启用");
+						addRecord(domain, "应用重启");
 						}else{
 							sAlert("警告",data.msg);
 						}
@@ -171,7 +184,8 @@ restart = function(){
 			setStatus();
 			sAlert("","应用已重启");
 			$("#controlApp").val("下线");
-			stateDes.html("已启用");			
+			stateDes.html("已启用");
+			addRecord(domain, "应用重启");
 		}
 	}
 	});
