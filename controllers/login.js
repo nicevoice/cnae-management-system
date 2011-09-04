@@ -185,6 +185,10 @@ exports.checkRegist = function(req, res){
 	});
 	}
 	}
+	
+function getDbAccount(email){
+	
+}
 /***
  * 检测email是否已被注册
  * @param {} req
