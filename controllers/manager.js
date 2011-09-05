@@ -310,6 +310,7 @@ exports.doUpload = function(req, res){
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
 	//解压文件
+	console.log(files);
 	if(filePath){
 		var type = filePath.slice(filePath.lastIndexOf('.')+1);
 		if(type=="gz"||type=="zip"){
@@ -358,6 +359,16 @@ exports.doUpload = function(req, res){
 			return res.render("error", {message:"请选择一个文件上传"});
 	}
 } 	
+exports.doUploadImg(req, res){
+	var domain = req.params.id||'';
+    var fields = req.form.fields, files = req.form.files;
+	var filePath = files.upload ? files.upload.filename : null;	
+	var types = {}
+	if(filePath){
+		var type = filePath.slice(filePath.lastIndexOf('.')+1);
+		
+	}
+}
 /***
  * 显示管理日志
  * @param {} req
