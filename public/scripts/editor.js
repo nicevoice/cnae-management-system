@@ -244,6 +244,7 @@ function getOutput(action){
 			}					
 		},
 		success:function(data){
+			alert(data.output);
 			$("#"+action).html(data.output);
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
