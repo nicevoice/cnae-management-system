@@ -147,6 +147,18 @@ function showMsg2(content, waiting, speed) {
 	msger.html(content);
 	setTimeout(function() { msger.slideUp(speed); }, waiting);
 }
+
+function htmlspecialchars(str) {
+	if (typeof(str) == "string") {
+		str = str.replace(/&/g, "&amp;"); /* must do &amp; first */
+		str = str.replace(/"/g, "&quot;");
+		str = str.replace(/'/g, "&#039;");
+		str = str.replace(/</g, "&lt;");
+		str = str.replace(/>/g, "&gt;");
+	}
+	return str;
+}
+
 //添加记录
 addRecord = function(domain, action){
 	$.ajax({
@@ -159,6 +171,7 @@ addRecord = function(domain, action){
 	success:function(){}
 	});
 }
+
 //重启应用
 function restart(){
 	$.ajax({
@@ -244,7 +257,8 @@ function getOutput(action){
 			}					
 		},
 		success:function(data){
-			$("#"+action).html(data.output);
+			var d = htmlspecialchars(data.output);
+			$("#"+action).html(d);
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
 					getOutput(action);
