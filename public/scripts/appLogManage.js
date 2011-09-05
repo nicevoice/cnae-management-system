@@ -29,6 +29,7 @@ function getOutput(action){
 		res = res.replace(/'/g, '&acute;');
 		res = res.replace(/"/g, '&quot;');
 		res = res.replace(/\|/g, '&brvbar;');
+		alert(res);
 		$("#"+action).html(res);
 		window.setTimeout(function(){	
 			getOutput(action);
