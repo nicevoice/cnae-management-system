@@ -98,7 +98,7 @@ function sAlert(strTitle,strContent){
     title.style.color="white"; 
     title.style.cursor="pointer"; 
     title.title = "点击关闭"; 
-    title.innerHTML="<table border='0' width='100%'><tr><td align='left'><b>"+ strTitle +"</b></td><td align='right'>关闭</td></tr></table></div>"; 
+    title.innerHTML="<table width='100%' class='noMargin'><tr><td align='left'><b>"+ strTitle +"</b></td><td align='right'>关闭</td></tr></table></div>"; 
     title.inn
     var deleteFunc = function(){ 
     document.body.removeChild(bgObj); 

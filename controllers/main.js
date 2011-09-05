@@ -320,20 +320,6 @@ exports.getOwnAuthInfo = function(req, res){
 			});
 		}
 	})
-	app_mem.find({appDomain:appDomain, email:email},
-		{role:1, active:1}).toArray(
-		function(err, data){
-		if(err){
-			resAjax(res,{});	
-		}else{
-			if(data[0]){
-				resAjax(res, {role:data[0].role, active:data[0].active});
-			}
-			else{
-				resAjax(res, {});
-			}
-		}
-	})
 }
 
 /***
