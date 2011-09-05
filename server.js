@@ -6,6 +6,7 @@ if(!config.debug) {
 
 var express = require('express'),
 	ejs = require('ejs'),
+	fs = require('fs'),
 	login = require('./controllers/login'),
 	manager = require('./controllers/manager'),
 	user = require('./controllers/user'),
@@ -245,3 +246,14 @@ app.get("*", main.pageNotFound);
 
 app.listen(config.port);
 console.log("server start http://localhost:" + config.port);
+
+var pid_path = __dirname + '/server.pid';
+fs.writeFile(pid_path, '' + process.pid);
+process.on('SIGINT', function () {
+//    console.log('Got SIGINT.  Press Control-D to exit.', arguments);
+    try {
+        fs.unlinkSync(pid_path);
+    } catch (e){
+    }
+    process.exit();
+});
