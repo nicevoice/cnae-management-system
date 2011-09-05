@@ -1,12 +1,10 @@
 $(function(){
-	getOutput("stdout");
-	getOutput("stderr");
 	window.setTimeout(function(){	
 		getOutput("stdout");					
-	}, 10000);
+	}, 10);
 	window.setTimeout(function(){
 		getOutput("stderr");
-	}, 10000);	
+	}, 10);	
 })
 
 function getOutput(action){
