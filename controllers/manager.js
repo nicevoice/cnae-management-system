@@ -359,7 +359,7 @@ exports.doUpload = function(req, res){
 			return res.render("error", {message:"请选择一个文件上传"});
 	}
 } 	
-exports.doUploadImg(req, res){
+exports.doUploadImg = function(req, res){
 	var domain = req.params.id||'';
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;	
