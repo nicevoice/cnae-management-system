@@ -21,8 +21,15 @@ function getOutput(action){
 		getOutput(action);
 		},30000);
 	},
-	success:function(data){								
-		$("#"+action).html(data.output);
+	success:function(data){
+		var res = data.output;
+		res = res.replace(/&/g, '&amp;');
+		res = res.replace(/</g, '&lt;');
+		res = res.replace(/>/g, '&gt;');
+		res = res.replace(/'/g, '&acute;');
+		res = res.replace(/"/g, '&quot;');
+		res = res.replace(/\|/g, '&brvbar;');
+		$("#"+action).html(res);
 		window.setTimeout(function(){	
 			getOutput(action);
 		},10000);
