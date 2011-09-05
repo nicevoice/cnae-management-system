@@ -24,6 +24,8 @@ $(function(){
 		$(this).change(changeRole);
 	})
 });
+
+
 //发出邀请
 function submitInvite(){
 	var email = $("#inviteEmail").val();
