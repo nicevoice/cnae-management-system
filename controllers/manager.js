@@ -334,7 +334,7 @@ exports.doUpload = function(req, res){
 						console.log(unCompress);
 						exec(unCompress, function(err, stdout, stderr){
 							if(err)console.log(err);
-							console.log("unzip");
+							console.log("unCompress");
 							exec('rm -rf '+savePath, function(err){
 								if(err){
 									console.log(err);
@@ -366,7 +366,6 @@ exports.doUploadImg = function(req, res){
 	var types = {}
 	if(filePath){
 		var type = filePath.slice(filePath.lastIndexOf('.')+1);
-		
 	}
 }
 /***

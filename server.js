@@ -53,7 +53,7 @@ app.use(express.session({
 //post
 app.use(express.bodyParser());
 
-app.use(express.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
+//app.use(express.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
 
 app.helpers({
 config:config
