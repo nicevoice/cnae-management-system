@@ -244,13 +244,6 @@ function getOutput(action){
 			}					
 		},
 		success:function(data){
-			var res = data.output;
-			res = res.replace(/&/g, '&amp;');
-			res = res.replace(/</g, '&lt;');
-			res = res.replace(/>/g, '&gt;');
-			res = res.replace(/'/g, '&acute;');
-			res = res.replace(/"/g, '&quot;');
-			res = res.replace(/\|/g, '&brvbar;');
 			$("#"+action).html(data.output);
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
