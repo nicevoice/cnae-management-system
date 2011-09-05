@@ -27,7 +27,7 @@ function delApp(domain){
       if(data.id==-1)
         sAlert("警告","连接错误，请稍后再试");
       else{
-	      var deleteDiv = document.getElementById(domain);
+	      var deleteDiv = document.getElementById(domain+"-div");
 	      deleteDiv.parentNode.removeChild(deleteDiv);
 	      var appNums = 0;
 		  $('div .ownApp').each(function(index) {
@@ -61,8 +61,8 @@ $.ajax({
       if(data.done===false)
       sAlert("警告","连接错误，请稍后再试");
       else{
-		$("#coop"+domain + " img").attr('src', '/images/arrow.gif');
-      	$("#active"+domain).css("display", "none");
+		$("#coop-"+domain + " img").attr('src', '/images/arrow.gif');
+      	$("#active-"+domain).css("display", "none");
       	$("#inactived"+domain).removeClass("inactiveApp");
       	}
    	}
@@ -86,7 +86,7 @@ $.ajax({
       if(data.done===false)
       sAlert("警告","连接错误，请稍后再试");
       else{
-	      var deleteNode = document.getElementById("coop"+domain);
+	      var deleteNode = document.getElementById("coop-"+domain);
 	      deleteNode.parentNode.removeChild(deleteNode);
 	      	$('div .otherApp').each(function(index) {
 			$(this).unbind("mouseenter").unbind("mouseleave");

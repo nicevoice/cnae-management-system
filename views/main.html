@@ -8,12 +8,12 @@
         <% for(var i = 0, len = ownApps.length; i < len; i++) {
         var app = ownApps[i];
         %>
-        <div class="application  ownApp" id="<%= app.appDomain %>">
+        <div class="application  ownApp" id="<%= app.appDomain %>-div">
           <li class="appLi" >
         <img src="/images/arrow.gif"></img>
         &nbsp;
         <a href="/application/manage/<%= app.appDomain%>/sum" title="管理" class="title"><%= app.appName %></a>
-        <span class="appActions" id="appAction<%=app.appDomain%>">
+        <span class="appActions" id="appAction-<%=app.appDomain%>">
         <a class="deleteApp" href="javascript:void(0)" 
         onclick="delApp('<%=app.appDomain%>')">删除</a>
         </span>
@@ -39,7 +39,7 @@
         <% for(var i = 0, len = otherApps.length; i < len; i++) {
         var app = otherApps[i];
         %>
-        <div class="application otherApp" id="coop<%= app.appDomain %>">
+        <div class="application otherApp" id="coop-<%= app.appDomain %>">
           <li class="appLi">
         <% if(app.active===0) {%>
         	<img src = "/images/inactive.gif"></img>&nbsp;
@@ -51,9 +51,9 @@
         	inactiveApp
         <%}%>
         "><%= app.appName %></a>
-        <span class="appActions" id="appAction<%=app.appDomain%>">
+        <span class="appActions" id="appAction-<%=app.appDomain%>">
         <% if(app.active===0) {%>
-        <a class="appActive" id="active<%=app.appDomain%>"
+        <a class="appActive" id="active-<%=app.appDomain%>"
          href="javascript:void(0)" onclick="active('<%=app.appDomain%>')">先点此激活应用</a>
         <%}%>
         <a class="deleteApp" href="javascript:void(0)" 
