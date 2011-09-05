@@ -304,16 +304,26 @@ exports.vermng = function(req, res){
 	nickName:req.session.nickName, email:req.session.email});
 };
 
-
+/***
+ * 上传代码，gz zip格式
+ * todo:zip格式偶尔出现过问题，控制上传大小
+ * @param {} req
+ * @param {} res
+ * @return {}
+ */
 exports.doUpload = function(req, res){
 	var domain = req.params.id||'';
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
 	//解压文件
-	console.log(files);
+	var type = files.upload.type;
 	if(filePath){
-		var type = filePath.slice(filePath.lastIndexOf('.')+1);
-		if(type=="gz"||type=="zip"){
+		if(type==="application/zip"||type==="application/x-gzip"||type==="application/octet-stream"){
+			if(type==="application/zip"||type==="application/octet-stream"){
+				type = "zip";
+			}else{
+				type= "gz";
+			}
 			var savePath = uploadDir+'/'+domain +'/'+"code."+type; 
 			fs.mkdir(path.dirname(savePath), '777', function(err){
 					fs.rename(files.upload.path, savePath, function(err){
@@ -359,13 +369,38 @@ exports.doUpload = function(req, res){
 			return res.render("error", {message:"请选择一个文件上传"});
 	}
 } 	
+
+/***
+ * 
+ * @param {} req
+ * @param {} res
+ */
+exports.doDownload = function(req, res){
+	var domain = req.params.domain||'';
+	var compress = "zip " + uploadDir + "/" + domain + " "
+}
+/***
+ * 上传图片
+ * todo：上传大小限制
+ * @param {} req
+ * @param {} res
+ */
 exports.doUploadImg = function(req, res){
 	var domain = req.params.id||'';
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;	
-	var types = {}
 	if(filePath){
-		var type = filePath.slice(filePath.lastIndexOf('.')+1);
+		if(fiiles.upload.type.indexOf("image")!==-1){
+			var savePath = uploadDir+'/'+domain +'/'+ fields + "/"+files.upload.name;
+			fs.rename(files.upload.path, savePath, function(err){
+				if(err){
+					log.error(err);
+					return resAjax(res, {done:false});
+				}else{
+					return resAjax(res, {done:true});
+				}
+			});
+		}
 	}
 }
 /***

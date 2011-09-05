@@ -299,8 +299,27 @@ exports.checkAppDomain = function(req, res){
  * @param {} res
  */
 exports.getOwnAuthInfo = function(req, res){
-	var email = req.session.email,
-		appDomain = req.body.domain;
+	//todo:修改成加密文验证。现在是用户名密码验证
+	var email = req.body.email||'',
+		password = req.body.password||'',
+		domain = req.body.domain||'';
+		//验证用户
+	users.findOne({email:email, password:password}, function(err, data){
+		if(err){
+			return resAjax(res, {status:"error",msg:"数据库查询错误"});
+		}else if(!data){
+			return resAjax(res, {status:"error", msg:"未登录或帐号密码错误"});
+		}else{
+			//查找权限
+			app_mem.findOne({appDomain:domain, email:email}, function(err ,data){
+				if(err){
+					return resAjax(res, {status:"error",msg:"数据库查询错误"});
+				}else{
+					return resAjax(res, {status:"ok", role:data.role});
+				}
+			});
+		}
+	})
 	app_mem.find({appDomain:appDomain, email:email},
 		{role:1, active:1}).toArray(
 		function(err, data){

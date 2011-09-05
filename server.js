@@ -190,6 +190,7 @@ app.get("/feedback", hasLogin, feedback.show);
 app.get("/doc", hasLogin, main.showDoc);
 
 //应用管理模块
+//显示
 app.get("/application/manage/:id", function(req, res, next){next();});
 app.get("/application/manage/:id/sum", hasLogin, checkAuth, manager.sum);
 app.get("/application/manage/:id/report", hasLogin, checkAuth, manager.report);
@@ -203,15 +204,28 @@ app.get("/application/manage/:id/mysqlmng", hasLogin, checkAuth, manager.mysqlmn
 app.get("/application/manage/:id/cornmng", hasLogin,checkAuth, manager.cornmng);
 app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
 
+//修改应用信息
 app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), manager.doAppmng);
+//发出邀请
 app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manager.doCoopmng);
+//删除协作者
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
+//上传代码
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
+//代码打包下载
+app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), manager.doDownload);
+//更改协作者权限
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
+//控制APP上下线
 app.post("/application/manage/:id/controlApp", hasLogin, checkChangeAuth(2), manager.doControlApp);
+//获取标准输出/错误
 app.post("/application/manage/:id/getStdOutput", hasLogin,checkAuth, manager.getStdOutput);
+//获取应用状态信息
 app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getStatus);
+//添加应用管理记录
 app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, manager.addRecord);
+//上传图片接口
+app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), manager.doUploadImg);
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);
@@ -224,8 +238,9 @@ app.get("/feedBack", hasLogin, feedback.show);
 app.post("/feedBack",hasLogin, feedback.postFeed);
 
 //获取权限
-app.post("/getOwnAuthInfo", hasLogin, main.getOwnAuthInfo);
+app.post("/getOwnAuthInfo", main.getOwnAuthInfo);
 
+//邀请码模块
 app.get("/inviteCode", hasLogin, isAdmin, inviteCode.showInviteCode);
 app.post("/inviteCode", hasLogin, isAdmin, inviteCode.generateInviteCode);
 app.post("/sendInviteCode", hasLogin, isAdmin, inviteCode.sendInviteCode);
