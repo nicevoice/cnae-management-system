@@ -346,10 +346,9 @@ exports.doUpload = function(req, res){
 						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 						action:"上传代码："+savePath.slice(savePath.lastIndexOf('/')+1), recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
-//						var info = req.url.slice(0, req.url.lastIndexOf('/'));
-//						info += '/sum'
-//						return res.redirect(info);
-						return res.redirect(req.url);
+						var codeManage = req.url.slice(0, req.url.lastIndexOf('/'));
+						codeManage += '/vermng';
+						return res.redirect(codeManage);
 					});
 					});
 			});
