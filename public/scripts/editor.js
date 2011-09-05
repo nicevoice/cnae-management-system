@@ -190,12 +190,12 @@ function restart(){
 						    showMsg2("重启成功");
 							window.clearInterval(outTimer);
 							window.clearInterval(errTimer);
-							outTimer = window.setInterval(function(){
+							outTimer = window.setTimeout(function(){
 								getOutput("stdout");
-							}, 3000);
-							errTimer = window.setInterval(function(){
+							}, 10);
+							errTimer = window.setTimeout(function(){
 								getOutput("stderr");
-							}, 3000);
+							}, 10);
 							addRecord(DOMAIN, "应用重启");
 						}else{
 							showMsg2("重启失败:"+data.msg);
@@ -209,12 +209,12 @@ function restart(){
 		    showMsg2("重启成功");
 			window.clearInterval(outTimer);
 			window.clearInterval(errTimer);
-			outTimer = window.setInterval(function(){
+			outTimer = window.setTimeout(function(){
 				getOutput("stdout");
-			}, 3000);
-			errTimer = window.setInterval(function(){
+			}, 10);
+			errTimer = window.setTimeout(function(){
 				getOutput("stderr");
-			}, 3000);
+			}, 10);
 			addRecord(DOMAIN, "应用重启");
 		}
 		getOutput("stdout");
@@ -232,9 +232,29 @@ function getOutput(action){
 		data:{action:action},
 		error:function(){
 			$("#"+action).html(action + "获取失败");
+			if(action == "stdout"){
+				outTimer = window.setTimeout(function(){
+					getOutput(action);
+				}, 30000);
+			}
+			else{
+				errTimer = window.setTimeout(function(){
+					getOutput(action);
+				}, 30000);
+			}					
 		},
 		success:function(data){
 			$("#"+action).html(data.output);
+			if(action == "stdout"){
+				outTimer = window.setTimeout(function(){
+					getOutput(action);
+				}, 3000);
+			}
+			else{
+				errTimer = window.setTimeout(function(){
+					getOutput(action);
+				}, 3000);
+			}
 		}
 	});	
 }
