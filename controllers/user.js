@@ -28,7 +28,7 @@ exports.userInfo = function(req, res){
 //				});
 //		}
 //	})
-	}
+//	}
 	console.log("123");
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
