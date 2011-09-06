@@ -54,9 +54,7 @@ download = function(){
 		sAlert("警告", "连接错误，请稍后再试");
 	},
 	success:function(data){
-		sAlert(data);
 		if(data.status==="ok"){
-			sAlert("ok!");
 			window.open(data.url);
 		}else{
 			sAlert("警告", "发生错误，请稍后再试");

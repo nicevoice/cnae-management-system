@@ -382,13 +382,9 @@ exports.doDownload = function(req, res){
 	var now = new Date();
 	var name = domain + "_" + now.getTime() + ".zip";
 	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"public/download/"+name;
-	console.log("saveName:"+saveName);
-	console.log("cwd:"+cwd);
 	try{
 		process.chdir(uploadDir);
-		console.log(process.cwd());
 	}catch(err){
-		console.log("chdir error");
 		return resAjax(res, {status:"error", msg:"修改工作目录失败"});
 	}
 	var compress = "zip -r "+ saveName + " "+domain;
@@ -402,7 +398,11 @@ exports.doDownload = function(req, res){
 			console.log(err);
 			return resAjax(res, {status:"error", msg:"压缩失败"});		
 		}else{
-			console.log("OK!");
+			setTimeout(function(){
+				fs.unlink(saveName, function(){
+					console.log("删除文件错误");
+				}, 1000*60*10);
+			});
 			return resAjax(res, {status:"ok", url:"/download/"+name});
 		}	
 	})
