@@ -53,7 +53,7 @@ download = function(){
 	error:function(err){
 		sAlert("警告", "连接错误，请稍后再试");
 	},
-	succsess:function(data){
+	success:function(data){
 		sAlert(data);
 		if(data.status==="ok"){
 			sAlert("ok!");
