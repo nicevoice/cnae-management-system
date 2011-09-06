@@ -377,10 +377,10 @@ exports.doUpload = function(req, res){
  * @param {} res
  */
 exports.doDownload = function(req, res){
-	var domain = req.params.domain||'';
+	var domain = req.params.id||'';
 	var cwd = process.cwd();
 	var now = new Date();
-	var name = domain + "_" + Date() + ".zip";
+	var name = domain + "_" + now + ".zip";
 	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"/public/download/"+name;
 	console.log("saveName:"+saveName);
 	console.log("cwd:"+cwd);
@@ -400,6 +400,7 @@ exports.doDownload = function(req, res){
 			console.log("chir error");
 		}
 		if(err){
+			console.log(err);
 			return resAjax(res, {status:"error", msg:"压缩失败"});		
 		}else{
 			console.log(tdout);
