@@ -17,15 +17,16 @@ $(function(){
 			}
 		}
 	});
-	$("td a").each(function() {
-		$(this).click(deleteCoop);
-	});
-	bindSelect();
+
+	bindCoop();
 });
-function bindSelect(){
+function bindCoop(){
 	$("td select").each(function(){
 		$(this).change(changeRole);
 	})
+	$("td a").each(function() {
+		$(this).click(deleteCoop);
+	});
 }
 
 
@@ -63,7 +64,7 @@ function submitInvite(){
         html+='>观察者</option></select></td></tr>';
       	$("#allCoops").html($("#allCoops").html()+html);
       	$("#allCoops a:last").click(deleteCoop);
-      	bindSelect();
+      	bindCoop();
       	}
    	}
 });
