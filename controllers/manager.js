@@ -380,12 +380,13 @@ exports.doDownload = function(req, res){
 	var domain = req.params.id||'';
 	var cwd = process.cwd();
 	var now = new Date();
-	var name = domain + "_" + now + ".zip";
+	var name = domain + "_" + now.getTime() + ".zip";
 	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"/public/download/"+name;
 	console.log("saveName:"+saveName);
 	console.log("cwd:"+cwd);
 	try{
 		process.chdir(uploadDir);
+		console.log(process.cwd());
 	}catch(err){
 		console.log("chdir error");
 		return resAjax(res, {status:"error", msg:"修改工作目录失败"});
