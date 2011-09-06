@@ -35,7 +35,7 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			return res.render("appManageSum", {layout:"layoutApp", url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			nickName:req.session.nickName, email:req.session.email});
+			dbName:data.appDbName, nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -400,8 +400,8 @@ exports.doDownload = function(req, res){
 		}else{
 			setTimeout(function(){
 				fs.unlink(saveName, function(){
-					console.log("删除文件错误");
-				}, 1000*60*10);
+					console.log("删除文件");
+				}, 1000*60);
 			});
 			return resAjax(res, {status:"ok", url:"/download/"+name});
 		}	

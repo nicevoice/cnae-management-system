@@ -5,6 +5,7 @@ EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
 inviteCode = config.db.collection(config.db_inviteCode),
 urlMoudle = require('url'),
+randomStringNum = require('../lib/randomString').getRandomStringNum,
 resAjax = config.resAjax;
 /***
  * 显示登录页面
@@ -118,7 +119,8 @@ exports.checkRegist = function(req, res){
 		if(!goodCode)
 			return res.render("error", {message:"邀请码不正确"});
 		else{
-			users.save({email:userEmail, nickName:userNickName, password:userPassword}, function(err){
+			users.save({email:userEmail, nickName:userNickName, password:userPassword, 
+			dbUserName:email+"_"+randomStringNum(6), dbPassword:randomStringNum(10)}, function(err){
 				if(err){
 					log.error(err);
 					return res.render("error", {message:"注册失败，请稍后再试"});

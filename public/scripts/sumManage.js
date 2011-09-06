@@ -78,10 +78,10 @@ function setStatus(){
 		}
 		//填入是否启用信息
 		if(status.running===true){
-			appRunning = "已启用";
+			appRunning = "已上线";
 			appButtonName = "下线";
 		}else{
-			appRunning = "未启用";
+			appRunning = "未上线";
 			appButtonName = "上线";
 		}
 		//填入详细应用信息
