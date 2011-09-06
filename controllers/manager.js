@@ -377,7 +377,13 @@ exports.doUpload = function(req, res){
  */
 exports.doDownload = function(req, res){
 	var domain = req.params.domain||'';
-	var compress = "zip " + uploadDir + "/" + domain + " "
+	var psw = process.psw();
+	console.log(psw);
+	try{
+		process.chdir(directory);
+	}catch(err){
+		
+	}
 }
 /***
  * 上传图片
@@ -461,7 +467,10 @@ exports.getStatus = function(req, res){
 			socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
 		}else{
-		socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
+			if(!socketRes.ports||socketRes.ports.length===0){
+				socketRes.ports = [80];
+			}
+			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
 		return resAjax(res, socketRes);
 	})

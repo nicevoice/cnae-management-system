@@ -91,7 +91,11 @@ display:none;
 
 #submitUpload, #editor{
     position:relative;
-    left:70%;
+    left:60%;
+}
+#download, #setEditor{
+    position:relative;
+    left:63%;
 }
 #status{
 position:relative;
