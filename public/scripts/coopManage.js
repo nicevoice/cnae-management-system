@@ -58,8 +58,8 @@ function submitInvite(){
         html += '>参与者</option><option value="3"';
         if(data.role==3) html += " selected";
         html+='>观察者</option></select></td></tr>';
-      	$("#allCoops").html($("#allCoops").html()+=html);
-      	$("tr:last a").click(deleteCoop);
+      	$("#allCoops").html($("#allCoops").html()+html);
+      	$("#allCoops a:last").click(deleteCoop);
       	}
    	}
 });
