@@ -55,6 +55,7 @@ download = function(){
 	},
 	succsess:function(data){
 		if(data.status==="ok"){
+			sAlert("ok!");
 			window.open(data.url);
 		}else{
 			sAlert("警告", "发生错误，请稍后再试");
