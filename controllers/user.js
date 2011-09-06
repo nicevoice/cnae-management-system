@@ -19,15 +19,15 @@ exports.show = function(req, res){
 exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
-	if(email === "dead_horse@qq.com"){
-	users.find({}).toArray(function(err, data){
-		for(var i=0, len=data.length; i<len; ++i){
-				var email = data[i].email;
-				users.update({email:email},{$set:{dbUserName:email+"_"+randomStringNum(6), dbPassword:randomStringNum(10)}},
-				function(err, data){
-				});
-		}
-	})
+//	if(email === "dead_horse@qq.com"){
+//	users.find({}).toArray(function(err, data){
+//		for(var i=0, len=data.length; i<len; ++i){
+//				var email = data[i].email;
+//				users.update({email:email},{$set:{dbUserName:email+"_"+randomStringNum(6), dbPassword:randomStringNum(10)}},
+//				function(err, data){
+//				});
+//		}
+//	})
 	}
 	console.log("123");
 	users.findOne({email:email.toString()}, function(err, data){
