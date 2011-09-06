@@ -20,10 +20,13 @@ $(function(){
 	$("td a").each(function() {
 		$(this).click(deleteCoop);
 	});
+	bindSelect();
+});
+function bindSelect(){
 	$("td select").each(function(){
 		$(this).change(changeRole);
 	})
-});
+}
 
 
 //发出邀请
@@ -60,6 +63,7 @@ function submitInvite(){
         html+='>观察者</option></select></td></tr>';
       	$("#allCoops").html($("#allCoops").html()+html);
       	$("#allCoops a:last").click(deleteCoop);
+      	bindSelect();
       	}
    	}
 });
