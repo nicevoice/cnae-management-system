@@ -380,8 +380,8 @@ exports.doDownload = function(req, res){
 	var domain = req.params.domain||'';
 	var cwd = process.cwd();
 	var now = new Date();
-	var name = domain + "_" + Date.toString() + ".zip";
-	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"download/"+name;
+	var name = domain + "_" + Date() + ".zip";
+	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"/public/download/"+name;
 	console.log("saveName:"+saveName);
 	console.log("cwd:"+cwd);
 	try{
@@ -393,7 +393,7 @@ exports.doDownload = function(req, res){
 	var compress = "zip -r "+ saveName + " "+domain;
 	console.log(compress);
 	exec(compress, function(err, stdout, stderr){
-		console.log(comporess);
+		console.log(compress);
 		try{
 			process.chdir(cwd);
 		}catch(err){
