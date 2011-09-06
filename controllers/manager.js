@@ -404,6 +404,7 @@ exports.doDownload = function(req, res){
 			console.log(err);
 			return resAjax(res, {status:"error", msg:"压缩失败"});		
 		}else{
+			
 			return resAjax(res, {status:"ok", url:"/download/"+name});
 		}	
 	})
