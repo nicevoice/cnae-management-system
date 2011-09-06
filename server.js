@@ -214,6 +214,7 @@ app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAu
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
 //代码打包下载
 app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), manager.doDownload);
+app.get("/application/download/:id.zip", hasLogin, manager.downloading);
 //更改协作者权限
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 //控制APP上下线

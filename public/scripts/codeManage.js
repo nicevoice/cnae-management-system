@@ -9,6 +9,7 @@ $(function(){
 	error:function(){
 		$("#submitUpload").click(upload);
 		$("#editor").click(popEditor);
+		$("#download").click(download);
 	},
 	success:function(data){
 		if(data.active===0 || data.role>2){//如果是观察者
@@ -17,6 +18,7 @@ $(function(){
 		}else{
 			$("#submitUpload").click(upload);
 			$("#editor").click(popEditor);
+			$("#download").click(download);
 		}
 	}
 	});
@@ -39,4 +41,24 @@ popEditor = function(){
 	var domain = $("#appDomain").html();
 	var url = "http://"+location.host+"/editor/"+domain;
 	window.open(url);
+}
+download = function(){
+	var domain = $("#appDomain").html();
+	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/download",
+	dataType:"json",
+	data:{},
+	error:function(err){
+		sAlert("警告", "连接错误，请稍后再试");
+	},
+	succsess:function(data){
+		if(data.status==="ok"){
+			window.open(data.url);
+		}else{
+			sAlert("警告", "发生错误，请稍后再试");
+		}
+	}
+	})
 }

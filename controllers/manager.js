@@ -6,6 +6,7 @@ var config = require('../config')
   , exec  = require('child_process').exec
   , onOff = require('../lib/socket').onOff
   , getLog = require('../lib/socket').getLog
+  , randomString = require('../lib/randomString')
   , child
   , db = config.db
   , log = config.logWithFile
@@ -378,12 +379,45 @@ exports.doUpload = function(req, res){
 exports.doDownload = function(req, res){
 	var domain = req.params.domain||'';
 	var psw = process.psw();
-	console.log(psw);
+	var now = new Date();
+	var name = domain + "_" + Date.toString() + ".zip";
+	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"download/"+name;
+	console.log("saveName:"+saveName);
+	console.log("psw:"+psw);
 	try{
-		process.chdir(directory);
+		process.chdir(uploadDir);
 	}catch(err){
-		
+		console.log("chdir error");
+		return resAjax(res, {status:"error", msg:"修改工作目录失败"});
 	}
+	var compress = "zip -r "+ saveName + " "+domain;
+	console.log(compress);
+	exec(compress, function(err, stdout, stderr){
+		console.log(comporess);
+		if(err){
+			return resAjax(res, {status:"error", msg:"压缩失败"});		
+		}else{
+			console.log(tdout);
+			console.log(stderr);
+			return resAjax(res, {status:"ok", url:"/download/"+name});
+		}	
+	})
+}
+
+exports.downloading = function(req, res){
+	var name = req.params.id||'',
+		domain = name.slice(0, name.lastIndexOf("_"));
+	app_mem.findOne({email:req.session.email, appDomain:domain}, function(err, data){
+		if(err){
+			return res.render("error", {msg:"查询数据库出错，请稍后再试"});
+		}else{
+			if(data.role&&data.active && data.role<=2 && data.active===1){
+				return res.render("/download/"+name+".zip");
+			}else{
+				return res.render("error", {msg:"不够权限下载这个应用"});
+			}
+		}
+	})
 }
 /***
  * 上传图片
@@ -467,9 +501,6 @@ exports.getStatus = function(req, res){
 			socketRes={rss:"", heap:"",uptime:"",
 			last:"",pid:"",autorun:"",running:"", ports:[80]};
 		}else{
-			if(!socketRes.ports||socketRes.ports.length===0){
-				socketRes.ports = [80];
-			}
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
 		return resAjax(res, socketRes);
