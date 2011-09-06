@@ -3,7 +3,7 @@ var pathutil = require('path');
 var mongo = require("mongoskin");
 var fs = require('fs');
 
-var debug = exports.debug = false;
+var debug = exports.debug = true;
 
 var root_dir = pathutil.dirname(__dirname)
   , cnae_dir = pathutil.join(root_dir, 'cnode-app-engine');
