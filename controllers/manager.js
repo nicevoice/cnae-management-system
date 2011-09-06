@@ -378,12 +378,12 @@ exports.doUpload = function(req, res){
  */
 exports.doDownload = function(req, res){
 	var domain = req.params.domain||'';
-	var psw = process.psw();
+	var cwd = process.cwd();
 	var now = new Date();
 	var name = domain + "_" + Date.toString() + ".zip";
 	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"download/"+name;
 	console.log("saveName:"+saveName);
-	console.log("psw:"+psw);
+	console.log("cwd:"+cwd);
 	try{
 		process.chdir(uploadDir);
 	}catch(err){
@@ -394,6 +394,11 @@ exports.doDownload = function(req, res){
 	console.log(compress);
 	exec(compress, function(err, stdout, stderr){
 		console.log(comporess);
+		try{
+			process.chdir(cwd);
+		}catch(err){
+			console.log("chir error");
+		}
 		if(err){
 			return resAjax(res, {status:"error", msg:"压缩失败"});		
 		}else{
