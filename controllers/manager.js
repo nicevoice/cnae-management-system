@@ -381,7 +381,7 @@ exports.doDownload = function(req, res){
 	var cwd = process.cwd();
 	var now = new Date();
 	var name = domain + "_" + now.getTime() + ".zip";
-	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"/public/download/"+name;
+	var saveName = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"public/download/"+name;
 	console.log("saveName:"+saveName);
 	console.log("cwd:"+cwd);
 	try{
