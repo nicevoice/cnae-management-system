@@ -392,9 +392,7 @@ exports.doDownload = function(req, res){
 		return resAjax(res, {status:"error", msg:"修改工作目录失败"});
 	}
 	var compress = "zip -r "+ saveName + " "+domain;
-	console.log(compress);
 	exec(compress, function(err, stdout, stderr){
-		console.log(compress);
 		try{
 			process.chdir(cwd);
 		}catch(err){
@@ -404,7 +402,7 @@ exports.doDownload = function(req, res){
 			console.log(err);
 			return resAjax(res, {status:"error", msg:"压缩失败"});		
 		}else{
-			
+			console.log("OK!");
 			return resAjax(res, {status:"ok", url:"/download/"+name});
 		}	
 	})
