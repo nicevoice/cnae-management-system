@@ -195,14 +195,35 @@ exports.deleteApp = function(req, res){
 				resAjax(res, {done:true});
 			}
 		});
-		app_basic.remove({appDomain:delDomain}, function(err){
+		deleteEvent.once("deleteDb", function(deleteDb){
+			if(!deleteDb){
+				return deleteEvent.fire("deleteBasic", false);
+			}
+			app_basic.remove({appDomain:delDomain}, function(err){
+				if(err){
+					log.error(err);
+					deleteEvent.fire("deletedBasic", false);
+				}
+				else{
+					deleteEvent.fire("deletedBasic", true);
+				}
+			});
+		});
+		app_basic.findOne({appDomain:delDomain}, function(err, data){
 			if(err){
-				log.error(err);
-				deleteEvent.fire("deletedBasic", false);
+				return deleteEvent.fire("deleteDb", false);
 			}
-			else{
-				deleteEvent.fire("deletedBasic", true);
-			}
+			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
+					data.appDbName;
+			exec(command, function(err){
+				console.log(command);
+				if(err){
+					console.log(err);
+					deleteEvent.fire("deleteDb", false);
+				}else{
+					deleteEvent.fire("deleteDb", true);
+				}
+			});
 		});
 		app_mem.remove({appDomain:delDomain}, function(err){
 			if(err){
@@ -222,17 +243,8 @@ exports.deleteApp = function(req, res){
 				deleteEvent.fire("deletedRecords", true);
 			}
 		});
-		var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
-				delDomain + "_mongo ";
-		exec(command, function(err){
-			console.log(command);
-			if(err){
-				console.log(err);
-				deleteEvent.fire("deleteDb", false);
-			}else{
-				deleteEvent.fire("deleteDb", true);
-			}
-		});
+		
+
 		onOff("stop", delDomain, function(){
 			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
 			if(err){

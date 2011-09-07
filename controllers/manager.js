@@ -37,7 +37,7 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			return res.render("appManageSum", {layout:"layoutApp", url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			dbType:data.appDbType, nickName:req.session.nickName, email:req.session.email});
+			dbType:data.appDbType, dbName:data.appDbName, nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -359,9 +359,9 @@ exports.doUpload = function(req, res){
 						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 						action:"上传代码："+savePath.slice(savePath.lastIndexOf('/')+1), recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
-						var codeManage = req.url.slice(0, req.url.lastIndexOf('/'));
-						codeManage += '/vermng';
-						return res.redirect(codeManage);
+						var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
+						sumManage += '/sum';
+						return res.redirect(sumManage);
 					});
 					});
 			});
@@ -531,8 +531,14 @@ exports.showMongo = function(req, res){
 			log.error(err);
 			res.render("error", {msg:"数据库错误，请稍后再试"});
 		}else{
-			res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
-			nickName:req.session.nickName, email:req.session.email});
+			users.findOne({email:req.session.email}, function(err, user){
+				if(err){
+					log.error(err);
+					res.render("error", {msg:"数据库错误，请稍后再试"});
+				}
+				res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
+				nickName:req.session.nickName, email:req.session.email, dbUserName:user.dbUserName, dbPassword:user.dbPassword});
+			});
 		}
 	})
 }

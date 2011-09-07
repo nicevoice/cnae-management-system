@@ -45,18 +45,22 @@
     	<div class="left borderRadius5">
     		<ul id="sidebar">
     		<li><h3>应用信息</h3></li>
+    		<li class="littleRight"><a href="<%=url%>/sum">汇总信息</a></li>
     		<hr />
-    		<li><a href="<%=url%>/sum">汇总信息</a></li>
+    		<li><h3>应用开发</h3></li>
+    		<li class="littleRight"><a href="<%=url%>/vermng">代码管理</a></li>
+    		<li class="littleRight"><a id="editorSidebar" href = "<%=url.replace('application/manage', 'editor')%>"
+    		target="_blank">在线编辑</a></li>
+    		<li class="littleRight"><a href="<%=url%>/mongo">mongoDB</a></li>
+    		<hr /> 		
     		<li><h3>应用管理</h3></li>
-    		<hr />
-    		<li><a href="<%=url%>/appmng">应用设置</a></li>
-    		<li><a href="<%=url%>/coopmng">成员管理</a></li>
-    		<li><a href="<%=url%>/vermng">代码管理</a></li>
-    		<li><a href="<%=url%>/mnglog">管理记录</a></li>
+    		<li class="littleRight"><a href="<%=url%>/appmng">应用设置</a></li>
+    		<li class="littleRight"><a href="<%=url%>/coopmng">成员管理</a></li>
+    		<li class="littleRight"><a href="<%=url%>/mnglog">管理记录</a></li>
+     		<hr />
     		<li><h3>应用调优</h3></li>
-    		<hr />
-    		<li><a href="<%=url%>/applog">日志中心</a></li>
-    		<li><a href="<%=url%>/mongo">mongoDB</a></li>
+    		<li class="littleRight"><a href="<%=url%>/applog">日志中心</a></li>
+
     		</ul>
     	</div>
     <div class="right borderRadius5">

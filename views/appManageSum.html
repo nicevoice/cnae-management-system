@@ -4,15 +4,15 @@
     	</div>
    	    <div id="appInfos" class="">
     		<table>
-    		<tr><td>应用域名：</td>
+    		<tr><td width="80px">应用域名：</td>
     		<td id="appDomains">
     		</td></tr>
     		<tr><td>应用名称：</td><td width="250px"><%=appName||''%></td></tr>
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes"></td></tr>
    			<tr><td>数据库：</td><td id="appDbName">
-   			<%if(dbType==="mongo"){%><%=domain%>_mongo:27007</td>
-   			<%}else{%>未启用</td><td><a href="<%=url%>/mongo">点此启用mongoDB</a></td><%}%>
+   			<%if(dbType==="mongo"){%><%=dbName%></td><td>端口号:21007</td>
+   			<%}else{%>未启用</td><td width="300px"><a href="<%=url%>/mongo">启用mongoDB</a></td><%}%>
    			<tr>
    		</table>
    		<h3>应用状态信息</h3>

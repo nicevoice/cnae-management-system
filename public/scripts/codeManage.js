@@ -8,17 +8,14 @@ $(function(){
 	data:{domain:$("#appDomain").html()},
 	error:function(){
 		$("#submitUpload").click(upload);
-		$("#editor").click(popEditor);
 		$("#download").click(download);
 	},
 	success:function(data){
 		if(data.active===0 || data.role>2){//如果是观察者
 			$("#submitUpload").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
-			$("#editor").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
 			$("#download").click(download);
 		}else{
 			$("#submitUpload").click(upload);
-			$("#editor").click(popEditor);
 			$("#download").click(download);
 		}
 	}
@@ -37,11 +34,6 @@ upload = function(){
 		return false;
 	}
 	$("#uploading").css("display", "block");
-}
-popEditor = function(){
-	var domain = $("#appDomain").html();
-	var url = "http://"+location.host+"/editor/"+domain;
-	window.open(url);
 }
 download = function(){
 	var domain = $("#appDomain").html();

@@ -32,12 +32,12 @@ function highlightSide() {
   if (!document.getElementById("sidebar")) return false;
   var side = document.getElementById("sidebar");
   var links = side.getElementsByTagName("a");
-  for (var i=0; i<links.length; i++) {
+  for (var i=0; i<links.length; i++){
     var linkurl = links[i].getAttribute("href");
     linkurl = linkurl.slice(linkurl.lastIndexOf('/')+1);
     var currenturl = window.location.href;
     currenturl = currenturl.slice(linkurl.lastIndexOf('/')+1);
-    if (currenturl.indexOf(linkurl) != -1) {
+    if (currenturl.indexOf(linkurl) != -1 && links[i].getAttribute("id")!=="editorSidebar") {
       links[i].className = "here";
       var linktext = links[i].lastChild.nodeValue.toLowerCase();
       document.body.setAttribute("id",linktext);
