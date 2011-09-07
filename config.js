@@ -18,7 +18,7 @@ exports.email = "heyiyu.deadhore@gmail.com";
 exports.site_name = "CNode App Engine";
 exports.site_desc = '';
 
-exports.db_url = "cnae:edpCnae@127.0.0.1:27017/nae_db";
+exports.db_url = "127.0.0.1:27017/nae_db";
 exports.db = mongo.db(this.db_url);
 exports.dbUser = {name:"deadhorse", password:"910022"};
 /***
