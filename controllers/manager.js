@@ -505,7 +505,7 @@ exports.getStatus = function(req, res){
 	onOff("status", domain, function(socketRes){
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
-			last:"",pid:"",autorun:"",running:"", ports:[80]};
+			last:"",pid:"",autorun:"",running:"", ports:[]};
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
@@ -606,11 +606,11 @@ exports.queryMongo = function(req, res){
 						console.log(err);
 						return resAjax(res, {status:"error", msg:"查询数据库失败"});
 					}else{
-						var place = stdout.indexOf("> 1\n");
+						var place = stdout.indexOf("1\n");
 						if(place === -1){
 							stdout = "权限验证错误";
 						}else{
-							stdout = stdout.slice(place+4, stdout.length-4).replace(/>\s/g, "") + "\ndone";
+							stdout = stdout.slice(place+2, stdout.length-4) + "\ndone";
 						}
 						
 						return resAjax(res, {status:"ok", output:stdout});

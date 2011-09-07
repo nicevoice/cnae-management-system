@@ -22,7 +22,7 @@ function getOutput(action){
 		},30000);
 	},
 	success:function(data){
-		res = htmlSpecial(data);
+		res = htmlSpecial(data.output);
 		$("#"+action).html(res);
 		window.setTimeout(function(){	
 			getOutput(action);
