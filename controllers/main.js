@@ -188,8 +188,8 @@ exports.deleteApp = function(req, res){
 		resAjax(res, {done:false});
 	}else{
 		var deleteEvent = new EventProxy();
-		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", function(){
-			if(!arguments[0] || !arguments[1] || !arguments[2])
+		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function(){
+			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4])
 				resAjax(res, {done:false});
 			else{
 				resAjax(res, {done:true});
@@ -222,11 +222,22 @@ exports.deleteApp = function(req, res){
 				deleteEvent.fire("deletedRecords", true);
 			}
 		});
+		var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
+				delDomain + "_mongo ";
+		exec(command, function(err){
+			console.log(command);
+			if(err){
+				console.log(err);
+				deleteEvent.fire("deleteDb", false);
+			}else{
+				deleteEvent.fire("deleteDb", true);
+			}
+		});
 		onOff("stop", delDomain, function(){
 			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
 			if(err){
 				console.log(err);
-				deleteEvent.fire("deleteDir", true);
+				deleteEvent.fire("deleteDir", false);
 			}else{
 				deleteEvent.fire("deleteDir", true);
 			}
