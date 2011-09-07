@@ -228,4 +228,7 @@ padding:40px;
     margin:0px;
 }
 
-
+.divCenter{
+    width:100%;
+    text-align:center;
+}

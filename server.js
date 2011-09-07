@@ -18,10 +18,12 @@ var express = require('express'),
 	form = require('connect-form'),
 	RedisStore = require('connect-redis')(express),
 	inviteCode = require('./controllers/inviteCode'),
+	db = config.db,
 	log = config.logWithFile,
 	users = config.db.collection(config.db_user),
 	app_mem = config.db.collection(config.db_app_mem),
 	admins = config.admins;	
+	
 //创建httpServer
 var app = express.createServer(
 	form({ uploadDir: config.uploadDir, keepExtensions: true })
@@ -94,6 +96,9 @@ Date.prototype.format = function(format){
  return format;
 }
 
+String.prototype.trim = function() {
+return this.replace(/^\s+|\s+$/g, "");
+}
 //路由中间件
 
 function hasLogin(req, res, next){
@@ -203,7 +208,7 @@ app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
 app.get("/application/manage/:id/mysqlmng", hasLogin, checkAuth, manager.mysqlmng);
 app.get("/application/manage/:id/cornmng", hasLogin,checkAuth, manager.cornmng);
 app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
-
+app.get("/application/manage/:id/mongo", hasLogin, checkAuth, manager.showMongo);
 //修改应用信息
 app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), manager.doAppmng);
 //发出邀请
@@ -227,6 +232,10 @@ app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getSt
 app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, manager.addRecord);
 //上传图片接口
 app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), manager.doUploadImg);
+//给应用分配mongoDB
+app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), manager.createMongo);
+//应用DB查询
+app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), manager.queryMongo);
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);

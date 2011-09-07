@@ -15,6 +15,7 @@ $(function(){
 		if(data.active===0 || data.role>2){//如果是观察者
 			$("#submitUpload").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
 			$("#editor").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+			$("#download").click(download);
 		}else{
 			$("#submitUpload").click(upload);
 			$("#editor").click(popEditor);

@@ -10,6 +10,7 @@ var config = require('../config')
   , child
   , db = config.db
   , log = config.logWithFile
+  , users = db.collection(config.db_user)
   , app_mem = db.collection(config.db_app_mem)
   , app_basic = db.collection(config.db_app_basic)
   , records = db.collection(config.db_app_records)
@@ -35,7 +36,7 @@ exports.sum = function(req, res){
 		}
 		else if(data){
 			return res.render("appManageSum", {layout:"layoutApp", url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			dbName:data.appDbName, nickName:req.session.nickName, email:req.session.email});
+			dbType:data.appDbType, nickName:req.session.nickName, email:req.session.email});
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -518,6 +519,92 @@ exports.addRecord = function(req, res){
 						action:action, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){
 						resAjax(res, {});
 						});
+}
+
+exports.showMongo = function(req, res){
+	var domain = req.params.id||'';
+		url = req.url;
+	url = url.slice(0, url.lastIndexOf('/'));
+	app_basic.findOne({appDomain:domain},function(err, data){
+		if(err){
+			log.error(err);
+			res.render("error", {msg:"数据库错误，请稍后再试"});
+		}else{
+			res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
+			nickName:req.session.nickName, email:req.session.email});
+		}
+	})
+}
+exports.createMongo = function(req, res){
+	var domain = req.params.id||'',
+		url = req.url,
+		email = req.session.email;
+	url = url.slice(0, url.lastIndexOf('/'));
+	users.findOne({email:email},function(err, data){
+		if(err){
+			log.error(err);
+			return res.render("error", {message:"数据库错误，请稍后再试"});
+		}else{
+			if(data.dbType){	//如果已经创建过数据库
+				return res.render("error", {message:"已经创建数据库"});
+			}else{
+				var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoAllocator.sh "+
+				domain + "_mongo " + data.dbUserName + " " + data.dbPassword;
+				console.log(command);
+				exec(command, function(err, stdout, stderr){//执行shell脚本，给用户授权对应数据库
+					if(err){
+						console.log("command err:"+err);
+						return res.render("error", {message:"执行错误，请稍后再试"});
+					}else{
+						console.log("stdout:"+stdout);
+						console.log("stderr:"+stderr);
+						app_basic.update({appDomain:domain}, {$set:{appDbType:"mongo"}}, function(err){//更新应用表
+							if(err){
+								console.log(err);
+								return res.render("error", {message:"执行错误，请稍后再试"});
+							}else{
+								return res.redirect(url+"/mongo");
+							}
+						})
+					}
+				})
+			}
+		}
+	})
+}
+
+exports.queryMongo = function(req, res){
+	var domain = req.params.id||'',
+		queryString = req.body.queryString.trim()||'';
+		queryString = "\""+queryString+"\"";
+	if(queryString.indexOf("db.addUser")===0 || queryString.indexOf("^use")===0 
+	|| queryString.indexOf("db.removeUser")===0 || queryString.indexOf("db.dropDatabase")===0){
+		return resAjax(res, {status:"error", msg:"操作不被允许"});
+	}
+	users.findOne({email:req.session.email},function(err, data){//查找db帐号密码
+		if(err){
+			log.error(err);
+			return resAjax(res, {status:"error", msg:"数据库帐号密码查找失败"});		
+		}else{
+			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoQuery.sh "+
+				domain + "_mongo " + data.dbUserName + " " + data.dbPassword +" "+ queryString;
+			console.log(command);
+			exec(command, function(err, stdout, stderr){
+				if(err){
+					console.log(err);
+					return resAjax(res, {status:"error", msg:"查询数据库失败"});
+				}else{
+					var place = stdout.indexOf("> 1\n");
+					if(place === -1){
+						stdout = "权限验证错误";
+					}else{
+						stdout = stdout.slice(place+4, stdout.length-4).replace(/>\s/g, "") + "\ndone";
+					}
+					return resAjax(res, {status:"ok", output:stdout});
+				}
+			})
+		}
+	})
 }
 exports.mysqlmng = function(req, res){};
 exports.cornmng = function(req, res){};

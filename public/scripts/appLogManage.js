@@ -22,13 +22,7 @@ function getOutput(action){
 		},30000);
 	},
 	success:function(data){
-		var res = data.output;
-		res = res.replace(/&/g, '&amp;');
-		res = res.replace(/</g, '&lt;');
-		res = res.replace(/>/g, '&gt;');
-		res = res.replace(/'/g, '&acute;');
-		res = res.replace(/"/g, '&quot;');
-		res = res.replace(/\|/g, '&brvbar;');
+		res = htmlSpecial(data);
 		$("#"+action).html(res);
 		window.setTimeout(function(){	
 			getOutput(action);

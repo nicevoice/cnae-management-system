@@ -11,8 +11,8 @@
     		<tr><td>应用描述：</td><td><%=appDes||''%></td></tr>
    			<tr><td>应用状态:</td><td id="appStateDes"></td></tr>
    			<tr><td>数据库：</td><td id="appDbName">
-   			<%if(dbName){%><%=dbName%></td>
-   			<%}else{%>未启用</td><td><input type="button" id="startDb" class="button_orange r3px" value="启用"></td><%}%>
+   			<%if(dbType==="mongo"){%><%=domain%>_mongo:27007</td>
+   			<%}else{%>未启用</td><td><a href="<%=url%>/mongo">点此启用mongoDB</a></td><%}%>
    			<tr>
    		</table>
    		<h3>应用状态信息</h3>

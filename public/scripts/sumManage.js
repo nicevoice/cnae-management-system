@@ -13,6 +13,7 @@ $(function(){
 	error:function(){
 			$("#controlApp").click(controlApp);
 			$("#controlAppRestart").click(restart);
+			$("#createDb").click(showCreateDb);
 		},
 	success:function(data){
 		if(data.active===0 || data.role>2){//如果是观察者或者未激活
