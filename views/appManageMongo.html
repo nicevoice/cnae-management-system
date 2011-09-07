@@ -19,9 +19,15 @@
  <pre id="queryOutput">
  </pre>
   <div class="r3px subContent">
- <p>自行连接数据库，请使用以下参数</p>
- <p>DB帐号:<%=dbUserName%></p>
- <p>DB密码:<%=dbPassword%></p>
+ <h3>自行连接数据库，请使用以下参数</h3>
+ <table id="dbInfo">
+ <tr>
+ <td>数据库帐号：</td><td><%=dbUserName%></td><td>数据库名称：</td><td><%=dbName%></td>
+ </tr>
+ <tr>
+ <td>数据库密码：</td><td><%=dbPassword%></td><td>数据库端口：</td><td>20088</td>
+ </tr>
+ </table>
  </div>
  <%}%>
  

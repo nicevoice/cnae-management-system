@@ -105,3 +105,11 @@ width:600px;
 #status, #status td, #status th{
 border:1px solid #aaa;
 }
+#dbInfo{
+margin:8px;
+width:600px;
+height:60px;
+}
+#dbInfo td, #dbInfo tr{
+margin:8px;
+}

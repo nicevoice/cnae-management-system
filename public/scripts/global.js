@@ -36,8 +36,8 @@ function highlightSide() {
     var linkurl = links[i].getAttribute("href");
     linkurl = linkurl.slice(linkurl.lastIndexOf('/')+1);
     var currenturl = window.location.href;
-    currenturl = currenturl.slice(linkurl.lastIndexOf('/')+1);
-    if (currenturl.indexOf(linkurl) != -1 && links[i].getAttribute("id")!=="editorSidebar") {
+    currenturl = currenturl.slice(currenturl.lastIndexOf('/')+1);
+    if (currenturl === linkurl && links[i].getAttribute("id")!=="editorSidebar") {
       links[i].className = "here";
       var linktext = links[i].lastChild.nodeValue.toLowerCase();
       document.body.setAttribute("id",linktext);

@@ -537,7 +537,8 @@ exports.showMongo = function(req, res){
 					res.render("error", {msg:"数据库错误，请稍后再试"});
 				}
 				res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
-				nickName:req.session.nickName, email:req.session.email, dbUserName:user.dbUserName, dbPassword:user.dbPassword});
+				nickName:req.session.nickName, email:req.session.email, dbUserName:user.dbUserName, dbPassword:user.dbPassword,
+				dbName:data.appDbName});
 			});
 		}
 	})
