@@ -23,6 +23,7 @@ var config = require('../config')
   , mailEvent = sendMail.mailEvent
   , urlMoudle = require('url')
   , uploadDir = config.uploadDir
+  , randomStringNum = require('../lib/randomString').getRandomStringNum
   , options = config.options;
 //汇总信息
 exports.sum = function(req, res){
@@ -548,8 +549,9 @@ exports.createMongo = function(req, res){
 			if(data.dbType){	//如果已经创建过数据库
 				return res.render("error", {message:"已经创建数据库"});
 			}else{
+				var dbName = randomStringNum(12);
 				var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoAllocator.sh "+
-				domain + "_mongo " + data.dbUserName + " " + data.dbPassword;
+				dbName + " "+ data.dbUserName + " " + data.dbPassword;
 				console.log(command);
 				exec(command, function(err, stdout, stderr){//执行shell脚本，给用户授权对应数据库
 					if(err){
@@ -558,7 +560,7 @@ exports.createMongo = function(req, res){
 					}else{
 						console.log("stdout:"+stdout);
 						console.log("stderr:"+stderr);
-						app_basic.update({appDomain:domain}, {$set:{appDbType:"mongo"}}, function(err){//更新应用表
+						app_basic.update({appDomain:domain}, {$set:{appDbType:"mongo", appDbName:dbName}}, function(err){//更新应用表
 							if(err){
 								console.log(err);
 								return res.render("error", {message:"执行错误，请稍后再试"});
@@ -586,23 +588,29 @@ exports.queryMongo = function(req, res){
 			log.error(err);
 			return resAjax(res, {status:"error", msg:"数据库帐号密码查找失败"});		
 		}else{
-			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoQuery.sh "+
-				domain + "_mongo " + data.dbUserName + " " + data.dbPassword +" "+ queryString;
-			console.log(command);
-			exec(command, function(err, stdout, stderr){
-				if(err){
-					console.log(err);
-					return resAjax(res, {status:"error", msg:"查询数据库失败"});
-				}else{
-					var place = stdout.indexOf("> 1\n");
-					if(place === -1){
-						stdout = "权限验证错误";
-					}else{
-						stdout = stdout.slice(place+4, stdout.length-4).replace(/>\s/g, "") + "\ndone";
-					}
-					return resAjax(res, {status:"ok", output:stdout});
+			app_basic.findOne({appDomain:domain},function(err, appInfos){
+				if(appInfos.appDbType!=="mongo"){
+					return resAjax(res, {status:"error", msg:"数据库未申请或者不是mongoDB"});
 				}
-			})
+				var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoQuery.sh "+
+					appInfos.appDbName +" "+ data.dbUserName + " " + data.dbPassword +" "+ queryString;
+				console.log(command);
+				exec(command, function(err, stdout, stderr){
+					if(err){
+						console.log(err);
+						return resAjax(res, {status:"error", msg:"查询数据库失败"});
+					}else{
+						var place = stdout.indexOf("> 1\n");
+						if(place === -1){
+							stdout = "权限验证错误";
+						}else{
+							stdout = stdout.slice(place+4, stdout.length-4).replace(/>\s/g, "") + "\ndone";
+						}
+						
+						return resAjax(res, {status:"ok", output:stdout});
+					}
+				})
+			});
 		}
 	})
 }
