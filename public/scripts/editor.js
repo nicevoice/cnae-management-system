@@ -225,10 +225,10 @@ function restart(){
 			window.clearInterval(errTimer);
 			outTimer = window.setInterval(function(){
 				getOutput("stdout");
-			}, 4000);
+			}, 2000);
 			errTimer = window.setInterval(function(){
 				getOutput("stderr");
-			}, 4000);
+			}, 2000);
 			addRecord(DOMAIN, "应用重启");
 		}
 		getOutput("stdout");
