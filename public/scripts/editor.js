@@ -243,6 +243,8 @@ function getOutput(action){
 		dataType:"json",
 		data:{action:action},
 		error:function(){
+			window.clearTimeout(outTimer);
+			window.clearTimeout(errTimer);
 			$("#"+action).html(action + "获取失败");
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
@@ -256,6 +258,8 @@ function getOutput(action){
 			}					
 		},
 		success:function(data){
+			window.clearTimeout(outTimer);
+			window.clearTimeout(errTimer);
 			var d = htmlspecialchars(data.output);
 			$("#"+action).html(d);
 			if(action == "stdout"){
