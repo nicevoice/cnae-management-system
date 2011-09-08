@@ -4,7 +4,7 @@ var currPath = ROOT_PATH; // 当前路径
 var currFilePath; // 当前文件
 var currNode; // 当前文件DOM
 var changed = false; // 当前文件被改变的标记
-var outTimer, errTimer;	//获取stdoutput的定时器，点击重启应用以后开始每10s获取一次
+var outTimer, errTimer, interval=1000;	//获取stdoutput的定时器，点击重启应用以后开始每10s获取一次
 
 /*
  * 动态设定编辑器尺寸
@@ -206,10 +206,10 @@ function restart(){
 							window.clearInterval(errTimer);
 							outTimer = window.setInterval(function(){
 								getOutput("stdout");
-							}, 10);
+							}, interval);
 							errTimer = window.setInterval(function(){
 								getOutput("stderr");
-							}, 10);
+							}, interval);
 							addRecord(DOMAIN, "应用重启");
 						}else{
 							showMsg2("重启失败:"+data.msg);
@@ -225,10 +225,10 @@ function restart(){
 			window.clearInterval(errTimer);
 			outTimer = window.setInterval(function(){
 				getOutput("stdout");
-			}, 2000);
+			}, interval);
 			errTimer = window.setInterval(function(){
 				getOutput("stderr");
-			}, 2000);
+			}, interval);
 			addRecord(DOMAIN, "应用重启");
 		}
 		getOutput("stdout");
