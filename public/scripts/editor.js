@@ -202,8 +202,8 @@ function restart(){
 					success:function(data){
 						if(data.status==="ok"){
 						    showMsg2("重启成功");
-							window.clearInterval(outTimer);
-							window.clearInterval(errTimer);
+							window.clearTimeout(outTimer);
+							window.clearTimeout(errTimer);
 							outTimer = window.setTimeout(function(){
 								getOutput("stdout");
 							}, 10);
@@ -221,8 +221,8 @@ function restart(){
 			}
 		}else{
 		    showMsg2("重启成功");
-			window.clearInterval(outTimer);
-			window.clearInterval(errTimer);
+			window.clearTimeout(outTimer);
+			window.clearTimeout(errTimer);
 			outTimer = window.setTimeout(function(){
 				getOutput("stdout");
 			}, 10);
@@ -231,8 +231,6 @@ function restart(){
 			}, 10);
 			addRecord(DOMAIN, "应用重启");
 		}
-		getOutput("stdout");
-		getOutput("stderr");
 	}
 	});	
 }
