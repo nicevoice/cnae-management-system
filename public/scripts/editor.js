@@ -202,12 +202,12 @@ function restart(){
 					success:function(data){
 						if(data.status==="ok"){
 						    showMsg2("重启成功");
-							window.clearTimeout(outTimer);
-							window.clearTimeout(errTimer);
-							outTimer = window.setTimeout(function(){
+							window.clearInterval(outTimer);
+							window.clearInterval(errTimer);
+							outTimer = window.setInterval(function(){
 								getOutput("stdout");
 							}, 10);
-							errTimer = window.setTimeout(function(){
+							errTimer = window.setInterval(function(){
 								getOutput("stderr");
 							}, 10);
 							addRecord(DOMAIN, "应用重启");
@@ -221,16 +221,18 @@ function restart(){
 			}
 		}else{
 		    showMsg2("重启成功");
-			window.clearTimeout(outTimer);
-			window.clearTimeout(errTimer);
-			outTimer = window.setTimeout(function(){
+			window.clearInterval(outTimer);
+			window.clearInterval(errTimer);
+			outTimer = window.setInterval(function(){
 				getOutput("stdout");
-			}, 10);
-			errTimer = window.setTimeout(function(){
+			}, 4000);
+			errTimer = window.setInterval(function(){
 				getOutput("stderr");
-			}, 10);
+			}, 4000);
 			addRecord(DOMAIN, "应用重启");
 		}
+		getOutput("stdout");
+		getOutput("stderr");
 	}
 	});	
 }
@@ -243,9 +245,9 @@ function getOutput(action){
 		dataType:"json",
 		data:{action:action},
 		error:function(){
-			window.clearTimeout(outTimer);
-			window.clearTimeout(errTimer);
 			$("#"+action).html(action + "获取失败");
+			/*window.clearTimeout(outTimer);
+			window.clearTimeout(errTimer);
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
 					getOutput(action);
@@ -255,13 +257,14 @@ function getOutput(action){
 				errTimer = window.setTimeout(function(){
 					getOutput(action);
 				}, 30000);
-			}					
+			}*/					
 		},
 		success:function(data){
-			window.clearTimeout(outTimer);
-			window.clearTimeout(errTimer);
 			var d = htmlspecialchars(data.output);
 			$("#"+action).html(d);
+			/*
+			window.clearTimeout(outTimer);
+			window.clearTimeout(errTimer);
 			if(action == "stdout"){
 				outTimer = window.setTimeout(function(){
 					getOutput(action);
@@ -271,7 +274,7 @@ function getOutput(action){
 				errTimer = window.setTimeout(function(){
 					getOutput(action);
 				}, 3000);
-			}
+			}*/
 		}
 	});	
 }
