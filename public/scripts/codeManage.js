@@ -49,7 +49,7 @@ download = function(){
 	success:function(data){
 		
 		if(data.status==="ok"){
-			sAlert("下载","<a href='"+  window.location.origin + data.url +"' target='_blank'>下载zip压缩包</a>");
+			sAlert("下载","<a href='"+ data.url +"' target='_blank'>下载zip压缩包</a>");
 		}else{
 			sAlert("警告", "发生错误，请稍后再试");
 		}
