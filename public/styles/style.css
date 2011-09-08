@@ -169,7 +169,7 @@ padding:20px;
 color:#666971;
 padding-left:50px;
 padding-right:50px;
-width:50%;
+width:600px;
 }
 .subContent strong{
 color:#333;
@@ -234,4 +234,7 @@ padding:40px;
 }
 .littleRight{
     margin-left:10px;
+}
+.littleBlue{
+    background-color:#c7dae5;
 }
