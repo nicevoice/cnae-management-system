@@ -17,6 +17,11 @@ $(function(){
 		}
 	}
 	});
+	$("#queryString").keydown(function(e){
+		if(e.keyCode===13){
+			queryDb();
+		}
+	});
 })
 
 queryDb = function(){

@@ -13,7 +13,7 @@
  <%}else{%>
  <br />
  <div class="divCenter">
- <input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="查询">
+ <input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="执行">
  <span class="redText">tips: use mongo shell</span>
  </div>
  <pre id="queryOutput">
@@ -29,7 +29,7 @@
  </tr>
  </table>
  <p>mongoSkin连接url：</p>
- <p><%=dbUserName%>:<%=dbPassword%>@127.0.0.1:20088/<%=dbName%></p>
+ <p><input type="text" readonly="readonly" value="<%=dbUserName%>:<%=dbPassword%>@127.0.0.1:20088/<%=dbName%>"></p>
  </div>
  <%}%>
  
