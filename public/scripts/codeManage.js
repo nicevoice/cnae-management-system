@@ -49,7 +49,10 @@ download = function(){
 	success:function(data){
 		
 		if(data.status==="ok"){
-			sAlert("下载","<a href='"+ data.url +"' target='_blank'>下载zip压缩包</a>");
+			var a = $("<a href='"+ data.url +"' target='_blank'>download</a>").get(0);
+            var e = document.createEvent('MouseEvents');
+            e.initEvent( 'click', true, true );
+            a.dispatchEvent(e);
 		}else{
 			sAlert("警告", "发生错误，请稍后再试");
 		}
