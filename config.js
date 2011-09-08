@@ -1,9 +1,8 @@
 var pathutil = require('path');
-
 var mongo = require("mongoskin");
 var fs = require('fs');
-
-var debug = exports.debug = false;
+var configInfo = eval('('+fs.readFileSync("./config.json")+')');
+var debug = exports.debug = configInfo.debug;
 
 var root_dir = pathutil.dirname(__dirname)
   , cnae_dir = pathutil.join(root_dir, 'cnode-app-engine');
@@ -18,9 +17,8 @@ exports.email = "heyiyu.deadhore@gmail.com";
 exports.site_name = "CNode App Engine";
 exports.site_desc = '';
 
-exports.db_url = "127.0.0.1:27017/nae_db";
+exports.db_url = configInfo.dbUserName+":"+configInfo.dbPassword+"@127.0.0.1:27017/"+configInfo.dbName;
 exports.db = mongo.db(this.db_url);
-exports.dbUser = {name:"deadhorse", password:"910022"};
 /***
  * 用户信息：email,nickName,password,realName,telNumber,mainPage
  * */
