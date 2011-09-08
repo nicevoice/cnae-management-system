@@ -123,6 +123,8 @@ window.onload = function() {
 	setToolbarAction();
 	$('#restart').click(restart); // 绑定重启事件
 	
+	setConsoleResize();
+	
 	// 加载样式
 	setSidebarUI();
 };
@@ -134,7 +136,7 @@ window.onbeforeunload = function() {
 			saveFile(currFilePath);
 		}
 	}
-}
+};
 
 function showMsg1(content) {
 	$("#msg").html(content).slideDown();
@@ -262,6 +264,7 @@ function getOutput(action){
 		success:function(data){
 			var d = htmlspecialchars(data.output);
 			$("#"+action).html(d);
+			setConsoleHeight();
 			/*
 			window.clearTimeout(outTimer);
 			window.clearTimeout(errTimer);
@@ -648,9 +651,10 @@ function openFile(name) {
 	var filePath = currPath + name;
 	var e = editor.getSession();
 	if(changed) { // 文件被修改过
-		if(confirm("文件被修改过，是否保存？")) saveFile(currFilePath);
+		if(confirm("文件被修改过，是否保存？")) {
+			saveFile(currFilePath);
+		}
 	}
-	e.setValue("");
 	readFile(filePath, function(status, content) {
 		if(status) {
 			// 依据文件后缀名更改编辑器的语法模式
@@ -924,4 +928,32 @@ function setToolbarAction() {
 				}
 			});
 	});
+}
+
+function setConsoleResize(minHeight) {
+	if(typeof minHeight == "undefined") minHeight = 125;
+	maxHeight = document.documentElement.clientHeight - 100;
+	$("#console").resizable({
+		handles: 'n',
+		minHeight: minHeight,
+		maxHeight: maxHeight
+	});
+	$("#console").resize(function() {
+		var h = $(this).height() - 30;
+		$('#stdout').css("height", h);
+		$('#stderr').css("height", h);
+	});
+	$("#console-min").click(function() {
+		setConsoleHeight(minHeight);
+	});
+}
+
+function setConsoleHeight(height) {
+	if(typeof height == "undefined") {
+		height = Math.round(document.documentElement.clientHeight * 0.5);
+	}
+	$("#console").removeAttr("style").css("height", height);
+	var h = height - 30;
+	$('#stdout').css("height", h);
+	$('#stderr').css("height", h);
 }
