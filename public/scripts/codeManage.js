@@ -47,8 +47,9 @@ download = function(){
 		sAlert("警告", "连接错误，请稍后再试");
 	},
 	success:function(data){
+		
 		if(data.status==="ok"){
-			var a = $("<a href='"+ data.url +"' target='_blank'>download</a>").get(0);
+			var a = $("<a href='"+  window.location.host + data.url +"' target='_blank'>download</a>").get(0);
             var e = document.createEvent('MouseEvents');
             e.initEvent( 'click', true, true );
             a.dispatchEvent(e);
