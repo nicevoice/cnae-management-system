@@ -14,7 +14,7 @@ exports.listen_sock_dir = pathutil.dirname(exports.proxy_sock);
 exports.session_secret = "sakjfewf_cnaemngm";
 var port = exports.port = 2012;
 exports.email = "heyiyu.deadhore@gmail.com";
-exports.site_name = "CNode App Engine";
+exports.site_name = "Node App Engine";
 exports.site_desc = '';
 
 exports.db_url = configInfo.dbUserName+":"+configInfo.dbPassword+"@127.0.0.1:27017/"+configInfo.dbName;
