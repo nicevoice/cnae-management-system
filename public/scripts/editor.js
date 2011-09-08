@@ -235,6 +235,7 @@ function restart(){
 		}
 		getOutput("stdout");
 		getOutput("stderr");
+		setConsoleHeight();
 	}
 	});	
 }
@@ -264,7 +265,6 @@ function getOutput(action){
 		success:function(data){
 			var d = htmlspecialchars(data.output);
 			$("#"+action).html(d);
-			setConsoleHeight();
 			/*
 			window.clearTimeout(outTimer);
 			window.clearTimeout(errTimer);
