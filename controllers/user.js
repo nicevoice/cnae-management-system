@@ -2,6 +2,7 @@ var config = require('../config'),
 log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
 randomStringNum = require("../lib/randomString").getRandomStringNum,
+resAjax = config.resAjax,
 users = config.db.collection(config.db_user);
 /***
  * 跳转到显示用户信息页面
