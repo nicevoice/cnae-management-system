@@ -315,7 +315,7 @@ exports.vermng = function(req, res){
  */
 exports.doUpload = function(req, res){
 	var domain = req.params.id||'';
-    var fields = req.form.fields, files = req.form.files;
+  var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
 	//解压文件
 	var type = files.upload.type;
@@ -326,35 +326,73 @@ exports.doUpload = function(req, res){
 			}else{
 				type= "gz";
 			}
-			var savePath = uploadDir+'/'+domain +'/'+"code."+type; 
-			fs.mkdir(path.dirname(savePath), '777', function(err){
-					fs.rename(files.upload.path, savePath, function(err){
-					if(err){
-						log.error(err);
-						return res.render("error",{message:"创建文件错误"});
-					}
-					fs.chmod(savePath, '444', function(err){
+      var tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp/",
+			    savePath = uploadDir+'/'+domain +'/'; 
+			fs.mkdir(tempDir+"/"+domain, '777', function(err){
+          console.log("mkdir");
+					fs.chmod(files.upload.path, '444', function(err){
+            console.log("chmod");
 						if(err){
-						return res.render("error", {message:"修改权限错误"});
+              console.log(err);
+						  return res.render("error", {message:"上传失败,请稍后再试"});
 						}
 						var unCompress = "";
 						if(type==="gz"){
-							unCompress = 'tar -xf '+savePath + ' -C '+uploadDir+ '/'+domain;
+							unCompress = 'tar -xf '+ files.upload.path + ' -C '+tempDir+ '/'+domain;
 						}else{
-							unCompress = 'unzip '+savePath+' -d '+uploadDir+ '/'+domain;
+							unCompress = 'unzip '+ files.upload.path +' -d '+tempDir+ '/'+domain;
 						}
 						console.log(unCompress);
 						exec(unCompress, function(err, stdout, stderr){
-							if(err)console.log(err);
-							console.log("unCompress");
-							exec('rm -rf '+savePath, function(err){
-								if(err){
-									console.log(err);
-								}
-							})
-							if(err){
-								console.log(err);
-							}
+							if (err) {
+                console.log(err);
+                return res.render("error", {message:"上传失败,请稍后再试"});
+              }
+              else {
+                console.log("unCompress");
+                fs.readdir(tempDir+'/'+domain, function(err, files){
+                  if(err){
+                    console.log(err);
+                    exec("rm -rf "+tempDir+'/'+domain, function(){});
+                    return res.render("error", {message:"上传失败,请稍后再试"});
+                  }else{
+                    fs.mkdir(savePath, '777', function(err){
+                      var move = "";
+                      if (err) {
+                        console.log(err);
+                        exec("rm -rf "+tempDir+'/'+domain, function(){});
+                        return res.render("error", {
+                          message: "上传失败,请稍后再试"
+                        });
+                      }
+                      else {
+                        if (files.length === 1 && fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === 16877) {//如果只有一个文件夹
+                          move = "mv -rf " + tempDir + '/' + domain + "/" + files[0] + "/*.* " + savePath;
+                        }
+                        else {
+                          move = "mv -rf " + tempDir + '/' + domain + "/*.* " + savePath;
+                        }
+                        exec(move, function(err){
+                          if (err) {
+                            console.log(err);
+                            exec("rm -rf "+tempDir+'/'+domain, function(){});
+                            return res.render("error", {
+                              message: "上传失败,请稍后再试"
+                            });
+                          }
+                          else {
+                            exec("rm -rf "+tempDir+'/'+domain, function(){});
+                            var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
+                            sumManage += '/sum';
+                            return res.redirect(sumManage);
+                          }
+                        });
+                      }
+                    })
+                  }
+                })
+              }
+              })
 						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 						action:"上传代码："+savePath.slice(savePath.lastIndexOf('/')+1), recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
@@ -362,8 +400,6 @@ exports.doUpload = function(req, res){
 						sumManage += '/sum';
 						return res.redirect(sumManage);
 					});
-					});
-			});
 		}else{
 			return res.render("error", {message:"请上传正确的格式"});
 		}
@@ -399,11 +435,6 @@ exports.doDownload = function(req, res){
 			console.log(err);
 			return res.sendJson( {status:"error", msg:"压缩失败"});		
 		}else{
-			setTimeout(function(){
-				fs.unlink(saveName, function(){
-					console.log("删除文件");
-				}, 1000*60);
-			});
 			return res.sendJson( {status:"ok", url:"/download/"+name});
 		}	
 	})
