@@ -48,7 +48,7 @@ exports.generateInviteCode = function(req, res){
 	inviteCode.find({},{id:1}).toArray(function(err, data){
 		if(err){
 			log.error(err);
-			return resAjax(res, {done:false});
+			return res.sendJson( {done:false});
 		}
 		if(!data||data.length<1){
 			num=1;
@@ -66,9 +66,9 @@ exports.generateInviteCode = function(req, res){
 		inviteCode.save({id:num, code:code},function(){
 			if(err){
 			log.error(err);
-			return resAjax(res, {done:false});
+			return res.sendJson( {done:false});
 			}else{
-				//return resAjax(res, {done:true, code:code});	
+				//return res.sendJson( {done:true, code:code});	
 			  return res.sendJson({done:true, code:code});
       }
 		})
@@ -87,7 +87,7 @@ exports.sendInviteCode = function(req, res){
 		code = req.body.code||'';
 	var regEmail = config.regEmail;
 	if(!regEmail.exec(email)){
-		return resAjax(res, {done:false, warn:"请输入合法的email地址"}) 
+		return res.sendJson( {done:false, warn:"请输入合法的email地址"}) 
 	}
 	var inviteNickName = email.split('@')[0];
 	code+="&email="+email;
@@ -100,7 +100,7 @@ exports.sendInviteCode = function(req, res){
     debug: true
 	});
 	mailEvent.fire("getMail");
-	return resAjax(res, {done:true});
+	return res.sendJson( {done:true});
 }
 /***
  * 删除邀请码
@@ -111,9 +111,9 @@ exports.deleteInviteCode = function(req, res){
 	var code = req.body.code||'';
 	inviteCode.remove({code:code},function(err){
 		if(err){
-			return resAjax(res, {done:false});
+			return res.sendJson( {done:false});
 		}else{
-			return resAjax(res, {done:true});
+			return res.sendJson( {done:true});
 		}
 	})
 }
