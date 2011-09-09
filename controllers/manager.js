@@ -373,10 +373,10 @@ exports.doUpload = function(req, res){
                           console.log("readdir");
                           if (files.length === 1 &&
                           fs.statSync(tempDir + '/' + domain + "/" + files[0]).isDirectory()) {//如果只有一个文件夹
-                            move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                            move = "mv -f" + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                           }
                           else {
-                            move = "mv " + tempDir + '/' + domain + "/* " + savePath;
+                            move = "mv -f" + tempDir + '/' + domain + "/* " + savePath;
                           }
                           console.log(move);
                           exec(move, function(err){
@@ -419,34 +419,30 @@ exports.gitClone = function(req, res){
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
       domain = req.params.id||'',
       savePath = uploadDir+'/'+domain +'/',
-      move = "mv "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
-      console.log(savePath);
-      console.log(gitClone);
-      console.log(move);
+      move = "mv -f "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
       exec(gitClone, function(err, gitStdout, gitStderr){
-        console.log("gitclone");
         if(err){
           console.log(err);
           exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
-          return res.sendJson({status:"error", msg:"执行错误"});
+          return res.sendJson({status:"error", msg:"请使用Git Read-Only方式获取代码"});
         }else{
            fs.mkdir(savePath, '777', function(err){
              console.log("mkdir");
              if(err.errno !== 17){
                console.log(err);
                exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
-               return res.sendJson({status:"error", msg:"执行错误"});
+               return res.sendJson({status:"error", msg:"执行错误，请稍后再试"});
              }else{
                exec(move, function(err){
                  console.log("move");
                  if(err){
                    console.log("move error");
                    console.log(err.toString());
-                   return res.sendJson({status:"error", msg:"执行错误"});
+                   return res.sendJson({status:"error", msg:"请勿对当前应用重复执行clone操作"});
                  }
                  else{
                    exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
-                   return res.sendJson({status:"ok"});
+                   return res.sendJson({status:"ok",msg:"成功获取"});
                  }
                })
              }
