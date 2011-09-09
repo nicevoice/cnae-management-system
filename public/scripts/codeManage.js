@@ -116,11 +116,11 @@ pull = function(){
 showInfo = function(msg){
   msg = htmlSpecial(msg);
   if (hasInfo) {
-    $("#info").html(msg);
+    $("#gitInfo").html(msg);
   }
   else{
     hasInfo = true;
-    var info = $('<pre id="info" class="borderRadius5"></pre>');
+    var info = $('<pre id="gitInfo" class="borderRadius5"></pre>');
     info.html(msg);
     info.insertAfter($("#pull-p"));
   }
