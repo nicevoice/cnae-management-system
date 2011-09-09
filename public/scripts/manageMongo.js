@@ -23,6 +23,24 @@ $(function(){
 		}
 	});
 })
+checkQueryString = function(queryString){
+  if(queryString.indexOf("db.")!==0 || queryString.indexof("show")!==0){
+    return false;
+  }else{
+    if(queryString.indexOf("db.addUser")===0||
+       queryString.indexOf("db.auth")===0||
+       queryString.indexOf("db.removeUser")===0||
+       queryString.indexOf("db.eval")===0||
+       queryString.indexOf("db.dropDatabase")===0||
+       queryString.indexOf("db.shoutdownServer")===0||
+       queryString.indexOf("db.copyDatabase")===0||
+       queryString.indexOf("db.cloneDatabse")===0){
+         return false;
+       }else{
+         return true;
+       }
+  }
+}
 
 queryDb = function(){
 	var domain = $("#appDomain").html();
@@ -30,7 +48,8 @@ queryDb = function(){
 	if(!queryString){
 		return false;
 	}
-	if(queryString.substring(0, 3)==="use"){
+	if(!checkQueryString){
+    $("#queryOutput").html("该操作不被允许");
 		return false;	
 	}
 	$.ajax({
