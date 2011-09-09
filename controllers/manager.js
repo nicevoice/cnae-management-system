@@ -346,6 +346,7 @@ exports.doUpload = function(req, res){
 						exec(unCompress, function(err, stdout, stderr){
 							if (err) {
                 console.log(err);
+                console.log(350);
                 return res.render("error", {message:"上传失败,请稍后再试"});
               }
               else {
@@ -361,6 +362,7 @@ exports.doUpload = function(req, res){
                       if (err.errno!==17) {
                         console.log(err);
                         exec("rm -rf "+tempDir+'/'+domain, function(){});
+                        console.log(364);
                         return res.render("error", {
                           message: "上传失败,请稍后再试"
                         });
@@ -369,7 +371,8 @@ exports.doUpload = function(req, res){
                         console.log("readdir");
                         console.log(files.length);
                         console.log(fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode);
-                        if (files.length === 1 && fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === 16877) {//如果只有一个文件夹
+                        if (files.length === 1 && 
+                        fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === fs.statSync(__dirname.mode)) {//如果只有一个文件夹
                           move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                         }
                         else {
