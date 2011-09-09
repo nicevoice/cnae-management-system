@@ -37,7 +37,7 @@ exports.db_inviteCode = "nae_inviteCode";
 //session
 exports.session_timeOut = 3600000*24*14;
 //正则
-exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w){2,4}$/;
+exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w){2,8}$/;
 exports.regPass = /^(\w){6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
@@ -45,10 +45,10 @@ var log = require("./lib/log");
 exports.logWithFile = log.create(log.ERROR, './logs/system.log');
 //mail的配置
 //协作邀请邮件的模板
-exports.mailTitle =  'CNode App Engine协作邀请函';
+exports.mailTitle =  'Node App Engine协作邀请函';
 exports.mailContent = fs.readFileSync("./mailTemplate/coopInviteMail.html", "utf-8");
 //发送邀请函邮件的模板
-exports.inviteMailTitle = "CNode App Engine邀请码";
+exports.inviteMailTitle = "Node App Engine邀请码";
 exports.inviteMailContent = fs.readFileSync("./mailTemplate/inviteCodeMail.html", "utf-8");
 exports.admin = "dead_horse@qq.com";
 exports.smtp = {
@@ -61,12 +61,6 @@ exports.smtp = {
 };
 
 exports.uploadDir = pathutil.join(cnae_dir, 'apps');
-//发送json格式
-exports.resAjax = function(res, data){
-	body = new Buffer(JSON.stringify(data));
-	res.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
-	res.end(body);
-};
 
 exports.socketPort = 1128;
 

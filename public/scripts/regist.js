@@ -7,7 +7,7 @@ $(function(){
 
 emailBlur = function(){
 	var email = $("#newEmail").val()||'';
-	var regEmail = /^[a-zA-Z0-9_\.\-]+@(\w+)\.(\w){2,4}$/;
+	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w){2,8}$/;
 	if(!regEmail.exec(email)){
 		$("#emailWarn").html("请输入合法的email地址"); 
 		return false;
