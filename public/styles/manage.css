@@ -117,5 +117,6 @@ margin:8px;
 width: 380px;
 }
 #gitInfo{
-  width=450px;
+  width:450px;
+  font-size:15px;
 }
