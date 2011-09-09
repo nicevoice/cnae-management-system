@@ -366,12 +366,14 @@ exports.doUpload = function(req, res){
                         });
                       }
                       else {
+                        console.log("readdir");
                         if (files.length === 1 && fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === 16877) {//如果只有一个文件夹
                           move = "mv -rf " + tempDir + '/' + domain + "/" + files[0] + "/*.* " + savePath;
                         }
                         else {
                           move = "mv -rf " + tempDir + '/' + domain + "/*.* " + savePath;
                         }
+                        console.log(move);
                         exec(move, function(err){
                           if (err) {
                             console.log(err);
