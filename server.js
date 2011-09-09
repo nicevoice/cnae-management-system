@@ -221,7 +221,7 @@ app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manage
 //删除协作者
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
 //git clone代码
-app.post("/application/manage/:id/clone", function(){console.log(123);},hasLogin, checkChangeAuth(2), manager.gitClone);
+app.post("/application/manage/:id/clone" , hasLogin, checkChangeAuth(2), manager.gitClone);
 //上传代码
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
 //代码打包下载
