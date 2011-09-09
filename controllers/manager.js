@@ -372,7 +372,7 @@ exports.doUpload = function(req, res){
                         console.log(files.length);
                         console.log(fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode);
                         if (files.length === 1 && 
-                        fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === fs.statSync(__dirname.mode)) {//如果只有一个文件夹
+                        fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === fs.statSync(__dirname).mode) {//如果只有一个文件夹
                           move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                         }
                         else {
