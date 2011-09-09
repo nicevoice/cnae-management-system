@@ -48,7 +48,7 @@ queryDb = function(){
 	if(!queryString){
 		return false;
 	}
-	if(!checkQueryString()){
+	if(!checkQueryString(queryString)){
     $("#queryOutput").html("该操作不被允许");
 		return false;	
 	}
