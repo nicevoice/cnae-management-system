@@ -108,3 +108,7 @@ clone = function(){
     }
   })
 }
+
+pull = function(){
+  
+}
