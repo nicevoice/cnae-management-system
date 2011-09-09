@@ -1,4 +1,5 @@
 $(function(){
+
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -7,30 +8,31 @@ $(function(){
 	data:{domain:$("#appDomain").html()},
 	error:function(){
 			$("#submitUpload").click(upload);
-			$("#download").click(download);
-
-//      $("#gitClone").click(clone);     
-//      $("#gitUrl").keydown(function(e){
-//		    if(e.keyCode===13){
-//		  	  clone();
-//		    }
-//  	  })
+			$("#download").click(download);;
+      $("#gitPull").click(pull);
+      $("#gitClone").click(clone);     
+      $("#gitUrl").keydown(function(e){
+		    if(e.keyCode===13){
+		  	  clone();
+		    }
+  	  })
 	},
 	success:function(data){
 		if(data.active===0 || data.role>2){//如果是观察者
 			$("#submitUpload").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
-			$("#download")..click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+			$("#download").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitClone").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitPull").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
 		}else{
 			$("#submitUpload").click(upload);
 			$("#download").click(download);
-//      $("#gitClone").click(clone);
-//      $("#gitUrl").keydown(function(e){
-//		    if(e.keyCode===13){
-//		  	  clone();
-//		    }
-//  	  })
+      $("#gitPull").click(pull);
+      $("#gitClone").click(clone);
+      $("#gitUrl").keydown(function(e){
+		    if(e.keyCode===13){
+		  	  clone();
+		    }
+  	  })
 		}
 	}
 	});
@@ -77,4 +79,36 @@ download = function(){
 	})
 }
 
+clone = function(){
+  var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
+	if(!confirm(str))
+		return false;
+  var gitUrl = $("#gitUrl").val()||'',
+      domain = $("#appDomain").html();
+  if(gitUrl === ""){
+    return false;
+  }
+  $.ajax({
+    cache:false,
+    type:"post",
+    url:"/application/manage/"+domain+"/gitclone",
+    datatype:"json",
+    data:{
+      gitUrl:gitUrl
+    },
+    error:function(){
+      sAlert("警告", "获取代码出现错误，请稍后再试");
+    },
+    success:function(data){
+      if(data.status==="ok"){
+        sAert("","从github获取代码成功");
+      }else{
+        sAlert("警告",data.msg);
+      }
+    }
+  })
+}
 
+pull = function(){
+  
+}
