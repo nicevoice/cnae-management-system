@@ -65,7 +65,7 @@ function sendInvite(){
 		sAlert("警告","请先生成邀请码！");
 		return false; 
 	}
-	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w){2,8}$/;
+	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w\.){2,8}$/;
 	if(!regEmail.exec(email)){
 		sAlert("警告","请输入合法的email地址");
 		return false;

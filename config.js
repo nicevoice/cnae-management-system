@@ -37,7 +37,7 @@ exports.db_inviteCode = "nae_inviteCode";
 //session
 exports.session_timeOut = 3600000*24*14;
 //正则
-exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w){2,8}$/;
+exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.(\w\.){2,8}$/;
 exports.regPass = /^(\w){6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
