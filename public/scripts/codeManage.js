@@ -1,5 +1,4 @@
 $(function(){
-
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -10,12 +9,12 @@ $(function(){
 			$("#submitUpload").click(upload);
 			$("#download").click(download);;
 
-      $("#gitClone").click(clone);     
-      $("#gitUrl").keydown(function(e){
-		    if(e.keyCode===13){
-		  	  clone();
-		    }
-  	  })
+//      $("#gitClone").click(clone);     
+//      $("#gitUrl").keydown(function(e){
+//		    if(e.keyCode===13){
+//		  	  clone();
+//		    }
+//  	  })
 	},
 	success:function(data){
 		if(data.active===0 || data.role>2){//如果是观察者
@@ -27,12 +26,12 @@ $(function(){
 			$("#submitUpload").click(upload);
 			$("#download").click(download);
 
-      $("#gitClone").click(clone);
-      $("#gitUrl").keydown(function(e){
-		    if(e.keyCode===13){
-		  	  clone();
-		    }
-  	  })
+//      $("#gitClone").click(clone);
+//      $("#gitUrl").keydown(function(e){
+//		    if(e.keyCode===13){
+//		  	  clone();
+//		    }
+//  	  })
 		}
 	}
 	});
@@ -79,14 +78,4 @@ download = function(){
 	})
 }
 
-clone = function(){
-  var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
-	if(!confirm(str))
-		return false;
-  var gitUrl = $("#gitUrl").val()||'',
-      domain = $("#appDomain").html();
-  if(gitUrl === ""){
-    return false;
-  }
-}
 
