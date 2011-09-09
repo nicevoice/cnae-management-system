@@ -418,6 +418,7 @@ exports.gitColone = function(req, res){
       tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp",
       gitUrl = req.body.gitUrl|"",
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
+      domain = req.params.id||'',
       savePath = uploadDir+'/'+domain +'/',
       move = "mv "+tempDir+"/"+tempDirLast + " "+ savePath; 
       console.log(savePath);
