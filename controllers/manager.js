@@ -432,7 +432,7 @@ exports.gitClone = function(req, res){
         }else{
            fs.mkdir(savePath, '777', function(err){
              console.log("mkdir");
-             if(err){
+             if(err.errno !== 17){
                console.log(err);
                exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
                return res.sendJson({status:"error", msg:"执行错误"});
