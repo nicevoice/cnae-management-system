@@ -24,7 +24,7 @@
          <p><input type="button" class="button_orange r3px" id="gitClone" value="Clone">
          <input type="text" id="gitUrl" class="longInput"></p>
     	   <p id="pull-p">
-    	<input type="button" class="button_orange r3px" id="gitPull" value=" Pull ">
+    	<input type="button" class="button_orange r3px" id="gitPull" value="Pull ">
     	</p>
     </div>
     </div>

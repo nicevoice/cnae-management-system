@@ -113,6 +113,7 @@ pull = function(){
 
 showInfo = function(msg){
   msg = htmlSpecial(msg);
+  alert($("#info"));
   if ($("#info")) {
     $("#info").html = msg;
   }
