@@ -403,10 +403,7 @@ exports.doUpload = function(req, res){
                 }
               })
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
-						action:"上传代码："+savePath.slice(savePath.lastIndexOf('/')+1), recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
-						var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
-						sumManage += '/sum';
-						return res.redirect(sumManage);
+						action:"上传代码", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 					});
 		}else{
 			return res.render("error", {message:"请上传正确的格式"});
