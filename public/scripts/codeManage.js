@@ -101,16 +101,37 @@ clone = function(){
 	},
 	success:function(data){
 		if(data.status==="ok"){
-      showInfo("代码获取成功");
+      showInfo("代码获取成功。");
 		}else{
-			 showInfo("连接错误,请稍后再试。");
+			 showInfo("发现错误\n"+data.msg);
 		}
 	}
 	})
 }
 
 pull = function(){
-  
+  var domain = $("#appDomain").html();
+  var str = '可能会存在冲突，确定进行此操作吗？';
+	if(!confirm(str))
+		return false;
+  showInfo("正在获取中，请稍后...");
+ 	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/pull",
+	dataType:"json",
+	data:{},
+	error:function(err){
+		 showInfo("连接错误,请稍后再试。");
+	},
+	success:function(data){
+		if(data.status==="ok"){
+      showInfo("代码获取成功!\n"+data.msg);
+		}else{
+			 showInfo("发现错误！\n"+data.msg);
+		}
+	}
+	})
 }
 
 showInfo = function(msg){

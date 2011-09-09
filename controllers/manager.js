@@ -450,6 +450,32 @@ exports.gitClone = function(req, res){
         }
       })
 }
+
+exports.gitPull = function(req, res){
+  var domain = req.params.id|| '',
+      pull = "git pull",
+      cwd = process.cwd(),
+      savePath = uploadDir+'/'+domain +'/';
+  try{
+		process.chdir(savePath);
+	}catch(err){
+    console.log(err.toString());
+		return res.sendJson( {status:"error", msg:"拉取代码失败，请稍后再试"});
+	}
+  exec(pull, function(err, gitStdout, gitStderr){
+    try{
+			process.chdir(cwd);
+		}catch(err){
+			console.log("chir error");
+		}
+    if(err){
+      console.log(err.toString());
+		  return res.sendJson( {status:"error", msg:"拉取代码失败，请稍后再试"});
+    }else{
+      return res.sendJson({status:"ok", msg:gitStdout});
+    }
+  })
+}
 /***
  * 
  * @param {} req
