@@ -2,4 +2,5 @@
 logs
 start.sh
 stop.sh
+config.json
 shells
