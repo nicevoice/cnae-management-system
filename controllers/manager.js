@@ -373,10 +373,10 @@ exports.doUpload = function(req, res){
                           console.log("readdir");
                           if (files.length === 1 &&
                           fs.statSync(tempDir + '/' + domain + "/" + files[0]).isDirectory()) {//如果只有一个文件夹
-                            move = "mv -f" + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                            move = "mv -f " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                           }
                           else {
-                            move = "mv -f" + tempDir + '/' + domain + "/* " + savePath;
+                            move = "mv -f " + tempDir + '/' + domain + "/* " + savePath;
                           }
                           console.log(move);
                           exec(move, function(err){
