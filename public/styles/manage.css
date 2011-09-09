@@ -89,11 +89,11 @@ left:55%
 display:none;
 }
 
-#submitUpload, #editor{
+#submitUpload, #gitClone{
     position:relative;
     left:60%;
 }
-#download, #setEditor{
+#download, #gitpull  {  
     position:relative;
     left:63%;
 }

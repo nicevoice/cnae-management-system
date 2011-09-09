@@ -413,6 +413,39 @@ exports.doUpload = function(req, res){
 	}
 } 	
 
+exports.gitColone = function(req, res){
+  var tempDirLast = randomStringNum(15),
+      tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp",
+      gitUrl = req.body.gitUrl|"",
+      gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
+      savePath = uploadDir+'/'+domain +'/',
+      move = "mv "+tempDir+"/"+tempDirLast + " "+ savePath; 
+      exec(gitClone, function(err, gitStdout, gitStderr){
+        if(err){
+          console.log(err);
+          exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
+          return res.sendJson({status:"error", msg:"执行错误"});
+        }else{
+           fs.mkdir(savePath, '777', function(err){
+             if(err){
+               console.log(err);
+               exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
+               return res.sendJson({status:"error", msg:"执行错误"});
+             }else{
+               exec(move, function(err){
+                 if(err){
+                   console.log(err);
+                   return res.sendJson({status:"error", msg:"执行错误"});
+                 }
+                 else{
+                   exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
+                 }
+               })
+             }
+           })
+        }
+      })
+}
 /***
  * 
  * @param {} req
