@@ -222,6 +222,8 @@ app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manage
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
 //上传代码
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
+//git clone代码
+app.post("/application/manage/:id/gitclone", hasLogin, checkChangeAuth(2), manager.gitClone);
 //代码打包下载
 app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), manager.doDownload);
 app.get("/application/download/:id.zip", hasLogin, manager.downloading);
