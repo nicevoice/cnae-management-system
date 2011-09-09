@@ -446,7 +446,7 @@ exports.gitClone = function(req, res){
                  }
                  else{
                    exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
-                   return res.sendJson({status:"ok", msg:"gitStdout"});
+                   return res.sendJson({status:"ok"});
                  }
                })
              }

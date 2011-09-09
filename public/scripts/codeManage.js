@@ -95,13 +95,13 @@ clone = function(){
 	dataType:"json",
 	data:{gitUrl:gitUrl},
 	error:function(err){
-		sAlert("警告", "连接错误，请稍后再试");
+		 showInfo("连接错误,请稍后再试。");
 	},
 	success:function(data){
 		if(data.status==="ok"){
-      sAlert("","获取代码成功");
+      showInfo("代码获取成功");
 		}else{
-			sAlert("警告", "发生错误，请稍后再试");
+			 showInfo("连接错误,请稍后再试。");
 		}
 	}
 	})
@@ -109,4 +109,16 @@ clone = function(){
 
 pull = function(){
   
+}
+
+showInfo = function(msg){
+  msg = htmlSpecial(msg);
+  if ($("#info")) {
+    $("#info").html = msg;
+  }
+  else{
+    var info = $('<pre id="info" class="borderRadius5"></pre>');
+    info.html = msg;
+    info.insertAfter($("#pull-p"));
+  }
 }
