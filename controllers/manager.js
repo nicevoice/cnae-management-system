@@ -330,77 +330,81 @@ exports.doUpload = function(req, res){
 			    savePath = uploadDir+'/'+domain +'/'; 
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
-					fs.chmod(files.upload.path, '444', function(err){
-            console.log("chmod");
-						if(err){
-              console.log(err);
-						  return res.render("error", {message:"上传失败,请稍后再试"});
-						}
-						var unCompress = "";
-						if(type==="gz"){
-							unCompress = 'tar -xf '+ files.upload.path + ' -C '+tempDir+ '/'+domain;
-						}else{
-							unCompress = 'unzip '+ files.upload.path +' -d '+tempDir+ '/'+domain;
-						}
-						console.log(unCompress);
-						exec(unCompress, function(err, stdout, stderr){
-							if (err) {
-                console.log(err);
-                console.log(350);
-                return res.render("error", {message:"上传失败,请稍后再试"});
+              var unCompress = "";
+              if (type === "gz") {
+                unCompress = 'tar -xf ' + files.upload.path + ' -C ' + tempDir + '/' + domain;
               }
               else {
-                console.log("unCompress");
-                fs.readdir(tempDir+'/'+domain, function(err, files){
-                  if(err){
-                    console.log(err);
-                    exec("rm -rf "+tempDir+'/'+domain, function(){});
-                    return res.render("error", {message:"上传失败,请稍后再试"});
-                  }else{
-                    fs.mkdir(savePath, '777', function(err){
-                      var move = "";
-                      if (err.errno!==17) {
-                        console.log(err);
-                        exec("rm -rf "+tempDir+'/'+domain, function(){});
-                        console.log(364);
-                        return res.render("error", {
-                          message: "上传失败,请稍后再试"
-                        });
-                      }
-                      else {
-                        console.log("readdir");
-                        console.log(files.length);
-                        console.log(fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode);
-                        if (files.length === 1 && 
-                        fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === fs.statSync(__dirname).mode) {//如果只有一个文件夹
-                          move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                unCompress = 'unzip ' + files.upload.path + ' -d ' + tempDir + '/' + domain;
+              }
+              console.log(unCompress);
+              exec(unCompress, function(err, stdout, stderr){
+                if (err) {
+                  console.log(err);
+                  console.log(350);
+                  return res.render("error", {
+                    message: "上传失败,请稍后再试"
+                  });
+                }
+                else {
+                  console.log("unCompress");
+                  fs.readdir(tempDir + '/' + domain, function(err, files){
+                    if (err) {
+                      console.log(err);
+                      exec("rm -rf " + tempDir + '/' + domain, function(){
+                      });
+                      return res.render("error", {
+                        message: "上传失败,请稍后再试"
+                      });
+                    }
+                    else {
+                      fs.mkdir(savePath, '777', function(err){
+                        var move = "";
+                        if (err.errno !== 17) {
+                          console.log(err);
+                          exec("rm -rf " + tempDir + '/' + domain, function(){
+                          });
+                          console.log(364);
+                          return res.render("error", {
+                            message: "上传失败,请稍后再试"
+                          });
                         }
                         else {
-                          move = "mv " + tempDir + '/' + domain + "/* " + savePath;
-                        }
-                        console.log(move);
-                        exec(move, function(err){
-                          if (err) {
-                            console.log(err);
-                            exec("rm -rf "+tempDir+'/'+domain, function(){});
-                            return res.render("error", {
-                              message: "上传失败,请稍后再试"
-                            });
+                          console.log("readdir");
+                          console.log(files.length);
+                          console.log(fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode);
+                          console.log(fs.statSync(__dirname));
+                          if (files.length === 1 &&
+                          fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === fs.statSync(__dirname).mode) {//如果只有一个文件夹
+                            move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                           }
                           else {
-                            exec("rm -rf "+tempDir+'/'+domain, function(){});
-                            var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
-                            sumManage += '/sum';
-                            return res.redirect(sumManage);
+                            move = "mv " + tempDir + '/' + domain + "/* " + savePath;
                           }
-                        });
-                      }
-                    })
-                  }
-                })
-              }
+                          console.log(move);
+                          exec(move, function(err){
+                            if (err) {
+                              console.log(err);
+                              exec("rm -rf " + tempDir + '/' + domain, function(){
+                              });
+                              return res.render("error", {
+                                message: "上传失败,请稍后再试"
+                              });
+                            }
+                            else {
+                              exec("rm -rf " + tempDir + '/' + domain, function(){
+                              });
+                              var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
+                              sumManage += '/sum';
+                              return res.redirect(sumManage);
+                            }
+                          });
+                        }
+                      })
+                    }
+                  })
+                }
               })
-						})
 						records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 						action:"上传代码："+savePath.slice(savePath.lastIndexOf('/')+1), recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 						var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
