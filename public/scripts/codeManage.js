@@ -7,7 +7,7 @@ $(function(){
 	data:{domain:$("#appDomain").html()},
 	error:function(){
 			$("#submitUpload").click(upload);
-			$("#download").click(download);;
+			$("#download").click(download);
 
 //      $("#gitClone").click(clone);     
 //      $("#gitUrl").keydown(function(e){
@@ -25,7 +25,6 @@ $(function(){
 		}else{
 			$("#submitUpload").click(upload);
 			$("#download").click(download);
-
 //      $("#gitClone").click(clone);
 //      $("#gitUrl").keydown(function(e){
 //		    if(e.keyCode===13){
