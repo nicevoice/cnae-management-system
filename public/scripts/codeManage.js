@@ -92,7 +92,7 @@ clone = function(){
   $.ajax({
     cache:false,
     type:"post",
-    url:"/application/manage/"+domain+"/gitclone",
+    url:"/application/manage/"+domain+"/clone",
     datatype:"json",
     data:{
       gitUrl:gitUrl
