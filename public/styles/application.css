@@ -127,3 +127,6 @@ margin: 0px 20px 10px;
 .inactiveApp{
 color:#333;
 }
+#domainWarn{
+  font-size:6px;
+}
