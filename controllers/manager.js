@@ -413,8 +413,7 @@ exports.doUpload = function(req, res){
 	}
 } 	
 
-exports.gitColone = function(req, res){
-   console.log("in");
+exports.gitClone = function(req, res){
   var tempDirLast = randomStringNum(15),
       tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp",
       gitUrl = req.body.gitUrl|"",
