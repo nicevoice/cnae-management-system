@@ -367,11 +367,13 @@ exports.doUpload = function(req, res){
                       }
                       else {
                         console.log("readdir");
+                        console.log(files.length);
+                        console.log(fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode);
                         if (files.length === 1 && fs.statSync(tempDir + '/' + domain + "/" + files[0]).mode === 16877) {//如果只有一个文件夹
-                          move = "mv -rf " + tempDir + '/' + domain + "/" + files[0] + "/*.* " + savePath;
+                          move = "mv " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                         }
                         else {
-                          move = "mv -rf " + tempDir + '/' + domain + "/*.* " + savePath;
+                          move = "mv " + tempDir + '/' + domain + "/* " + savePath;
                         }
                         console.log(move);
                         exec(move, function(err){
