@@ -10,7 +10,7 @@ $(function(){
 			$("#submitUpload").click(upload);
 			$("#download").click(download);;
       $("#gitPull").click(pull);
-       $("#gitClone").click(clone);     
+      $("#gitClone").click(clone);     
       $("#gitUrl").keydown(function(e){
 		    if(e.keyCode===13){
 		  	  clone();
@@ -80,7 +80,7 @@ download = function(){
 }
 
 clone = function(){
-  str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
+  var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
 	if(!confirm(str))
 		return false;
   var gitUrl = $("#gitUrl").val()||'',
