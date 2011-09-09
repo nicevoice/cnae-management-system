@@ -68,8 +68,9 @@ exports.generateInviteCode = function(req, res){
 			log.error(err);
 			return resAjax(res, {done:false});
 			}else{
-				return resAjax(res, {done:true, code:code});	
-			}
+				//return resAjax(res, {done:true, code:code});	
+			  return res.sendJson({done:true, code:code});
+      }
 		})
 	})
 }
