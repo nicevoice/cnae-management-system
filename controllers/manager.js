@@ -358,7 +358,7 @@ exports.doUpload = function(req, res){
                   }else{
                     fs.mkdir(savePath, '777', function(err){
                       var move = "";
-                      if (err) {
+                      if (err.errno!==17) {
                         console.log(err);
                         exec("rm -rf "+tempDir+'/'+domain, function(){});
                         return res.render("error", {
