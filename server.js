@@ -15,6 +15,7 @@ var express = require('express'),
 	editor = require('./controllers/editor'),
 	EventProxy = require('EventProxy.js').EventProxy,
 	md5 = require('./lib/md5').hex_md5,
+  startDel = require('./lib/deleteDownload').startDel,
 	form = require('connect-form'),
 	RedisStore = require('connect-redis')(express),
 	inviteCode = require('./controllers/inviteCode'),
@@ -275,6 +276,8 @@ app.get("*", main.pageNotFound);
 
 app.listen(config.port);
 console.log("server start http://localhost:" + config.port);
+
+startDel();
 
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
