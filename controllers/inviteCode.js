@@ -7,6 +7,7 @@ var config = require('../config')
   , mailEvent =sendMail.mailEvent
   , randomString = require('../lib/randomString').getRandomString
   , urlMoudle = require('url')
+  , resAjax = config.resAjax
   , nodemailer = config.nodemailer;
 
 /***
