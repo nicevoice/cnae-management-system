@@ -582,14 +582,32 @@ exports.createMongo = function(req, res){
 	})
 }
 
+checkQueryString = function(queryString){
+  if(queryString.indexOf("db.")!==0 || queryString.indexof("show")!==0){
+    return false;
+  }else{
+    if(queryString.indexOf("db.addUser")===0||
+       queryString.indexOf("db.auth")===0||
+       queryString.indexOf("db.removeUser")===0||
+       queryString.indexOf("db.eval")===0||
+       queryString.indexOf("db.dropDatabase")===0||
+       queryString.indexOf("db.shoutdownServer")===0||
+       queryString.indexOf("db.copyDatabase")===0||
+       queryString.indexOf("db.cloneDatabse")===0){
+         return false;
+       }else{
+         return true;
+       }
+  }
+}
+
 exports.queryMongo = function(req, res){
 	var domain = req.params.id||'',
 		queryString = req.body.queryString.trim()||'';
-		queryString = "\""+queryString+"\"";
-	if(queryString.indexOf("db.addUser")===0 || queryString.indexOf("^use")===0 
-	|| queryString.indexOf("db.removeUser")===0 || queryString.indexOf("db.dropDatabase")===0){
-		return resAjax(res, {status:"error", msg:"操作不被允许"});
+	if(!checkQueryString(queryString)){
+		return resAjax(res, {status:"error", msg:"该操作不被允许"});
 	}
+		queryString = "\""+queryString+"\"";
 	users.findOne({email:req.session.email},function(err, data){//查找db帐号密码
 		if(err){
 			log.error(err);

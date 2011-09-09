@@ -1,5 +1,5 @@
 var config = require('../config'),
-log = config.logWithFile;
+log = config.logWithFile,
 md5 = require('../lib/md5').hex_md5,
 EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
