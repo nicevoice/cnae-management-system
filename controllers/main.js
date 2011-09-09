@@ -77,7 +77,7 @@ var config = require('../config')
  if(newAppName.length>20){
  	return res.render("error", {message:"应用名不能超过20个字符"});
  }
-  var regDomain = /^(\w){4,18}$/;
+  var regDomain = /^[a-z][a-z0-9_]{3,17}$/;
   if(!regDomain.exec(newAppDomain))
 		return res.render("error", {message:"子域名格式错误"});
 
