@@ -116,12 +116,12 @@ pull = function(){
 showInfo = function(msg){
   msg = htmlSpecial(msg);
   if (hasInfo) {
-    $("#info").html = msg;
+    $("#info").html(msg);
   }
   else{
     hasInfo = true;
     var info = $('<pre id="info" class="borderRadius5"></pre>');
-    info.html = msg;
+    info.html(msg);
     info.insertAfter($("#pull-p"));
   }
 }
