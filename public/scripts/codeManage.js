@@ -9,7 +9,7 @@ $(function(){
 	error:function(){
 			$("#submitUpload").click(upload);
 			$("#download").click(download);;
-      $("#gitPull").click(pull);
+
       $("#gitClone").click(clone);     
       $("#gitUrl").keydown(function(e){
 		    if(e.keyCode===13){
@@ -26,7 +26,7 @@ $(function(){
 		}else{
 			$("#submitUpload").click(upload);
 			$("#download").click(download);
-      $("#gitPull").click(pull);
+
       $("#gitClone").click(clone);
       $("#gitUrl").keydown(function(e){
 		    if(e.keyCode===13){
@@ -39,7 +39,7 @@ $(function(){
 });
 
 upload = function(){
-  str = '可能会覆盖之前存在的代码，确定上传吗？';
+  var str = '可能会覆盖之前存在的代码，确定上传吗？';
 	if(!confirm(str))
 		return false;
 	var file = $("#getFile").val();
@@ -88,27 +88,5 @@ clone = function(){
   if(gitUrl === ""){
     return false;
   }
-  $.ajax({
-    cache:false,
-    type:"post",
-    url:"/application/manage/"+domain+"/gitclone",
-    datatype:"json",
-    data:{
-      gitUrl:gitUrl
-    },
-    error:function(){
-      sAlert("警告", "获取代码出现错误，请稍后再试");
-    },
-    success:function(data){
-      if(data.status==="ok"){
-        sAert("","从github获取代码成功");
-      }else{
-        sAlert("警告",data.msg);
-      }
-    }
-  })
 }
 
-pull = function(){
-  
-}
