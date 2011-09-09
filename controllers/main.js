@@ -5,7 +5,6 @@ var config = require('../config')
   , app_basic = db.collection(config.db_app_basic)
   , users = db.collection(config.db_user)
   , records = db.collection(config.db_app_records)
-  , resAjax = config.resAjax
   , urlMoudle = require('url')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
@@ -185,14 +184,14 @@ exports.deleteApp = function(req, res){
 	var delDomain = req.body.domain||'';
 	var body;
 	if(!delDomain){
-		resAjax(res, {done:false});
+		res.sendJson( {done:false});
 	}else{
 		var deleteEvent = new EventProxy();
 		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function(){
 			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4])
-				resAjax(res, {done:false});
+				res.sendJson( {done:false});
 			else{
-				resAjax(res, {done:true});
+				res.sendJson( {done:true});
 			}
 		});
 		deleteEvent.once("deleteDb", function(deleteDb){
@@ -264,14 +263,14 @@ exports.deleteApp = function(req, res){
  */
 exports.joinApp = function(req, res){
 	var domain = req.body.domain||'';
-	if(!domain) resAjax(res, {done:false});
+	if(!domain) res.sendJson( {done:false});
 	else{
 		app_mem.update({appDomain:domain, email:req.session.email},
 		{$set:{active:1}}, function(err){
 			if(err)
-				resAjax(res, {done:false});
+				res.sendJson( {done:false});
 			else{
-				resAjax(res, {done:true});
+				res.sendJson( {done:true});
 				records.save({appDomain:domain, email:req.session.email,
 				action:"接受邀请", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 			}
@@ -285,15 +284,15 @@ exports.joinApp = function(req, res){
  */
 exports.deleteCoop = function(req, res){
 	var domain = req.body.domain||'';
-	if(!domain) resAjax(res, {done:false});
+	if(!domain) res.sendJson( {done:false});
 	else{
 		app_mem.remove({appDomain:domain, email:req.session.email},
 		function(err){
 			if(err){
-				resAjax(res, {done:false});
+				res.sendJson( {done:false});
 			}
 			else{
-				resAjax(res, {done:true});
+				res.sendJson( {done:true});
 				records.save({appDomain:domain, email:req.session.email,
 				action:"退出项目", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 			}
@@ -309,11 +308,11 @@ exports.checkAppDomain = function(req, res){
 	var domain = req.body.domain||'';
 	app_basic.findOne({appDomain:domain}, function(err, data){
 		if(err)
-			resAjax(res, {});
+			res.sendJson( {});
 		else if(data)
-			resAjax(res, {warn:"域名已经被使用"});
+			res.sendJson( {warn:"域名已经被使用"});
 			else
-			resAjax(res, {});
+			res.sendJson( {});
 	})
 }
 /***
@@ -329,16 +328,16 @@ exports.getOwnAuthInfo = function(req, res){
 		//验证用户
 	users.findOne({email:email, password:password}, function(err, data){
 		if(err){
-			return resAjax(res, {status:"error",msg:"数据库查询错误"});
+			return res.sendJson( {status:"error",msg:"数据库查询错误"});
 		}else if(!data){
-			return resAjax(res, {status:"error", msg:"未登录或帐号密码错误"});
+			return res.sendJson( {status:"error", msg:"未登录或帐号密码错误"});
 		}else{
 			//查找权限
 			app_mem.findOne({appDomain:domain, email:email}, function(err ,data){
 				if(err){
-					return resAjax(res, {status:"error",msg:"数据库查询错误"});
+					return res.sendJson( {status:"error",msg:"数据库查询错误"});
 				}else{
-					return resAjax(res, {status:"ok", role:data.role});
+					return res.sendJson( {status:"ok", role:data.role});
 				}
 			});
 		}

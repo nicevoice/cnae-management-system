@@ -2,7 +2,6 @@ var config = require('../config'),
 log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
 randomStringNum = require("../lib/randomString").getRandomStringNum,
-resAjax = config.resAjax,
 users = config.db.collection(config.db_user);
 /***
  * 跳转到显示用户信息页面
@@ -76,15 +75,15 @@ exports.doChangeInfo = function(req, res){
 		newMainPage = req.body.changeMainPage||'';
 	var regName = config.regName;
 	if(!regName.exec(newNickName)){
-		return resAjax(res,{done:false, message:"请输入合法的昵称"});
+		return res.sendJson({done:false, message:"请输入合法的昵称"});
 	}
 	users.findOne({nickName:newNickName.toString()}, function(err, data){
 		if(err){
 			log.error(err);
-			return resAjax(res, {done:false,message:"连接错误，请稍后再试"});
+			return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 		}else{
 			if(data && data.nickName!=req.session.nickName){
-				return resAjax(res, {done:false,message:"昵称已存在"});
+				return res.sendJson( {done:false,message:"昵称已存在"});
 		}else{
 			users.update({email:req.session.email.toString()},{$set:
 				{nickName:newNickName.toString(), realName:newRealName.toString(),
@@ -92,10 +91,10 @@ exports.doChangeInfo = function(req, res){
 				function(err){
 					if(err){
 						log.error(err);
-						return resAjax(res, {done:false,message:"连接错误，请稍后再试"});
+						return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 					}else{
 						req.session.nickName = newNickName;
-						//return resAjax(res, {done:true});
+						//return res.sendJson( {done:true});
 					  return res.sendJson({done:true});
           }
 				})
@@ -115,23 +114,23 @@ exports.doChangePassword = function(req, res){
 		confirmation = req.body.changeConfirmation;
 	var regPass = config.regPass;
 	if(!regPass.exec(newPassword)){
-			return resAjax(res,{done:false, message:"密码必须为6～20位字符或者数字"});
+			return res.sendJson({done:false, message:"密码必须为6～20位字符或者数字"});
 	}
 	if(newPassword != confirmation){
-		return resAjax(res, {done:false,message:"两次密码必须一致"});
+		return res.sendJson( {done:false,message:"两次密码必须一致"});
 	}
 	else{
 		var checkEvent = new EventProxy();
 		checkEvent.once("checkOK", function(ok){
 			if(!ok){
-				return resAjax(res, {done:false,message:"错误的原始密码"});
+				return res.sendJson( {done:false,message:"错误的原始密码"});
 			}else{
 				users.update({email:req.session.email.toString()}, {$set:{password:newPassword.toString()}},
 				function(err){
 					if(err){
-						return resAjax(res, {done:false,message:"连接错误，请稍后再试"});
+						return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 					}else{
-						return resAjax(res, {done:true});					
+						return res.sendJson( {done:true});					
 						}
 				});
 			}

@@ -3,8 +3,7 @@ var config = require('../config'),
 	mails = sendMail.mails,
 	mailEvent =sendMail.mailEvent,
 	nodemailer = config.nodemailer,	
-	admin = config.admin,
-	resAjax = config.resAjax;
+	admin = config.admin;
 /***
  * 显示反馈页面
  * @param {} req
@@ -30,5 +29,5 @@ exports.postFeed = function(req, res){
     debug: true
 	});
 	mailEvent.fire("getMail");
-	return resAjax(res, {done:true});
+	return res.sendJson( {done:true});
 }

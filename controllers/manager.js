@@ -16,7 +16,6 @@ var config = require('../config')
   , records = db.collection(config.db_app_records)
   , EventProxy = require('EventProxy.js').EventProxy  
   , nodemailer = config.nodemailer
-  , resAjax = config.resAjax
   , mailContent = config.mailContent
   , mailTitle = config.mailTitle
   , mails = sendMail.mails
@@ -54,7 +53,7 @@ exports.doControlApp = function(req, res){
 		action = "stop";
 	}
 	onOff(action, domain, function(data){
-		resAjax(res, data);
+		res.sendJson( data);
 	})
 	//todo 添加启动停止
 	/*var controlEvent = new EventProxy();
@@ -117,17 +116,17 @@ exports.doAppmng = function(req, res){
 	var newAppName = req.body.newAppName||'';
 	var body;
 	if(!newAppName){
-		resAjax(res, {done:false});
+		res.sendJson( {done:false});
 	}else{
 		var newAppDes = req.body.newAppDes||'';
 		var updateInfoEvent = new EventProxy();
 		updateInfoEvent.assign("updatedBasic", "updatedMem", "saveRecords",
 		function(){
 			if(!arguments[0]||!arguments[1]||!arguments[2]){
-				resAjax(res, {done:false});
+				res.sendJson( {done:false});
 			}
 			else{
-				resAjax(res, {done:true});
+				res.sendJson( {done:true});
 			}
 		})
 		app_basic.update({appDomain:domain.toString()},
@@ -218,39 +217,39 @@ exports.doCoopmng = function(req, res){
 		body;
 	//未输入
 	if(!email){
-		resAjax(res, {done:false, why:"请输入邮箱"})
+		res.sendJson( {done:false, why:"请输入邮箱"})
 	}else
 	//输入不合法
 	 	if(!regEmail.exec(email)){
-	 		resAjax(res, {done:false, why:"请输入合法的email地址"})
+	 		res.sendJson( {done:false, why:"请输入合法的email地址"})
 		}
 	else
 	//输入自身
 	if(email === req.session.email){
-		resAjax(res, {done:false, why:"不能邀请自己"});
+		res.sendJson( {done:false, why:"不能邀请自己"});
 	}
 	else{
 		app_mem.findOne({email:email,appDomain:domain}, function(err, data){
 			if(err){
-				return resAjax(res, {done:false, why:"数据库查询错误"});
+				return res.sendJson( {done:false, why:"数据库查询错误"});
 			}else
 			if(data){
-				return resAjax(res, {done:false, why:"不能邀请已参加用户"});
+				return res.sendJson( {done:false, why:"不能邀请已参加用户"});
 			}else{
 			//插入
 			app_basic.findOne({appDomain:domain}, function(err, name){
 	 		if(err){
-	 			resAjax(res, {done:false, why:"数据库查询错误，请稍后再试"});
+	 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
 	 		}else if(name){
 			 	app_mem.save({appDomain:domain.toString(), appName:name.appName.toString(),
 			 	email:email.toString(), role:parseInt(role), active:0}, function(err){
 			 		if(err){
 			 			log.error(err);
-			 			resAjax(res, {done:false, why:"数据库查询错误，请稍后再试"});
+			 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
 			 			}
 			 		else{
 			 			send(email, words);
-			 			resAjax(res, {done:true, domain:domain, role:parseInt(role)});
+			 			res.sendJson( {done:true, domain:domain, role:parseInt(role)});
 			 			records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 			 			action:"邀请成员:"+email, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 			 		}
@@ -270,14 +269,14 @@ exports.deleteCoop = function(req, res){
 	var email = req.body.email||'';
 	var domain = req.params.id||'';
 	if(!email)
-		resAjax(res, {done:false});
+		res.sendJson( {done:false});
 	else{
 		app_mem.remove({email:email, appDomain:domain}, function(err){
 			if(err){
 				log.error(err);
-				resAjax(res, {done:false});
+				res.sendJson( {done:false});
 			}else{
-				resAjax(res, {done:true});
+				res.sendJson( {done:true});
 				records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 		 		action:"删除成员:"+email, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
 			}
@@ -292,9 +291,9 @@ exports.doChangeRole = function(req, res){
 	app_mem.update({email:email, appDomain:domain}, {$set:{role:parseInt(role)}},
 	function(err){
 		if(err){
-			resAjax(res, {done:false});
+			res.sendJson( {done:false});
 		}else{
-			resAjax(res, {done:true});
+			res.sendJson( {done:true});
 		}
 	})
 }
@@ -387,7 +386,7 @@ exports.doDownload = function(req, res){
 	try{
 		process.chdir(uploadDir);
 	}catch(err){
-		return resAjax(res, {status:"error", msg:"修改工作目录失败"});
+		return res.sendJson( {status:"error", msg:"修改工作目录失败"});
 	}
 	var compress = "zip -r "+ saveName + " "+domain;
 	exec(compress, function(err, stdout, stderr){
@@ -398,14 +397,14 @@ exports.doDownload = function(req, res){
 		}
 		if(err){
 			console.log(err);
-			return resAjax(res, {status:"error", msg:"压缩失败"});		
+			return res.sendJson( {status:"error", msg:"压缩失败"});		
 		}else{
 			setTimeout(function(){
 				fs.unlink(saveName, function(){
 					console.log("删除文件");
 				}, 1000*60);
 			});
-			return resAjax(res, {status:"ok", url:"/download/"+name});
+			return res.sendJson( {status:"ok", url:"/download/"+name});
 		}	
 	})
 }
@@ -441,9 +440,9 @@ exports.doUploadImg = function(req, res){
 			fs.rename(files.upload.path, savePath, function(err){
 				if(err){
 					log.error(err);
-					return resAjax(res, {done:false});
+					return res.sendJson( {done:false});
 				}else{
-					return resAjax(res, {done:true});
+					return res.sendJson( {done:true});
 				}
 			});
 		}
@@ -495,7 +494,7 @@ exports.getStdOutput = function(req, res){
 		action = req.body.action;
 	getLog(action, domain, 1000, function(data){
 		try{
-		return resAjax(res, {output:data});
+		return res.sendJson( {output:data});
 		}catch(e){};
 	});
 }
@@ -509,7 +508,7 @@ exports.getStatus = function(req, res){
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
-		return resAjax(res, socketRes);
+		return res.sendJson( socketRes);
 	})
 	}
 
@@ -518,7 +517,7 @@ exports.addRecord = function(req, res){
 		domain = req.params.id||'';
 	records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 						action:action, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){
-						resAjax(res, {});
+						res.sendJson( {});
 						});
 }
 
@@ -605,17 +604,17 @@ exports.queryMongo = function(req, res){
 	var domain = req.params.id||'',
 		queryString = req.body.queryString.trim()||'';
 	if(!checkQueryString(queryString)){
-		return resAjax(res, {status:"error", msg:"该操作不被允许"});
+		return res.sendJson( {status:"error", msg:"该操作不被允许"});
 	}
 		queryString = "\""+queryString+"\"";
 	users.findOne({email:req.session.email},function(err, data){//查找db帐号密码
 		if(err){
 			log.error(err);
-			return resAjax(res, {status:"error", msg:"数据库帐号密码查找失败"});		
+			return res.sendJson( {status:"error", msg:"数据库帐号密码查找失败"});		
 		}else{
 			app_basic.findOne({appDomain:domain},function(err, appInfos){
 				if(appInfos.appDbType!=="mongo"){
-					return resAjax(res, {status:"error", msg:"数据库未申请或者不是mongoDB"});
+					return res.sendJson( {status:"error", msg:"数据库未申请或者不是mongoDB"});
 				}
 				var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoQuery.sh "+
 					appInfos.appDbName +" "+ data.dbUserName + " " + data.dbPassword +" "+ queryString;
@@ -623,7 +622,7 @@ exports.queryMongo = function(req, res){
 				exec(command, function(err, stdout, stderr){
 					if(err){
 						console.log(err);
-						return resAjax(res, {status:"error", msg:"查询数据库失败"});
+						return res.sendJson( {status:"error", msg:"查询数据库失败"});
 					}else{
 						var place = stdout.indexOf("1\n");
 						if(place === -1){
@@ -632,7 +631,7 @@ exports.queryMongo = function(req, res){
 							stdout = stdout.slice(place+2, stdout.length-4) + "\ndone";
 						}
 						
-						return resAjax(res, {status:"ok", output:stdout});
+						return res.sendJson( {status:"ok", output:stdout});
 					}
 				})
 			});

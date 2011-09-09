@@ -5,8 +5,7 @@ EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
 inviteCode = config.db.collection(config.db_inviteCode),
 urlMoudle = require('url'),
-randomStringNum = require('../lib/randomString').getRandomStringNum,
-resAjax = config.resAjax;
+randomStringNum = require('../lib/randomString').getRandomStringNum;
 /***
  * 显示登录页面
  * @param {} req
@@ -201,15 +200,15 @@ exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
 	var regEmail = config.regEmail;
 	if(!regEmail.exec(userEmail))
-		return resAjax(res, {warn:"请输入合法的email地址"});
+		return res.sendJson( {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){
 		if(err){
-			resAjax(res, {});
+			res.sendJson( {});
 		}else{
 			if(data){
-			resAjax(res, {warn:"该邮箱已经被注册"});
+			res.sendJson( {warn:"该邮箱已经被注册"});
 			}else{
-			resAjax(res, {});
+			res.sendJson( {});
 			}
 		}
 	});
@@ -224,17 +223,17 @@ exports.checkName = function(req, res){
 	var name = req.body.name;
 	var regName = config.regName;
 	if(!regName.exec(name))
-		return resAjax(res, {warn:"昵称为2～20个字符或数字或._"});
+		return res.sendJson( {warn:"昵称为2～20个字符或数字或._"});
 	if(req.session.nickName && req.session.nickName===name)
-		return resAjax(res, {warn:""});
+		return res.sendJson( {warn:""});
 	users.findOne({nickName:name}, function(err, data){
 		if(err){
-			resAjax(res, {});
+			res.sendJson( {});
 		}else{
 			if(data){
-			resAjax(res, {warn:"该昵称已经被使用"});
+			res.sendJson( {warn:"该昵称已经被使用"});
 			}else{
-			resAjax(res, {});
+			res.sendJson( {});
 			}
 		}
 	});
