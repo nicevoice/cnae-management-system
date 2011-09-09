@@ -89,6 +89,7 @@ clone = function(){
   var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
 	if(!confirm(str))
 		return false;
+  showInfo("正在获取中，请稍后...");
  	$.ajax({
 	cache:false,
 	type:"post",
