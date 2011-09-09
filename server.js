@@ -223,7 +223,7 @@ app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAu
 //上传代码
 app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
 //git clone代码
-app.post("/application/manage/:id/gitclone", hasLogin, checkChangeAuth(2), manager.gitClone);
+app.post("/application/manage/:id/gitclone", hasLogin, checkChangeAuth(2), manager.gitClones);
 //代码打包下载
 app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), manager.doDownload);
 app.get("/application/download/:id.zip", hasLogin, manager.downloading);
