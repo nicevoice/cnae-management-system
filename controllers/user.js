@@ -95,8 +95,9 @@ exports.doChangeInfo = function(req, res){
 						return resAjax(res, {done:false,message:"连接错误，请稍后再试"});
 					}else{
 						req.session.nickName = newNickName;
-						return resAjax(res, {done:true});
-					}
+						//return resAjax(res, {done:true});
+					  return res.sendJson({done:true});
+          }
 				})
 		}
 	}

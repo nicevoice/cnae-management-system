@@ -169,7 +169,11 @@ function isAdmin(req, res, next){
 	res.redirect("/");
 }
 
-
+require('http').ServerResponse.prototype.sendJson = function(data){
+  body = new Buffer(JSON.stringify(data));
+	this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
+	this.end(body);
+}
 //routing
 //登录模块
 app.get("/", hasLogin, main.show);
