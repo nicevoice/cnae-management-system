@@ -45,10 +45,10 @@ var log = require("./lib/log");
 exports.logWithFile = log.create(log.ERROR, './logs/system.log');
 //mail的配置
 //协作邀请邮件的模板
-exports.mailTitle =  'Node App Engine协作邀请函';
+exports.mailTitle =  'CNode App Engine协作邀请函';
 exports.mailContent = fs.readFileSync("./mailTemplate/coopInviteMail.html", "utf-8");
 //发送邀请函邮件的模板
-exports.inviteMailTitle = "Node App Engine邀请码";
+exports.inviteMailTitle = "CNode App Engine邀请码";
 exports.inviteMailContent = fs.readFileSync("./mailTemplate/inviteCodeMail.html", "utf-8");
 exports.admin = "dead_horse@qq.com";
 exports.smtp = {
