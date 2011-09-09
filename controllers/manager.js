@@ -420,19 +420,25 @@ exports.gitColone = function(req, res){
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
       savePath = uploadDir+'/'+domain +'/',
       move = "mv "+tempDir+"/"+tempDirLast + " "+ savePath; 
+      console.log(savePath);
+      console.log(gitClone);
+      console.log(move);
       exec(gitClone, function(err, gitStdout, gitStderr){
+        console.log("gitclone");
         if(err){
           console.log(err);
           exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
           return res.sendJson({status:"error", msg:"执行错误"});
         }else{
            fs.mkdir(savePath, '777', function(err){
+             console.log("mkdir");
              if(err){
                console.log(err);
                exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
                return res.sendJson({status:"error", msg:"执行错误"});
              }else{
                exec(move, function(err){
+                 console.log("move");
                  if(err){
                    console.log(err);
                    return res.sendJson({status:"error", msg:"执行错误"});
