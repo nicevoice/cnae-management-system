@@ -440,7 +440,8 @@ exports.gitClone = function(req, res){
                exec(move, function(err){
                  console.log("move");
                  if(err){
-                   console.log(err);
+                   console.log("move error");
+                   console.log(err.toString());
                    return res.sendJson({status:"error", msg:"执行错误"});
                  }
                  else{
