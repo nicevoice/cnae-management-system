@@ -1,3 +1,4 @@
+var hasInfo = false;
 $(function(){
 
 	$.ajax({
@@ -113,11 +114,11 @@ pull = function(){
 
 showInfo = function(msg){
   msg = htmlSpecial(msg);
-  alert($("#info"));
-  if ($("#info")) {
+  if (hasInfo) {
     $("#info").html = msg;
   }
   else{
+    hasInfo = true;
     var info = $('<pre id="info" class="borderRadius5"></pre>');
     info.html = msg;
     info.insertAfter($("#pull-p"));
