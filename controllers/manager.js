@@ -452,6 +452,7 @@ exports.gitClone = function(req, res){
 }
 
 exports.gitPull = function(req, res){
+  console.log("in");
   var domain = req.params.id|| '',
       pull = "git pull",
       cwd = process.cwd(),
