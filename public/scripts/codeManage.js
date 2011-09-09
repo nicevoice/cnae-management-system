@@ -80,14 +80,15 @@ download = function(){
 }
 
 clone = function(){
-  var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
-	if(!confirm(str))
-		return false;
+
   var gitUrl = $("#gitUrl").val()||'',
       domain = $("#appDomain").html();
   if(gitUrl === ""){
     return false;
   }
+  var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
+	if(!confirm(str))
+		return false;
   $.ajax({
     cache:false,
     type:"post",
