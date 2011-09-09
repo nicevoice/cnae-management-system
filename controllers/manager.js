@@ -326,7 +326,7 @@ exports.doUpload = function(req, res){
 			}else{
 				type= "gz";
 			}
-      var tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp/",
+      var tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp",
 			    savePath = uploadDir+'/'+domain +'/'; 
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
