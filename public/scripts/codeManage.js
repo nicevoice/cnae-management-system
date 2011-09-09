@@ -80,7 +80,6 @@ download = function(){
 }
 
 clone = function(){
-
   var gitUrl = $("#gitUrl").val()||'',
       domain = $("#appDomain").html();
   if(gitUrl === ""){
@@ -89,25 +88,23 @@ clone = function(){
   var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
 	if(!confirm(str))
 		return false;
-  $.ajax({
-    cache:false,
-    type:"post",
-    url:"/application/manage/"+domain+"/clone",
-    datatype:"json",
-    data:{
-      gitUrl:gitUrl
-    },
-    error:function(){
-      sAlert("警告", "获取代码出现错误，请稍后再试");
-    },
-    success:function(data){
-      if(data.status==="ok"){
-        sAert("","从github获取代码成功");
-      }else{
-        sAlert("警告",data.msg);
-      }
-    }
-  })
+ 	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/clone",
+	dataType:"json",
+	data:{gitUrl:gitUrl},
+	error:function(err){
+		sAlert("警告", "连接错误，请稍后再试");
+	},
+	success:function(data){
+		if(data.status==="ok"){
+      sAlert("","获取代码成功");
+		}else{
+			sAlert("警告", "发生错误，请稍后再试");
+		}
+	}
+	})
 }
 
 pull = function(){
