@@ -427,10 +427,12 @@ exports.newTodo = function(req, res){
 exports.finishTodo = function(req, res){
   var domain = req.params.id|| '',
       _id = req.body._id;
-  app_todo.update({_id:"ObjectId(\""+_id+"\")"}, {$set:{finished:1}}, function(err){
+  console.log("finish");
+  app_todo.update({_id:"ObjectId('"+_id+"')"}, {$set:{finished:1}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
+      console.log(_id);
       return res.sendJson({status:"ok"});
     }
   })
@@ -438,7 +440,7 @@ exports.finishTodo = function(req, res){
 exports.recoverTodo = function(req, res){
   var domain = req.params.id|| '',
       _id = req.body._id;
-  app_todo.update({_id:"ObjectId(\""+_id+"\")"}, {$set:{finished:0}}, function(err){
+  app_todo.update({_id:"ObjectId('"+_id+"')"}, {$set:{finished:0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
