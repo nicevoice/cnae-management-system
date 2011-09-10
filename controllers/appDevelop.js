@@ -412,10 +412,7 @@ exports.showTodo = function(req, res){
 }
 
 exports.newTodo = function(req, res){
-  var domain = req.params.id || '',
-  		url = req.url,
-      title = req.body.title;
-	url = url.slice(0, url.lastIndexOf('/'));
+  var domain = req.params.id || '';
   app_todo.save({title:title, email:req.session.email, appDomain:domain, finished:0}, function(err){
     if (err) {
       console.log(err.toString());
@@ -424,6 +421,28 @@ exports.newTodo = function(req, res){
       });
     }else{
       return res.redirect("/application/manage/"+domain+"/todo");
+    }
+  })
+}
+exports.finishTodo = function(req, res){
+  var domain = req.params.id|| '',
+      _id = req.body._id;
+  app_todo.update({_id:_id}, {$set:{finished:1}}, function(err){
+    if(err){
+      return res.sendJson({status:"error"});
+    }else{
+      return res.sendJson({status:"ok"});
+    }
+  })
+}
+exports.recoverTodo = function(req, res){
+  var domain = req.params.id|| '',
+      _id = req.body._id;
+  app_todo.update({_id:_id}, {$set:{finished:0}}, function(err){
+    if(err){
+      return res.sendJson({status:"error"});
+    }else{
+      return res.sendJson({status:"ok"});
     }
   })
 }

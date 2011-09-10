@@ -12,11 +12,11 @@
                             <% if(todo.finished == 0) { %>
                                 <%= todo.title %>
                                 &nbsp;
-                                <a href="/todo/<%- todo.id%>/finish?status=yes">完成</a>,
+                                <a href="javascript:void(0)" id="<%=todo._id%>" class="doFinish">完成</a>,
                             <% } else { %>
                                 <del><%= todo.title %></del>
                                 &nbsp;
-                                <a href="/todo/<%- todo.id%>/finish?status=no">恢复</a>,
+                                <a href="javascript:void(0)" id="<%=todo._id%>" class="doRecover">恢复</a>,
                             <% } %>
                             <a href="/todo/<%- todo.id%>/edit">修改</a>,
                             <a href="/todo/<%- todo.id%>/delete" 
