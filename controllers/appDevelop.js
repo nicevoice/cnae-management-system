@@ -438,7 +438,7 @@ exports.finishTodo = function(req, res){
 exports.recoverTodo = function(req, res){
   var domain = req.params.id|| '',
       _id = req.body._id;
-  app_todo.update({_id:_id}, {$set:{finished:0}}, function(err){
+  app_todo.update({_id:"ObjectId(\""+_id+"\")"}, {$set:{finished:0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
