@@ -16,6 +16,14 @@ $(function(){
       });
   });
   $("#submitTodo").click(check);
+  $(".todos li").each(function(){
+    $(this).mouseenter(function(index) {
+			$('.todos span:eq(' + index + ')').css("display", "block");
+			});
+			$(this).mouseleave(function() {
+			$('.todos span:eq(' + index + ')').css("display", "none");
+			});
+	});
 });
 check = function(){
   if($("#titleContent").val()===""){

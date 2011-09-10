@@ -6,3 +6,8 @@
 .todos ul li.finished { color:#666; }
 .todos ul li a { color:#666; }
 .post p { margin:10px; }
+.todoAction{
+  display:none;
+  position:relative;
+  float:right;
+}
