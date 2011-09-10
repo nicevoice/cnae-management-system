@@ -5,6 +5,7 @@ var config = require('../config')
   , app_basic = db.collection(config.db_app_basic)
   , users = db.collection(config.db_user)
   , records = db.collection(config.db_app_records)
+  , app_todo = db.collection(config,db_app_todo)
   , urlMoudle = require('url')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
@@ -187,8 +188,8 @@ exports.deleteApp = function(req, res){
 		res.sendJson( {done:false});
 	}else{
 		var deleteEvent = new EventProxy();
-		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function(){
-			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4])
+		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", "deleteTodo", function(){
+			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
 				res.sendJson( {done:false});
 			else{
 				res.sendJson( {done:true});
@@ -200,7 +201,7 @@ exports.deleteApp = function(req, res){
 			}
 			app_basic.remove({appDomain:delDomain}, function(err){
 				if(err){
-					log.error(err);
+          log.error(err.toString());
 					deleteEvent.fire("deletedBasic", false);
 				}
 				else{
@@ -210,6 +211,7 @@ exports.deleteApp = function(req, res){
 		});
 		app_basic.findOne({appDomain:delDomain}, function(err, data){
 			if(err){
+        log.error(err.toString());
 				return deleteEvent.fire("deleteDb", false);
 			}
 			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
@@ -217,7 +219,7 @@ exports.deleteApp = function(req, res){
 			exec(command, function(err){
 				console.log(command);
 				if(err){
-					console.log(err);
+          log.error(err.toString());
 					deleteEvent.fire("deleteDb", false);
 				}else{
 					deleteEvent.fire("deleteDb", true);
@@ -226,7 +228,7 @@ exports.deleteApp = function(req, res){
 		});
 		app_mem.remove({appDomain:delDomain}, function(err){
 			if(err){
-				log.error(err);
+        log.error(err.toString());
 				deleteEvent.fire("deletedMem", false);
 			}
 			else{
@@ -235,14 +237,21 @@ exports.deleteApp = function(req, res){
 		});
 		records.remove({appDomain:delDomain}, function(err){
 			if(err){
-				log.error(err);
+        log.error(err.toString());
 				deleteEvent.fire("deletedRecords", false);
 			}
 			else{
 				deleteEvent.fire("deletedRecords", true);
 			}
 		});
-		
+    app_todo.remove({appDomain:delDomain}, function(err){
+      if(err){
+        log.error(err.toString());
+				deleteEvent.fire("deletedTodos", false);
+      }else{
+				deleteEvent.fire("deletedTodos", true);        
+      }
+    })		
 
 		onOff("stop", delDomain, function(){
 			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){

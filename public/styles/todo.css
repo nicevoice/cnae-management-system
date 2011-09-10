@@ -1,6 +1,8 @@
 .todos {
   padding:30px;
   min-hieght:270px;
+  margin-left:50px;
+  margin-right:50px;
 }
 .todos ul li { list-style-type:none; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dotted #CCC; }
 .todos ul li.finished { color:#666; }
@@ -11,3 +13,7 @@
   position:relative;
   float:right;
 }
+.post{
+  text-align:center;
+}
+
