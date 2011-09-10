@@ -13,6 +13,7 @@ var express = require('express'),
 	feedback = require('./controllers/feedback'),
 	main = require('./controllers/main'),
 	editor = require('./controllers/editor'),
+  appDevelop = require('./controllers/appDevelop'),
 	EventProxy = require('EventProxy.js').EventProxy,
 	md5 = require('./lib/md5').hex_md5,
   startDel = require('./lib/deleteDownload').startDel,
@@ -207,13 +208,14 @@ app.get("/application/manage/:id/report", hasLogin, checkAuth, manager.report);
 app.get("/application/manage/:id/stat", hasLogin, checkAuth, manager.stat);
 app.get("/application/manage/:id/appmng", hasLogin, checkAuth, manager.appmng);
 app.get("/application/manage/:id/coopmng", hasLogin, checkAuth, manager.coopmng);
-app.get("/application/manage/:id/vermng", hasLogin, checkAuth, manager.vermng);
 app.get("/application/manage/:id/mnglog", hasLogin, checkAuth, manager.mnglog);
 app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
 app.get("/application/manage/:id/mysqlmng", hasLogin, checkAuth, manager.mysqlmng);
 app.get("/application/manage/:id/cornmng", hasLogin,checkAuth, manager.cornmng);
 app.get("/application/manage/:id/applog", hasLogin, checkAuth, manager.applog);
-app.get("/application/manage/:id/mongo", hasLogin, checkAuth, manager.showMongo);
+app.get("/application/manage/:id/vermng", hasLogin, checkAuth, appDevelop.vermng);
+app.get("/application/manage/:id/mongo", hasLogin, checkAuth, appDevelop.showMongo);
+app.get("/application/manage/:id/todo", hasLogin, checkAuth, appDevelop.showTodo);
 //修改应用信息
 app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), manager.doAppmng);
 //发出邀请
@@ -221,14 +223,14 @@ app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manage
 //删除协作者
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
 //git clone代码
-app.post("/application/manage/:id/clone" , hasLogin, checkChangeAuth(2), manager.gitClone);
+app.post("/application/manage/:id/clone" , hasLogin, checkChangeAuth(2), appDevelop.gitClone);
 //git pull代码
-app.post("/application/manage/:id/pull" , hasLogin, checkChangeAuth(2), manager.gitPull);
+app.post("/application/manage/:id/pull" , hasLogin, checkChangeAuth(2), appDevelop.gitPull);
 //上传代码
-app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), manager.doUpload);
+app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), appDevelop.doUpload);
 //代码打包下载
-app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), manager.doDownload);
-app.get("/application/download/:id.zip", hasLogin, manager.downloading);
+app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), appDevelop.doDownload);
+app.get("/application/download/:id.zip", hasLogin, appDevelop.downloading);
 //更改协作者权限
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 //控制APP上下线
@@ -240,11 +242,11 @@ app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getSt
 //添加应用管理记录
 app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, manager.addRecord);
 //上传图片接口
-app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), manager.doUploadImg);
+app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), appDevelop.doUploadImg);
 //给应用分配mongoDB
-app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), manager.createMongo);
+app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), appDevelop.createMongo);
 //应用DB查询
-app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), manager.queryMongo);
+app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), appDevelop.queryMongo);
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);
