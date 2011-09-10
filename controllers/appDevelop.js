@@ -416,7 +416,7 @@ exports.newTodo = function(req, res){
   		url = req.url,
       title = req.body.title;
 	url = url.slice(0, url.lastIndexOf('/'));
-  app_todo.save({title:title, email:req.session.email, finished:0}, function(err){
+  app_todo.save({title:title, email:req.session.email, appDomain:domain, finished:0}, function(err){
     if (err) {
       console.log(err.toString());
       return res.render("error", {
