@@ -448,7 +448,7 @@ exports.recoverTodo = function(req, res){
     }
   })
 }
-exports.recoverTodo = function(req, res){
+exports.deleteTodo = function(req, res){
   var domain = req.params.id|| '',
       _id = app_todo.id(req.body._id);
   app_todo.remove({_id:_id}, function(err){
