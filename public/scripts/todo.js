@@ -15,8 +15,13 @@ $(function(){
       doDelete($(this));
       });
   });
+  $("#submitTodo").click(check);
 });
-
+check = function(){
+  if($("#titleContent").val()===""){
+    return false;
+  }
+}
 doFinish = function(which){
   var _id = which.attr("id") || '';
   $.ajax({

@@ -5,5 +5,4 @@
 .todos ul li { list-style-type:none; margin-bottom:10px; padding-bottom:10px; border-bottom:1px dotted #CCC; }
 .todos ul li.finished { color:#666; }
 .todos ul li a { color:#666; }
-.todos ul li del { padding-left:15px; background:url(images/ok.gif) no-repeat left center; }
 .post p { margin:10px; }
