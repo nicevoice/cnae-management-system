@@ -8,7 +8,7 @@
                         var status = todo.finished == 1 ? 'class="finished"' : '';
                     %>
                         <li <%- status %>>
-                            <%=todo.email%>&nbsp;:
+                            <%=email%>&nbsp;:
                             <% if(todo.finished == 0) { %>
                                 <%= todo.title %>
                                 &nbsp;
