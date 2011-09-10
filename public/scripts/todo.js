@@ -16,8 +16,8 @@ $(function(){
       });
   });
   $("#submitTodo").click(check);
-  $(".todos li").each(function(){
-    $(this).mouseenter(function(index) {
+  $(".todos li").each(function(index){
+    $(this).mouseenter(function() {
 			$('.todos span:eq(' + index + ')').css("display", "block");
 			});
 			$(this).mouseleave(function() {
