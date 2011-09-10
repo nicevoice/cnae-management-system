@@ -391,7 +391,7 @@ exports.showTodo = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
   app_todo.find({
     appDomain: domain
-  }).toArray(function(err, data){
+  },{sort:[['finished', 1]]}).toArray(function(err, data){
     if (err) {
       console.log(err.toString());
       return res.render("error", {
@@ -412,7 +412,8 @@ exports.showTodo = function(req, res){
 }
 
 exports.newTodo = function(req, res){
-  var domain = req.params.id || '';
+  var domain = req.params.id || '',
+      title = req.body.title;
   app_todo.save({title:title, email:req.session.email, appDomain:domain, finished:0}, function(err){
     if (err) {
       console.log(err.toString());
