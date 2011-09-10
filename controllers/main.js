@@ -188,7 +188,7 @@ exports.deleteApp = function(req, res){
 		res.sendJson( {done:false});
 	}else{
 		var deleteEvent = new EventProxy();
-		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", "deleteTodo", function(){
+		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", "deletedTodos", function(){
 			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
 				res.sendJson( {done:false});
 			else{
@@ -213,7 +213,9 @@ exports.deleteApp = function(req, res){
 			if(err){
         log.error(err.toString());
 				return deleteEvent.fire("deleteDb", false);
-			}
+			}if(!data){
+         return log.error("在app_basic中没有找到这个应用");
+      }
 			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
 					data.appDbName;
 			exec(command, function(err){
