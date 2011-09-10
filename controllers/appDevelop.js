@@ -386,7 +386,9 @@ exports.queryMongo = function(req, res){
 }
 
 exports.showTodo = function(req, res){
-  var domain = req.params.id || '';
+  var domain = req.params.id || '',
+  		url = req.url;
+	url = url.slice(0, url.lastIndexOf('/'));
   app_todo.find({
     appDomain: domain
   }).toArray(function(err, data){
