@@ -68,7 +68,7 @@ doRecover = function(which){
   })
 }
 doDelete = function(which){
-  var _id = which.prev().prev().attr("id")||'';
+  var _id = which.prev().attr("id")||'';
   $.ajax({
     cache: false,
     type: "post",
