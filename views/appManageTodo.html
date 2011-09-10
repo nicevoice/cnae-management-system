@@ -16,13 +16,11 @@
                         <li <%- status %>>
                             
                             <% if(todo.finished == 0) { %>
-                                <%=todo.email%>&nbsp;:<span id="text-"><%= todo.title %>
-                                &nbsp;
+                                <%=todo.email%>&nbsp;:<%= todo.title %>
                                 <span class = "todoAction"><a href="javascript:void(0)" id="<%=todo._id%>" class="doFinish">完成</a>,
                             <% } else { %>
                                 <img src="/images/ok.gif"></img>
                                 <%=todo.email%>&nbsp;:<del><%= todo.title %></del>
-                                &nbsp;
                                 <span class = "todoAction"><a href="javascript:void(0)" id="<%=todo._id%>" class="doRecover">恢复</a>,
                             <% } %>
                             <a href="javascript:void(0)" 
