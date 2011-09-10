@@ -410,3 +410,20 @@ exports.showTodo = function(req, res){
     }
   })
 }
+
+exports.newTodo = function(req, res){
+  var domain = req.params.id || '',
+  		url = req.url,
+      title = req.body.title;
+	url = url.slice(0, url.lastIndexOf('/'));
+  app_todo.save({title:title, email:req.session.email, finished:0}, function(err){
+    if (err) {
+      console.log(err.toString());
+      return res.render("error", {
+        message: "查询数据库错误，请稍后再试"
+      });
+    }else{
+      return res.redirect("/application/manage/"+domain+"/todo");
+    }
+  })
+}
