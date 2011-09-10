@@ -401,7 +401,8 @@ exports.showTodo = function(req, res){
         layout: "layoutApp",
         todos: data,
         domain: domain,
-        email: req.session.email
+        email: req.session.email,
+        nickName: req.session.nickName
       });
     }
   })
