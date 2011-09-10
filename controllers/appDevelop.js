@@ -426,7 +426,7 @@ exports.newTodo = function(req, res){
 }
 exports.finishTodo = function(req, res){
   var domain = req.params.id|| '',
-      _id = db.bson.ObjectID.createFromHexString(req.body._id);
+      _id = app_todo.id(req.body._id);
   app_todo.update({_id:_id}, {$set:{finished:1}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
@@ -438,7 +438,7 @@ exports.finishTodo = function(req, res){
 }
 exports.recoverTodo = function(req, res){
   var domain = req.params.id|| '',
-      _id = db.bson_serializer.ObjectID.createFromHexString(req.body._id);
+      _id = app_todo.id(req.body._id);
   app_todo.update({_id:_id}, {$set:{finished:0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
