@@ -404,7 +404,8 @@ exports.showTodo = function(req, res){
         todos: data,
         domain: domain,
         email: req.session.email,
-        nickName: req.session.nickName
+        nickName: req.session.nickName,
+        url:rul
       });
     }
   })
