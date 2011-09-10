@@ -24,8 +24,7 @@ $(function(){
 	});
 })
 checkQueryString = function(queryString){
-  alert(queryString.indexOf("db."));
-  if(queryString.indexOf("db.")!==0 || queryString.indexOf("show")!==0){
+  if(queryString.indexOf("db.")!==0 && queryString.indexOf("show")!==0){
     return false;
   }else{
     if(queryString.indexOf("db.addUser")===0||
