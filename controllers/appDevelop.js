@@ -405,7 +405,7 @@ exports.showTodo = function(req, res){
         domain: domain,
         email: req.session.email,
         nickName: req.session.nickName,
-        url:rul
+        url:url
       });
     }
   })
