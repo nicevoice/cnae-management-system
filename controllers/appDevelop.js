@@ -391,7 +391,7 @@ exports.showTodo = function(req, res){
     appDomain: domain
   }).toArray(function(err, data){
     if (err) {
-      console.log(err);
+      console.log(err.toString());
       return res.render("error", {
         message: "查询数据库错误，请稍后再试"
       });
