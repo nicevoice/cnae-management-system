@@ -8,7 +8,8 @@ $(function(){
     $(this).click(function(){
       doRecover($(this));
       });
-})
+  });
+});
 
 doFinish = function(which){
   alert(which.attr("id"));
