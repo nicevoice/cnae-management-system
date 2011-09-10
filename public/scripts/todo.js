@@ -1,15 +1,18 @@
 $(function(){
   $(".doFinish").each(function() {
-    $(this).click(doFinish);
+    $(this).click(function(){
+      doFinish($(this));
+      });
   });
   $(".doRecover").each(function(){
-    $(this).click(doRecover);
-  })
+    $(this).click(function(){
+      doRecover($(this));
+      });
 })
 
-doFinish = function(){
-  alert($(this).attr("id"));
-  var _id = $(this).attr("id") || '', domain = $("#appDomain").html() || '';
+doFinish = function(which){
+  alert(which.attr("id"));
+  var _id = which.attr("id") || '', domain = $("#appDomain").html() || '';
   $.ajax({
     cache: false,
     type: "post",
@@ -31,9 +34,9 @@ doFinish = function(){
   })
 }
 
-doRecover = function(){
-  alert($(this).attr("id"));
-  var _id = $(this).attr("id") || '', domain = $("#appDomain").html() || '';
+doRecover = function(which){
+  alert(which.attr("id"));
+  var _id = which.attr("id") || '', domain = $("#appDomain").html() || '';
   $.ajax({
     cache: false,
     type: "post",
