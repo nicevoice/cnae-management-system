@@ -1,3 +1,4 @@
+var domain = $("#appDomain").html() || '';
 $(function(){
   $(".doFinish").each(function() {
     $(this).click(function(){
@@ -9,11 +10,15 @@ $(function(){
       doRecover($(this));
       });
   });
+  $(".doDelete").each(function(){
+    $(this).click(function(){
+      doDelete($(this));
+      });
+  });
 });
 
 doFinish = function(which){
-  var _id = which.attr("id") || '',
-       domain = $("#appDomain").html() || '';
+  var _id = which.attr("id") || '';
   $.ajax({
     cache: false,
     type: "post",
@@ -36,13 +41,33 @@ doFinish = function(which){
 }
 
 doRecover = function(which){
-  alert(which.attr("id"));
-  var _id = which.attr("id") || '',
-       domain = $("#appDomain").html() || '';
+  var _id = which.attr("id") || '';
   $.ajax({
     cache: false,
     type: "post",
     url: "/application/manage/" + domain + "/todo/recover",
+    dataType: "json",
+    data: {
+      _id: _id
+    },
+    error: function(){
+        sAlert("警告", "执行错误，请稍后再试");
+    },
+    success: function(data){
+      if (data.status === "ok") {
+        location.reload(true);
+      }else{
+        sAlert("警告", "执行错误，请稍后再试");
+      }
+    }
+  })
+}
+doDelete = function(which){
+  var _id = which.prev().prev().attr("id")||'';
+  $.ajax({
+    cache: false,
+    type: "post",
+    url: "/application/manage/" + domain + "/todo/delete",
     dataType: "json",
     data: {
       _id: _id

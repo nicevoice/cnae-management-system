@@ -448,3 +448,14 @@ exports.recoverTodo = function(req, res){
     }
   })
 }
+exports.recoverTodo = function(req, res){
+  var domain = req.params.id|| '',
+      _id = app_todo.id(req.body._id);
+  app_todo.remove({_id:_id}, function(err){
+    if(err){
+      return res.sendJson({status:"error"});
+    }else{
+      return res.sendJson({status:"ok"});
+    }
+  })
+}

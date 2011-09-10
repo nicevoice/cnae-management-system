@@ -249,9 +249,11 @@ app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), ap
 app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), appDevelop.queryMongo);
 //添加todo
 app.post("/application/manage/:id/todo/new", hasLogin, checkChangeAuth(2), appDevelop.newTodo);
-//完成和恢复
+//完成、恢复、删除
 app.post("/application/manage/:id/todo/finish", hasLogin, checkChangeAuth(2), appDevelop.finishTodo);
 app.post("/application/manage/:id/todo/recover", hasLogin, checkChangeAuth(2), appDevelop.recoverTodo);
+app.post("/application/manage/:id/todo/delete", hasLogin, checkChangeAuth(2), appDevelop.deleteTodo);
+
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);
