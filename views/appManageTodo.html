@@ -1,8 +1,7 @@
   <div class="subTitle"><img src="/images/arrow.gif"></img>
     	<span id="appDomain"><%=domain%></span><img src="/images/arrow.gif"></img>待办事项
  </div>
-        <div class="box">
-            <div class="box todos">
+            <div class="todos">
                 <ul>
                     <% for(var i = 0, len = todos.length; i < len; i++) {
                         var todo = todos[i];
@@ -26,11 +25,10 @@
                     <% } %>
                 </ul>
             </div>
-            <div class="box post">
+            <div class="post subContent">
                 <h2>新增</h2>
                 <form action="/application/manage/<%=domain%>/todo/new" method="post" id="post_new">
                     <p><input type="text" name="title" class="longInput" /></p>
                     <p><input type="submit" class="button_orange r3px" value="添加" /></p>
                 </form>
             </div>
-        </div>
