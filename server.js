@@ -247,6 +247,8 @@ app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), appD
 app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), appDevelop.createMongo);
 //应用DB查询
 app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), appDevelop.queryMongo);
+//添加todo
+app.post("/application/manage/:id/todo/new", hasLogin, checkChangeAuth(2), appDevelop.newTodo);
 //个人中心
 app.get("/userCenter", hasLogin, user.show);
 app.get("/userCenter/userInfo", hasLogin, user.userInfo);
