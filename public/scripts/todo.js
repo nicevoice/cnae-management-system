@@ -12,8 +12,8 @@ $(function(){
 });
 
 doFinish = function(which){
-  alert(which.attr("id"));
-  var _id = which.attr("id") || '', domain = $("#appDomain").html() || '';
+  var _id = which.attr("id") || '',
+       domain = $("#appDomain").html() || '';
   $.ajax({
     cache: false,
     type: "post",
@@ -37,7 +37,8 @@ doFinish = function(which){
 
 doRecover = function(which){
   alert(which.attr("id"));
-  var _id = which.attr("id") || '', domain = $("#appDomain").html() || '';
+  var _id = which.attr("id") || '',
+       domain = $("#appDomain").html() || '';
   $.ajax({
     cache: false,
     type: "post",
