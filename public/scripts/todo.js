@@ -37,7 +37,9 @@ function addTips(){
   }
 }
 function removeTips(){
-  $("#titleContent").val("");
+  var title = $("#titleContent");
+  if(title.val()===tips)
+    title.val("");
 }
 check = function(){
   if($("#titleContent").val()===""){
