@@ -33,7 +33,7 @@ var config = require('../config')
  * @return {}
  */
 exports.doUpload = function(req, res){
-  log.info(req.session.email+" upload");
+  console.log(req.session.email+" upload");
 	var domain = req.params.id||'';
   var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
@@ -51,7 +51,7 @@ exports.doUpload = function(req, res){
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
           if(err){
-              log.error(err.toString());
+              console.log(err.toString());
           }
               var unCompress = "";
               if (type === "gz") {
