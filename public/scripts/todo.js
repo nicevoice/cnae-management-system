@@ -46,8 +46,8 @@ function bindAll(){
       });
   });
   $("#submitTodo").click(check);
-  var val = $("#titleContent").val()||'';
   $("#titleContent").keydown(function(e){
+      var val = $("#titleContent").val()||'';
       if(e.keyCode===13&&val===''||val===tips){
         return false;
     }
