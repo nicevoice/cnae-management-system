@@ -52,7 +52,7 @@ function addTips(){
   }
 }
 function removeTips(){
-  var url = $("#urlContent");
+  var url = $("#gitUrl");
   if(url.val()===tips)
     url.val("");
 }
