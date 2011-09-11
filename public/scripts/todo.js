@@ -58,7 +58,7 @@ function bindNo(){
     $(this).click(function(){sAlert("警告","没有权限进行此操作"); return false;});
   });
   $("#submitTodo").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
-  $("titleContent").keydown(function(e){
+  $("#titleContent").keydown(function(e){
 	  if(e.keyCode===13){
 		  sAlert("警告","没有权限进行此操作");
       return false;
