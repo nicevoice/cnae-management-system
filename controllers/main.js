@@ -332,16 +332,18 @@ exports.checkAppDomain = function(req, res){
  * @param {} res
  */
 exports.getOwnAuthInfo = function(req, res){
-	//todo:修改成加密文验证。现在是用户名密码验证
-	var email = req.body.email||'',
+	var email = req.session.email||'',
 		domain = req.body.domain||'';
 			//查找权限
 			app_mem.findOne({appDomain:domain, email:email}, function(err ,data){
 				if(err){
 					return res.sendJson( {status:"error",msg:"数据库查询错误"});
 				}else{
-					return res.sendJson( {status:"ok", role:data.role});
-				}
+          if(data)
+					  return res.sendJson( {status:"ok", role:data.role, active:active});
+				  else
+            return res.sendJson({status:"error", msg:"没有权限访问这个应用"});
+        }
 			});
 }
 
