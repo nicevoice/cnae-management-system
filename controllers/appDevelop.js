@@ -38,15 +38,16 @@ exports.doUpload = function(req, res){
   var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;
 	//解压文件
-	var type = files.upload.type;
 	if(filePath){
+	  var type = files.upload.type,
+        path = files.upload.path;
 		if(type==="application/zip"||type==="application/x-gzip"||type==="application/octet-stream"){
 			if(type==="application/zip"||type==="application/octet-stream"){
 				type = "zip";
 			}else{
 				type= "gz";
 			}
-      var tempDir = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"temp",
+      var tempDir = config.tempDir,
 			    savePath = uploadDir+'/'+domain +'/'; 
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
@@ -55,15 +56,15 @@ exports.doUpload = function(req, res){
             }
               var unCompress = "";
               if (type === "gz") {
-                unCompress = 'tar -xf ' + files.upload.path + ' -C ' + tempDir + '/' + domain;
+                unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
               }
               else {
-                unCompress = 'unzip ' + files.upload.path + ' -d ' + tempDir + '/' + domain;
+                unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
               }
               exec(unCompress, function(err, stdout, stderr){
                 if (err) {
                   console.log(err.toString());
-                  exec("rm -rf "+files.upload.path, function(err){
+                  exec("rm -rf "+path, function(err){
                     if(err){
                       console.log(err.toString());
                     }
@@ -77,7 +78,7 @@ exports.doUpload = function(req, res){
                   fs.readdir(tempDir + '/' + domain, function(err, files){
                     if (err) {
                       console.log(err.toString());
-                      exec("rm -rf "+files.upload.path, function(err){
+                      exec("rm -rf "+path, function(err){
                         if(err){
                           console.log(err.toString());
                         }
@@ -96,7 +97,7 @@ exports.doUpload = function(req, res){
                         var move = "";
                         if (err && err.errno !== 17) {
                           console.log(err.toString());
-                          exec("rm -rf "+files.upload.path, function(err){
+                          exec("rm -rf "+path, function(err){
                             if(err){
                               console.log(err.toString());
                             }
@@ -121,7 +122,7 @@ exports.doUpload = function(req, res){
                           exec(move, function(err){
                             if (err) {
                               console.log(err.toString());
-                              exec("rm -rf "+files.upload.path, function(err){
+                              exec("rm -rf "+path, function(err){
                                 if(err){
                                   console.log(err.toString());
                                 }
@@ -136,7 +137,7 @@ exports.doUpload = function(req, res){
                               });
                             }
                             else {
-                              exec("rm -rf "+files.upload.path, function(err){
+                              exec("rm -rf "+path, function(err){
                                 if(err){
                                   console.log(err.toString());
                                 }
