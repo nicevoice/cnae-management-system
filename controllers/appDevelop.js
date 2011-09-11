@@ -63,6 +63,11 @@ exports.doUpload = function(req, res){
               exec(unCompress, function(err, stdout, stderr){
                 if (err) {
                   console.log(err.toString());
+                  exec("rm -rf "+files.upload.path, function(err){
+                    if(err){
+                      console.log(err.toString());
+                    }
+                  });
                   return res.render("error", {
                     message: "上传失败,请稍后再试"
                   });
@@ -72,6 +77,11 @@ exports.doUpload = function(req, res){
                   fs.readdir(tempDir + '/' + domain, function(err, files){
                     if (err) {
                       console.log(err.toString());
+                      exec("rm -rf "+files.upload.path, function(err){
+                        if(err){
+                          console.log(err.toString());
+                        }
+                      });
                       exec("rm -rf " + tempDir + '/' + domain, function(err){
                         if(err){
                           console.log(err.toString());
@@ -86,6 +96,11 @@ exports.doUpload = function(req, res){
                         var move = "";
                         if (err && err.errno !== 17) {
                           console.log(err.toString());
+                          exec("rm -rf "+files.upload.path, function(err){
+                            if(err){
+                              console.log(err.toString());
+                            }
+                          });
                           exec("rm -rf " + tempDir + '/' + domain, function(err){
                             if(err){
                               console.log(err.toString());
@@ -106,6 +121,11 @@ exports.doUpload = function(req, res){
                           exec(move, function(err){
                             if (err) {
                               console.log(err.toString());
+                              exec("rm -rf "+files.upload.path, function(err){
+                                if(err){
+                                  console.log(err.toString());
+                                }
+                              });
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
                                 if (err) {
                                   console.log(err.toString());
@@ -116,6 +136,11 @@ exports.doUpload = function(req, res){
                               });
                             }
                             else {
+                              exec("rm -rf "+files.upload.path, function(err){
+                                if(err){
+                                  console.log(err.toString());
+                                }
+                              });
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
                                 if(err){
                                   console.log(err.toString());
