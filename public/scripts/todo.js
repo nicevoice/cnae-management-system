@@ -46,6 +46,12 @@ function bindAll(){
       });
   });
   $("#submitTodo").click(check);
+  var val = $("#titleContent").val()||'';
+  $("#titleContent").keydown(function(e){
+      if(e.keyCode===13&&val===''){
+        return false;
+    }
+  })
 }
 function bindNo(){
    $(".doFinish").each(function() {
