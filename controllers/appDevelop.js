@@ -60,7 +60,6 @@ exports.doUpload = function(req, res){
               else {
                 unCompress = 'unzip ' + files.upload.path + ' -d ' + tempDir + '/' + domain;
               }
-              console.log(unCompress);
               exec(unCompress, function(err, stdout, stderr){
                 if (err) {
                   console.log(err.toString());
@@ -104,7 +103,6 @@ exports.doUpload = function(req, res){
                             }else{
                               move = "cp -rf " + tempDir + '/' + domain + "/* " + savePath;
                             }
-                          console.log(move);
                           exec(move, function(err){
                             if (err) {
                               console.log(err.toString());
