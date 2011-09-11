@@ -50,9 +50,9 @@ exports.doUpload = function(req, res){
 			    savePath = uploadDir+'/'+domain +'/'; 
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
-          if(err){
+          if (err.errno !== 17) {
               console.log(err.toString());
-          }
+            }
               var unCompress = "";
               if (type === "gz") {
                 unCompress = 'tar -xf ' + files.upload.path + ' -C ' + tempDir + '/' + domain;
@@ -88,7 +88,9 @@ exports.doUpload = function(req, res){
                         if (err.errno !== 17) {
                           console.log(err.toString());
                           exec("rm -rf " + tempDir + '/' + domain, function(err){
-                            console.log(err.toString());
+                            if(err){
+                              console.log(err.toString());
+                            }
                           });
                           return res.render("error", {
                             message: "上传失败,请稍后再试"
@@ -98,16 +100,18 @@ exports.doUpload = function(req, res){
                           var moveEvent = new EventProxy();
                           moveEvent.on("getStat", function(isDir){
                             if(isDir){
-                              move = "mv -f " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                              move = "cp -rf " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                             }else{
-                              move = "mv -f " + tempDir + '/' + domain + "/* " + savePath;
+                              move = "cp -rf " + tempDir + '/' + domain + "/* " + savePath;
                             }
                           console.log(move);
                           exec(move, function(err){
                             if (err) {
                               console.log(err.toString());
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
-                                console.log(err.toString());
+                                if (err) {
+                                  console.log(err.toString());
+                                }
                               });
                               return res.render("error", {
                                 message: "上传失败,请稍后再试"
@@ -115,7 +119,9 @@ exports.doUpload = function(req, res){
                             }
                             else {
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
-                                console.log(err.toString());
+                                if(err){
+                                  console.log(err.toString());
+                                }
                               });
                               var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
                               sumManage += '/sum';
@@ -162,7 +168,7 @@ exports.gitClone = function(req, res){
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
       domain = req.params.id||'',
       savePath = uploadDir+'/'+domain +'/',
-      move = "mv -f "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
+      move = "cp -rf "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
       exec(gitClone, function(err, gitStdout, gitStderr){
         if(err){
           console.log(err.toString());
@@ -180,7 +186,7 @@ exports.gitClone = function(req, res){
                  console.log("move");
                  if(err){
                    console.log(err.toString());
-                   return res.sendJson({status:"error", msg:"请勿对当前应用重复执行clone操作"});
+                   return res.sendJson({status:"error", msg:err.toString()});
                  }
                  else{
                    exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
