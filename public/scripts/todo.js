@@ -60,7 +60,6 @@ function bindNo(){
   $("#submitTodo").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
   $("#titleContent").keydown(function(e){
 	  if(e.keyCode===13){
-		  sAlert("警告","没有权限进行此操作");
       return false;
     }
   })
