@@ -62,7 +62,7 @@ exports.smtp = {
 };
 
 exports.uploadDir = pathutil.join(cnae_dir, 'apps');
-exports.tempDir = "../temp";
+exports.tempDir = configInfo.tempDir;
 exports.socketPort = 1128;
 
 //管理员帐号表
