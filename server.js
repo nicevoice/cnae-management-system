@@ -28,7 +28,7 @@ var express = require('express'),
 	
 //创建httpServer
 var app = express.createServer(
-	form({ uploadDir: config.uploadDir, keepExtensions: true })
+	form({ uploadDir: config.tempDir, keepExtensions: true })
   , function(req, res, next) {
         if(req.form) {
             req.form.complete(function(err, fields, files){
