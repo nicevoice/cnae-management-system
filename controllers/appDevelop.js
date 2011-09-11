@@ -50,7 +50,7 @@ exports.doUpload = function(req, res){
 			    savePath = uploadDir+'/'+domain +'/'; 
 			fs.mkdir(tempDir+"/"+domain, '777', function(err){
           console.log("mkdir");
-          if (err.errno !== 17) {
+          if (err&&err.errno !== 17) {
               console.log(err.toString());
             }
               var unCompress = "";
@@ -85,7 +85,7 @@ exports.doUpload = function(req, res){
                     else {
                       fs.mkdir(savePath, '777', function(err){
                         var move = "";
-                        if (err.errno !== 17) {
+                        if (err && err.errno !== 17) {
                           console.log(err.toString());
                           exec("rm -rf " + tempDir + '/' + domain, function(err){
                             if(err){
@@ -177,7 +177,7 @@ exports.gitClone = function(req, res){
         }else{
            fs.mkdir(savePath, '777', function(err){
              console.log("mkdir");
-             if(err.errno !== 17){
+             if(err && err.errno !== 17){
                console.log(err.toString());
                exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
                return res.sendJson({status:"error", msg:"执行错误，请稍后再试"});
