@@ -75,7 +75,7 @@ exports.doUpload = function(req, res){
                       console.log(err.toString());
                       exec("rm -rf " + tempDir + '/' + domain, function(err){
                         if(err){
-                          console.logor(err.toString());
+                          console.log(err.toString());
                         }
                       });
                       return res.render("error", {
@@ -86,9 +86,9 @@ exports.doUpload = function(req, res){
                       fs.mkdir(savePath, '777', function(err){
                         var move = "";
                         if (err.errno !== 17) {
-                          console.logor(err.toString());
+                          console.log(err.toString());
                           exec("rm -rf " + tempDir + '/' + domain, function(err){
-                            console.logor(err.toString());
+                            console.log(err.toString());
                           });
                           return res.render("error", {
                             message: "上传失败,请稍后再试"
@@ -105,9 +105,9 @@ exports.doUpload = function(req, res){
                           console.log(move);
                           exec(move, function(err){
                             if (err) {
-                              console.logor(err.toString());
+                              console.log(err.toString());
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
-                                console.logor(err.toString());
+                                console.log(err.toString());
                               });
                               return res.render("error", {
                                 message: "上传失败,请稍后再试"
@@ -115,7 +115,7 @@ exports.doUpload = function(req, res){
                             }
                             else {
                               exec("rm -rf " + tempDir + '/' + domain, function(err){
-                                console.logor(err.toString());
+                                console.log(err.toString());
                               });
                               var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
                               sumManage += '/sum';
@@ -127,7 +127,7 @@ exports.doUpload = function(req, res){
                           if (files.length === 1) {
                             fs.stat(tempDir + '/' + domain + "/" + files[0], function(err, stat){ //如果只有一个文件夹
                               if(err){
-                                console.logor(err.toString());
+                                console.log(err.toString());
                                 moveEvent.unbind();
                                 return res.render("error", {message:"上传失败，请稍后再试"});
                               }else{
@@ -165,21 +165,21 @@ exports.gitClone = function(req, res){
       move = "mv -f "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
       exec(gitClone, function(err, gitStdout, gitStderr){
         if(err){
-          console.logor(err.toString());
+          console.log(err.toString());
           exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
           return res.sendJson({status:"error", msg:"请使用Git Read-Only方式获取代码"});
         }else{
            fs.mkdir(savePath, '777', function(err){
              console.log("mkdir");
              if(err.errno !== 17){
-               console.logor(err.toString());
+               console.log(err.toString());
                exec("rm -rf "+tempDir+"/"+tempDirLast, function(){});
                return res.sendJson({status:"error", msg:"执行错误，请稍后再试"});
              }else{
                exec(move, function(err){
                  console.log("move");
                  if(err){
-                   console.logor(err.toString());
+                   console.log(err.toString());
                    return res.sendJson({status:"error", msg:"请勿对当前应用重复执行clone操作"});
                  }
                  else{
@@ -202,17 +202,17 @@ exports.gitPull = function(req, res){
   try{
 		process.chdir(savePath);
 	}catch(err){
-    console.logor(err.toString());
+    console.log(err.toString());
 		return res.sendJson( {status:"error", msg:"拉取代码失败，请稍后再试"});
 	}
   exec(pull, function(err, gitStdout, gitStderr){
     try{
 			process.chdir(cwd);
 		}catch(err){
-			console.logor(err.toString());
+			console.log(err.toString());
 		}
     if(err){
-      console.logor(err.toString());
+      console.log(err.toString());
 		  return res.sendJson( {status:"error", msg:"拉取代码失败，请稍后再试"});
     }else{
       return res.sendJson({status:"ok", msg:gitStdout});
@@ -244,7 +244,7 @@ exports.doDownload = function(req, res){
 			console.log("chdir error");
 		}
 		if(err){
-			console.logor(err.toString());
+			console.log(err.toString());
 			return res.sendJson( {status:"error", msg:"压缩失败"});		
 		}else{
 			return res.sendJson( {status:"ok", url:"/download/"+name});
@@ -282,7 +282,7 @@ exports.doUploadImg = function(req, res){
 			var savePath = uploadDir+'/'+domain +'/'+ fields + "/"+files.upload.name;
 			fs.rename(files.upload.path, savePath, function(err){
 				if(err){
-					console.logor(err);
+					console.log(err);
 					return res.sendJson( {done:false});
 				}else{
 					return res.sendJson( {done:true});
@@ -298,12 +298,12 @@ exports.showMongo = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	app_basic.findOne({appDomain:domain},function(err, data){
 		if(err){
-			console.logor(err);
+			console.log(err);
 			res.render("error", {msg:"数据库错误，请稍后再试"});
 		}else{
 			users.findOne({email:req.session.email}, function(err, user){
 				if(err){
-					console.logor(err);
+					console.log(err);
 					res.render("error", {msg:"数据库错误，请稍后再试"});
 				}
 				res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
@@ -321,7 +321,7 @@ exports.createMongo = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	users.findOne({email:email},function(err, data){
 		if(err){
-			console.logor(err);
+			console.log(err);
 			return res.render("error", {message:"数据库错误，请稍后再试"});
 		}else{
 			if(data.dbType){	//如果已经创建过数据库
@@ -333,12 +333,12 @@ exports.createMongo = function(req, res){
 				console.log(command);
 				exec(command, function(err, stdout, stderr){//执行shell脚本，给用户授权对应数据库
 					if(err){
-						console.logor(err.toString());
+						console.log(err.toString());
 						return res.render("error", {message:"执行错误，请稍后再试"});
 					}else{
 						app_basic.update({appDomain:domain}, {$set:{appDbType:"mongo", appDbName:dbName}}, function(err){//更新应用表
 							if(err){
-								console.logor(err.toString());
+								console.log(err.toString());
 								return res.render("error", {message:"执行错误，请稍后再试"});
 							}else{
 								return res.redirect(url+"/mongo");
@@ -380,7 +380,7 @@ exports.queryMongo = function(req, res){
 		queryString = "\""+queryString+"\"";
 	users.findOne({email:req.session.email},function(err, data){//查找db帐号密码
 		if(err){
-			console.logor(err.toString());
+			console.log(err.toString());
 			return res.sendJson( {status:"error", msg:"数据库帐号密码查找失败"});		
 		}else{
 			app_basic.findOne({appDomain:domain},function(err, appInfos){
@@ -392,7 +392,7 @@ exports.queryMongo = function(req, res){
 				console.log(command);
 				exec(command, function(err, stdout, stderr){
 					if(err){
-						console.logor(err.toString());
+						console.log(err.toString());
 						return res.sendJson( {status:"error", msg:"查询数据库失败"});
 					}else{
 						var place = stdout.indexOf("1\n");
