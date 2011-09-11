@@ -340,7 +340,7 @@ exports.getOwnAuthInfo = function(req, res){
 					return res.sendJson( {status:"error",msg:"数据库查询错误"});
 				}else{
           if(data)
-					  return res.sendJson( {status:"ok", role:data.role, active:active});
+					  return res.sendJson( {status:"ok", role:data.role, active:data.active});
 				  else
             return res.sendJson({status:"error", msg:"没有权限访问这个应用"});
         }
