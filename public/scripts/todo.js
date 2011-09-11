@@ -1,4 +1,5 @@
-var domain = $("#appDomain").html() || '';
+var domain = $("#appDomain").html() || '',
+    tips = "输入代办事项，按回车确认";
 $(function(){
   $(".doFinish").each(function() {
     $(this).click(function(){
@@ -24,7 +25,19 @@ $(function(){
 			$('.todos span:eq(' + index + ')').css("display", "none");
 			});
 	});
+  $("#titleContent").blur(addTips);
+  $("#titleContent").focus(reomveTips);
 });
+function addTips(){
+  var title = $("#titleContent"),
+      titleContent = title.val()||'';
+  if (titleContent === '') {
+    title.val(tips);
+  }
+}
+function removeTips(){
+  $("#titleContent").val("");
+}
 check = function(){
   if($("#titleContent").val()===""){
     return false;
