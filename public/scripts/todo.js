@@ -1,5 +1,5 @@
 var domain = $("#appDomain").html() || '',
-    tips = "输入代办事项，按回车确认";
+    tips = "输入待办事项，按回车确认";
 $(function(){
   $(".doFinish").each(function() {
     $(this).click(function(){
@@ -25,6 +25,7 @@ $(function(){
 			$('.todos span:eq(' + index + ')').css("display", "none");
 			});
 	});
+  addTips();
   $("#titleContent").blur(addTips);
   $("#titleContent").focus(removeTips);
 });
