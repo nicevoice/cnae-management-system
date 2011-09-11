@@ -1,7 +1,36 @@
 var domain = $("#appDomain").html() || '',
     tips = "输入待办事项，按回车确认";
 $(function(){
-  $(".doFinish").each(function() {
+  $(".todos li").each(function(index){
+    $(this).mouseenter(function() {
+			$('.todos span:eq(' + index + ')').css("display", "block");
+			});
+			$(this).mouseleave(function() {
+			$('.todos span:eq(' + index + ')').css("display", "none");
+			});
+	});
+  addTips();
+  $("#titleContent").blur(addTips).focus(removeTips);  
+  $.ajax({
+	cache:false,
+	url:"/getOwnAuthInfo",
+	type:"post",
+	dataType:"json",
+	data:{domain:$("#appDomain").html()},
+  error:function(){
+    bindAll();
+  },
+  success:function(data){
+    if(data.active===0 || data.role>2){
+      bindNo();
+    }else{
+      bindAll();
+    }
+  }
+  });
+});
+function bindAll(){
+   $(".doFinish").each(function() {
     $(this).click(function(){
       doFinish($(this));
       });
@@ -17,18 +46,25 @@ $(function(){
       });
   });
   $("#submitTodo").click(check);
-  $(".todos li").each(function(index){
-    $(this).mouseenter(function() {
-			$('.todos span:eq(' + index + ')').css("display", "block");
-			});
-			$(this).mouseleave(function() {
-			$('.todos span:eq(' + index + ')').css("display", "none");
-			});
-	});
-  addTips();
-  $("#titleContent").blur(addTips);
-  $("#titleContent").focus(removeTips);
-});
+}
+function bindNo(){
+   $(".doFinish").each(function() {
+    $(this).click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+  });
+  $(".doRecover").each(function(){
+    $(this).click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+  });
+  $(".doDelete").each(function(){
+    $(this).click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+  });
+  $("#submitTodo").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+  $("#gitUrl").keydown(function(e){
+	  if(e.keyCode===13){
+		  sAlert("警告","没有权限进行此操作");
+      return false;
+    }
+  })
+}
 function addTips(){
   var title = $("#titleContent"),
       titleContent = title.val()||'';

@@ -1,6 +1,7 @@
-var hasInfo = false;
+var hasInfo = false,
+    tips = "git clone操作请在此输入Git Read-Only url";
 $(function(){
-
+  $("#gitUrl").blur(addTips).focus(removeTips).val(tips);
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -24,6 +25,11 @@ $(function(){
 			$("#download").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitClone").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitPull").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
+      $("#gitUrl").keydown(function(e){
+		    if(e.keyCode===13){
+		  	  sAlert("警告","没有权限进行此操作");
+		    }
+  	  })
 		}else{
 			$("#submitUpload").click(upload);
 			$("#download").click(download);
@@ -38,7 +44,18 @@ $(function(){
 	}
 	});
 });
-
+function addTips(){
+  var url = $("#gitUrl"),
+      urlContent = url.val()||'';
+  if (urlContent === '') {
+    url.val(tips);
+  }
+}
+function removeTips(){
+  var url = $("#urlContent");
+  if(url.val()===tips)
+    url.val("");
+}
 upload = function(){
   var str = '可能会覆盖之前存在的代码，确定上传吗？';
 	if(!confirm(str))
