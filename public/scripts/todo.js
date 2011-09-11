@@ -26,7 +26,7 @@ $(function(){
 			});
 	});
   $("#titleContent").blur(addTips);
-  $("#titleContent").focus(reomveTips);
+  $("#titleContent").focus(removeTips);
 });
 function addTips(){
   var title = $("#titleContent"),
