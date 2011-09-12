@@ -47,7 +47,7 @@ exports.sum = function(req, res){
 exports.doControlApp = function(req, res){
 	var domain = req.params.id,
 		action = req.body.action;
-  log.info(req.session.email + " " + domain + " " + action);
+  console.log(req.session.email + " " + domain + " " + action);
 	if(action === "上线"){
 		action = "start";
 	}else if(action==="下线"){
