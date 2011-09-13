@@ -461,23 +461,42 @@ exports.showTodo = function(req, res){
           userEmails.push(data[i].email);
         }
       }
+      console.log(userEmails);
       users.find({email:{$in:userEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
-        var emailToNick = {};
-        for(var i=0, len=userInfos.length; i<len; ++i){
-          emailToNick[userInfo[email]] = userInfo[nickName];
+        if (err) {
+          console.log(err.toString());
+          return res.render("error", {
+            message: "查询数据库错误，请稍后再试"
+          });
+        }else if(!userInfos || userInfos.length===0){
+          return res.render("appManageTodo", {
+            layout: "layoutApp",
+            todos: data,
+            domain: domain,
+            email: req.session.email,
+            nickName: req.session.nickName,
+            url: url
+          });          
         }
-        for(var i=0, len=data.length; i<len; i++){
-          data[nickName] = emailToNick[data[email]];
-        }
-        console.log(data);
-        res.render("appManageTodo", {
-        layout: "layoutApp",
-        todos: data,
-        domain: domain,
-        email: req.session.email,
-        nickName: req.session.nickName,
-        url:url
-      });
+        else if(userInfos){
+        
+          var emailToNick = {};
+          for (var i = 0, len = userInfos.length; i < len; ++i) {
+            emailToNick[userInfo[email]] = userInfo[nickName];
+          }
+          for (var i = 0, len = data.length; i < len; i++) {
+            data[nickName] = emailToNick[data[email]];
+          }
+          console.log(data);
+          return res.render("appManageTodo", {
+            layout: "layoutApp",
+            todos: data,
+            domain: domain,
+            email: req.session.email,
+            nickName: req.session.nickName,
+            url: url
+          });
+        };
       })
     }
   })
