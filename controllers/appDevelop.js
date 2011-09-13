@@ -470,7 +470,6 @@ exports.showTodo = function(req, res){
           userEmails.push(data[i].email);
         }
       }
-      console.log(userEmails);
       users.find({email:{$in:userEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
         if (err) {
           console.log(err.toString());
@@ -488,9 +487,10 @@ exports.showTodo = function(req, res){
           });          
         }
         else if(userInfos){
+          console.log(userInfos);
           var emailToNick = {};
           for (var i = 0, len = userInfos.length; i < len; ++i) {
-            emailToNick[userInfos[email]] = userInfos[nickName];
+            emailToNick[userInfos.email] = userInfos.nickName;
           }
           for (var i = 0, len = data.length; i < len; i++) {
             data[nickName] = emailToNick[data[email]];
