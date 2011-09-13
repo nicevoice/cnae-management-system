@@ -488,10 +488,9 @@ exports.showTodo = function(req, res){
           });          
         }
         else if(userInfos){
-        
           var emailToNick = {};
           for (var i = 0, len = userInfos.length; i < len; ++i) {
-            emailToNick[userInfo[email]] = userInfo[nickName];
+            emailToNick[userInfos[email]] = userInfos[nickName];
           }
           for (var i = 0, len = data.length; i < len; i++) {
             data[nickName] = emailToNick[data[email]];
