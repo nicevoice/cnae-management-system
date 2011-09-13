@@ -464,7 +464,7 @@ exports.showTodo = function(req, res){
     }
     else {
       var userEmails = [], uhash={};
-      for(var i=0, len=data.length; i<length; ++i){
+      for(var i=0, len=data.length; i<len; ++i){
         if (uhash[data[i].email]) {
           uhash[data[i].email] = true;
           userEmails.push(data[i].email);
