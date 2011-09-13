@@ -70,8 +70,8 @@ exports.socketPort = configInfo.socketPort;
 exports.admins = configInfo.admins;
 
 //邀请码注册链接
-exports.inviteHref = configInfo.inviteHref;
+exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
 if(!debug) {
     exports.port = 80;
-    exports.inviteHref = configInfo.debugInviteHref;
+    exports.inviteHref = "http://cnodejs.net/regist?code=";
 }
