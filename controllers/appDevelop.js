@@ -454,7 +454,23 @@ exports.showTodo = function(req, res){
       });
     }
     else {
-      res.render("appManageTodo", {
+      var userEmails = [], uhash={};
+      for(var i=0, len=data.length; i<length; ++i){
+        if (uhash[data[i].email]) {
+          uhash[data[i].email] = true;
+          userEmails.push(data[i].email);
+        }
+      }
+      users.find({email:{$in:userEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
+        var emailToNick = {};
+        for(var i=0, len=userInfos.length; i<len; ++i){
+          emailToNick[userInfo[email]] = userInfo[nickName];
+        }
+        for(var i=0, len=data.length; i<len; i++){
+          data[nickName] = emailToNick[data[email]];
+        }
+        console.log(data);
+        res.render("appManageTodo", {
         layout: "layoutApp",
         todos: data,
         domain: domain,
@@ -462,6 +478,7 @@ exports.showTodo = function(req, res){
         nickName: req.session.nickName,
         url:url
       });
+      })
     }
   })
 }
