@@ -492,7 +492,7 @@ exports.showTodo = function(req, res){
             emailToNick[userInfos[i].email] = userInfos[i].nickName;
           }
           for (var i = 0, len = data.length; i < len; i++) {
-            data[nickName] = emailToNick[data[email]];
+            data[i].nickName = emailToNick[data[i].email];
           }
           console.log(data);
           return res.render("appManageTodo", {
