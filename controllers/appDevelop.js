@@ -452,6 +452,15 @@ exports.showTodo = function(req, res){
       return res.render("error", {
         message: "查询数据库错误，请稍后再试"
       });
+    }else if(!data||data.length===0){
+      return res.render("appManageTodo", {
+        layout: "layoutApp",
+        todos: data,
+        domain: domain,
+        email: req.session.email,
+        nickName: req.session.nickName,
+        url: url
+      });
     }
     else {
       var userEmails = [], uhash={};
