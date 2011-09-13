@@ -1,7 +1,7 @@
 var pathutil = require('path');
 var mongo = require("mongoskin");
 var fs = require('fs');
-var configInfo = eval('('+fs.readFileSync("./config.json")+')');
+var configInfo = JSON.parse(fs.readFileSync('./config.json').toString());
 
 //是否debug模式
 var debug = exports.debug = configInfo.debug;
