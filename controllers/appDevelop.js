@@ -450,16 +450,59 @@ exports.showTodo = function(req, res){
       return res.render("error", {
         message: "查询数据库错误，请稍后再试"
       });
-    }
-    else {
-      res.render("appManageTodo", {
+    }else if(!data||data.length===0){
+      return res.render("appManageTodo", {
         layout: "layoutApp",
         todos: data,
         domain: domain,
         email: req.session.email,
         nickName: req.session.nickName,
-        url:url
+        url: url
       });
+    }
+    else {
+      var userEmails = [], uhash={};
+      for(var i=0, len=data.length; i<len; ++i){
+        if (!uhash[data[i].email]) {
+          uhash[data[i].email] = true;
+          userEmails.push(data[i].email);
+        }
+      }
+      users.find({email:{$in:userEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
+        if (err) {
+          console.log(err.toString());
+          return res.render("error", {
+            message: "查询数据库错误，请稍后再试"
+          });
+        }else if(!userInfos || userInfos.length===0){
+          return res.render("appManageTodo", {
+            layout: "layoutApp",
+            todos: data,
+            domain: domain,
+            email: req.session.email,
+            nickName: req.session.nickName,
+            url: url
+          });          
+        }
+        else if(userInfos){
+          var emailToNick = {};
+          for (var i = 0, len = userInfos.length; i < len; ++i) {
+            emailToNick[userInfos[i].email] = userInfos[i].nickName;
+          }
+          for (var i = 0, len = data.length; i < len; i++) {
+            data[i].nickName = emailToNick[data[i].email];
+          }
+          console.log(data);
+          return res.render("appManageTodo", {
+            layout: "layoutApp",
+            todos: data,
+            domain: domain,
+            email: req.session.email,
+            nickName: req.session.nickName,
+            url: url
+          });
+        };
+      })
     }
   })
 }
