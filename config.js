@@ -39,9 +39,9 @@ exports.db_app_todo = configInfo.collections.app_todo;
 //session
 exports.session_timeOut = configInfo.timeOut;
 //正则
-exports.regEmail = configInfo.regEmail;
-exports.regPass = configInfo.regPass;
-exports.regName = configInfo.regName;
+exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
+exports.regPass = /^(\w){6,20}$/;
+exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.INFO, configInfo.logPath);
