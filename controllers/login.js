@@ -247,5 +247,5 @@ exports.checkName = function(req, res){
 }
 
 exports.showRetrieve = function(req, res){
-  res.redirect("retrive");
+  res.render("retrieve");
 }
