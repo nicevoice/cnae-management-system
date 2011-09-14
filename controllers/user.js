@@ -21,18 +21,6 @@ exports.show = function(req, res){
 exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
-	if(email === "dead_horse@qq.com"){
-	  var now = new Date().getTime();
-    console.log(now);
-		app_basic.update({},{$set:{appCreateDate:now}},{multi:true},
-		  function(err, data){
-        if(err){
-          console.log(err.toString());
-        }else{
-          console.log(data);
-        }
-			});
-	}
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
 			log.error(err);
