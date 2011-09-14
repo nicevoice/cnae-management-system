@@ -262,7 +262,10 @@ exports.postRetrieve = function(req, res){
   var retrieveKey = randomStringNum(15),
       retrieveTime = new Date().getTime();
   users.findAndModify({email: email},[],
-    {retrieveKey:retrieveKey, retrieveTime:retrieveTime},
+    {$set: {
+      retrieveKey: retrieveKey,
+      retrieveTime: retrieveTime
+    }},
     function(err, userInfo){
     if(err){
       console.log(err.toString());
