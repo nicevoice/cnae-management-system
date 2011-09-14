@@ -14,6 +14,7 @@ var express = require('express'),
 	main = require('./controllers/main'),
 	editor = require('./controllers/editor'),
   appDevelop = require('./controllers/appDevelop'),
+  square = require('./controllers/square'),
 	EventProxy = require('EventProxy.js').EventProxy,
 	md5 = require('./lib/md5').hex_md5,
   startDel = require('./lib/deleteDownload').startDel,
@@ -186,6 +187,11 @@ app.get("/regist", hasNotLogin, login.regist);
 app.post("/checkRegist", hasNotLogin, login.checkRegist);
 app.post("/regist/checkEmail", hasNotLogin, login.checkEmail);
 app.post("/regist/checkName", login.checkName);
+app.get("/retrieve", hasNotLogin, login.showRetrieve);
+app.post("/retrieve", hasNotLogin, login.postRetrieve);
+app.get("/retrieveTips", hasNotLogin, login.showRetrieveTips);
+app.get("/resetPassword", hasNotLogin, login.showResetPassword);
+app.post("/resetPassword", hasNotLogin, login.resetPassword);
 //我的应用模块
 app.get("/application", hasLogin, main.show);
 app.get("/application/newApp", hasLogin, main.showNewApp);
@@ -261,6 +267,10 @@ app.get("/userCenter/changeInfo", hasLogin, user.changeInfo);
 app.get("/userCenter/changePassword", hasLogin, user.changePassword);
 app.post("/userCenter/changeInfo", hasLogin, user.doChangeInfo);
 app.post("/userCenter/changePassword", hasLogin, user.doChangePassword);
+
+//应用广场
+app.get("/square", hasLogin, square.showSquare);
+
 //反馈
 app.get("/feedBack", hasLogin, feedback.show);
 app.post("/feedBack",hasLogin, feedback.postFeed);

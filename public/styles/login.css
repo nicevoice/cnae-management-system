@@ -3,7 +3,7 @@ input{
 	-webkit-border-radius: 3px;
 	
 }
-#log{
+.log{
 position: relative;
 left:29%;
 
@@ -54,8 +54,20 @@ position:relative;
 left:25%;
 }
 
-
-
+.retrieveTitle{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+.retrieveContent{
+  margin-top:30px;
+}
+.rightButton{
+  position:relative;
+  left:70%;
+}
+#retrievePassword p{
+  margin:8px;
+}
 .separator {
     border-bottom: 1px solid #F	FFFFF;
     border-top: 1px solid #CCCCCC;

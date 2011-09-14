@@ -1,7 +1,7 @@
 
     <div class="notMain">
     <h2 class="orangeH2 loginH2">欢迎登录网站</h2>
-    <div id="log">
+    <div id="log" class="log">
     <div class="warn" id="loginWarn"><%= warn %></div>
     <form id="loginForm" action="/checkLogin" method="post">
         <p class="loginInput">
@@ -13,7 +13,9 @@
         <label for="passWord">密码：</label>
         <input type="password" id="password" class="inputText" name="password">
         <p class = "loginInputCheck">
-<input id="autoLogin" name="autoLogin" type="checkbox" value="true" />        <label id="autoLoginText" for="autoLogin">下次自动登录</label>
+        <input id="autoLogin" name="autoLogin" type="checkbox" value="true" />
+        <label id="autoLoginText" for="autoLogin">下次自动登录</label>&nbsp;&nbsp;
+        <a href="/retrieve">找回密码</a>
         </p>
         <p class="loginInputCheck">
         <input class = "r3px button_orange submit"type="submit" value="登录">

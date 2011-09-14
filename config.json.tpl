@@ -25,6 +25,9 @@
   "mailContentPath":"",
   "inviteMailTitle":"",
   "inviteMailContentPath":"",
+  "retrieveMailTitle":"",
+  "retrieveMailContentPath":"",
+  "retrieveLink":"",
   "admin":"",
   "smtp":{
     "host": "",

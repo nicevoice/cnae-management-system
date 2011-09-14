@@ -53,15 +53,26 @@ exports.mailContent = fs.readFileSync(configInfo.mailContentPath, "utf-8");
 //发送邀请函邮件的模板
 exports.inviteMailTitle = configInfo.inviteMailTitle;
 exports.inviteMailContent = fs.readFileSync(configInfo.inviteMailContentPath, "utf-8");
+//找回密码邮件模板
+exports.retrieveMailTitle = configInfo.retrieveMailTitle;
+exports.retrieveMailContent = fs.readFileSync(configInfo.retrieveMailContentPath, "utf-8");
+exports.retrieveLink = configInfo.retrieveLink;
 exports.admin = configInfo.admin;
 exports.smtp = {
     host: configInfo.smtp.host,
     port: configInfo.smtp.port,
     ssl: configInfo.smtp.ssl,
     use_authentication: configInfo.smtp.use_authentication,
-    user: configInfo.users,
+    user: configInfo.user,
     pass: configInfo.pass
 };
+//邀请码注册链接
+exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
+if(!debug) {
+    exports.port = 80;
+    exports.inviteHref = "http://cnodejs.net/regist?code=";
+}
+
 
 exports.uploadDir = configInfo.uploadDir;
 exports.tempDir = configInfo.tempDir;
@@ -70,9 +81,3 @@ exports.socketPort = configInfo.socketPort;
 //管理员帐号表
 exports.admins = configInfo.admins;
 
-//邀请码注册链接
-exports.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
-if(!debug) {
-    exports.port = 80;
-    exports.inviteHref = "http://cnodejs.net/regist?code=";
-}
