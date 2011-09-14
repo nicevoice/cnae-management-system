@@ -54,7 +54,9 @@ position:relative;
 left:25%;
 }
 
-
+.retrieveTitle{
+  margin:30px;
+}
 
 .separator {
     border-bottom: 1px solid #F	FFFFF;
