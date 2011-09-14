@@ -259,9 +259,11 @@ exports.postRetrieve = function(req, res){
   console.log(email+":retrieve");
 	if(!regEmail.exec(email))
 		return res.render("error", { message:"email格式不正确"});
-  users.findOne({
-    email: email
-  }, function(err, userInfo){
+  var retrieveKey = randomStringNum(15),
+      retrieveTime = new Date().getTime();
+  users.findAndModify({email: email},
+    {retrieveKey:retrieveKey, retrieveTime:retrieveTime},
+    function(err, userInfo){
     if(err){
       console.log(err.toString());
 		return res.render("error", { message:"数据获取失败，请稍后再试"});      
@@ -269,9 +271,8 @@ exports.postRetrieve = function(req, res){
       if(!userInfo){
 		    return res.render("error", { message:"email未被注册"});      
       }else{
-        var link = config.retrieveLink+"?p="+userInfo.password+"&e="+email;
+        var link = config.retrieveLink+"?p="+retrieveKey+"&e="+email;
         var nickName = email.split('@')[0];
-      	link+="&email="+email;
        	var codeHtml = "<a href="+link+">"+link+"</a>";
        	mails.push({
           sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
