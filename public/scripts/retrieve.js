@@ -1,6 +1,6 @@
 $(function(){
   $("#commitRetrieve").click(checkEmail);
-  $("#close").click(closePage);
+  $("#back").click(back);
   $("#commitReset").click(checkPassword);
 })
 
@@ -13,7 +13,7 @@ function checkEmail(){
 	}
 }
 function closePage(){
-  window.close();
+  window.location = "/";
 }
 function checkPassword(){
   	var password = $("#changePassword").val()||'';

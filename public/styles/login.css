@@ -65,6 +65,9 @@ left:25%;
   position:relative;
   left:70%;
 }
+#retrievePassword p{
+  margin:8px;
+}
 .separator {
     border-bottom: 1px solid #F	FFFFF;
     border-top: 1px solid #CCCCCC;
