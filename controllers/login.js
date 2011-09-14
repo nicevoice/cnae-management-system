@@ -299,6 +299,7 @@ exports.showResetPassword = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query,
       email = queryString.email||'',
       key = queryString.p||'';
+      console.log(key);
   users.findOne({email:email, retrieveKey:key}, function(err, data){
     if(err){
       return res.render("error", {message:"数据获取失败，请稍后再试"});
