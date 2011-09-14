@@ -54,10 +54,13 @@ position:relative;
 left:25%;
 }
 
-.retrieveTitle, .retrieveContent{
-  margin:30px;
+.retrieveTitle{
+  margin-top:10px;
+  margin-bottom:10px;
 }
-
+.retrieveContent{
+  margin-top:30px;
+}
 .separator {
     border-bottom: 1px solid #F	FFFFF;
     border-top: 1px solid #CCCCCC;

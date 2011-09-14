@@ -287,3 +287,7 @@ exports.postRetrieve = function(req, res){
     }
   })
 }
+
+exports.showRetrieveTips = function(req, res){
+  return res.render("retrieveTips");
+}
