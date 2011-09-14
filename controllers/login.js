@@ -257,7 +257,7 @@ exports.postRetrieve = function(req, res){
   var email = req.body.userEmail||'';
 	var regEmail = config.regEmail;
   console.log(email+":retrieve");
-	if(!regEmail.exec(userEmail))
+	if(!regEmail.exec(email))
 		return res.render("error", { message:"email格式不正确"});
   user.findOne({
     email: email
