@@ -26,13 +26,12 @@ exports.userInfo = function(req, res){
     console.log(now);
 		app_basic.update({},{$set:{appCreateDate:now}},
 		  function(err, data){
+        if(err){
+          console.log(err.toString());
+        }else{
+          console.log(data);
+        }
 			});
-  users.find({}).toArray(function(err, data){
-    var emailToPass = {};
-    for(var i=0, len=data.length; i<len; ++i){
-      users.update({email:data[i].email},{$set:{password:md5(data[i].password+config.md5_secret), registTime:now}}, function(){});
-    }
-  })
 	}
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
