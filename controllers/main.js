@@ -105,7 +105,7 @@ var config = require('../config')
 						console.log(saveDir);
 						exec('tar -xf '+ initFile + ' -C '+ saveDir, function(err){
 						if(err){
-							console.log("初始文件夹失败");
+							console.log("初始文件夹失败:"+err.toString());
 						}
 					}); 
 				}

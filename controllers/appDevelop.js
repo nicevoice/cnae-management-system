@@ -27,7 +27,6 @@ var config = require('../config')
   
 /***
  * 上传代码，gz zip格式
- * todo:zip格式偶尔出现过问题，控制上传大小
  * @param {} req
  * @param {} res
  * @return {}
@@ -48,9 +47,8 @@ exports.doUpload = function(req, res){
 				type= "gz";
 			}
       var tempDir = config.tempDir,
-			    savePath = uploadDir+'/'+domain +'/'; 
-			fs.mkdir(tempDir+"/"+domain, '777', function(err){
-          console.log("mkdir");
+      savePath = uploadDir+'/'+domain +'/'; 
+      fs.mkdir(tempDir+"/"+domain, '777', function(err){
           if (err&&err.errno !== 17) {
               console.log(err.toString());
             }
