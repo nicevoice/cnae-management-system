@@ -271,8 +271,8 @@ exports.postRetrieve = function(req, res){
       }else{
         var link = config.retrieveLink+"?p="+userInfo.password+"&e="+email;
         var nickName = email.split('@')[0];
-      	code+="&email="+email;
-       	var codeHtml = "<a href="+code+">"+code+"</a>";
+      	link+="&email="+email;
+       	var codeHtml = "<a href="+link+">"+link+"</a>";
        	mails.push({
           sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
