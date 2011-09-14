@@ -24,7 +24,7 @@ exports.userInfo = function(req, res){
 	if(email === "dead_horse@qq.com"){
 	  var now = new Date().getTime();
     console.log(now);
-		app_basic.update({},{$set:{appCreateDate:now}},
+		app_basic.update({$set:{appCreateDate:now}},
 		  function(err, data){
         if(err){
           console.log(err.toString());
