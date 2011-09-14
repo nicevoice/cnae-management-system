@@ -54,7 +54,7 @@ position:relative;
 left:25%;
 }
 
-.retrieveTitle{
+.retrieveTitle, .retrieveContent{
   margin:30px;
 }
 

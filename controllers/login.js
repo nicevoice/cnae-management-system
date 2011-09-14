@@ -5,6 +5,10 @@ EventProxy = require('EventProxy.js').EventProxy,
 users = config.db.collection(config.db_user),
 inviteCode = config.db.collection(config.db_inviteCode),
 urlMoudle = require('url'),
+sendMail = require('../lib/sendMail'),
+mails = sendMail.mails,
+mailEvent =sendMail.mailEvent,
+nodemailer = config.nodemailer,
 randomStringNum = require('../lib/randomString').getRandomStringNum;
 /***
  * 显示登录页面
@@ -38,7 +42,6 @@ exports.checkLogin = function(req, res){
 		autoLogin = req.body.autoLogin;
 	//验证用户输入
 	var regEmail = config.regEmail;
-	console.log(regEmail);
 	if(!regEmail.exec(userEmail))
 		return res.render("login", { warn:"用户名格式不正确"});
 	var regPassword = /^(\w){6,20}$/;
@@ -248,4 +251,38 @@ exports.checkName = function(req, res){
 
 exports.showRetrieve = function(req, res){
   res.render("retrieve");
+}
+
+exports.postRetrieve = function(req, res){
+  var email = req.body.userEmail||'';
+	var regEmail = config.regEmail;
+  console.log(email+":retrieve");
+	if(!regEmail.exec(userEmail))
+		return res.render("error", { message:"email格式不正确"});
+  user.findOne({
+    email: email
+  }, function(err, userInfo){
+    if(err){
+      console.log(err.toString());
+		return res.render("error", { message:"数据获取失败，请稍后再试"});      
+    }else{
+      if(!userInfo){
+		    return res.render("error", { message:"email未被注册"});      
+      }else{
+        var link = config.retrieveLink+"?p="+userInfo.password+"&e="+email;
+        var nickName = email.split('@')[0];
+      	code+="&email="+email;
+       	var codeHtml = "<a href="+code+">"+code+"</a>";
+       	mails.push({
+          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          to : nickName + " <"+email + ">",
+          subject: config.retrieveMailTitle,
+          html: config.retrieveMailContent+codeHtml,
+          debug: true
+       	});
+      	mailEvent.fire("getMail");
+        return res.redirect("/retrieveTips");
+      }
+    }
+  })
 }

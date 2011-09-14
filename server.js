@@ -188,6 +188,7 @@ app.post("/checkRegist", hasNotLogin, login.checkRegist);
 app.post("/regist/checkEmail", hasNotLogin, login.checkEmail);
 app.post("/regist/checkName", login.checkName);
 app.get("/retrieve", hasNotLogin, login.showRetrieve);
+app.post("/retrieve", hasNotLogin, login.postRetrieve);
 //我的应用模块
 app.get("/application", hasLogin, main.show);
 app.get("/application/newApp", hasLogin, main.showNewApp);

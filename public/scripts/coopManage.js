@@ -32,10 +32,15 @@ function bindCoop(){
 
 //发出邀请
 function submitInvite(){
-	var email = $("#inviteEmail").val();
-	var words = $("#inviteWords").val();
-	var role = $("#roles").val();
-	var url = $("form").attr('action');
+	var email = $("#inviteEmail").val()||'';
+	var words = $("#inviteWords").val()||'';
+	var role = $("#roles").val()||'';
+	var url = $("form").attr('action')||'';
+	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
+	if(!regEmail.exec(email)){
+		sAlert("警告","请输入合法的email地址");
+		return false;
+	}
 	$.ajax({
     cache:false,
     type:"POST",
