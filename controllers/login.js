@@ -45,27 +45,32 @@ exports.checkLogin = function(req, res){
 	if(!regPassword.exec(password))
 		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
+  console.log(password.toString()+config.md5_secret);
 	users.findOne({email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
-			log.error(err);
+			console.log(err);
 			return res.render("login", { warn:"用户名或密码错误"});
 		}
 		else{
-			if(!item)
-				return res.render("login", { warn:"用户名或密码错误"});
-			else{
-				req.session.email =userEmail;
-				req.session.nickName = item.nickName;
-				if(autoLogin){
-					var timeOut = config.session_timeOut;
-					req.session.cookie.expires = new Date(Date.now() + timeOut);
-					req.session.cookie.maxAge = timeOut;
-				}
-				else{
-					req.session.cookie.expires = false;
-				}
-				res.redirect("/application");
-			}
+			if (!item) {
+        console.log(md5(password.toString()+config.md5_secret));
+        return res.render("login", {
+          warn: "用户名或密码错误"
+        });
+      }
+      else {
+        req.session.email = userEmail;
+        req.session.nickName = item.nickName;
+        if (autoLogin) {
+          var timeOut = config.session_timeOut;
+          req.session.cookie.expires = new Date(Date.now() + timeOut);
+          req.session.cookie.maxAge = timeOut;
+        }
+        else {
+          req.session.cookie.expires = false;
+        }
+        res.redirect("/application");
+      }
 		}
 	});
 }
@@ -108,7 +113,6 @@ exports.checkRegist = function(req, res){
 		return res.render("error", {message:"密码必须为6～20个字母或者数字组成的字符"});
 		
 	//检查是否数据库中已经存在
-	console.log("start assign");
 	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
 		console.log(goodName);
 		if(!goodName)
