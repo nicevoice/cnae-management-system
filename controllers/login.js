@@ -45,7 +45,7 @@ exports.checkLogin = function(req, res){
 	if(!regPassword.exec(password))
 		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
-	users.findOne({email:userEmail.toString(), password:password.toString()}, function(err, item){
+	users.findOne({email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
 			log.error(err);
 			return res.render("login", { warn:"用户名或密码错误"});
@@ -118,7 +118,7 @@ exports.checkRegist = function(req, res){
 		if(!goodCode)
 			return res.render("error", {message:"邀请码不正确"});
 		else{
-			users.save({email:userEmail, nickName:userNickName, password:userPassword, 
+			users.save({email:userEmail, nickName:userNickName, password:md5(userPassword+config.md5_secret), 
 			dbUserName:randomStringNum(12), dbPassword:randomStringNum(10)}, function(err){
 				if(err){
 					log.error(err);

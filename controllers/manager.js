@@ -119,8 +119,14 @@ exports.doAppmng = function(req, res){
 	if(!newAppName){
 		res.sendJson( {done:false});
 	}else{
+    if(newAppName.length>10){
+      newAppName = newAppName.slice(0, 10);
+    }
 		var newAppDes = req.body.newAppDes||'';
-		var updateInfoEvent = new EventProxy();
+    if(newAppDes.length>100){
+      newAppDes = newAppDes.slice(0, 100);
+    }
+    var updateInfoEvent = new EventProxy();
 		updateInfoEvent.assign("updatedBasic", "updatedMem", "saveRecords",
 		function(){
 			if(!arguments[0]||!arguments[1]||!arguments[2]){

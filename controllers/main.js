@@ -74,8 +74,11 @@ var config = require('../config')
   if(!newAppName){
  	return res.render("error", {message:"必须有应用名称"});
  }
- if(newAppName.length>20){
- 	return res.render("error", {message:"应用名不能超过20个字符"});
+ if(newAppName.length>10){
+   newAppName = newAppName.slice(0, 10);
+ }
+ if(newAppDes.length>100){
+   newAppDes = newAppDes.slice(0, 100);
  }
   var regDomain = /^[a-z][a-z0-9_]{3,17}$/;
   if(!regDomain.exec(newAppDomain))
@@ -88,13 +91,10 @@ var config = require('../config')
  		if(!checkNumbers)
  			return res.render("error", {message:"创建的应用数目已经达到上限"});
  		else{
- 			var now = new Date().format("YYYY-MM-dd hh:mm:ss");
  			var createAppEvent = new EventProxy();
  			createAppEvent.assign("savedBasic", "savedMem", "saveRecord", function(){
  				var saveDir = uploadDir+"/"+newAppDomain;
  				var initFile = __dirname.slice(0, __dirname.lastIndexOf('/')+1)+"init.tar.gz";
- 				console.log(initFile+"~~");						
- 				console.log(saveDir+"~~");
 				fs.mkdir(saveDir, '777', function(err){
 					console.log("mkdir");
 					if(err){
@@ -113,6 +113,7 @@ var config = require('../config')
  				res.redirect("/application");
  			})
  			//执行插入
+      var now = new Date().getTime();
  			app_basic.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
  			appDes:newAppDes.toString(), appState:0, appCreateDate:now}, function(err){
  				if(err){
@@ -216,17 +217,23 @@ exports.deleteApp = function(req, res){
 			}if(!data){
          return log.error("在app_basic中没有找到这个应用");
       }
-			var command = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/mongoDeletor.sh "+
-					data.appDbName;
-			exec(command, function(err){
-				console.log(command);
-				if(err){
-          log.error(err.toString());
-					deleteEvent.fire("deleteDb", false);
-				}else{
-					deleteEvent.fire("deleteDb", true);
-				}
-			});
+      if (!data.appDbName) {
+        deleteEvent.fire("deleteDb", true);
+      }
+      else {
+        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoDeletor.sh " +
+        data.appDbName;
+        exec(command, function(err){
+          console.log(command);
+          if (err) {
+            log.error(err.toString());
+            deleteEvent.fire("deleteDb", false);
+          }
+          else {
+            deleteEvent.fire("deleteDb", true);
+          }
+        });
+      }
 		});
 		app_mem.remove({appDomain:delDomain}, function(err){
 			if(err){
