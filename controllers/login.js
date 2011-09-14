@@ -299,6 +299,7 @@ exports.showResetPassword = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query,
       email = queryString.email||'',
       key = queryString.p||'';
+      console.log(email);
       console.log(key);
   users.findOne({email:email, retrieveKey:key}, function(err, data){
     if(err){
@@ -310,7 +311,7 @@ exports.showResetPassword = function(req, res){
         var now = new Date().getTime(),
             oneDay = 1000*60*60*24;
         if(!data.retrieveTime || now - data.retrieveTime >oneDay){
-          return res.render("error", {message:"该链接已失效，请重新申请"});
+          return res.render("error", {message:"该链接已过期，请重新申请"});
         }else{
           return res.render("resetPassword",{email:email});
         }
