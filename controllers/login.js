@@ -294,3 +294,26 @@ exports.postRetrieve = function(req, res){
 exports.showRetrieveTips = function(req, res){
   return res.render("retrieveTips");
 }
+
+exports.showResetPassword = function(req, res){
+  var queryString = urlMoudle.parse(req.url, true).query,
+      email = queryString.email||'',
+      key = queryString.p||'';
+  users.findOne({email:email, retrieveKey:p}, function(err, data){
+    if(err){
+      return res.render("error", {message:"数据获取失败，请稍后再试"});
+    }else{
+      if(!data){
+        return res.render("error", {message:"错误的链接"});
+      }else{
+        var now = new Date().getTime(),
+            oneDay = 1000*60*60*24;
+        if(!data.retrieveTime || now - data.retrieveTime >oneDay){
+          return res.render("error", {message:"该链接已失效，请重新申请"});
+        }else{
+          return res.render("resetPassword",{email:email});
+        }
+      }
+    }
+  })
+}

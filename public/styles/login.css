@@ -61,6 +61,10 @@ left:25%;
 .retrieveContent{
   margin-top:30px;
 }
+.rightButton{
+  postion:relative;
+  left:70%;
+}
 .separator {
     border-bottom: 1px solid #F	FFFFF;
     border-top: 1px solid #CCCCCC;
