@@ -3,6 +3,7 @@ log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
 randomStringNum = require("../lib/randomString").getRandomStringNum,
 md5 = require('../lib/md5').hex_md5,
+app_basic = config.db.collection(config.db_app_basic);
 users = config.db.collection(config.db_user);
 /***
  * 跳转到显示用户信息页面
