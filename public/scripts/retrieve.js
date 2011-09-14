@@ -1,6 +1,7 @@
 $(function(){
   $("#commitRetrieve").click(checkEmail);
   $("#close").click(closePage);
+  $("#commitReset").click(checkPassword);
 })
 
 function checkEmail(){
@@ -13,4 +14,18 @@ function checkEmail(){
 }
 function closePage(){
   window.close();
+}
+function checkPassword(){
+  	var password = $("#changePassword").val()||'';
+	  var regPass = /^(\w){6,20}$/;
+  	if(!regPass.exec(password)){
+		sAlert("警告","密码必须为6～20位字母、数字或下划线");
+    return false;
+	}else{
+		var con = $("#changeConfirmation").val()||'';
+		if(con && password!==con){
+		sAlert("警告","两次密码必须一致");
+		}
+    return false;
+	}
 }

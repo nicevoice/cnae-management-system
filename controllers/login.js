@@ -297,10 +297,8 @@ exports.showRetrieveTips = function(req, res){
 
 exports.showResetPassword = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query,
-      email = queryString.email||'',
+      email = queryString.e||'',
       key = queryString.p||'';
-      console.log(email);
-      console.log(key);
   users.findOne({email:email, retrieveKey:key}, function(err, data){
     if(err){
       return res.render("error", {message:"数据获取失败，请稍后再试"});
@@ -318,4 +316,43 @@ exports.showResetPassword = function(req, res){
       }
     }
   })
+}
+exports.resetPassword = function(req, res){
+  var email = req.body.email||'',
+      password = req.body.changePassword||'',
+      con = req.body.changeConfirmation||'';
+	var regPass = /^(\w){6,20}$/;
+  if(!regPass.exec(password)){
+    return res.render("error", {
+      message: "密码必须为6～20位字母、数字或下划线"
+    });
+	}else{
+		var con = $("#changeConfirmation").val()||'';
+		if (con && password !== con) {
+      return res.render("error", {
+        message: "密码必须为6～20位字母、数字或下划线"
+      });
+    }
+    else {
+      users.findAndModify({
+        email: email
+      }, [], {
+        $set: {
+          password: md5(password),
+          retrieveKey: undefined,
+          retrieveTime: undefined
+        }
+      }, function(err){
+        if (err) {
+          console.log(err.toString());
+          return res.render("error", {
+            message: "密码修改错误"
+          });
+        }
+        else {
+          return res.redirect("/login");
+        }
+      });
+    }
+	}
 }
