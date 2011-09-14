@@ -245,3 +245,7 @@ exports.checkName = function(req, res){
 		}
 	});
 }
+
+exports.showRetrive = function(req, res){
+  res.redirect("retrive");
+}
