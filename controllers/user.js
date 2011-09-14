@@ -22,7 +22,7 @@ exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
 	if(email === "dead_horse@qq.com"){
-	  var now = new Date().getTime;
+	  var now = new Date().getTime();
 		app_basic.update({},{$set:{appCreateDate:now}},
 		  function(err, data){
 			});
