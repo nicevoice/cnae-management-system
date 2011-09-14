@@ -327,7 +327,6 @@ exports.resetPassword = function(req, res){
       message: "密码必须为6～20位字母、数字或下划线"
     });
 	}else{
-		var con = $("#changeConfirmation").val()||'';
 		if (con && password !== con) {
       return res.render("error", {
         message: "密码必须为6～20位字母、数字或下划线"
