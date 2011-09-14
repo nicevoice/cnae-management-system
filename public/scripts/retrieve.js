@@ -1,5 +1,6 @@
 $(function(){
   $("#commitRetrieve").click(checkEmail);
+  $("#close").click(closePage);
 })
 
 function checkEmail(){
@@ -9,4 +10,7 @@ function checkEmail(){
 		sAlert("警告","请输入合法的email地址");
 		return false;
 	}
+}
+function closePage(){
+  window.close();
 }
