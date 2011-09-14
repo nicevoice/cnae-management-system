@@ -2,6 +2,8 @@ var config = require('../config'),
 log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
 randomStringNum = require("../lib/randomString").getRandomStringNum,
+md5 = require('../lib/md5').hex_md5,
+app_basic = config.db.collection(config.db_app_basic);
 users = config.db.collection(config.db_user);
 /***
  * 跳转到显示用户信息页面
@@ -19,17 +21,6 @@ exports.show = function(req, res){
 exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
-//	if(email === "dead_horse@qq.com"){
-//	users.find({}).toArray(function(err, data){
-//		for(var i=0, len=data.length; i<len; ++i){
-//				var email = data[i].email;
-//				users.update({email:email},{$set:{dbUserName:randomStringNum(12), dbPassword:randomStringNum(10)}},
-//				function(err, data){
-//				});
-//		}
-//	})
-//	}
-	console.log("123");
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
 			log.error(err);
@@ -125,7 +116,7 @@ exports.doChangePassword = function(req, res){
 			if(!ok){
 				return res.sendJson( {done:false,message:"错误的原始密码"});
 			}else{
-				users.update({email:req.session.email.toString()}, {$set:{password:newPassword.toString()}},
+				users.update({email:req.session.email.toString()}, {$set:{password:md5(newPassword.toString()+config.md5_secret)}},
 				function(err){
 					if(err){
 						return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
@@ -135,7 +126,7 @@ exports.doChangePassword = function(req, res){
 				});
 			}
 		});
-		users.findOne({email:req.session.email.toString(), password:oldPassword.toString()},
+		users.findOne({email:req.session.email.toString(), password:md5(oldPassword.toString()+config.md5_secret)},
 		function(err, data){
 			if(err){
 				log.error(err);
