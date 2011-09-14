@@ -261,7 +261,7 @@ exports.postRetrieve = function(req, res){
 		return res.render("error", { message:"email格式不正确"});
   var retrieveKey = randomStringNum(15),
       retrieveTime = new Date().getTime();
-  users.findAndModify({email: email},{email:'ascending'},
+  users.findAndModify({email: email},[],
     {retrieveKey:retrieveKey, retrieveTime:retrieveTime},
     function(err, userInfo){
     if(err){
