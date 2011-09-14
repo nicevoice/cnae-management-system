@@ -22,18 +22,14 @@ exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
 	if(email === "dead_horse@qq.com"){
-	app_basic.find({}).toArray(function(err, data){
-		for(var i=0, len=data.length; i<len; ++i){
-				var now = new Date().getTime;
-				users.update({},{$set:{appCreateDate:now}},
-				function(err, data){
-				});
-		} 
-	})
+	  var now = new Date().getTime;
+		app_basic.update({},{$set:{appCreateDate:now}},
+		  function(err, data){
+			});
   users.find({}).toArray(function(err, data){
     var emailToPass = {};
     for(var i=0, len=data.length; i<len; ++i){
-      users.update({email:data[i].email},{$set:{password:md5(data[i].password+config.md5_secret)}}, function(){});
+      users.update({email:data[i].email},{$set:{password:md5(data[i].password+config.md5_secret), registTime:now}}, function(){});
     }
   })
 	}
