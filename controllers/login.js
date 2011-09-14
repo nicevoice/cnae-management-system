@@ -337,7 +337,7 @@ exports.resetPassword = function(req, res){
         email: email
       }, [], {
         $set: {
-          password: md5(password),
+          password: md5(password+config.md5_secret),
           retrieveKey: undefined,
           retrieveTime: undefined
         }
