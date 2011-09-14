@@ -46,6 +46,7 @@ exports.checkLogin = function(req, res){
 		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
   console.log(password.toString()+config.md5_secret);
+  console.log("email:"+userEmail.toString()+",password:"+md5(password.toString()+config.md5_secret));
 	users.findOne({email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
 			console.log(err);
@@ -53,6 +54,8 @@ exports.checkLogin = function(req, res){
 		}
 		else{
 			if (!item) {
+        console.log("验证失败");
+        console.log(userEmail.toString());
         console.log(md5(password.toString()+config.md5_secret));
         return res.render("login", {
           warn: "用户名或密码错误"
