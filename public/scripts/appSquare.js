@@ -7,11 +7,19 @@ $(function(){
 
 function getMore(){
   $("#getMore").html("加载中...");
-  $.get("/suqare/post",
-        {skip:appNums, limit:onceNum},
-        function(data){
-          $("#square-apps").html($("#square-apps").html()+data);  
-          $("#getMore").html("更多");
-        },
-        "text");  
+  $.ajax({
+    cache:false,
+    type:"get",
+    url:"/square/post?skip="+appNums+"&limit="+onceNum,
+    datatype:"text",
+    data:"",
+    error:function(){
+      $("#getMore").html("获取失败，请稍后再试");
+    },
+    success:function(data){
+      $("#square-apps").html($("#square-apps").html()+data);  
+      $("#getMore").html("更多");
+      appNum += onceNum;
+    }
+  });
 }
