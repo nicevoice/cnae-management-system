@@ -51,7 +51,7 @@ exports.post = function(req, res){
         domains[i] = data[i].appDomain;
         domainToMems[domains[i]].memberNums = 0;
       }
-      console.log(domains.toString());
+      console.log(domains);
       app_mem.find({              //查找这limit个应用的参与者
         appDomain: {
           $in: domains
@@ -85,7 +85,6 @@ exports.post = function(req, res){
             }
           }
           console.log("find mems");
-          console.log(data);
           console.log(creatorEmails);
           users.find({email:{$in:creatorEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
             if (err) {
