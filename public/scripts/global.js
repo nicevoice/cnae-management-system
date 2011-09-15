@@ -45,6 +45,7 @@ function highlightSide() {
   }
 }
 function sAlert(strTitle,strContent){ 
+    deleteFunc();
     var msgw,msgh,bordercolor; 
     msgw=250;//提示窗口的宽度 
     msgh=100;//提示窗口的高度 
@@ -86,11 +87,6 @@ function sAlert(strTitle,strContent){
     title.title = "点击关闭"; 
     title.innerHTML="<table width='100%' class='noMargin'><tr><td align='left'><b>"+ strTitle +"</b></td><td align='right'>关闭</td></tr></table></div>"; 
     title.inn
-    var deleteFunc = function(){
-    document.getElementById("msgDiv").removeChild(title); 
-    document.body.removeChild(msgObj); 
-    } ;
-    title.onclick=deleteFunc;
     
     document.body.appendChild(msgObj); 
     document.getElementById("msgDiv").appendChild(title); 
@@ -108,6 +104,12 @@ function sAlert(strTitle,strContent){
 		}
     }
 } 
+function deleteFunc(){
+  if(!document.getElementById("msgDiv")) return false;
+  document.getElementById("msgDiv").removeChild(title);
+  document.body.removeChild(msgObj);
+}
+    title.onclick=deleteFunc;
 //扩展 去除前后字符串
 String.prototype.trim = function() {
 return this.replace(/^\s+|\s+$/g, "");
