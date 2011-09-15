@@ -108,7 +108,7 @@ exports.post = function(req, res){
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].creatorEmail]) {
                       data[i].creatorNickName = emailToNick[data[i].creatorEmail];
-                      console.log(data[i]).appCreateDate;
+                      console.log(data[i].appCreateDate);
                       data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
                     }
                     else{
