@@ -51,6 +51,8 @@ exports.post = function(req, res){
         domainToMems[domains[i]] = {};
         domainToMems[domains[i]].memberNums = 0;
       }
+      console.log(data.length);
+      console.log(domains);
       app_mem.find({              //查找这limit个应用的参与者
         appDomain: {
           $in: domains
