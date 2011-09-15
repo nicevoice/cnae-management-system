@@ -17,12 +17,38 @@ function getMore(){
       $("#getMore").html("获取失败，请稍后再试");
     },
     success:function(data){
-      render(data);  
-      $("#getMore").html("更多");
-      appNums += onceNum;
+      if (data.status === "ok") {
+        render(data.apps);
+        $("#getMore").html("更多");
+        appNums += onceNum;
+      }
+      else{
+        $("#getMore").html(data.msg);        
+      }
     }
   });
 }
 function render(data){
-  $("#square-apps").html($("#square-apps").html()+data.msg);
+  var html="";
+  for(var i=0, len=data.length; i<len; ++i){
+    html += renderApp(data[i]);
+  }
+}
+
+function renderApp(app){
+  if(!app.appName || !app.appDomain ||
+     !app.creatorEmail || !app.nickName ||
+     !app.memberNums){
+       return "";
+     }
+  var port="";
+  if(app.port && app.port!=80){
+    port=":"+app.port;
+  }
+  var div = '<div class="app-info">' +
+            '<p><H3>'+app.appName+'</H3>&nbsp;&nbsp;<a href=">'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">' +
+            app.appDomain+'.cnodejs.net"</a></p>' + 
+            '<p>'+app.appDes+'</p>' +
+            '<p class="font11">'+app.creatorNickName + '创建于' + app.appCreateDate +' | 有'+app.memberNums +'个参与者</p></div>';
+  return div;
 }
