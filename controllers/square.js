@@ -13,6 +13,7 @@ var config = require('../config')
   , records = db.collection(config.db_app_records)
   , EventProxy = require('EventProxy.js').EventProxy  
   , uploadDir = config.uploadDir
+  , urlMoudle = require('url')
   , randomStringNum = require('../lib/randomString').getRandomStringNum;
   
 exports.showSquare = function(req, res){
@@ -21,5 +22,8 @@ exports.showSquare = function(req, res){
 }
 
 exports.post = function(req, res){
-  return res.sendText('<div><a>数据</a></div>');
+  var queryString = urlMoudle.parse(req.url, true).query,
+      skip = queryString.skip||'',
+      limit = queryString.limit||'';
+  return res.sendJson({msg:""+skip+","+limit});
 } 

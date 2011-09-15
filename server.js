@@ -177,10 +177,6 @@ require('http').ServerResponse.prototype.sendJson = function(data){
 	this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
 	this.end(body);
 }
-require('http').ServerResponse.prototype.sendText = function(data){
-  this.writeHead(200, {"Content/type":"text/plain","Content/length":data.length});
-  this.end(data);
-}
 //routing
 //登录模块
 app.get("/", hasLogin, main.show);

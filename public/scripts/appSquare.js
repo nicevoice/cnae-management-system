@@ -16,9 +16,12 @@ function getMore(){
       $("#getMore").html("获取失败，请稍后再试");
     },
     success:function(data){
-      $("#square-apps").html($("#square-apps").html()+data);  
+      render(data);  
       $("#getMore").html("更多");
       appNums += onceNum;
     }
   });
+}
+function render(data){
+  $("#square-apps").html($("#square-apps").html()+data.msg);
 }
