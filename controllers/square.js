@@ -142,7 +142,7 @@ exports.apply = function(req, res){
       email = req.body.email || '',
       appName = req.body.name||'',
       nickName = req.body.nickName||'';
-  var applyEvent = new EnvetProxy();
+  var applyEvent = new EventProxy();
   applyEvent.assign("checkOwn", "checkTarget", function(checkOwn, checkTarget){
     if (checkOwn.status === "error") {
       return res.sendJson(checkOwn);
