@@ -44,6 +44,11 @@ function highlightSide() {
     }
   }
 }
+function deleteFunc(){
+  if(!document.getElementById("msgDiv")) return false;
+    document.getElementById("msgDiv").removeChild(title);
+    document.body.removeChild(msgObj);
+}
 function sAlert(strTitle,strContent){ 
     deleteFunc();
     var msgw,msgh,bordercolor; 
@@ -65,6 +70,7 @@ function sAlert(strTitle,strContent){
     msgObj.style.left = (document.body.scrollLeft + (window.innerWidth-msgw)/2)+"px"; 
     msgObj.style.top = (document.body.scrollTop + (window.innerHeight-msgh)/2) + "px"; 
     msgObj.style.font="14px/1.6em Verdana, Geneva, Arial, Helvetica, sans-serif"; 
+
     msgObj.style.width = msgw + "px"; 
     msgObj.style.height =msgh + "px"; 
     msgObj.style.textAlign = "center"; 
@@ -86,7 +92,7 @@ function sAlert(strTitle,strContent){
     title.style.cursor="pointer"; 
     title.title = "点击关闭"; 
     title.innerHTML="<table width='100%' class='noMargin'><tr><td align='left'><b>"+ strTitle +"</b></td><td align='right'>关闭</td></tr></table></div>"; 
-    title.inn
+    title.onclick=deleteFunc;
     
     document.body.appendChild(msgObj); 
     document.getElementById("msgDiv").appendChild(title); 
@@ -104,12 +110,6 @@ function sAlert(strTitle,strContent){
 		}
     }
 } 
-function deleteFunc(){
-  if(!document.getElementById("msgDiv")) return false;
-  document.getElementById("msgDiv").removeChild(title);
-  document.body.removeChild(msgObj);
-}
-    title.onclick=deleteFunc;
 //扩展 去除前后字符串
 String.prototype.trim = function() {
 return this.replace(/^\s+|\s+$/g, "");
