@@ -169,7 +169,7 @@ exports.apply = function(req, res){
           sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
           subject: config.applyMailTitle,
-          html: config.retrieveMailContent+applyInfo,
+          html: config.applyMailContent+applyInfo,
           debug: true
        	});
       	mailEvent.fire("getMail");
