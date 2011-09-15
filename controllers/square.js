@@ -104,6 +104,7 @@ exports.post = function(req, res){
                   for (var i = 0, len = userInfos.length; i < len; ++i) {
                     emailToNick[userInfos[i].email] = userInfos[i].nickName;
                   }
+                  console.log(emailToNick);
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].email]) {
                       data[i].nickName = emailToNick[data[i].creatorEmail];
