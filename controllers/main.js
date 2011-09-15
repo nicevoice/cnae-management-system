@@ -162,7 +162,7 @@ var config = require('../config')
  	});
  var isAdmin = false;
 	for(var i=0, len=config.admins.length; i<len; ++i){
-		if(userEmail === config.admins[i]){
+		if(req.session.email === config.admins[i]){
 			isAdmin = true;
 			break;
 		}
