@@ -185,20 +185,20 @@ exports.apply = function(req, res){
   }, function(err, data){
     if (err) {
       console.log(err.toString());
-      applyEvent.fire({
+      applyEvent.fire("checkTarget",{
         status: "error",
         msg: "数据获取错误"
       });
     }
     else {
       if (!data || data.role !== 0) {
-        applyEvent.fire({
+        applyEvent.fire("checkTarget",{
           status: "error",
           msg: "对方没有权限管理该应用"
         });
       }
       else {
-        applyEvent.fire({
+        applyEvent.fire("checkTarget",{
           status: "ok"
         });
       }
@@ -210,19 +210,19 @@ exports.apply = function(req, res){
   }, function(err, data){
     if (err) {
       console.log(err.toString());
-      applyEvent.fire({
+      applyEvent.fire("checkOwn",{
         status: "error",
         msg: "数据获取错误"
       });
     }
     else {
       if (!data || data.length === 0) {
-        applyEvent.fire({
+        applyEvent.fire("checkOwn",{
           status: "ok"
         });
       }
       else {
-        applyEvent.fire({
+        applyEvent.fire("checkOwn",{
           status: "error",
           msg: "已经参与该项目"
         });
