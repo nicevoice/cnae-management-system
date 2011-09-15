@@ -1,3 +1,4 @@
+@import url(appSquare.css);
 @import url(application.css);
 @import url(login.css);
 @import url(newApp.css);
@@ -241,3 +242,4 @@ padding:40px;
 .littleBlue{
     background-color:#c7dae5;
 }
+

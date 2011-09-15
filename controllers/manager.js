@@ -327,7 +327,7 @@ exports.mnglog = function(req, res){
 				{sort:[['recordTime', -1]],skip:pageNum*(page-1), limit:pageNum}).toArray(
 			function(err, data){
 				if(err){
-					log.error(err);
+					console.log(err);
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
 			

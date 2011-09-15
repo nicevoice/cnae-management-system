@@ -270,7 +270,7 @@ app.post("/userCenter/changePassword", hasLogin, user.doChangePassword);
 
 //应用广场
 app.get("/square", hasLogin, square.showSquare);
-
+app.get("/square/post", hasLogin, square.post);
 //反馈
 app.get("/feedBack", hasLogin, feedback.show);
 app.post("/feedBack",hasLogin, feedback.postFeed);
