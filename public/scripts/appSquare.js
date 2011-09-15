@@ -23,5 +23,5 @@ function getMore(){
   });
 }
 function render(data){
-  $("#square-apps").html($("#square-apps").html()+data.msg);
+  $("#square-apps").html($("#square-apps").html()+data["msg"]);
 }
