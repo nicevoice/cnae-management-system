@@ -70,7 +70,9 @@ exports.post = function(req, res){
         else {
           var creatorEmails = [];
           for (var i = 0, len = mems.length; i < len; ++i) {
-            domainToMems[mems[i].appDomain].memberNums++;
+            if (mems[i].active < 2) {
+              domainToMems[mems[i].appDomain].memberNums++;
+            }
             if (mems[i].role === 0) {
               domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
               creatorEmails.push(mems[i].email);
@@ -138,10 +140,7 @@ exports.post = function(req, res){
 } 
 
 exports.apply = function(req, res){
-  var domain = req.body.domain || '',
-      email = req.body.email || '',
-      appName = req.body.name||'',
-      nickName = req.body.nickName||'';
+  var domain = req.body.domain || '', email = req.body.email || '', appName = req.body.name || '', nickName = req.body.nickName || '';
   var applyEvent = new EventProxy();
   applyEvent.assign("checkOwn", "checkTarget", function(checkOwn, checkTarget){
     if (checkOwn.status === "error") {
@@ -163,18 +162,20 @@ exports.apply = function(req, res){
         });
       }
       else {
-        var applyInfo = req.session.nickName+"("+req.session.email+")"+
-                        '申请加入您的项目"'+appName+'"。';
-       	mails.push({
+        var applyInfo = req.session.nickName + "(" + req.session.email + ")" +
+        '申请加入您的项目"' +
+        appName +
+        '"。';
+        mails.push({
           sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
-          to : nickName + " <"+email + ">",
+          to: nickName + " <" + email + ">",
           subject: config.applyMailTitle,
-          html: config.applyMailContent+applyInfo,
+          html: config.applyMailContent + applyInfo,
           debug: true
-       	});
-      	mailEvent.fire("getMail");
+        });
+        mailEvent.fire("getMail");
         res.sendJson({
-          status:"ok"
+          status: "ok"
         });
       }
     })
@@ -185,20 +186,20 @@ exports.apply = function(req, res){
   }, function(err, data){
     if (err) {
       console.log(err.toString());
-      applyEvent.fire("checkTarget",{
+      applyEvent.fire("checkTarget", {
         status: "error",
         msg: "数据获取错误"
       });
     }
     else {
       if (!data || data.role !== 0) {
-        applyEvent.fire("checkTarget",{
+        applyEvent.fire("checkTarget", {
           status: "error",
           msg: "对方没有权限管理该应用"
         });
       }
       else {
-        applyEvent.fire("checkTarget",{
+        applyEvent.fire("checkTarget", {
           status: "ok"
         });
       }
@@ -210,19 +211,19 @@ exports.apply = function(req, res){
   }, function(err, data){
     if (err) {
       console.log(err.toString());
-      applyEvent.fire("checkOwn",{
+      applyEvent.fire("checkOwn", {
         status: "error",
         msg: "数据获取错误"
       });
     }
     else {
       if (!data || data.length === 0) {
-        applyEvent.fire("checkOwn",{
+        applyEvent.fire("checkOwn", {
           status: "ok"
         });
       }
       else {
-        applyEvent.fire("checkOwn",{
+        applyEvent.fire("checkOwn", {
           status: "error",
           msg: "已经参与该项目"
         });
