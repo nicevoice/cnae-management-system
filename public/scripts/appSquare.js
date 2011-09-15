@@ -38,7 +38,7 @@ function render(data){
 
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
-     !app.creatorEmail || !app.nickName ||
+     !app.creatorEmail || !app.creatorNickName ||
      !app.memberNums){
        return "";
      }
