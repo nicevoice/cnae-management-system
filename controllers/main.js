@@ -160,18 +160,36 @@ var config = require('../config')
  			checkRepetition.fire("checkDomain", true);
  		}
  	});
- 	app_mem.count({email:req.session.email, role:0},function(err, data){
- 		console.log("应用数目:"+data);
- 		if(err){
- 			log.error(err);
- 			checkRepetition.unbind();
- 			return res.render("error", {message:"创建应用失败，请稍后再试"});
- 		}
- 		else if(data>=10)
- 			checkRepetition.fire("checkNumbers", false);
- 		else
- 			checkRepetition.fire("checkNumbers", true);
- 	});
+ var isAdmin = false;
+	for(var i=0, len=config.admins.length; i<len; ++i){
+		if(userEmail === config.admins[i]){
+			isAdmin = true;
+			break;
+		}
+	}
+  if (isAdmin) {
+    checkRepetition.fire("checkNumbers", true);
+  }
+  else {
+    app_mem.count({
+      email: req.session.email,
+      role: 0
+    }, function(err, data){
+      console.log("应用数目:" + data);
+      if (err) {
+        log.error(err);
+        checkRepetition.unbind();
+        return res.render("error", {
+          message: "创建应用失败，请稍后再试"
+        });
+      }
+      else 
+        if (data >= 10) 
+          checkRepetition.fire("checkNumbers", false);
+        else 
+          checkRepetition.fire("checkNumbers", true);
+    });
+  }
 }
 /***
  * 显示创建新应用页面
