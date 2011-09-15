@@ -24,7 +24,7 @@ exports.showSquare = function(req, res){
 exports.post = function(req, res){
   console.log(req.session.email + ":square post");
   var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
-  app_basic.find({}, { //找出最新的limit个应用
+  app_basic.find({}, {  //找出最新的limit个应用
     sort: [['appCreateDate', -1]],
     skip: skip,
     limit: limit
@@ -45,7 +45,7 @@ exports.post = function(req, res){
           msg: "所有数据获取完成"
         });
       }
-      var domainToMems = {}, domains = []; //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
+      var domainToMems = {}, domains = [];  //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
       for (var i = 0, len = data.length; i < len; ++i) {
         domains[i] = data[i].appDomain;
         domainToMems[domains[i]] = {};
@@ -53,7 +53,7 @@ exports.post = function(req, res){
       }
       console.log(data.length);
       console.log(domains);
-      app_mem.find({ //查找这limit个应用的参与者
+      app_mem.find({              //查找这limit个应用的参与者
         appDomain: {
           $in: domains
         }
@@ -67,15 +67,15 @@ exports.post = function(req, res){
           });
         }
         else {
-          var creatorEmails = [];
+          var creatorEmails = [];    
           for (var i = 0, len = mems.length; i < len; ++i) {
-            domainToMems[mems[i].appDomain].memberNums++;
-            if (mems[i].role === 0) {
+            domainToMems[mems[i].appDomain].memberNums ++;
+            if(mems[i].role===0){
               domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
               creatorEmails.push(mems[i].email);
             }
           }
-          for (var i = 0, len = data.length; i < len; ++i) {
+          for(var i=0, len=data.length; i<len; ++i){
             if (!domainToMems[data[i].appDomain]) {
               data[i].memberNums = "0";
               data[i].creatorEmail = "";
@@ -85,27 +85,15 @@ exports.post = function(req, res){
               data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
             }
           }
-          users.find({
-            email: {
-              $in: creatorEmails
-            }
-          }, {
-            email: 1,
-            nickName: 1
-          }).toArray(function(err, userInfos){
+
+          users.find({email:{$in:creatorEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
             if (err) {
               console.log(err.toString());
-              return res.sendJson({
-                status: "error",
-                msg: "数据获取失败"
-              });
+              return res.sendJson({status:"error", msg:"数据获取失败"});
             }
             else 
               if (!userInfos || userInfos.length === 0) {
-                return res.sendJson({
-                  status: "error",
-                  msg: "数据获取失败"
-                });
+                return res.sendJson({status:"error", msg:"数据获取失败"});
               }
               else 
                 if (userInfos) {
@@ -113,24 +101,21 @@ exports.post = function(req, res){
                   for (var i = 0, len = userInfos.length; i < len; ++i) {
                     emailToNick[userInfos[i].email] = userInfos[i].nickName;
                   }
+                  console.log(emailToNick);
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].creatorEmail]) {
                       data[i].creatorNickName = emailToNick[data[i].creatorEmail];
                       data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
                     }
-                    else {
+                    else{
                       data[i].creatorNickName = "";
                     }
-                    
-                    return res.sendJson({
-                      status: "ok",
-                      apps: data
-                    });
                   }
+                  return res.sendJson({status:"ok", apps:data});
                 }
-          })
+              })
         }
       });
     }
   })
-}
+} 
