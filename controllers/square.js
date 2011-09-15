@@ -30,6 +30,7 @@ exports.post = function(req, res){
     limit: limit
   }).toArray(function(err, data){
     if (err) {
+      console.log("not find apps");
       console.log(err.toString());
       return res.sendJson({
         status: "error",
@@ -37,6 +38,8 @@ exports.post = function(req, res){
       });
     }
     else {
+      console.log("find apps");
+      console.log(data.toString());
       if (!data || data.length <= 0) {
         return res.sendJson({
           status: "done",
@@ -48,12 +51,14 @@ exports.post = function(req, res){
         domains[i] = data[i].appDomain;
         domainToMems[domains[i]].memberNums = 0;
       }
+      console.log(domains.toString());
       app_mem.find({              //查找这limit个应用的参与者
         appDomain: {
           $in: domains
         }
       }).toArray(function(err, mems){
         if (err) {
+          console.log("not find mems");
           console.log(err.toString());
           return res.sendJson({
             status: "error",
@@ -79,13 +84,17 @@ exports.post = function(req, res){
               data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
             }
           }
+          console.log("find mems");
+          console.log(data.toString());
           users.find({email:{$in:creatorEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
             if (err) {
+              console.log("not find nick");
               console.log(err.toString());
               return res.sendJson({status:"error", msg:"数据获取失败"});
             }
             else 
               if (!userInfos || userInfos.length === 0) {
+                console.log("not find nick 2");
                 return res.sendJson({status:"error", msg:"数据获取失败"});
               }
               else 
@@ -102,6 +111,8 @@ exports.post = function(req, res){
                       data[i].nickName = "";
                     }
                   }
+                  console.log("find nick");
+                  console.log(data.toString());
                   return res.sendJson({status:"ok", apps:data});
                 }
               })
