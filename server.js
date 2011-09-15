@@ -178,7 +178,7 @@ require('http').ServerResponse.prototype.sendJson = function(data){
 	this.end(body);
 }
 require('http').ServerResponse.prototype.sendText = function(data){
-  this.writeHead(200, {"Content/type":"text/html","Content/length":data.length});
+  this.writeHead(200, {"Content/type":"text/plain","Content/length":data.length});
   this.end(data);
 }
 //routing

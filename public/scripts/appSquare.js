@@ -18,7 +18,7 @@ function getMore(){
     success:function(data){
       $("#square-apps").html($("#square-apps").html()+data);  
       $("#getMore").html("更多");
-      appNum += onceNum;
+      appNums += onceNum;
     }
   });
 }
