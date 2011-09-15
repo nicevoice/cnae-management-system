@@ -85,7 +85,8 @@ exports.post = function(req, res){
             }
           }
           console.log("find mems");
-          console.log(data.toString());
+          console.log(data);
+          console.log(creatorEmails);
           users.find({email:{$in:creatorEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
             if (err) {
               console.log("not find nick");
