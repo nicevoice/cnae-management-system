@@ -14,10 +14,10 @@ var config = require('../config')
   , EventProxy = require('EventProxy.js').EventProxy  
   , uploadDir = config.uploadDir
   , urlMoudle = require('url')
-  sendMail = require('../lib/sendMail')
-mails = sendMail.mails
-mailEvent =sendMail.mailEvent
-nodemailer = config.nodemailer
+  ,sendMail = require('../lib/sendMail')
+  ,mails = sendMail.mails
+  ,mailEvent =sendMail.mailEvent
+  ,nodemailer = config.nodemailer
   , randomStringNum = require('../lib/randomString').getRandomStringNum;
   
 exports.showSquare = function(req, res){
