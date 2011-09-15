@@ -12,6 +12,7 @@ function getMore(){
     type:"get",
     url:"/square/post",
     data:{skip:appNums, limit:onceNum},
+    dataType:"json",
     error:function(){
       $("#getMore").html("获取失败，请稍后再试");
     },
@@ -23,5 +24,5 @@ function getMore(){
   });
 }
 function render(data){
-  $("#square-apps").html($("#square-apps").html()+data["msg"]);
+  $("#square-apps").html($("#square-apps").html()+data.msg);
 }

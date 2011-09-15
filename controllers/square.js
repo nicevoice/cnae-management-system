@@ -22,8 +22,23 @@ exports.showSquare = function(req, res){
 }
 
 exports.post = function(req, res){
-  var queryString = urlMoudle.parse(req.url, true).query,
-      skip = queryString.skip||'',
-      limit = queryString.limit||'';
-  return res.sendJson({msg:""+skip+","+limit});
+  console.log(req.session.email + ":square post");
+  var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
+  app_basic.find({}, {
+    sort: [['appCreateDate', -1]],
+    skip: skip,
+    limit: limit
+  }).toArray(function(err, data){
+    if (err) {
+      console.log(err.toString());
+      return res.render("error", {
+        message: "数据库查询错误"
+      });
+    }
+    else {
+      return res.sendJson({
+        apps: data
+      });
+    }
+  })
 } 
