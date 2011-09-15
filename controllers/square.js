@@ -39,7 +39,6 @@ exports.post = function(req, res){
     }
     else {
       console.log("find apps");
-      console.log(data.toString());
       if (!data || data.length <= 0) {
         return res.sendJson({
           status: "done",
@@ -49,9 +48,9 @@ exports.post = function(req, res){
       var domainToMems = {}, domains = [];  //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
       for (var i = 0, len = data.lenght; i < len; ++i) {
         domains[i] = data[i].appDomain;
+        console.log(data[i].appDomain);
         domainToMems[domains[i]].memberNums = 0;
       }
-      console.log(domains);
       app_mem.find({              //查找这limit个应用的参与者
         appDomain: {
           $in: domains
