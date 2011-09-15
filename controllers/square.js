@@ -14,6 +14,10 @@ var config = require('../config')
   , EventProxy = require('EventProxy.js').EventProxy  
   , uploadDir = config.uploadDir
   , urlMoudle = require('url')
+  sendMail = require('../lib/sendMail')
+mails = sendMail.mails
+mailEvent =sendMail.mailEvent
+nodemailer = config.nodemailer
   , randomStringNum = require('../lib/randomString').getRandomStringNum;
   
 exports.showSquare = function(req, res){
@@ -116,3 +120,38 @@ exports.post = function(req, res){
     }
   })
 } 
+
+exports.apply = function(req, res){
+  var domain = req.body.domain||'',
+      email = req.body.email||'';
+  var applyEvent = new EnvetProxy();
+  applyEvent.assign("checkOwn", "checkTarget",function(checkOwn, checkTarget){
+    if(checkOwn.status==="error"){
+      return res.sendJson(checkOwn);
+    }
+    if(checkTarget.status==="error"){
+      return res.sendJson(checkTarget);
+    }
+    app_mem.save({appDomain:domain, email:req.session.email, active:2}, function(err){
+      if(err){
+        console.log(err.toString());
+        res.sendJson({status:"error", msg:"数据更新失败"});
+      }else{
+        
+      }
+    })
+  })
+  app_mem.findOne({appDomain:domain, email:email}, function(err, data){
+    if(err){
+      console.log(err.toString());
+      applyEvent.fire({status:"error", msg:"数据获取错误"});
+    }else{
+      if(!data || data.role!==0){
+        applyEvent.fire({status:"error", msg:"对方没有权限管理该应用"});
+      }else{
+        applyEvent.fire({status:"ok"});
+      }
+    }
+  });
+  
+}
