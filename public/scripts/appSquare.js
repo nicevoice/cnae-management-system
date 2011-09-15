@@ -57,7 +57,6 @@ function renderApp(app){
 }
 
 function apply(domain, name, email, nickName){
-  return false;
   $.ajax({
     cache:false,
     type:"post",
