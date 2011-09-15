@@ -1,7 +1,10 @@
 $(function(){
-  $("#commitRetrieve").click(checkEmail);
-  $("#back").click(back);
-  $("#commitReset").click(checkPassword);
+  if($("#commitRetrieve"))
+    $("#commitRetrieve").click(checkEmail);
+  if($("#back"))
+    $("#back").click(back);
+  if($("#commitReset"))
+    $("#commitReset").click(checkPassword);
 })
 
 function checkEmail(){
