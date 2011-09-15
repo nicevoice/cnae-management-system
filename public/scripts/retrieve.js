@@ -15,7 +15,7 @@ function checkEmail(){
 		return false;
 	}
 }
-function closePage(){
+function back(){
   window.location = "/";
 }
 function checkPassword(){
