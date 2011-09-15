@@ -46,7 +46,10 @@ function highlightSide() {
 }
 function deleteFunc(){
   if(!document.getElementById("msgDiv")) return false;
-    document.getElementById("msgDiv").removeChild(title);
+  if(!document.getElementById("msgTitle")) return false;
+    var title = document.getElementById("msgTitle");
+    var msgObj = document.getElementById("msgDiv");
+    msgObj.removeChild(title);
     document.body.removeChild(msgObj);
 }
 function sAlert(strTitle,strContent){ 
