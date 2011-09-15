@@ -107,10 +107,11 @@ exports.post = function(req, res){
                   console.log(emailToNick);
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].creatorEmail]) {
-                      data[i].nickName = emailToNick[data[i].creatorEmail];
+                      data[i].creatorNickName = emailToNick[data[i].creatorEmail];
+                      data[i].createDate = new Date(parseInt(data[i].createDate)).format("YYYY-MM-dd hh:mm:ss");
                     }
                     else{
-                      data[i].nickName = "";
+                      data[i].creatorNickName = "";
                     }
                   }
                   console.log("find nick");
