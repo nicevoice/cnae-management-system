@@ -62,7 +62,7 @@ function sAlert(strTitle,strContent){
     msgObj.style.border="1px solid " + bordercolor; 
     msgObj.style.position = "absolute"; 
     msgObj.style.left = (document.body.scrollWidth - window.innerWidth + (window.innerWidth-msgw)/2)+"px"; 
-    msgObj.style.top = (document.body.scrollHeight - window.innerHeight + (window.innerHeight-msgh)/2) + "ps"; 
+    msgObj.style.top = (document.body.scrollHeight - window.innerHeight + (window.innerHeight-msgh)/2) + "px"; 
     msgObj.style.font="14px/1.6em Verdana, Geneva, Arial, Helvetica, sans-serif"; 
     msgObj.style.marginLeft = "-225px" ; 
     msgObj.style.marginTop = -75+document.documentElement.scrollTop+"px"; 
