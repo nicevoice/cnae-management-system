@@ -46,11 +46,14 @@ function renderApp(app){
   if(app.port && app.port!=80){
     port=":"+app.port;
   }
+  if(app.appDes===""){
+    appDes = " ";
+  }
   var div = '<div class="app-info">' +
             '<p><img src="/images/arrow.gif"></img><span class="appTitle">'+
-            app.appName+'</span>&nbsp;&nbsp;<a href=">'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">' +
+            app.appName+'</span>&nbsp;&nbsp;<a href="http://'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">' +
             app.appDomain+'.cnodejs.net</a></p>' + 
-            '<p>'+app.appDes+'</p>' +
+            '<p class="app-des">'+app.appDes+'</p>' +
             '<p class="font11">'+app.creatorNickName + '创建于' + app.appCreateDate +' | 有'+app.memberNums +'个参与者</p></div>';
   return div;
 }

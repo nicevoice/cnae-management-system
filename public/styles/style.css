@@ -4,6 +4,7 @@
 @import url(manage.css);
 @import url(todo.css);
 @import url(userCenter.css);
+@import url(appSquare.css);
 .clearfix:after {
 	content: ".";
 	display: block;
