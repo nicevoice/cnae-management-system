@@ -51,7 +51,7 @@ function renderApp(app){
             app.appName +'</a></p>' + 
             '<p class="app-des">描述：'+app.appDes+'</p>' +
             '<p class="app-mem">'+app.creatorNickName + '创建于' + app.appCreateDate +' | 有'+app.memberNums +'个参与者 | '+
-            '<a href="javascript:void(0)" onclick="apply('+app.appDomain+','+app.creatorEmail+')">申请参加</a>'
+            '<a href="javascript:void(0)" onclick="apply('+app.appDomain+','+app.creatorEmail+')">申请参加</a>'+
             '</p></div>';
   return div;
 }
