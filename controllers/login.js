@@ -269,7 +269,11 @@ exports.postRetrieve = function(req, res){
     function(err, userInfo){
     if(err){
       console.log(err.toString());
-		return res.render("error", { message:"数据获取失败，请稍后再试"});      
+      if(err.toString().indexOf("No matching object found")===-1){
+		    return res.render("error", { message:"数据获取失败，请稍后再试"});
+      }else{
+		    return res.render("error", { message:"email未被注册"});      
+      }      
     }else{
       if(!userInfo){
 		    return res.render("error", { message:"email未被注册"});      

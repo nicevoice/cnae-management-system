@@ -1,7 +1,10 @@
 $(function(){
-  $("#commitRetrieve").click(checkEmail);
-  $("#back").click(back);
-  $("#commitReset").click(checkPassword);
+  if($("#commitRetrieve"))
+    $("#commitRetrieve").click(checkEmail);
+  if($("#back"))
+    $("#back").click(back);
+  if($("#commitReset"))
+    $("#commitReset").click(checkPassword);
 })
 
 function checkEmail(){
@@ -12,7 +15,7 @@ function checkEmail(){
 		return false;
 	}
 }
-function closePage(){
+function back(){
   window.location = "/";
 }
 function checkPassword(){
@@ -25,7 +28,7 @@ function checkPassword(){
 		var con = $("#changeConfirmation").val()||'';
 		if(con && password!==con){
 		sAlert("警告","两次密码必须一致");
-		}
     return false;
+		}
 	}
 }
