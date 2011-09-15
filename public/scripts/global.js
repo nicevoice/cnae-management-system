@@ -46,8 +46,8 @@ function highlightSide() {
 }
 function sAlert(strTitle,strContent){ 
     var msgw,msgh,bordercolor; 
-    msgw=300;//提示窗口的宽度 
-    msgh=125;//提示窗口的高度 
+    msgw=250;//提示窗口的宽度 
+    msgh=100;//提示窗口的高度 
     titleheight=25 //提示窗口标题高度 
     bordercolor="#336699";//提示窗口的边框颜色 
     titlecolor="#99CCFF";//提示窗口的标题颜色
@@ -64,8 +64,6 @@ function sAlert(strTitle,strContent){
     msgObj.style.left = (document.body.scrollLeft + (window.innerWidth-msgw)/2)+"px"; 
     msgObj.style.top = (document.body.scrollTop + (window.innerHeight-msgh)/2) + "px"; 
     msgObj.style.font="14px/1.6em Verdana, Geneva, Arial, Helvetica, sans-serif"; 
-    msgObj.style.marginLeft = "-225px" ; 
-    msgObj.style.marginTop = -75+document.documentElement.scrollTop+"px"; 
     msgObj.style.width = msgw + "px"; 
     msgObj.style.height =msgh + "px"; 
     msgObj.style.textAlign = "center"; 
