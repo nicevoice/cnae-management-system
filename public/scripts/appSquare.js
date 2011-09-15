@@ -54,6 +54,6 @@ function renderApp(app){
             app.appName+'</span>&nbsp;&nbsp;<a href="http://'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">' +
             app.appDomain+'.cnodejs.net</a></p>' + 
             '<p class="app-des">'+app.appDes+'</p>' +
-            '<p class="font11">'+app.creatorNickName + '创建于' + app.appCreateDate +' | 有'+app.memberNums +'个参与者</p></div>';
+            '<p class="app-mem">'+app.creatorNickName + '创建于' + app.appCreateDate +' | 有'+app.memberNums +'个参与者</p></div>';
   return div;
 }
