@@ -39,7 +39,7 @@
         <% for(var i = 0, len = otherApps.length; i < len; i++) {
         var app = otherApps[i];
         %>
-        <%if(app.active<=2){%>
+        <%if(app.active<2){%>
 	        <div class="application otherApp" id="coop-<%= app.appDomain %>">
 	          <li class="appLi">
 	        <% if(app.active===0) {%>
