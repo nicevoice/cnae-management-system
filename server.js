@@ -130,7 +130,7 @@ function checkAuth(req, res, next){
 		if(err){
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else
-		if(!data){
+		if(!data || data.active===2){  //active===2为申请者
 			return res.render("error", {message:"没有权限访问这个应用"});
 		}else{
 			next();
@@ -148,7 +148,7 @@ function checkChangeAuth(role) {
 		if(err){
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else
-		if(!data){
+		if(!data || data.active===2){
 			return res.render("error", {message:"没有权限访问这个应用"});
 		}else{
 			if(data.role>role||data.active!==1){
@@ -228,6 +228,8 @@ app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), manager
 app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manager.doCoopmng);
 //删除协作者
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
+//同意协作请求
+app.post("/application/mamage/:id/agreeCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.agreeCoop);
 //git clone代码
 app.post("/application/manage/:id/clone" , hasLogin, checkChangeAuth(2), appDevelop.gitClone);
 //git pull代码

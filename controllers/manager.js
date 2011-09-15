@@ -272,15 +272,15 @@ exports.doCoopmng = function(req, res){
  * @param {} res
  */
 exports.deleteCoop = function(req, res){
-	console.log("coop");
 	var email = req.body.email||'';
 	var domain = req.params.id||'';
+	console.log(req.session.email + " delete " + email +" in "+domain);
 	if(!email)
 		res.sendJson( {done:false});
 	else{
 		app_mem.remove({email:email, appDomain:domain}, function(err){
 			if(err){
-				log.error(err);
+				console.log(err.toString());
 				res.sendJson( {done:false});
 			}else{
 				res.sendJson( {done:true});
@@ -290,7 +290,31 @@ exports.deleteCoop = function(req, res){
 		});
 	}
 }
-
+exports.agreeCoop = function(req, res){
+  var email = req.body.email || '';
+  var domain = req.params.id || '';
+ 	console.log(req.session.email + " agree " + email +" in "+domain);
+  app_mem.update({appDomain:domain, email:email},{$set:{active:1, role:3}}, function(err){
+			if(err){
+				console.log(err.toString());
+				return res.sendJson( {done:false});
+			}else{
+        var nickName = email.split('@')[0],
+            agreeInfo = 
+       	mails.push({
+          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          to : nickName + " <"+email + ">",
+          subject: config.agreeMailTitle,
+          html: config.agreeMailContent+applyInfo,
+          debug: true
+       	});
+      	mailEvent.fire("getMail");       
+				records.save({appDomain:domain.toString(), email:req.session.email.toString(),
+		 		action:"同意"+email+"参与应用", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
+			  return res.sendJson({done:true});
+      }      
+  })
+}
 exports.doChangeRole = function(req, res){
 	var email = req.body.email||'',
 		domain = req.params.id||'',
@@ -301,7 +325,16 @@ exports.doChangeRole = function(req, res){
 			res.sendJson( {done:false});
 		}else{
 			res.sendJson( {done:true});
-		}
+      var roleName="";
+      switch(role){
+        case 0:"创建者";break;
+        case 1:"管理者";break;
+        case 2:"参与者";break;
+        case 3:"观察者";break;
+      }
+      records.save({appDomain:domain.toString(), email:req.session.email.toString(),
+		 		action:"修改"+email+"角色至"+roleName, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});		
+    }
 	})
 }
 

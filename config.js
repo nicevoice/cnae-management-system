@@ -57,6 +57,15 @@ exports.inviteMailContent = fs.readFileSync(configInfo.inviteMailContentPath, "u
 exports.retrieveMailTitle = configInfo.retrieveMailTitle;
 exports.retrieveMailContent = fs.readFileSync(configInfo.retrieveMailContentPath, "utf-8");
 exports.retrieveLink = configInfo.retrieveLink;
+//申请参与邮件模板
+exports.applyMailTitle = configInfo.applyMailTitle;
+exports.applyMailContent = fs.readFileSync(configInfo.applyMailContentPath, "utf-8");
+//同意参与邮件模板
+exports.agreeMailTitle = configInfo.agreeMailTitle;
+exports.agreeMailContent = fs.readFileSync(configInfo.agreeMailContentPath, "utf-8");
+//拒绝参与邮件模板
+exports.refuseMailTitle = configInfo.refuseMailTitle;
+exports.refuseMailContent = fs.readFileSync(configInfo.refuseMailContentPath, "utf-8");
 exports.admin = configInfo.admin;
 exports.smtp = {
     host: configInfo.smtp.host,

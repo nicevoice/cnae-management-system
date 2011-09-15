@@ -25,7 +25,14 @@ function bindCoop(){
 		$(this).change(changeRole);
 	})
 	$("td a").each(function() {
-		$(this).click(deleteCoop);
+    var action = $(this).attr("id").split("#")[2]||'';
+    if (action === "delete") {
+      $(this).click(deleteCoop);
+    }else if(action ==="agree"){
+      $(this).click(agreeCoop);
+    }else{
+      $(this).click(refuseCoop);
+    }
 	});
 }
 
@@ -81,7 +88,7 @@ function deleteCoop(){
 	if(!confirm(str))
 		return false;
 	var infos = $(this).attr("id").split("#");
-	if(infos.length!=2) {
+	if(infos.length!=3) {
 		return false;
 	}
 	$.ajax({
@@ -103,7 +110,35 @@ function deleteCoop(){
    	}
 });	
 }
-
+function agreeCoop(){
+  var infos = $(this).attr("id").split("#");
+  if (infos.length != 3) {
+    return false;
+  }
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "/application/mamage/" + infos[1] + "/agreeCoop",
+    dataType: "json",
+    data: {
+      email: infos[0]
+    },
+    error: function(){
+      sAlert("警告", "连接错误，请稍后再试！");
+    },
+    success: function(data){
+      if (data.done === false) 
+        sAlert("警告", "连接错误，请稍后再试");
+      else {
+        sAlert("", "操作成功，请修改申请者权限");
+        location.reload();
+      }
+    }
+  });
+}
+function refuseCoop(){
+  
+}
 function changeRole(){
 	var newRole = this.options[this.options.selectedIndex].value,
 		email = $(this).attr("id").slice(0, -4),

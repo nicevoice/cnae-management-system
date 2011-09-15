@@ -11,38 +11,58 @@
     			var mem = mems[i];
     		%>
     		<tr id="<%=mem.email%>Tr">
-    		<td><%=mem.email%></td><td><%= mem.active==1?"Active":"Inactive"%></td>
+    		<td><%=mem.email%></td>
     		<td>
-    		<%if(mem.role==0){%>
-    		无法删除应用创建者
-    		<%}else if(own.role===0){%>
-    		<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>">删除此参与者</a>
+    		<% 
+    		var state="";
+    		switch(mem.active){
+    			case 0: state = "inactive";break;
+    			case 1: state = "active"; break;
+    			case 2: state = "applying";break;
+    		} %>
+    		<%= state%>
+    		</td>
+    		<td>
+    		<if(mem.active<2){>
+	    		<%if(mem.role==0){%>
+	    		无法删除应用创建者
+	    		<%}else if(own.role===0){%>
+	    		<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>#delete">删除此参与者</a>
+	    		<%}else{%>
+	    		没有权限进行操作
+	    		<%}%>
     		<%}else{%>
-    		没有权限进行操作
-    		<%}%>
+    			<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>#agree">同意</a>
+    			 | 
+    			<a href="javascript:void(0);" id="<%=mem.email%>#<%=mem.appDomain%>#refuse">拒绝</a>
     		</td>
     		<td>
     		<%
-    		var role;
-    		switch(mem.role){
-    			case 0: role = "创建者";break;
-    			case 1: role = "管理者";break;
-    			case 2: role = "参与者";break;
-    			case 3: role = "观察者";break;
-    			default:role = "";
+    		var role="";
+    		if(mem.role){
+	    		switch(mem.role){
+	    			case 0: role = "创建者";break;
+	    			case 1: role = "管理者";break;
+	    			case 2: role = "参与者";break;
+	    			case 3: role = "观察者";break;
+	    		}
+    		}else{
+    			
     		}
     		%>
-    		<%if(own.role==0){%>
-    		<%if(mem.role==0){%>
-    			<%=role%>
-    		<%}else{%>
-    		<select id="<%=mem.email%>Role">
-            	<option value="1"<%if(mem.role==1){%> selected<%}%>>管理者</option>
-            	<option value="2"<%if(mem.role==2){%> selected<%}%>>参与者</option>
-            	<option value="3"<%if(mem.role==3){%> selected<%}%>>观察者</option>
-            </select>
-            <%}}else{%>
-            <%=role%>
+    		<%if(mem.role){%>
+	    		<%if(own.role==0){%>
+	    		<%if(mem.role==0){%>
+	    			<%=role%>
+	    		<%}else{%>
+	    		<select id="<%=mem.email%>Role">
+	            	<option value="1"<%if(mem.role==1){%> selected<%}%>>管理者</option>
+	            	<option value="2"<%if(mem.role==2){%> selected<%}%>>参与者</option>
+	            	<option value="3"<%if(mem.role==3){%> selected<%}%>>观察者</option>
+	            </select>
+	            <%}}else{%>
+	            <%=role%>
+	            <%}%>
             <%}%>
     		</td>
     		</tr>
