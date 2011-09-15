@@ -177,6 +177,10 @@ require('http').ServerResponse.prototype.sendJson = function(data){
 	this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
 	this.end(body);
 }
+require('http').ServerResponse.prototype.sendText = function(data){
+  this.writeHead(200, {"Content/type":"text/html","Content/length":data.length});
+  this.end(data);
+}
 //routing
 //登录模块
 app.get("/", hasLogin, main.show);
@@ -270,7 +274,7 @@ app.post("/userCenter/changePassword", hasLogin, user.doChangePassword);
 
 //应用广场
 app.get("/square", hasLogin, square.showSquare);
-
+app.get("/square/post", hasLogin, square.post);
 //反馈
 app.get("/feedBack", hasLogin, feedback.show);
 app.post("/feedBack",hasLogin, feedback.postFeed);

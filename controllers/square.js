@@ -15,7 +15,11 @@ var config = require('../config')
   , uploadDir = config.uploadDir
   , randomStringNum = require('../lib/randomString').getRandomStringNum;
   
-  exports.showSquare = function(req, res){
-    return res.render("appSquare", {layout:"layoutMain",
-        nickName:req.session.nickName, email:req.session.email});
-  }
+exports.showSquare = function(req, res){
+  return res.render("appSquare", {layout:"layoutMain",
+      nickName:req.session.nickName, email:req.session.email});
+}
+
+exports.post = function(req, res){
+  return res.sendText('<div><a>数据</a></div>');
+} 

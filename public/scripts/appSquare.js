@@ -10,9 +10,8 @@ function getMore(){
   $.ajax({
     cache:false,
     type:"get",
-    url:"/square/post?skip="+appNums+"&limit="+onceNum,
-    datatype:"text",
-    data:"",
+    url:"/square/post",
+    data:{skip:appNums, limit:onceNum},
     error:function(){
       $("#getMore").html("获取失败，请稍后再试");
     },
