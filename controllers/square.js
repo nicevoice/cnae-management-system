@@ -111,7 +111,7 @@ exports.post = function(req, res){
                     }
                   }
                   console.log("find nick");
-                  console.log(data.toString());
+                  console.log(data);
                   return res.sendJson({status:"ok", apps:data});
                 }
               })
