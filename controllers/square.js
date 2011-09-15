@@ -85,17 +85,13 @@ exports.post = function(req, res){
               data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
             }
           }
-          console.log("find mems");
-          console.log(creatorEmails);
           users.find({email:{$in:creatorEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
             if (err) {
-              console.log("not find nick");
               console.log(err.toString());
               return res.sendJson({status:"error", msg:"数据获取失败"});
             }
             else 
               if (!userInfos || userInfos.length === 0) {
-                console.log("not find nick 2");
                 return res.sendJson({status:"error", msg:"数据获取失败"});
               }
               else 
@@ -104,7 +100,6 @@ exports.post = function(req, res){
                   for (var i = 0, len = userInfos.length; i < len; ++i) {
                     emailToNick[userInfos[i].email] = userInfos[i].nickName;
                   }
-                  console.log(emailToNick);
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].creatorEmail]) {
                       data[i].creatorNickName = emailToNick[data[i].creatorEmail];
@@ -113,9 +108,7 @@ exports.post = function(req, res){
                     else{
                       data[i].creatorNickName = "";
                     }
-                  }
-                  console.log("find nick");
-                  console.log(data);
+                  
                   return res.sendJson({status:"ok", apps:data});
                 }
               })
