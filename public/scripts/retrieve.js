@@ -28,7 +28,7 @@ function checkPassword(){
 		var con = $("#changeConfirmation").val()||'';
 		if(con && password!==con){
 		sAlert("警告","两次密码必须一致");
-		}
     return false;
+		}
 	}
 }
