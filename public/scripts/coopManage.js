@@ -138,11 +138,11 @@ function agreeCoop(){
           alert(memInfo.html());
           return location.reload();
         }
-        memInfo[1].html("active");
-        memInfo[2].html('<a href="javascript:void(0);" id="' + email +
-      	"#"+data.domain+'#delete">删除此参与者</a>');
-        memInfo[3].html('<select id="'+email+'Role">'+'<option value="1">管理者</option>'+
-         '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>');
+        memInfo[1].innerHTML = "active";
+        memInfo[2].innerHTML = '<a href="javascript:void(0);" id="' + email +
+      	"#"+data.domain+'#delete">删除此参与者</a>';
+        memInfo[3].innerHTML = '<select id="'+email+'Role">'+'<option value="1">管理者</option>'+
+         '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>';
       }
     }
   });
