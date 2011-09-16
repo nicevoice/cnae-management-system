@@ -242,7 +242,6 @@ exports.showPersonalSquare = function(req, res){
 exports.personalSquare = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
   var nickName = queryString.nickName||'';
-  console.log(nickName);
   users.findOne({
     nickName: nickName
   }, function(err, owner){
@@ -262,6 +261,7 @@ exports.personalSquare = function(req, res){
       }
       else {
         var email = owner.email;
+        console.log(email);
         app_basic.find({
           email: email
         }, { //找出该用户的应用
