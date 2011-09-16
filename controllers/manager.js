@@ -352,11 +352,11 @@ exports.doChangeRole = function(req, res){
 		}else{
 			res.sendJson( {done:true});
       var roleName="";
-      switch(role){
-        case 0:"创建者";break;
-        case 1:"管理者";break;
-        case 2:"参与者";break;
-        case 3:"观察者";break;
+      switch(parseInt(role)){
+        case 0:roleName="创建者";break;
+        case 1:roleName="管理者";break;
+        case 2:roleName="参与者";break;
+        case 3:roleName="观察者";break;
       }
       records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 		 		action:"修改"+email+"角色至"+roleName, recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});		

@@ -1,7 +1,9 @@
 
 #appSquare{
   margin:50px;
-  width:600px;
+  position:relative;
+  left:100px;
+  width:700px;
   min-height:600px;
 }
 
@@ -31,6 +33,8 @@
 .app-title{
   font-size:18px;
   font-width:bold;
+}
+.app-title a{
   text-decoration:none;
 }
 .app-mem{
@@ -59,4 +63,16 @@
   border-radius: 3px;
   text-align:center;
   text-decoration:none;
+}
+.app-info-left{
+  float:left;
+  width:540px;
+  margin:0px;
+  padding:0px;
+}
+.app-info-right{
+  float:right;
+  width:140px;
+  margin:0px;
+  padding:0px;
 }
