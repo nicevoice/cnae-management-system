@@ -1,0 +1,11 @@
+<div id="appSquare">
+  <div class="square-title">
+    <h2>最新应用</h2>
+  </div>
+  <div class="square-apps" id="all-apps">
+  </div>
+  <p>
+    <a href="javascript:void(0)" id="getMore" class="blockA likeWhite">更多</a>
+  </p>
+</div>
+<script type="text/javascript" src="/scripts/appSquare.js"></script> 

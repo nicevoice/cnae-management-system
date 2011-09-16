@@ -69,12 +69,16 @@ function renderApp(app){
 }
 
 function apply(domain, name, email, nickName){
+  var reason = "";
+  if(null===(reason=prompt("申请说明：",""))){
+    return false;
+  }
   $.ajax({
     cache:false,
     type:"post",
     url:"/appSquare/apply",
     dataType:"json",
-    data:{domain:domain, name:name, email:email, nickName:nickName},
+    data:{domain:domain, name:name, email:email, nickName:nickName, reason:reason},
     error:function(){
       sAlert("警告","申请失败，请稍后再试");
     },
