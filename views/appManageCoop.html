@@ -38,18 +38,7 @@
     		<%}%>
     		</td>
     		<td>
-    		<%
-    		var role="";
-    		if(mem.role){
-	    		switch(mem.role){
-	    			case 0: role = "创建者";break;
-	    			case 1: role = "管理者";break;
-	    			case 2: role = "参与者";break;
-	    			case 3: role = "观察者";break;
-	    		}
-    		}
-    		%>
-    		<%if(mem.role){%>
+    		<%if((typeof mem.role)===number){%>
 	    		<%if(own.role==0){%>
 	    		<%if(mem.role==0){%>
 	    			<%=role%>
