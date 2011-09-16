@@ -87,8 +87,7 @@ exports.post = function(req, res){
               data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
               data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
             }
-          }
-          
+          }          
           users.find({
             email: {
               $in: creatorEmails
@@ -274,9 +273,7 @@ exports.personalSquare = function(req, res){
           else {
             console.log(mems);
             for(var i=0, len=mems.length; i<len; ++i){
-              if(mems[i].role===0){
                 ownDomain.push(mems[i].appDomain);
-              }
             }
             console.log(ownDomain);
             app_basic.find({
@@ -314,25 +311,71 @@ exports.personalSquare = function(req, res){
                     });
                   }
                   else {
-                    for (var i = 0, len = mems.length; i < len; ++i) {
-                      if (mems[i].active < 2) {
-                        domainToMems[mems[i].appDomain].memberNums++;
+                    var creatorEmails = [];
+                      for (var i = 0, len = mems.length; i < len; ++i) {
+                        if (mems[i].active < 2) {
+                          domainToMems[mems[i].appDomain].memberNums++;
+                        }
+                        if (mems[i].role === 0) {
+                          domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
+                          creatorEmails.push(mems[i].email);
+                        }
                       }
-                    }
-                    for (var i = 0, len = data.length; i < len; ++i) {
-                      data[i].creatorEmail = email || '';
-                      data[i].creatorNickName = nickName || '';
-                      if (!domainToMems[data[i].appDomain]) {
-                        data[i].memberNums = "0";
-                      }
-                      else {
-                        data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
-                      }
-                    }
-                    return res.sendJson({
-                      status: "ok",
-                      apps: data
-                    });
+                      for (var i = 0, len = data.length; i < len; ++i) {
+                        if (!domainToMems[data[i].appDomain]) {
+                          data[i].memberNums = "0";
+                          data[i].creatorEmail = "";
+                        }
+                        else {
+                          data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
+                          data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
+                        }
+                      }           
+                      users.find({
+                        email: {
+                          $in: creatorEmails
+                        }
+                      }, {
+                        email: 1,
+                        nickName: 1
+                      }).toArray(function(err, userInfos){
+                        if (err) {
+                          console.log(err.toString());
+                          return res.sendJson({
+                            status: "error",
+                            msg: "数据获取失败"
+                          });
+                        }
+                        else 
+                          if (!userInfos || userInfos.length === 0) {
+                            return res.sendJson({
+                              status: "error",
+                              msg: "数据获取失败"
+                            });
+                          }
+                          else 
+                            if (userInfos) {
+                              var emailToNick = {};
+                              for (var i = 0, len = userInfos.length; i < len; ++i) {
+                                emailToNick[userInfos[i].email] = userInfos[i].nickName;
+                              }
+                              for (var i = 0, len = data.length; i < len; i++) {
+                                if (emailToNick[data[i].creatorEmail]) {
+                                  data[i].creatorNickName = emailToNick[data[i].creatorEmail];
+                                  data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
+                                }
+                                else {
+                                  data[i].creatorNickName = "";
+                                }
+                              }
+                              console.log("find " + data.length);
+                              return res.sendJson({
+                                status: "ok",
+                                apps: data,
+                                owner:email
+                              });
+                            }
+                      })
                   }
                 })
               }
