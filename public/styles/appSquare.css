@@ -41,22 +41,13 @@
   font-size:11px;
   color:#666;
 }
-#getMore{
+.blockA{
   display: block;
   font-size: 13px;
   margin: 20px 0 0 0;
   padding: 5px 1px;
   height: 22px;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F9',endColorstr='#E6E6E8');
-  background: -webkit-gradient(linear,0 0,0 100%,from(#F8F8F9),to(#E6E6E8));
-  background: -moz-linear-gradient(top,#F8F8F9,#E6E6E8);
-  -webkit-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
-  -moz-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
-  -o-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
-  box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
-  text-shadow: 0 1px 0 white;
   border: 1px solid #BBB;
-  color: #666!important;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -o-border-radius: 3px;
@@ -64,15 +55,40 @@
   text-align:center;
   text-decoration:none;
 }
+.likeWhite{
+  color: #666!important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F8F8F9',endColorstr='#E6E6E8');
+  background: -webkit-gradient(linear,0 0,0 100%,from(#F8F8F9),to(#E6E6E8));
+  background: -moz-linear-gradient(top,#F8F8F9,#E6E6E8);
+  background-color:#F8F8F9;
+   -webkit-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
+  -moz-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
+  -o-box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
+  box-shadow: 0 1px 0 white inset,0 1px 0 rgba(0, 0, 0, .1);
+  text-shadow: 0 1px 0 white;
+}
+.likeBlue{
+  background: #0D72D2;
+background: -webkit-gradient(linear,left top,left bottom,from(#0D72D2),to(#0A5EC2));
+background: -moz-linear-gradient(center top,#0D72D2,#0A5EC2);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0D72D2',endColorstr='#0A5EC2');
+-moz-box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
+-webkit-box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
+-o-box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
+box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
+color: white!important;
+text-shadow: -1px -1px 0px #204877;
+border: 1px solid #054388;
+}
 .app-info-left{
   float:left;
   width:540px;
   margin:0px;
   padding:0px;
 }
-.app-info-left{
+.app-info-right{
   float:right;
-  width:140px;
+  width:100px;
   margin:0px;
   padding:0px;
 }
