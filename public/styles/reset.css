@@ -28,7 +28,7 @@ h2 { font-size:20px; }
 h3 { font-size:18px; }
 h4 { font-size:18px; }
 h5 { font-size:14px; }
-h1, h2, h3, h4, h5 { font-weight:normal; }
+h1, h2, h3, h4, h5 { font-weight:bold; }
 
 address, cite, dfn, em, var { font-style: normal; } /* 将斜体扶正 */
 small { font-size: 11px; } /* 小于 12px 的中文很难阅读，让 small 正常化 */
