@@ -111,7 +111,8 @@ function deleteCoop(){
 });	
 }
 function agreeCoop(){
-  var infos = $(this).attr("id").split("#");
+  var action = $(this);
+  var infos = action.attr("id").split("#");
   if (infos.length != 3) {
     return false;
   }
@@ -132,15 +133,14 @@ function agreeCoop(){
       else {
         sAlert("", "操作成功，请修改申请者权限");
         //location.reload();
-        var memInfo = $(this).parent().parent().children();
-        alert($(this).html());
+        var memInfo = action.parent().parent().children();
         if(memInfo.length!==4){
-          alert(memInfo.length);
+          alert(memInfo.html());
           return location.reload();
         }
         memInfo[1].html("active");
         memInfo[2].html('<a href="javascript:void(0);" id="' + email +
-      	"#"+data.domain+'">删除此参与者</a>');
+      	"#"+data.domain+'#delete">删除此参与者</a>');
         memInfo[3].html('<select id="'+email+'Role">'+'<option value="1">管理者</option>'+
          '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>');
       }
