@@ -24,7 +24,7 @@ function getApps(){
     },
     success:function(data){
       if (data.status === "ok") {
-        render(data.apps);
+        render(data.apps, data.owner);
       }
       else{
         $("#square-apps").html(data.msg);        
@@ -32,12 +32,18 @@ function getApps(){
     }
   });
 }
-function render(data){
-  var html="";
-  for(var i=0, len=data.length; i<len; ++i){
-    html += renderApp(data[i]);
+function render(data, owner){
+  var ownHtml="", otherHtml="";
+  for (var i = 0, len = data.length; i < len; ++i) {
+    if (owner === data[i].creatorEmail){ 
+      ownhtml += renderApp(data[i]);
+  }else{
+      otherHtml += renderApp(data[i]);
+    }
   }
-  $("#square-apps").html($("#square-apps").html()+html);
+  $("#own-apps").html($("#own-apps").html()+html);
+  $("#other-apps").html($("#other-apps").html()+html);
+  
   bindDiv();
 }
 
