@@ -316,6 +316,31 @@ exports.agreeCoop = function(req, res){
       }      
   })
 }
+exports.refuseCoop = function(req, res){
+  var email = req.body.email || '';
+  var domain = req.params.id || '';
+  var reason = req.body.reason || '';
+ 	console.log(req.session.email + " refuse " + email +" in "+domain);
+  app_mem.remove({appDomain:domain, email:email}, function(err){
+			if(err){
+				console.log(err.toString());
+				return res.sendJson( {done:false});
+			}else{
+        var nickName = email.split('@')[0],
+            refuseReason = req.session.nickName + '( '+req.session.email+' )拒绝了您对项目"'+
+            domain+'"的参与申请。<br />拒绝原因：'+reason;
+       	mails.push({
+          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          to : nickName + " <"+email + ">",
+          subject: config.refuseMailTitle,
+          html: config.refuseMailContent+refuseReason,
+          debug: true
+       	});
+      	mailEvent.fire("getMail");       
+			  return res.sendJson({done:true});
+      }      
+  })  
+}
 exports.doChangeRole = function(req, res){
 	var email = req.body.email||'',
 		domain = req.params.id||'',

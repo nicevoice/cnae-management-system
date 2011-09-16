@@ -230,6 +230,8 @@ app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), manage
 app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.deleteCoop);
 //同意协作请求
 app.post("/application/mamage/:id/agreeCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.agreeCoop);
+//拒绝协作请求
+app.post("/application/mamage/:id/refuseCoop", hasLogin, checkAuth,checkChangeAuth(0), manager.refuseCoop);
 //git clone代码
 app.post("/application/manage/:id/clone" , hasLogin, checkChangeAuth(2), appDevelop.gitClone);
 //git pull代码
