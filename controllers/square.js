@@ -234,7 +234,7 @@ exports.apply = function(req, res){
   })
 }
 exports.showPersonalSquare = function(req, res){
-  var nickName = req.url.slice(lastIndexOf("/")+1)||'';
+  var nickName = req.url.slice(req.url.lastIndexOf("/")+1)||'';
   console.log(req.session.email + " viewing " + nickName + "'s apps");
   return res.render("personalSquare.html", {layout:"layoutMain", email:req.session.email, 
   nickName:req.session.nickName, ownerNickName:nickName});
