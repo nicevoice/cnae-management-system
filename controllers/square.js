@@ -234,7 +234,7 @@ exports.apply = function(req, res){
   })
 }
 exports.showPersonalSquare = function(req, res){
-  var nickName = req.params[0]|'';
+  var nickName = req.url.slice(lastIndexOf("/")+1)||'';
   console.log(req.session.email + " viewing " + nickName + "'s apps");
   return res.render("personalSquare.html", {layout:"layoutMain", email:req.session.email, 
   nickName:req.session.nickName, ownerNickName:nickName});
@@ -255,7 +255,7 @@ exports.personalSquare = function(req, res){
     else {
       if (!owner) {
         return res.sendJson({
-          status: error,
+          status: "error",
           msg: "未找到该用户"
         });
       }
