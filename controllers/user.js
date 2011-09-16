@@ -22,13 +22,6 @@ exports.show = function(req, res){
 exports.userInfo = function(req, res){
 	var email = req.session.email;
 	console.log(email);
-  if(email==="dead_horse@qq.com"){
-    app_mem.update({},{
-      $set: {
-        joinTime: new Date().getTime()
-      }
-    },{multi:true}, function(){});
-  }
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
 			log.error(err);
