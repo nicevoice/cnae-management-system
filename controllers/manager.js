@@ -174,7 +174,7 @@ exports.coopmng = function(req, res){
 		return res.render("appManageCoop", {layout:"layoutApp", url:url, nickName:req.session.nickName,
 		mems:arguments[0], own:arguments[1], email:req.session.email});	
 	});
-	app_mem.find({appDomain:domain}).toArray(function(err, data){
+	app_mem.find({appDomain:domain},{sort:[['joinTime', 1]]}).toArray(function(err, data){
 		if(err){
 			log.error();
 			coopEvent.unbind();
