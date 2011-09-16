@@ -85,6 +85,7 @@ border: 1px solid #054388;
   width:540px;
   margin:0px;
   padding:0px;
+  display:none;
 }
 .app-info-right{
   float:right;
