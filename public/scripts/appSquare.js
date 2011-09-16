@@ -46,7 +46,7 @@ function renderApp(app){
   if(app.port && app.port!=80){
     port=":"+app.port;
   }
-  var div = '<div class="app-info clear-fix"><div class="app-info-left">' +
+  var div = '<div class="app-info clearfix"><div class="app-info-left">' +
             '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">'+
             app.appName +'</a></p>' + 
             '<p class="app-des">描述：'+app.appDes+'</p>' +
