@@ -273,7 +273,9 @@ exports.personalSquare = function(req, res){
           else {
             console.log(mems);
             for(var i=0, len=mems.length; i<len; ++i){
-                ownDomain.push(mems[i].appDomain);
+                if (mems[i].active < 2) {
+                  ownDomain.push(mems[i].appDomain);
+                }
             }
             console.log(ownDomain);
             app_basic.find({
