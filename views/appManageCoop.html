@@ -41,7 +41,7 @@
     		<%if((typeof mem.role)==="number"){%>
 	    		<%if(own.role==0){%>
 	    		<%if(mem.role==0){%>
-	    			<%=role%>
+	    			创建者
 	    		<%}else{%>
 	    		<select id="<%=mem.email%>Role">
 	            	<option value="1"<%if(mem.role==1){%> selected<%}%>>管理者</option>
