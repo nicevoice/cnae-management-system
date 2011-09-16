@@ -280,7 +280,7 @@ exports.personalSquare = function(req, res){
             }
             console.log(ownDomain);
             app_basic.find({
-              appDmain:{$in:ownDomain}
+              appDomain:{$in:ownDomain}
             }, { //找出该用户的应用
               sort: [['appCreateDate', -1]]
             }).toArray(function(err, data){
