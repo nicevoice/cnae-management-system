@@ -1,7 +1,16 @@
 $(function(){
   getApps();
 })
-
+function bindDiv(){
+    $("div .app-info").each(function(index){
+		$(this).mouseenter(function() {
+			$('.app-info-right:eq(' + index + ')').css("display", "block");
+			});
+			$(this).mouseleave(function() {
+			$('.app-info-right:eq(' + index + ')').css("display", "none");
+			});
+  });
+}
 function getApps(){
   var nickName = $("#ownerNickName").html()||'';
   $.ajax({
@@ -29,6 +38,7 @@ function render(data){
     html += renderApp(data[i]);
   }
   $("#square-apps").html($("#square-apps").html()+html);
+  bindDiv();
 }
 
 function renderApp(app){

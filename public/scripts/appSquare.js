@@ -43,7 +43,7 @@ function render(data){
   for(var i=0, len=data.length; i<len; ++i){
     html += renderApp(data[i]);
   }
-  $("#square-apps").html($("#square-apps").html()+html);
+  $("#all-apps").html($("#all-apps").html()+html);
   bindDiv();
 }
 
