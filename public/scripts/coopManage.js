@@ -140,7 +140,7 @@ function agreeCoop(){
         memInfo[1].innerHTML = "active";
         memInfo[2].innerHTML = '<a href="javascript:void(0);" id="' + infos[0] +
       	"#"+infos[1]+'#delete">删除此参与者</a>';
-        memInfo[3].innerHTML = '<select id="'+infos[1]+'Role">'+'<option value="1">管理者</option>'+
+        memInfo[3].innerHTML = '<select id="'+infos[0]+'Role">'+'<option value="1">管理者</option>'+
          '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>';
         bindCoop();
       }
