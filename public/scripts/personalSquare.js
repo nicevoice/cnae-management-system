@@ -36,14 +36,19 @@ function render(data, owner){
   var ownHtml="", otherHtml="";
   for (var i = 0, len = data.length; i < len; ++i) {
     if (owner === data[i].creatorEmail){ 
-      ownhtml += renderApp(data[i]);
+      ownHtml += renderApp(data[i]);
   }else{
       otherHtml += renderApp(data[i]);
     }
   }
   $("#own-apps").html($("#own-apps").html()+html);
   $("#other-apps").html($("#other-apps").html()+html);
-  
+  if($("#own-apps").html()===""){
+    $("#own-apps").html('<div>没有创建任何应用</div>');
+  }
+  if($("#other-apps").html()===""){
+    $("#other-apps").html('<div>没有创建任何应用</div>');
+  }
   bindDiv();
 }
 
