@@ -276,7 +276,7 @@ app.post("/userCenter/changePassword", hasLogin, user.doChangePassword);
 app.get("/square", hasLogin, square.showSquare);
 app.get("/square/post", hasLogin, square.post);
 app.post("/appSquare/apply", hasLogin, square.apply);
-app.get("/square/\/^([a-zA-Z0-9._\-]){2,20}$\/", hasLogin, square.showPersonalSquare);
+app.get(/^\/square\/([a-zA-Z0-9._\-]){2,20}$/, hasLogin, square.showPersonalSquare);
 app.get("/square/post/personal", hasLogin, square.personalSquare);
 //反馈
 app.get("/feedBack", hasLogin, feedback.show);
