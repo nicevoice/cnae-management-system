@@ -76,8 +76,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0D72D2',endCo
 -webkit-box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
 -o-box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
 box-shadow: 0 1px 0 #4793DA inset,0 1px 0 #0D4E86;
-color: white;
+color: white!important;
 text-shadow: -1px -1px 0px #204877;
+border: 1px solid #054388;
 }
 .app-info-left{
   float:left;
@@ -87,7 +88,7 @@ text-shadow: -1px -1px 0px #204877;
 }
 .app-info-right{
   float:right;
-  width:140px;
+  width:100px;
   margin:0px;
   padding:0px;
 }
