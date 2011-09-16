@@ -152,7 +152,8 @@ exports.apply = function(req, res){
     app_mem.save({
       appDomain: domain,
       email: req.session.email,
-      active: 2
+      active: 2,
+      joinTime:new Date().getTime()
     }, function(err){
       if (err) {
         console.log(err.toString());
