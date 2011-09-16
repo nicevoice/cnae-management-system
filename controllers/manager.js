@@ -145,7 +145,7 @@ exports.doAppmng = function(req, res){
 			}else
 				updateInfoEvent.fire("updatedBasic", true);
 		});
-		app_mem.update({appDomain:domain.toString()}, {$set:{appName:newAppName.toString()}},
+		app_mem.update({appDomain:domain.toString()}, {$set:{appName:newAppName.toString()}},{multi:true},
 		function(err){
 			if(err){
 				log.error(err);
