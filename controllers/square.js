@@ -241,7 +241,7 @@ exports.showPersonalSquare = function(req, res){
 }
 exports.personalSquare = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
-  var nickName = queryString.nickName||'';
+  var nickName = queryString.nickName || '';
   users.findOne({
     nickName: nickName
   }, function(err, owner){
@@ -260,36 +260,31 @@ exports.personalSquare = function(req, res){
         });
       }
       else {
-        var email = owner.email;
-        console.log(email);
-        app_basic.find({
+        var email = owner.email, ownDomain=[];
+        app_mem.find({
           email: email
-        }, { //找出该用户的应用
-          sort: [['appCreateDate', -1]]
-        }).toArray(function(err, data){
+        }).toArray(function(err ,mems){
           if (err) {
-            console.log("not find apps");
             console.log(err.toString());
             return res.sendJson({
               status: "error",
-              msg: "数据获取失败"
+              msg: "获取数据失败"
             });
           }
           else {
-            console.log(data);
-            var domainToMems = {}, domains = []; //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
-            for (var i = 0, len = data.length; i < len; ++i) {
-              domains[i] = data[i].appDomain;
-              domainToMems[domains[i]] = {};
-              domainToMems[domains[i]].memberNums = 0;
-            }
-            app_mem.find({ //查找这他的应用的参与者
-              appDomain: {
-                $in: domains
+            for(var i=0, len=mems.length; i<len; ++i){
+              if(mems[i].role===0){
+                ownDomain.push(mems.appDomain);
               }
-            }).toArray(function(err, mems){
+            }
+            console.log(ownDomain);
+            app_basic.find({
+              appDmain:{$in:ownDomain}
+            }, { //找出该用户的应用
+              sort: [['appCreateDate', -1]]
+            }).toArray(function(err, data){
               if (err) {
-                console.log("not find mems");
+                console.log("not find apps");
                 console.log(err.toString());
                 return res.sendJson({
                   status: "error",
@@ -297,22 +292,48 @@ exports.personalSquare = function(req, res){
                 });
               }
               else {
-                for (var i = 0, len = mems.length; i < len; ++i) {
-                  if (mems[i].active < 2) {
-                    domainToMems[mems[i].appDomain].memberNums++;
-                  }
-                }
+                console.log(data);
+                var domainToMems = {}, domains = []; //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
                 for (var i = 0, len = data.length; i < len; ++i) {
-                  data[i].creatorEmail = email||'';
-                  data[i].creatorNickName = nickName||'';
-                  if (!domainToMems[data[i].appDomain]) {
-                    data[i].memberNums = "0";
+                  domains[i] = data[i].appDomain;
+                  domainToMems[domains[i]] = {};
+                  domainToMems[domains[i]].memberNums = 0;
+                }
+                app_mem.find({ //查找这他的应用的参与者
+                  appDomain: {
+                    $in: domains
+                  }
+                }).toArray(function(err, mems){
+                  if (err) {
+                    console.log("not find mems");
+                    console.log(err.toString());
+                    return res.sendJson({
+                      status: "error",
+                      msg: "数据获取失败"
+                    });
                   }
                   else {
-                    data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
+                    for (var i = 0, len = mems.length; i < len; ++i) {
+                      if (mems[i].active < 2) {
+                        domainToMems[mems[i].appDomain].memberNums++;
+                      }
+                    }
+                    for (var i = 0, len = data.length; i < len; ++i) {
+                      data[i].creatorEmail = email || '';
+                      data[i].creatorNickName = nickName || '';
+                      if (!domainToMems[data[i].appDomain]) {
+                        data[i].memberNums = "0";
+                      }
+                      else {
+                        data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
+                      }
+                    }
+                    return res.sendJson({
+                      status: "ok",
+                      apps: data
+                    });
                   }
-                }
-                return res.sendJson({status:"ok", apps:data});
+                })
               }
             })
           }
