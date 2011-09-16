@@ -4,6 +4,16 @@ $(function(){
   getMore();
   $("#getMore").click(getMore);
 })
+function bindDiv(){
+    $("div .app-info").each(function(index){
+		$(this).mouseenter(function() {
+			$('.app-info-left:eq(' + index + ')').css("display", "block");
+			});
+			$(this).mouseleave(function() {
+			$('.app-info-left:eq(' + index + ')').css("display", "none");
+			});
+  });
+}
 
 function getMore(){
   $("#getMore").html("加载中...");
@@ -34,6 +44,7 @@ function render(data){
     html += renderApp(data[i]);
   }
   $("#square-apps").html($("#square-apps").html()+html);
+  bindDiv();
 }
 
 function renderApp(app){
