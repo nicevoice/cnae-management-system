@@ -41,8 +41,8 @@ function render(data, owner){
       otherHtml += renderApp(data[i]);
     }
   }
-  $("#own-apps").html($("#own-apps").html()+html);
-  $("#other-apps").html($("#other-apps").html()+html);
+  $("#own-apps").html($("#own-apps").html()+ownHtml);
+  $("#other-apps").html($("#other-apps").html()+otherHtml);
   if($("#own-apps").html()===""){
     $("#own-apps").html('<div>没有创建任何应用</div>');
   }
