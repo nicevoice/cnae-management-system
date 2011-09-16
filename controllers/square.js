@@ -271,7 +271,6 @@ exports.personalSquare = function(req, res){
             });
           }
           else {
-            console.log(mems);
             for(var i=0, len=mems.length; i<len; ++i){
                 if (mems[i].active < 2) {
                   ownDomain.push(mems[i].appDomain);
