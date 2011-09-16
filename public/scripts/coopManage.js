@@ -75,7 +75,6 @@ function submitInvite(){
         if(data.role==3) html += " selected";
         html+='>观察者</option></select></td></tr>';
       	$("#allCoops").html($("#allCoops").html()+html);
-      	$("#allCoops a:last").click(deleteCoop);
       	bindCoop();
       	}
    	}
@@ -139,10 +138,11 @@ function agreeCoop(){
           return location.reload();
         }
         memInfo[1].innerHTML = "active";
-        memInfo[2].innerHTML = '<a href="javascript:void(0);" id="' + email +
-      	"#"+data.domain+'#delete">删除此参与者</a>';
-        memInfo[3].innerHTML = '<select id="'+email+'Role">'+'<option value="1">管理者</option>'+
+        memInfo[2].innerHTML = '<a href="javascript:void(0);" id="' + infos[0] +
+      	"#"+infos[1]+'#delete">删除此参与者</a>';
+        memInfo[3].innerHTML = '<select id="'+infos[1]+'Role">'+'<option value="1">管理者</option>'+
          '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>';
+        bind();
       }
     }
   });
