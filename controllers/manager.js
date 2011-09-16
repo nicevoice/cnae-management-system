@@ -352,7 +352,7 @@ exports.doChangeRole = function(req, res){
 		}else{
 			res.sendJson( {done:true});
       var roleName="";
-      switch(role){
+      switch(parseInt(role)){
         case 0:"创建者";break;
         case 1:"管理者";break;
         case 2:"参与者";break;
