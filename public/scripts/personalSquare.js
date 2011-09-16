@@ -1,29 +1,24 @@
-var appNums = 0,
-    onceNum = 20;
 $(function(){
-  getMore();
-  $("#getMore").click(getMore);
+  getApps();
 })
 
-function getMore(){
-  $("#getMore").html("加载中...");
+function getApps(){
+  var nickName = $("#ownerNickName").html()||'';
   $.ajax({
     cache:false,
     type:"get",
-    url:"/square/post",
-    data:{skip:appNums, limit:onceNum},
+    url:"/square/post/personal",
+    data:{nickName:nickName},
     dataType:"json",
     error:function(){
-      $("#getMore").html("获取失败，请稍后再试");
+      $("#square-apps").html("获取失败，请稍后再试...");
     },
     success:function(data){
       if (data.status === "ok") {
         render(data.apps);
-        $("#getMore").html("更多");
-        appNums += onceNum;
       }
       else{
-        $("#getMore").html(data.msg);        
+        $("#square-apps").html(data.msg);        
       }
     }
   });
