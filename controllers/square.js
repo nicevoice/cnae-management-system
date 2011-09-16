@@ -275,7 +275,7 @@ exports.personalSquare = function(req, res){
             console.log(mems);
             for(var i=0, len=mems.length; i<len; ++i){
               if(mems[i].role===0){
-                ownDomain.push(mems.appDomain);
+                ownDomain.push(mems[i].appDomain);
               }
             }
             console.log(ownDomain);
