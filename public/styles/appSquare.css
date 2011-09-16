@@ -64,3 +64,15 @@
   text-align:center;
   text-decoration:none;
 }
+.app-info-left{
+  float:left;
+  width:540px;
+  margin:0px;
+  padding:0px;
+}
+.app-info-left{
+  float:right;
+  width:140px;
+  margin:0px;
+  padding:0px;
+}
