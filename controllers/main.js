@@ -126,7 +126,7 @@ var config = require('../config')
  				}
  			});
  			app_mem.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
- 			email:req.session.email.toString(), role:0, active:1}, function(err){
+ 			email:req.session.email.toString(), role:0, active:1,joinTime:new Date().getTime()}, function(err){
  				if(err){
  					log.error(err);
  					createAppEvent.unbind();

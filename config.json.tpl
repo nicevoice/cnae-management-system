@@ -28,6 +28,12 @@
   "retrieveMailTitle":"",
   "retrieveMailContentPath":"",
   "retrieveLink":"",
+  "applyMailTitle":"",
+  "applyMailContentPath":"",
+  "agreeMailTitle":"",
+  "agreeMailContentPath":"",
+  "refuseMailTitle":"",
+  "refuseMailContentPath":"",
   "admin":"",
   "smtp":{
     "host": "",

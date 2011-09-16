@@ -25,7 +25,14 @@ function bindCoop(){
 		$(this).change(changeRole);
 	})
 	$("td a").each(function() {
-		$(this).click(deleteCoop);
+    var action = $(this).attr("id").split("#")[2]||'';
+    if (action === "delete") {
+      $(this).click(deleteCoop);
+    }else if(action ==="agree"){
+      $(this).click(agreeCoop);
+    }else{
+      $(this).click(refuseCoop);
+    }
 	});
 }
 
@@ -58,7 +65,7 @@ function submitInvite(){
 	    var role = data.role;
       	var html = '<tr id="'+email+'Tr"><td>'+email+'</td><td>inactive</td><td>'+
       	'<a href="javascript:void(0);" id="' + email +
-      	"#"+data.domain+'">删除此参与者</a></td><td>'+
+      	"#"+data.domain+'#delete">删除此参与者</a></td><td>'+
       	'<select id="'+email+'Role">'+
         '<option value="1"';
         if(data.role==1) html += " selected";
@@ -68,7 +75,6 @@ function submitInvite(){
         if(data.role==3) html += " selected";
         html+='>观察者</option></select></td></tr>';
       	$("#allCoops").html($("#allCoops").html()+html);
-      	$("#allCoops a:last").click(deleteCoop);
       	bindCoop();
       	}
    	}
@@ -81,7 +87,7 @@ function deleteCoop(){
 	if(!confirm(str))
 		return false;
 	var infos = $(this).attr("id").split("#");
-	if(infos.length!=2) {
+	if(infos.length!=3) {
 		return false;
 	}
 	$.ajax({
@@ -97,13 +103,82 @@ function deleteCoop(){
       if(data.done===false)
         sAlert("警告","连接错误，请稍后再试");
       else{
-      	  var deleteNode = document.getElementById(infos[0]+"Tr");
+      	var deleteNode = document.getElementById(infos[0]+"Tr");
 	      deleteNode.parentNode.removeChild(deleteNode);
       }
    	}
 });	
 }
-
+function agreeCoop(){
+  var action = $(this);
+  var infos = action.attr("id").split("#");
+  if (infos.length != 3) {
+    return false;
+  }
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "/application/mamage/" + infos[1] + "/agreeCoop",
+    dataType: "json",
+    data: {
+      email: infos[0]
+    },
+    error: function(){
+      sAlert("警告", "连接错误，请稍后再试！");
+    },
+    success: function(data){
+      if (data.done === false) 
+        sAlert("警告", "连接错误，请稍后再试");
+      else {
+        sAlert("", "操作成功，请修改申请者权限");
+        //location.reload();
+        var memInfo = action.parent().parent().children();
+        if(memInfo.length!==4){
+          alert(memInfo.html());
+          return location.reload();
+        }
+        memInfo[1].innerHTML = "active";
+        memInfo[2].innerHTML = '<a href="javascript:void(0);" id="' + infos[0] +
+      	"#"+infos[1]+'#delete">删除此参与者</a>';
+        memInfo[3].innerHTML = '<select id="'+infos[0]+'Role">'+'<option value="1">管理者</option>'+
+         '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>';
+        bindCoop();
+      }
+    }
+  });
+}
+function refuseCoop(){
+  var reason = "";
+  if(null===(reason=prompt("拒绝原因：",""))){
+    return false;
+  }
+  var action = $(this);
+  var infos = action.attr("id").split("#");
+  if (infos.length != 3) {
+    return false;
+  }
+  $.ajax({
+    cache: false,
+    type: "POST",
+    url: "/application/mamage/" + infos[1] + "/refuseCoop",
+    dataType: "json",
+    data: {
+      email: infos[0],
+      reason:reason
+    },
+    error: function(){
+      sAlert("警告", "连接错误，请稍后再试！");
+    },
+    success: function(data){
+      if (data.done === false) 
+        sAlert("警告", "连接错误，请稍后再试");
+      else {
+      	var deleteNode = document.getElementById(infos[0]+"Tr");
+	      deleteNode.parentNode.removeChild(deleteNode);
+      }
+    }
+  });  
+}
 function changeRole(){
 	var newRole = this.options[this.options.selectedIndex].value,
 		email = $(this).attr("id").slice(0, -4),
