@@ -30,7 +30,7 @@ function delApp(domain){
 	      var deleteDiv = document.getElementById(domain+"-div");
 	      deleteDiv.parentNode.removeChild(deleteDiv);
 	      var appNums = 0;
-		  $('div .ownApp').each(function(index) {
+		  $('div .application').each(function(index) {
 		  		appNums++;
 				$(this).unbind("mouseenter").unbind("mouseleave");
 				$(this).mouseenter(function() {
