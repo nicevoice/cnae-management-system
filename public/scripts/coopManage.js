@@ -149,7 +149,7 @@ function agreeCoop(){
 }
 function refuseCoop(){
   var reason = "";
-  if(!(reason=prompt("拒绝原因：",""))){
+  if(null===(reason=prompt("拒绝原因：",""))){
     return false;
   }
   var action = $(this);
