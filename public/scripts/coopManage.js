@@ -131,7 +131,16 @@ function agreeCoop(){
         sAlert("警告", "连接错误，请稍后再试");
       else {
         sAlert("", "操作成功，请修改申请者权限");
-        location.reload();
+        //location.reload();
+        var memInfo = $(this).parent().parent().children();
+        if(memInfo.length!==4){
+          return location.reload();
+        }
+        memInfo[1].html("active");
+        memInfo[2].html('<a href="javascript:void(0);" id="' + email +
+      	"#"+data.domain+'">删除此参与者</a>');
+        memInfo[3].html('<select id="'+email+'Role">'+'<option value="1">管理者</option>'+
+         '<option value="2">参与者</option>'+'<option value="3" selected>观察者</option></select>');
       }
     }
   });
