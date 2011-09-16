@@ -133,6 +133,7 @@ function agreeCoop(){
         sAlert("", "操作成功，请修改申请者权限");
         //location.reload();
         var memInfo = $(this).parent().parent().children();
+        alert($(this).parent().html());
         if(memInfo.length!==4){
           alert(memInfo.length);
           return location.reload();
