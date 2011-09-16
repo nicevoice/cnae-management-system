@@ -249,7 +249,7 @@ exports.doCoopmng = function(req, res){
 	 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
 	 		}else if(name){
 			 	app_mem.save({appDomain:domain.toString(), appName:name.appName.toString(),
-			 	email:email.toString(), role:parseInt(role), active:0}, function(err){
+			 	email:email.toString(), role:parseInt(role), active:0,joinTime:new Date().getTime()}, function(err){
 			 		if(err){
 			 			log.error(err);
 			 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
