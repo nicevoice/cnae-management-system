@@ -65,7 +65,7 @@ function submitInvite(){
 	    var role = data.role;
       	var html = '<tr id="'+email+'Tr"><td>'+email+'</td><td>inactive</td><td>'+
       	'<a href="javascript:void(0);" id="' + email +
-      	"#"+data.domain+'">删除此参与者</a></td><td>'+
+      	"#"+data.domain+'#delete">删除此参与者</a></td><td>'+
       	'<select id="'+email+'Role">'+
         '<option value="1"';
         if(data.role==1) html += " selected";
@@ -134,6 +134,7 @@ function agreeCoop(){
         //location.reload();
         var memInfo = $(this).parent().parent().children();
         if(memInfo.length!==4){
+          alert(memInfo.length);
           return location.reload();
         }
         memInfo[1].html("active");
