@@ -300,12 +300,13 @@ exports.agreeCoop = function(req, res){
 				return res.sendJson( {done:false});
 			}else{
         var nickName = email.split('@')[0],
-            agreeInfo = 
+            agreeInfo = req.session.nickName + '( '+req.session.email+' )同意了您对项目"'+
+            domain+'"的参与申请。';
        	mails.push({
           sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
           subject: config.agreeMailTitle,
-          html: config.agreeMailContent+applyInfo,
+          html: config.agreeMailContent+agreeInfo,
           debug: true
        	});
       	mailEvent.fire("getMail");       
