@@ -49,23 +49,20 @@ exports.checkLogin = function(req, res){
 	if(!regPassword.exec(password))
 		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
-  console.log(password.toString()+config.md5_secret);
-  console.log("email:"+userEmail.toString()+",password:"+md5(password.toString()+config.md5_secret));
 	users.findOne({email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
-			console.log(err);
-			return res.render("login", { warn:"用户名或密码错误"});
+			console.log(err.toString());
+			return res.render("login", { warn:"数据获取失败"});
 		}
 		else{
 			if (!item) {
         console.log("验证失败");
-        console.log(userEmail.toString());
-        console.log(md5(password.toString()+config.md5_secret));
         return res.render("login", {
           warn: "用户名或密码错误"
         });
       }
       else {
+        console.log(userEmail+" login");
         req.session.email = userEmail;
         req.session.nickName = item.nickName;
         if (autoLogin) {
