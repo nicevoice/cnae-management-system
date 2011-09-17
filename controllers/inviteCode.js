@@ -1,7 +1,7 @@
 var config = require('../config')
   , log = config.logWithFile
-  , db = config.db
-  , inviteCode = db.collection(config.db_inviteCode)
+  , model = require('../models/index')
+  , inviteCode = model.inviteCode
   , sendMail = require('../lib/sendMail')
   , mails = sendMail.mails
   , mailEvent =sendMail.mailEvent
