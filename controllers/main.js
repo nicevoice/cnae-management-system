@@ -1,11 +1,11 @@
 var config = require('../config')
   , log = config.logWithFile
-  , db = config.db
-  , app_mem = db.collection(config.db_app_mem)
-  , app_basic = db.collection(config.db_app_basic)
-  , users = db.collection(config.db_user)
-  , records = db.collection(config.db_app_records)
-  , app_todo = db.collection(config.db_app_todo)
+  , model = require('../models/index')
+  , users = model.users
+  , app_mem = model.app_mem
+  , app_basic = model.app_basic
+  , app_todo = model.app_todo
+  , records = model.records
   , urlMoudle = require('url')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')

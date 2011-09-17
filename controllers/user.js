@@ -3,9 +3,10 @@ log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
 randomStringNum = require("../lib/randomString").getRandomStringNum,
 md5 = require('../lib/md5').hex_md5,
-app_basic = config.db.collection(config.db_app_basic),
-app_mem = config.db.collection(config.db_app_mem),
-users = config.db.collection(config.db_user);
+model = require('../models/index'),
+users = model.users,
+app_mem = model.app_mem,
+app_basic = model.app_basic;
 /***
  * 跳转到显示用户信息页面
  * @param {} req

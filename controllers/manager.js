@@ -8,12 +8,12 @@ var config = require('../config')
   , getLog = require('../lib/socket').getLog
   , randomString = require('../lib/randomString')
   , child
-  , db = config.db
+  , model = require('../models/index')
   , log = config.logWithFile
-  , users = db.collection(config.db_user)
-  , app_mem = db.collection(config.db_app_mem)
-  , app_basic = db.collection(config.db_app_basic)
-  , records = db.collection(config.db_app_records)
+  , users = model.users
+  , app_mem = model.app_mem
+  , app_basic = model.app_basic
+  , records = model.records
   , EventProxy = require('EventProxy.js').EventProxy  
   , nodemailer = config.nodemailer
   , mailContent = config.mailContent

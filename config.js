@@ -20,7 +20,6 @@ exports.email = configInfo.email;
 exports.site_name = configInfo.site_name;
 
 exports.db_url = configInfo.dbUserName+":"+configInfo.dbPassword+"@127.0.0.1:27017/"+configInfo.dbName;
-exports.db = mongo.db(this.db_url);
 /***
  * 用户信息：email,nickName,password,realName,telNumber,mainPage
  * */

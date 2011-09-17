@@ -21,10 +21,10 @@ var express = require('express'),
 	form = require('connect-form'),
 	RedisStore = require('connect-redis')(express),
 	inviteCode = require('./controllers/inviteCode'),
-	db = config.db,
+	model = require('./models/index'),
 	log = config.logWithFile,
-	users = config.db.collection(config.db_user),
-	app_mem = config.db.collection(config.db_app_mem),
+	users = model.users,
+	app_mem = model.app_mem,
 	admins = config.admins;	
 	
 //创建httpServer
@@ -308,7 +308,7 @@ app.listen(config.port);
 console.log("server start http://localhost:" + config.port);
 
 startDel();
-
+model.ensureIndexes();
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
 process.on('SIGINT', function () {
