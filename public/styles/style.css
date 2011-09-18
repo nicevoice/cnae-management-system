@@ -2,7 +2,7 @@
 @import url(application.css);
 @import url(login.css);
 @import url(newApp.css);
-@import url(manage.css);
+@import url(manage.css?v=1.0.1);
 @import url(todo.css);
 @import url(userCenter.css);
 .clearfix:after {
