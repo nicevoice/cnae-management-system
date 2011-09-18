@@ -121,9 +121,9 @@ width: 380px;
   font-size:15px;
 }
 .stdoutputs{ font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 200px; width: 700px; }
-.infoColor{#ffffff}
-.debugColor{#003399}
-.warningColor{#660066}
-.errorColor{#ff0000}
-.traceColor{#00aa00}
-.fileColor{#009999}
+.infoColor{color:#ffffff}
+.debugColor{color:#003399}
+.warningColor{color:#660066}
+.errorColor{color:#ff0000}
+.traceColor{color:#00aa00}
+.fileColor{color:#009999}
