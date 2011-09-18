@@ -126,14 +126,15 @@ function htmlSpecial(res){
 	res = res.replace(/\|/g, '&brvbar;');
 	return res;
 }
+
 function getColor(res){
-  res = res.replace(/\x1B[38m/g, '<span class="infoColor">');
-  res = res.replace(/\x1B[34m/g, '<span class="debugColor">');
-  res = res.replace(/\x1B[35m/g, '<span class="warningColor">');
-  res = res.replace(/\x1B[31m/g, '<span class="errorColor">');
-  res = res.replace(/\x1B[32m/g, '<span class="traceColor">');
-  res = res.replace(/\x1B[36m/g, '<span class="fileColor">');
-  res = res.replace(/\x1B[33m/g, '');
+  res = res.replace(/\x1B\[38m/g, '<span class="infoColor">');
+  res = res.replace(/\x1B\[34m/g, '<span class="debugColor">');
+  res = res.replace(/\x1B\[35m/g, '<span class="warningColor">');
+  res = res.replace(/\x1B\[31m/g, '<span class="errorColor">');
+  res = res.replace(/\x1B\[32m/g, '<span class="traceColor">');
+  res = res.replace(/\x1B\[36m/g, '<span class="fileColor">');
+  res = res.replace(/\x1B\[33m/g, '');
   res = res.replace(/\x1B\[0m/g, '</span>');
   return res;
 }
