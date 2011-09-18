@@ -23,6 +23,7 @@ function getOutput(action){
 	},
 	success:function(data){
 		res = htmlSpecial(data.output);
+    res = getColor(res);
 		$("#"+action).html(res);
 		window.setTimeout(function(){	
 			getOutput(action);
