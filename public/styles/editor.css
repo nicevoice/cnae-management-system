@@ -73,3 +73,9 @@ html[xmlns] .clearfix { display: block; }
 .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
 .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+.infoColor{color:#ffffff}
+.debugColor{color:#003399}
+.warningColor{color:#660066}
+.errorColor{color:#ff0000}
+.traceColor{color:#00aa00}
+.fileColor{color:#009999}
