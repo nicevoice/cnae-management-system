@@ -404,6 +404,7 @@ function getOutput(action){
 		},
 		success:function(data){
 			var d = htmlspecialchars(data.output);
+      d = getColor(d);
 			$("#"+action).html(d);
 			/*
 			window.clearTimeout(outTimer);
