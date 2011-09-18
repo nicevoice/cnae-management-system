@@ -49,6 +49,7 @@ function setEditingFile(index, noStore) {
 	
 	// 处理Tab
 	activeTab(activeFile);
+	setEditorMode(getFileExt(openedFiles[index].filePath));
 	changeLock = true; // 上锁
 	// 将文件内容写入editor
 	e.setValue(newContent);
