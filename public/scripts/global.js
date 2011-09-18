@@ -135,6 +135,7 @@ function getColor(res){
   res = res.replace(/\x1B[36m/g, '<span class="fileColor">');
   res = res.replace(/\x1B[33m/g, '');
   res = res.replace(/\x1B\[0m/g, '</span>');
+  return res;
 }
 /*
 function highlightPage() {
