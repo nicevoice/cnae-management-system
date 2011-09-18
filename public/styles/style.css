@@ -1,10 +1,10 @@
-@import url(appSquare.css);
-@import url(application.css);
-@import url(login.css);
-@import url(newApp.css);
-@import url(manage.css);
-@import url(todo.css);
-@import url(userCenter.css);
+@import url(appSquare.css?v=1.0.1);
+@import url(application.css?v=1.0.1);
+@import url(login.css?v=1.0.1);
+@import url(newApp.css?v=1.0.1);
+@import url(manage.css?v=1.0.1);
+@import url(todo.css?v=1.0.1);
+@import url(userCenter.css?v=1.0.1);
 .clearfix:after {
 	content: ".";
 	display: block;

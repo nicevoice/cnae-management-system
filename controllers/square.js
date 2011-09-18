@@ -5,6 +5,7 @@ var config = require('../config')
   , exec  = require('child_process').exec
   , randomString = require('../lib/randomString')
   , model = require('../models/index')
+  , md5 = require('../lib/md5').hex_md5
   , log = config.logWithFile
   , users = model.users
   , app_mem = model.app_mem
@@ -119,6 +120,7 @@ exports.post = function(req, res){
                   for (var i = 0, len = data.length; i < len; i++) {
                     if (emailToNick[data[i].creatorEmail]) {
                       data[i].creatorNickName = emailToNick[data[i].creatorEmail];
+                      data[i].photoUrl = "http://www.gravatar.com/avatar/"+md5(data[i].creatorEmail||'');
                       data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
                     }
                     else {
@@ -365,6 +367,7 @@ exports.personalSquare = function(req, res){
                               for (var i = 0, len = data.length; i < len; i++) {
                                 if (emailToNick[data[i].creatorEmail]) {
                                   data[i].creatorNickName = emailToNick[data[i].creatorEmail];
+                                  data[i].photoUrl = "http://www.gravatar.com/avatar/"+md5(data[i].creatorEmail||'');
                                   data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
                                 }
                                 else {
