@@ -716,6 +716,8 @@ function setEditorMode(ext) {
  * 创建文件，type用来区分用户输入文件名的方式
  */
 function createFile(type, content) {
+	if(actionLock) return false;
+	actionLock = true;
 	if(type != 1 && type != 2) return false;
 	$(".sub-menu").hide(); // 隐藏所有的二级目录
 	var file_list = $("#file-list");
@@ -787,6 +789,7 @@ function createFileAfter(fileName, this_div, content) {
 			changeLock = false;
 		});
 	}
+	actionLock = false;
 };
 
 /*
@@ -1106,10 +1109,7 @@ function setToolbarAction() {
 	});
 	// 创建新文件
 	$("#tb-newf").click(function() {
-		if(actionLock) return false;
-		actionLock = true;
 		createFile(2);
-		actionLock = false;
 	});
 	// 创建新目录
 	$("#tb-newd").click(function() {
