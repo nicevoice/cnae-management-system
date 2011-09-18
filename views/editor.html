@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><%=domain%> - 在线编辑</title>
+<title><%=domain%> - NAE IDE</title>
 <link href="/styles/editor.css" rel="stylesheet" type="text/css" />
 <script src="/scripts/head.load.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -56,12 +56,12 @@
 		<div id="console-min">Min</div>
 	</div>
     <div id="stdout-panel">
-    	<div class="console-label">Standard output</div>
-    	<textarea readonly="readonly" id="stdout"></textarea>
+    	<div class="console-label">stdout</div>
+    	<div id="stdout"></div>
     </div>
     <div id="stderr-panel">
-    	<div class="console-label">Standard error</div>
-    	<textarea readonly="readonly" id="stderr"></textarea>
+    	<div class="console-label">stderr</div>
+    	<div id="stderr"></div>
     </div>
 </div>
 <div id="msg"></div>
