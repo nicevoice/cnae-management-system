@@ -64,7 +64,7 @@ function renderApp(app){
   }
   var photo="";
   if(app.photoUrl){
-    photo += '<img src="'+photoUrl+'" style="width: 25px; height: 25px;">';
+    photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
   }
   var div = '<div class="app-info clearfix"><div class="app-info-left">' +
             '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">'+
