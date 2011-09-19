@@ -581,7 +581,7 @@ exports.deleteTodo = function(req, res){
       console.log(email+title);
  app_basic.update({
     appDomain:domain,
-  },{$pull:{todo:{$elemMatch:{email:email, title:title}}}}, function(err){
+  },{$pull:{todo:{email:email, title:title}}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
