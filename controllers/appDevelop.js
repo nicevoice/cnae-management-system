@@ -442,18 +442,18 @@ exports.showTodo = function(req, res){
   var domain = req.params.id || '',
   		url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
-  app_todo.find({
+  app_basic.findOne({
     appDomain: domain
-  },{sort:[['finished', 1]]}).toArray(function(err, data){
+  },function(err, data){
     if (err) {
       console.log(err.toString());
       return res.render("error", {
         message: "查询数据库错误，请稍后再试"
       });
-    }else if(!data||data.length===0){
+    }else if(!data || !data.todo){
       return res.render("appManageTodo", {
         layout: "layoutApp",
-        todos: data,
+        todos: data.todo,
         domain: domain,
         email: req.session.email,
         nickName: req.session.nickName,
@@ -461,11 +461,12 @@ exports.showTodo = function(req, res){
       });
     }
     else {
+      var todos = data.todo;
       var userEmails = [], uhash={};
-      for(var i=0, len=data.length; i<len; ++i){
-        if (!uhash[data[i].email]) {
-          uhash[data[i].email] = true;
-          userEmails.push(data[i].email);
+      for(var i=0, len=todos.length; i<len; ++i){
+        if (!uhash[todos[i].email]) {
+          uhash[todos[i].email] = true;
+          userEmails.push(todos[i].email);
         }
       }
       users.find({email:{$in:userEmails}},{email:1, nickName:1}).toArray(function(err, userInfos){
@@ -489,13 +490,13 @@ exports.showTodo = function(req, res){
           for (var i = 0, len = userInfos.length; i < len; ++i) {
             emailToNick[userInfos[i].email] = userInfos[i].nickName;
           }
-          for (var i = 0, len = data.length; i < len; i++) {
-            data[i].nickName = emailToNick[data[i].email];
+          for (var i = 0, len = todos.length; i < len; i++) {
+            todos[i].nickName = emailToNick[todos[i].email];
           }
-          console.log(data);
+          console.log(todos);
           return res.render("appManageTodo", {
             layout: "layoutApp",
-            todos: data,
+            todos: todos,
             domain: domain,
             email: req.session.email,
             nickName: req.session.nickName,
@@ -510,7 +511,15 @@ exports.showTodo = function(req, res){
 exports.newTodo = function(req, res){
   var domain = req.params.id || '',
       title = req.body.title;
-  app_todo.save({title:title, email:req.session.email, appDomain:domain, finished:0}, function(err){
+  app_basic.update({appDomain:domain}, {
+    $addToSet: {
+      todo: {
+        title: title,
+        email: req.session.email,
+        finished: 0
+      }
+    }
+  }, function(err){
     if (err) {
       console.log(err.toString());
       return res.render("error", {
@@ -522,21 +531,38 @@ exports.newTodo = function(req, res){
   })
 }
 exports.finishTodo = function(req, res){
-  var domain = req.params.id|| '',
-      _id = app_todo.id(req.body._id);
-  app_todo.update({_id:_id}, {$set:{finished:1}}, function(err){
+  var domain = req.params.id|| ''
+      email = req.body.email||'',
+      title = req.body.title||'';
+  app_basic.update({
+    appDomain:domain,
+    todo: {
+      $elemMatch: {
+        title: title,
+        email: email
+      }
+    }
+  }, {$set:{"todo.finished":1}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
-      console.log(_id);
       return res.sendJson({status:"ok"});
     }
   })
 }
 exports.recoverTodo = function(req, res){
   var domain = req.params.id|| '',
-      _id = app_todo.id(req.body._id);
-  app_todo.update({_id:_id}, {$set:{finished:0}}, function(err){
+      email = req.body.email||'',
+      title = req.body.title||'';
+ app_basic.update({
+    appDomain:domain,
+    todo: {
+      $elemMatch: {
+        title: title,
+        email: email
+      }
+    }
+  }, {$set:{"todo.finished":0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
@@ -546,8 +572,10 @@ exports.recoverTodo = function(req, res){
 }
 exports.deleteTodo = function(req, res){
   var domain = req.params.id|| '',
-      _id = app_todo.id(req.body._id);
-  app_todo.remove({_id:_id}, function(err){
+      email = req.body.email|| '';
+ app_basic.update({
+    appDomain:domain,
+  },{$pull:{todo:{$elemMatch:{email:email, title:title}}}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
