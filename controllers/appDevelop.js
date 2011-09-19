@@ -494,6 +494,8 @@ exports.showTodo = function(req, res){
             todos[i].nickName = emailToNick[todos[i].email];
           }
           console.log(todos);
+          todos.reverse();
+          todos.sort(function(a, b){return a.finished-b.finished});
           return res.render("appManageTodo", {
             layout: "layoutApp",
             todos: todos,
