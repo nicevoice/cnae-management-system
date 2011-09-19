@@ -512,7 +512,10 @@ exports.showTodo = function(req, res){
 
 exports.newTodo = function(req, res){
   var domain = req.params.id || '',
-      title = req.body.title;
+      title = req.body.title||'';
+  if(title===''){
+    return res.redirect("/application/manage/"+domain+"/todo");
+  }
   app_basic.update({appDomain:domain}, {
     $addToSet: {
       todo: {

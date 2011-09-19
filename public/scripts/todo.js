@@ -88,14 +88,17 @@ check = function(){
   }
 }
 doFinish = function(which){
-  var _id = which.attr("id") || '';
+  var infos = which.attr("id").split("#"),
+      email = infos[0]||'',
+      title = infos[1]||'';
   $.ajax({
     cache: false,
     type: "post",
     url: "/application/manage/" + domain + "/todo/finish",
     dataType: "json",
     data: {
-      _id: _id
+      email:email,
+      title:title
     },
     error: function(){
         sAlert("警告", "执行错误，请稍后再试");
@@ -111,14 +114,17 @@ doFinish = function(which){
 }
 
 doRecover = function(which){
-  var _id = which.attr("id") || '';
+  var infos = which.attr("id").split("#"),
+      email = infos[0]||'',
+      title = infos[1]||'';
   $.ajax({
     cache: false,
     type: "post",
     url: "/application/manage/" + domain + "/todo/recover",
     dataType: "json",
     data: {
-      _id: _id
+      email:email,
+      title:title
     },
     error: function(){
         sAlert("警告", "执行错误，请稍后再试");
@@ -133,14 +139,17 @@ doRecover = function(which){
   })
 }
 doDelete = function(which){
-  var _id = which.prev().attr("id")||'';
+  var infos = which.prev().attr("id").split("#"),
+      email = infos[0]||'',
+      title = infos[1]||'';
   $.ajax({
     cache: false,
     type: "post",
     url: "/application/manage/" + domain + "/todo/delete",
     dataType: "json",
     data: {
-      _id: _id
+      email:email,
+      title:title
     },
     error: function(){
         sAlert("警告", "执行错误，请稍后再试");
