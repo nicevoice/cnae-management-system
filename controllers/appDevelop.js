@@ -577,7 +577,8 @@ exports.recoverTodo = function(req, res){
 }
 exports.deleteTodo = function(req, res){
   var domain = req.params.id|| '',
-      email = req.body.email|| '';
+      email = req.body.email|| '',
+      title = req.body.title||'';
  app_basic.update({
     appDomain:domain,
   },{$pull:{todo:{$elemMatch:{email:email, title:title}}}}, function(err){
