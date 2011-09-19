@@ -453,7 +453,7 @@ exports.showTodo = function(req, res){
     }else if(!data || !data.todo){
       return res.render("appManageTodo", {
         layout: "layoutApp",
-        todos: data.todo,
+        todos: [],
         domain: domain,
         email: req.session.email,
         nickName: req.session.nickName,
@@ -478,7 +478,7 @@ exports.showTodo = function(req, res){
         }else if(!userInfos || userInfos.length===0){
           return res.render("appManageTodo", {
             layout: "layoutApp",
-            todos: data,
+            todos: [],
             domain: domain,
             email: req.session.email,
             nickName: req.session.nickName,
