@@ -493,7 +493,6 @@ exports.showTodo = function(req, res){
           for (var i = 0, len = todos.length; i < len; i++) {
             todos[i].nickName = emailToNick[todos[i].email];
           }
-          console.log(todos);
           todos.reverse();
           todos.sort(function(a, b){return a.finished-b.finished});
           return res.render("appManageTodo", {
@@ -579,6 +578,7 @@ exports.deleteTodo = function(req, res){
   var domain = req.params.id|| '',
       email = req.body.email|| '',
       title = req.body.title||'';
+      console.log(email+title);
  app_basic.update({
     appDomain:domain,
   },{$pull:{todo:{$elemMatch:{email:email, title:title}}}}, function(err){
