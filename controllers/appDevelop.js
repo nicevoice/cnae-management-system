@@ -541,8 +541,7 @@ exports.finishTodo = function(req, res){
       console.log(email+title+"finish");
   app_basic.update({
     appDomain:domain,
-    "todo.title":title,
-    "todo.email":email
+    todo:{$elemMatch:{"email":email, "title":title}}
   }, {$set:{"todo.$.finished":1}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
@@ -558,8 +557,7 @@ exports.recoverTodo = function(req, res){
       console.log(email+title+"recover");
  app_basic.update({
     appDomain:domain,
-    "todo.title":title,
-    "todo.email":email
+    todo:{$elemMatch:{"email":email, "title":title}}
   }, {$set:{"todo.$.finished":0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
