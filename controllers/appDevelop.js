@@ -538,11 +538,12 @@ exports.finishTodo = function(req, res){
   var domain = req.params.id|| ''
       email = req.body.email||'',
       title = req.body.title||'';
+      console.log(email+title);
   app_basic.update({
     appDomain:domain,
     "todo.title":title,
     "todo.email":email
-  }, {$set:{"todo.finished":1}}, function(err){
+  }, {$set:{"todo.$.finished":1}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
@@ -558,7 +559,7 @@ exports.recoverTodo = function(req, res){
     appDomain:domain,
     "todo.title":title,
     "todo.email":email
-  }, {$set:{"todo.finished":0}}, function(err){
+  }, {$set:{"todo.$.finished":0}}, function(err){
     if(err){
       return res.sendJson({status:"error"});
     }else{
