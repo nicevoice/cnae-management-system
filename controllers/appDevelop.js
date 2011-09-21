@@ -538,7 +538,7 @@ exports.finishTodo = function(req, res){
   var domain = req.params.id|| ''
       email = req.body.email||'',
       title = req.body.title||'';
-      console.log(email+title);
+      console.log(email+title+"finish");
   app_basic.update({
     appDomain:domain,
     "todo.title":title,
@@ -555,6 +555,7 @@ exports.recoverTodo = function(req, res){
   var domain = req.params.id|| '',
       email = req.body.email||'',
       title = req.body.title||'';
+      console.log(email+title+"recover");
  app_basic.update({
     appDomain:domain,
     "todo.title":title,
