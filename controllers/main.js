@@ -270,15 +270,7 @@ exports.deleteApp = function(req, res){
 			else{
 				deleteEvent.fire("deletedRecords", true);
 			}
-		});
-    app_todo.remove({appDomain:delDomain}, function(err){
-      if(err){
-        log.error(err.toString());
-				deleteEvent.fire("deletedTodos", false);
-      }else{
-				deleteEvent.fire("deletedTodos", true);        
-      }
-    })		
+		});	
 
 		onOff("stop", delDomain, function(){
 			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
