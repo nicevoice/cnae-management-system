@@ -207,7 +207,7 @@ exports.deleteApp = function(req, res){
 		res.sendJson( {done:false});
 	}else{
 		var deleteEvent = new EventProxy();
-		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", "deletedTodos", function(){
+		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function(){
 			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
 				res.sendJson( {done:false});
 			else{
