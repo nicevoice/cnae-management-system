@@ -113,9 +113,9 @@ exports.doUpload = function(req, res){
                           var moveEvent = new EventProxy();
                           moveEvent.on("getStat", function(isDir){
                             if(isDir){
-                              move = "cp -rf " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                              move = "cp -a " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
                             }else{
-                              move = "cp -rf " + tempDir + '/' + domain + "/* " + savePath;
+                              move = "cp -a " + tempDir + '/' + domain + "/* " + savePath;
                             }
                           exec(move, function(err){
                             if (err) {
@@ -190,7 +190,7 @@ exports.gitClone = function(req, res){
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
       domain = req.params.id||'',
       savePath = uploadDir+'/'+domain +'/',
-      move = "cp -rf "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
+      move = "cp -a "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
       exec(gitClone, function(err, gitStdout, gitStderr){
         if(err){
           console.log(err.toString());
