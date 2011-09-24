@@ -40,7 +40,7 @@ exports.db_app_todo = configInfo.collections.app_todo;
 exports.session_timeOut = configInfo.timeOut;
 //正则
 exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
-exports.regPass = /^(\w){6,20}$/;
+exports.regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
 var log = require("./lib/log");

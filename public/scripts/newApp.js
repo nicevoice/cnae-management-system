@@ -5,7 +5,7 @@ $(function(){
 domainBlur = function(){
 	var domain = $("#appDomain").val()||'';
 	$("#appName").val(domain);
-	var regDomain = /^[a-z][a-z0-9_]{3,17}$/;
+	var regDomain = /^[a-z][a-z0-9_]{3,19}$/;
   	if(!regDomain.exec(domain))
 		return $("#domainWarn").html("域名格式不正确");
 	$.ajax({
@@ -28,7 +28,7 @@ domainFocus = function(){
 nameBlur = function(){
 	var name = $("#appName").val()||'';
   	if(name.length>20)
-		return $("#appNameWarn").html("应用名不能超过20个字符");
+		return $("#appNameWarn").html("应用名不能超过20个字");
 }
 	
 nameFocus = function(){

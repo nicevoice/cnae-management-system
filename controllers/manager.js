@@ -119,8 +119,8 @@ exports.doAppmng = function(req, res){
 	if(!newAppName){
 		res.sendJson( {done:false});
 	}else{
-    if(newAppName.length>10){
-      newAppName = newAppName.slice(0, 10);
+    if(newAppName.length>20){
+      newAppName = newAppName.slice(0, 20);
     }
 		var newAppDes = req.body.newAppDes||'';
     if(newAppDes.length>100){
@@ -202,7 +202,7 @@ function send(email, words){
 	var inviteNickName = email.split('@')[0];
 
 	mails.push({
-    sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+    sender: 'NAE <heyiyu.deadhorse@gmail.com>',
     to : inviteNickName+" <" + email + ">",
     subject: mailTitle,
     html: mailContent + words,
@@ -303,7 +303,7 @@ exports.agreeCoop = function(req, res){
             agreeInfo = req.session.nickName + '( '+req.session.email+' )同意了您对项目"'+
             domain+'"的参与申请。';
        	mails.push({
-          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          sender: 'NAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
           subject: config.agreeMailTitle,
           html: config.agreeMailContent+agreeInfo,
@@ -330,7 +330,7 @@ exports.refuseCoop = function(req, res){
             refuseReason = req.session.nickName + '( '+req.session.email+' )拒绝了您对项目"'+
             domain+'"的参与申请。<br />拒绝原因：'+reason;
        	mails.push({
-          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          sender: 'NAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
           subject: config.refuseMailTitle,
           html: config.refuseMailContent+refuseReason,

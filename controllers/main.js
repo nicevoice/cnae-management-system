@@ -74,13 +74,13 @@ var config = require('../config')
   if(!newAppName){
  	return res.render("error", {message:"必须有应用名称"});
  }
- if(newAppName.length>10){
-   newAppName = newAppName.slice(0, 10);
+ if(newAppName.length>20){
+   newAppName = newAppName.slice(0, 20);
  }
  if(newAppDes.length>100){
    newAppDes = newAppDes.slice(0, 100);
  }
-  var regDomain = /^[a-z][a-z0-9_]{3,17}$/;
+  var regDomain = /^[a-z][a-z0-9_]{3,19}$/;
   if(!regDomain.exec(newAppDomain))
 		return res.render("error", {message:"子域名格式错误"});
 

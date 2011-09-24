@@ -54,7 +54,7 @@ nameFocus = function(){
 
 passBlur = function(){
 	var password = $("#newPassword").val()||'';
-	var regPass = /^(\w){6,20}$/
+	var regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/
 	if(!regPass.exec(password)){
 		$("#passwordWarn").html("密码必须为6～20位字符和数字"); 
 		return false;
