@@ -113,9 +113,12 @@ exports.doUpload = function(req, res){
                           var moveEvent = new EventProxy();
                           moveEvent.on("getStat", function(isDir){
                             if(isDir){
-                              move = "cp -a " + tempDir + '/' + domain + "/" + files[0] + "/* " + savePath;
+                               move = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/cpall.sh "
+                              + tempDir + '/' + domain + "/" + files[0] + " " + savePath;                             
                             }else{
-                              move = "cp -a " + tempDir + '/' + domain + "/* " + savePath;
+                              //通过执行cpall脚本来进行全文件复制
+                              move = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/cpall.sh "
+                              + tempDir + '/' + domain + " " + savePath;
                             }
                           exec(move, function(err){
                             if (err) {
@@ -190,7 +193,8 @@ exports.gitClone = function(req, res){
       gitClone = "git clone "+ req.body.gitUrl + " "+ tempDir+"/"+tempDirLast,
       domain = req.params.id||'',
       savePath = uploadDir+'/'+domain +'/',
-      move = "cp -a "+tempDir+"/"+tempDirLast + "/* "+ savePath; 
+      move = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"shells/cpall.sh "
+      + tempDir + '/' + tempDirLast + " " + savePath;
       exec(gitClone, function(err, gitStdout, gitStderr){
         if(err){
           console.log(err.toString());
