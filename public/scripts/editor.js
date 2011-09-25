@@ -847,19 +847,19 @@ function closeFile(index) {
  */
 function saveFile(index) {
 	if(typeof index == "undefined") index = activeFile;
-	showMsg1("正在保存..");
+	// showMsg1("正在保存..");
 	var content = editor.getSession().getValue();
 	var fileName = getFileName(openedFiles[index].filePath);
 	writeFile(openedFiles[index].filePath, content, function(status, msg) {
 		if(status) {
-			showMsg2("保存成功：" + openedFiles[index].filePath);
+			// showMsg2("保存成功：" + openedFiles[index].filePath);
 			// 处理tab
 			starTab(activeFile, false);
 			openedFiles[activeFile].changed = false;
 			setStatusBar(1, fileName);
 			// TODO:更新文件的mtime
 		} else {
-			showMsg2(msg + "，请稍后再尝试");
+			showMsg(msg + "，请稍后再尝试");
 		}
 	});
 }
