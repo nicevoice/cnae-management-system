@@ -121,7 +121,7 @@ exports.doUpload = function(req, res){
                               + tempDir + '/' + domain + " " + savePath;
                             }
                           exec(move, function(err){
-                            if (err) {
+                            if (err&&err.toString().indexOf("no matches found")===-1) {
                               console.log(err.toString());
                               exec("rm -rf "+path, function(err){
                                 if(err){
@@ -209,8 +209,7 @@ exports.gitClone = function(req, res){
                return res.sendJson({status:"error", msg:"执行错误，请稍后再试"});
              }else{
                exec(move, function(err){
-                 console.log("move");
-                 if(err){
+                 if (err&&err.toString().indexOf("no matches found")===-1){
                    console.log(err.toString());
                    return res.sendJson({status:"error", msg:err.toString()});
                  }
