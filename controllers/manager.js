@@ -427,6 +427,7 @@ exports.getStatus = function(req, res){
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
+      var ports = socketRes.ports;
       if(savePort&&ports&&ports[0]){
       app_basic.update({appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
         if(err){
