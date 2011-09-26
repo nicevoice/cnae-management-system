@@ -495,7 +495,7 @@ function listFiles(dirPath) {
 		data: {dirPath: dirPath},
 		dataType: "JSON",
 		beforeSend: function() {
-			file_list.empty().html("<p>正在加载文件列表</p>");
+			// file_list.empty().html("<p>正在加载文件列表</p>");
 		},
 		success: function(data) {
 			if(data.status && data.status == "succeed") {
@@ -729,16 +729,19 @@ function createFile(type, content) {
 		html += '</dl></div>';
 	var this_div = $(html);
 	this_div.appendTo(file_list);
-	var dt = this_div.children("dl").children("dt"); // 文件名要插到这个里面
+	var this_dl = this_div.children("dl");
+	var this_dt = this_dl.children("dt"); // 文件名要插到这个里面
 	if(type == 1) { // 弹出输入框输入文件名
 		var fileName = prompt("请输入文件名", "");
-		dt.html(fileName);
+		fileName = htmlspecialchars(fileName);
+		this_dt.html(fileName);
+		this_dl.attr("title", fileName);
 		createFileAfter(fileName, this_div, content);
 	} else if(type == 2) { // 在文件树里面输入
 		var input = '<input name="filename" value="" type="text" class="input" />';
 		showMsg1("输入文件名后按回车键继续");
 		$(input)
-			.appendTo(dt)
+			.appendTo(this_dt)
 			.focus() // 把焦点移到该元素上
 //			.blur(function() {
 //				var fileName = $(this).val(); // 取出<input>元素此时的值
@@ -748,10 +751,11 @@ function createFile(type, content) {
 //			})
 			.keyup(function(e) {
 				if(e.which == 13) {
-					showMsg2("创建成功");
 					var fileName = $(this).val(); // 取出<input>元素此时的值
+					fileName = htmlspecialchars(fileName);
 					$(this).remove(); // 移除该<input>元素
-					dt.html(fileName);
+					this_dt.html(fileName);
+					this_dl.attr("title", fileName);
 					createFileAfter(fileName, this_div, content);
 				}
 			});
@@ -771,24 +775,19 @@ function createFileAfter(fileName, this_div, content) {
 				showMsg(msg + "，请稍后再尝试");
 				return false;
 			}
+			showMsg2("创建成功");
 			// 在文件树里添加文件节点
-			var _t = this_div.children("dl").children("dd").children(".menu-btn");
+			var _t = this_div.find(".menu-btn");
 			var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
 			_t.append(setSubmenu(_file));
 			
 			var index = addOpenedFile(filePath, content);
 			addTab(fileName, index);
-			activeTab(index);
-			setStatusBar(2, fileName);
-			
-			activeFile = index;
 			
 			if(typeof editor == "undefined" || !editor) initEditor();
 			
-			setEditorMode(getFileExt(filePath));
-			changeLock = true;
-			editor.getSession().setValue(content);
-			changeLock = false;
+			setEditingFile(index);
+			setStatusBar(2, fileName);
 		});
 	}
 	actionLock = false;
@@ -798,9 +797,7 @@ function createFileAfter(fileName, this_div, content) {
  * 打开文件
  */
 function openFile(fileName) {
-	if(typeof editor == "undefined" || editor == null) {
-		initEditor();
-	}
+	if(typeof editor == "undefined" || editor == null) initEditor();
 	var filePath = currDir + fileName;
 	// 检查这个文件是否已经打开了
 	var isOpened = isFileOpened(filePath);
@@ -808,22 +805,10 @@ function openFile(fileName) {
 		var e = editor.getSession();
 		readFile(filePath, function(status, content) {
 			if(status) {
-				if(typeof openedFiles[activeFile] != "undefined") {
-					// 先保存原来的文件信息
-					openedFiles[activeFile].content = e.getValue();
-				}
-				// 将文件添加到数组
 				var index = addOpenedFile(filePath, content);
-				// 更新当前文件指针
-				activeFile = index;
 				// 添加tab
 				addTab(fileName, index);
-				activeTab(index);
-				// 依据文件后缀名更改编辑器的语法模式
-				setEditorMode(getFileExt(filePath));
-				changeLock = true;
-				e.setValue(content);
-				changeLock = false;
+				setEditingFile(index);
 			} else {
 				showMsg(content + "，请稍后再尝试");
 			}
@@ -862,10 +847,12 @@ function closeFile(index) {
  */
 function saveFile(index) {
 	if(typeof index == "undefined") index = activeFile;
+	// showMsg1("正在保存..");
 	var content = editor.getSession().getValue();
 	var fileName = getFileName(openedFiles[index].filePath);
 	writeFile(openedFiles[index].filePath, content, function(status, msg) {
 		if(status) {
+			// showMsg2("保存成功：" + openedFiles[index].filePath);
 			// 处理tab
 			starTab(activeFile, false);
 			openedFiles[activeFile].changed = false;
@@ -943,18 +930,22 @@ function setSubmenuAction() {
  */
 function itemActionCb() {
 	if(actionLock) return false; // 检查锁
-	actionLock = true;
 	var itemName = $(this).find(".item-name").html();
 	var itemType = $(this).children("dl").attr("name");
 	var curPathDiv = $("#currentPath");
 	if(itemType == "f") { // is a file
+		actionLock = true;
 		openFile(itemName);
 		currNode = $(this);
+		actionLock = false;
 	} else if (itemType == "d") { // is a directory
+		actionLock = true;
 		currDir = currDir + itemName + "/";
 		listFiles(currDir);
 		curPathDiv.html(currDir); // 更新当前路径
+		actionLock = false;
 	} else if (itemType == "up") {
+		actionLock = true;
 		var _t = currDir.split("/");
 		currDir = '';
 		for(var i = 0; i < _t.length - 2; i++) {
@@ -962,8 +953,8 @@ function itemActionCb() {
 		}
 		listFiles(currDir);
 		curPathDiv.html(currDir);
+		actionLock = false;
 	}
-	actionLock = false;
 	return false;
 }
 
@@ -977,30 +968,31 @@ function setItemAction() {
 	// 二级目录项目事件
 	$(".sub-menu-item").live("click", function() {
 		if(actionLock) return false; // 检查锁
-		var this_div = $(this).parent().parent().parent().parent().parent();
-		var _name = this_div.children("dt").html();
+		var this_div = $(this).parent().parent().parent().parent().parent().parent();
+		var _name = this_div.children("dl").attr("title");
 		var action = $(this).attr("name");
 		var curPathDiv = $("#currentPath");
 		if(action == "rename-file") { // 重命名文件
 			actionLock = true;
 			// 首先隐藏所有的二级目录
 			$(".sub-menu").hide(200);
-			// 取得dt
-			var dt = this_div.children("dt");
+			var this_dl = this_div.children("dl");
+			var this_dt = this_dl.children("dt"); // 文件名要插到这个里面
 			var oriName = _name;
 			// 清空dt
-			dt.html(""); // 清空自己
+			this_dt.html(""); // 清空自己
 			// 将文本改变为编辑框
 			var input = '<input name="filename" value="' + _name + '" type="text" class="input" />';
+			showMsg1("输入文件名后按回车键继续");
 			$(input)
-				.appendTo(dt)
+				.appendTo(this_dt)
 				.focus() // 把焦点移到该元素上
-				.blur(function() { // 绑定focusout事件
-					dyRenameUI(this, oriName, dt);
-				})
+//				.blur(function() { // 绑定focusout事件
+//					dyRenameUI(this, oriName, dt);
+//				})
 				.keyup(function(e) {
 					if(e.which == 13) {
-						dyRenameUI(this, oriName, dt);
+						dyRenameUI(this, oriName, this_dl, this_dt);
 					}
 				});
 		} else if(action == "edit-file") { // 编辑文件
@@ -1029,26 +1021,34 @@ function setItemAction() {
 	});
 }
 
-function dyRenameUI(that, oriName, dt) {
-	var newName = $(that).val(); // 取出<input>元素此时的值
-	var oriPath = currDir + oriName;
-	var newPath = currDir + newName;
-	renameFile(oriPath, newPath, function(status, errMsg) {
-		$(that).remove(); // 移除该<input>元素
-		if(status) { // 成功
-			dt.html(newName);
-			// 如果重命名的文件就是当前正在编辑的文件
-			var index = isFileOpened(oriPath);
-			if(index >= 0) {
-				openedFiles[index].filePath = newPath;
-				openedFiles[index].changed = false;
-				chTab(newName, index);
+function dyRenameUI(that, oriName, dl, dt) {
+	var newName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
+	if(newName == null || newName == "") {
+		dt.html(oriName);
+		showMsg("目录名不能为空");
+	} else {
+		var oriPath = currDir + oriName;
+		var newPath = currDir + newName;
+		renameFile(oriPath, newPath, function(status, errMsg) {
+			$(that).remove(); // 移除该<input>元素
+			if(status) { // 成功
+				showMsg2("修改成功");
+				dt.html(newName);
+				dl.attr("title", newName);
+				dl.find(".sub-menu .sub-menu-item[name='edit-file']").children("strong").html(newName);
+				// 如果重命名的文件就是当前正在编辑的文件
+				var index = isFileOpened(oriPath);
+				if(index >= 0) {
+					openedFiles[index].filePath = newPath;
+					openedFiles[index].changed = false;
+					chTab(newName, index);
+				}
+			} else { // 失败
+				showMsg(errMsg);
+				dt.html(oriName);
 			}
-		} else { // 失败
-			showMsg(errMsg);
-			dt.html(oriName);
-		}
-	});
+		});
+	}
 	actionLock = false;
 }
 
@@ -1059,13 +1059,18 @@ function setNavAction() {
 	$("#nav-save").click(function() {
 		if(actionLock) return false;
 		actionLock = true;
-		saveFile();
+		// 检查编辑器对象是否存在
+		if(typeof editor == "undefined" || !editor) {
+			showMsg("没有正在编辑的文件");
+		} else {
+			saveFile();
+		}
 		actionLock = false;
 	});
 }
 
-function dyCreateDirUI(that, that_div, dt) {
-	var dirName = $(that).val(); // 取出<input>元素此时的值
+function dyCreateDirUI(that, that_div, dl, dt) {
+	var dirName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
 	if(dirName == null || dirName == "") {
 		that_div.remove();
 		showMsg("目录名不能为空");
@@ -1074,12 +1079,14 @@ function dyCreateDirUI(that, that_div, dt) {
 		mkDir(dirPath, function(status, msg) {
 			$(that).remove(); // 移除该<input>元素
 			if(status) {
-				var _t = that_div.children("dl").children("dd").children(".menu-btn");
+				showMsg2("创建成功");
+				var _t = dl.children("dd").children(".menu-btn");
 				var _mtime = new Date();
 				_mtime = _mtime.toLocaleString();
 				var _dir = {"name": dirName, "type": "d", "size": 0, "mtime": _mtime};
 				_t.append(setSubmenu(_dir));
 				dt.html(dirName);
+				dl.attr("title", dirName);
 			} else {
 				that_div.remove();
 				showMsg(msg + "，请稍后再尝试");
@@ -1126,21 +1133,28 @@ function setToolbarAction() {
 			html += '</dl></div>';
 		var this_div = $(html);
 		this_div.appendTo(file_list);
-		var dt = this_div.children("dl").children("dt");
+		var this_dl = this_div.children("dl");
+		var this_dt = this_dl.children("dt");
 		var input = '<input name="filename" value="" type="text" class="input" />';
 		showMsg1("输入目录名后按回车键继续");
 		$(input)
-			.appendTo(dt)
+			.appendTo(this_dt)
 			.focus() // 把焦点移到该元素上
 //			.blur(function() {
 //				dyCreateDirUI(this, this_div, dt);
 //			})
 			.keyup(function(e) {
 				if(e.which == 13) {
-					showMsg2("创建成功");
-					dyCreateDirUI(this, this_div, dt);
+					dyCreateDirUI(this, this_div, this_dl, this_dt);
 				}
 			});
+	});
+	// 上传文件
+	$("#tb-upload").click(function() {
+		if(actionLock) return false;
+		actionLock = true;
+		showMsg("上传功能即将开放，敬请关注！");
+		actionLock = false;
 	});
 }
 

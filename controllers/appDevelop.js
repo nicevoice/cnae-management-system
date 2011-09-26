@@ -121,7 +121,7 @@ exports.doUpload = function(req, res){
                               + tempDir + '/' + domain + " " + savePath;
                             }
                           exec(move, function(err){
-                            if (err&&err.toString().indexOf("no matches found")===-1) {
+                            if (err&&err.toString().indexOf("No such file or directory")===-1) {
                               console.log(err.toString());
                               exec("rm -rf "+path, function(err){
                                 if(err){
