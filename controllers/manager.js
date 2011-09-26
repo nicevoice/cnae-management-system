@@ -113,8 +113,9 @@ exports.appmng = function(req, res){
  * @param {} res
  */
 exports.doAppmng = function(req, res){
-	var domain = req.params.id||'';
-	var newAppName = req.body.newAppName||'';
+  var domain = req.params.id || '';
+  var newAppName = req.body.newAppName || '';
+  var port = req.body.port||'';
 	var body;
 	if(!newAppName){
 		res.sendJson( {done:false});
@@ -137,7 +138,7 @@ exports.doAppmng = function(req, res){
 			}
 		})
 		app_basic.update({appDomain:domain.toString()},
-		{$set:{appName:newAppName.toString(), appDes:newAppDes.toString()}},
+		{$set:{appName:newAppName.toString(), appDes:newAppDes.toString(), port:parseInt(port)}},
 		function(err){
 			if(err){
 				log.error(err);
