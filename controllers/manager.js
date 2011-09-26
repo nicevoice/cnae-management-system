@@ -113,9 +113,8 @@ exports.appmng = function(req, res){
  * @param {} res
  */
 exports.doAppmng = function(req, res){
-  var domain = req.params.id || '';
-  var newAppName = req.body.newAppName || '';
-  var port = req.body.port||'';
+	var domain = req.params.id||'';
+	var newAppName = req.body.newAppName||'';
 	var body;
 	if(!newAppName){
 		res.sendJson( {done:false});
@@ -138,7 +137,7 @@ exports.doAppmng = function(req, res){
 			}
 		})
 		app_basic.update({appDomain:domain.toString()},
-		{$set:{appName:newAppName.toString(), appDes:newAppDes.toString(), port:parseInt(port)}},
+		{$set:{appName:newAppName.toString(), appDes:newAppDes.toString()}},
 		function(err){
 			if(err){
 				log.error(err);
@@ -419,7 +418,8 @@ exports.getStdOutput = function(req, res){
 }
 
 exports.getStatus = function(req, res){
-	var domain = req.params.id||'';
+	var domain = req.params.id||'',
+      savePort = req.body.savePort||'';
 	onOff("status", domain, function(socketRes){
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
@@ -427,6 +427,13 @@ exports.getStatus = function(req, res){
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
+      if(savePort&&ports&&ports[0]){
+      app_basic.update({appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
+        if(err){
+          console.log(err.toString());
+        }
+      });
+      }
 		return res.sendJson( socketRes);
 	})
 	}

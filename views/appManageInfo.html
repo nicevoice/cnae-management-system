@@ -5,9 +5,8 @@
     		    	<div class=" subContent">
 	    	<form method="post" action="<%=url%>/appmng">
 	    		<p>子域名：<span id="submitAppDomain"> <%=appInfo.appDomain||''%></span></p>
-				  <p>应用名：<input type="text" id="newAppName" name="newAppName" value="<%=appInfo.appName||''%>"></p>
+				<p>应用名：<input type="text" id="newAppName" name="newAppName" value="<%=appInfo.appName||''%>"></p>
 	    		<input type="text" style="display:none">
-          <p>端口号：<input type="text" id="port" name="port" value="<%=appInfo.port||''%>"></p>
 	    		<p>应用描述:</p>
       			<p><textarea rows="3" class="newLongInput" name="newAppDes" id="newAppDes"
       				><%=appInfo.appDes%></textarea></p>
