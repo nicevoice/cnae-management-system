@@ -309,7 +309,6 @@ exports.doUploadImg = function(req, res){
     var fields = req.form.fields, files = req.form.files;
 	var filePath = files.upload ? files.upload.filename : null;	
 	if(filePath){
-		if(fiiles.upload.type.indexOf("image")!==-1){
 			var savePath = uploadDir+'/'+domain +'/'+ fields + "/"+files.upload.name;
 			fs.rename(files.upload.path, savePath, function(err){
 				if(err){
@@ -319,7 +318,6 @@ exports.doUploadImg = function(req, res){
 					return res.sendJson( {done:true});
 				}
 			});
-		}
 	}
 }
 

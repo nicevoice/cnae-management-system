@@ -1,4 +1,5 @@
 var statusTimer;	//获取状态信息的定时器
+var savePort = true;
 $(function(){
 	setStatus();
 	window.setInterval(function(){
@@ -53,10 +54,11 @@ function setStatus(){
 	type:"post",
 	url:"/application/manage/"+domain+"/getStatus",
 	dataType:"json",
-	data:{},
+	data:{savePort:savePort},
 	error:function(){
 	},
 	success:function(status){
+    savePort = false;
 		var appDomains="",	//显示域名的html
 			appRunning="",	//显示应用是否启动
 			appStatusInfo="",//显示应用状态信息

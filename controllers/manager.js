@@ -418,7 +418,8 @@ exports.getStdOutput = function(req, res){
 }
 
 exports.getStatus = function(req, res){
-	var domain = req.params.id||'';
+	var domain = req.params.id||'',
+      savePort = req.body.savePort||'';
 	onOff("status", domain, function(socketRes){
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
@@ -426,6 +427,14 @@ exports.getStatus = function(req, res){
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
 		}
+      var ports = socketRes.ports;
+      if(savePort&&ports&&ports[0]){
+      app_basic.update({appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
+        if(err){
+          console.log(err.toString());
+        }
+      });
+      }
 		return res.sendJson( socketRes);
 	})
 	}
