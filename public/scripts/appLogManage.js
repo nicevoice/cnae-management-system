@@ -25,9 +25,9 @@ function getOutput(action){
 		res = htmlSpecial(data.output);
     res = getColor(res);
 		$("#"+action).html(res);
-//		window.setTimeout(function(){	
-//			getOutput(action);
-//		},10000);
+		window.setTimeout(function(){	
+			getOutput(action);
+		},10000);
     if(!document.getElementById) return;
     var outDiv = document.getElementById(action);
     outDiv.scrollTop = outDiv.scrollHeight;
