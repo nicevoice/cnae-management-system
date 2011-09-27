@@ -2,7 +2,8 @@ var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currDir = ROOT_PATH; // 当前路径
 var currNode; // 当前文件DOM
-var outTimer, errTimer, interval=2000;	//获取stdoutput的定时器，点击重启应用以后开始每5s获取一次
+var outTimer, errTimer, interval=2000;	//获取stdoutput的定时器，点击重启应用以后开始每2s获取一次
+var onStdErr=false, onStdOut=false;    //鼠标是否在std的div区域内，如果在则不把滚动条往下拉
 var openedFiles = []; // 打开的文件数组
 var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
@@ -213,7 +214,25 @@ $(window).resize(function(){
 	setElementsSize();
 });
 
+//绑定鼠标进出std DIV的事件
+function mouseOnStdDiv(){
+  $("#stdout").mouseenter = function(){
+    onStdOut = true;
+  }
+  $("#stderr").mouseenter = function(){
+    onStdErr = true;
+  }
+   $("#stdout").mouseleave = function(){
+    onStdOut = false;
+  }
+   $("#stderr").mouseleave = function(){
+    onStdErr = false;
+  } 
+}
+
 window.onload = function() {
+  mouseOnStdDiv();
+  
 	// 初始化编辑器和控制台尺寸
 	setElementsSize();
 	
@@ -406,10 +425,19 @@ function getOutput(action){
 			var d = htmlspecialchars(data.output);
       d = getColor(d);
 			$("#"+action).html(d);
-      if(!document.getElementById) return;
-      var outDiv = document.getElementById(action);
-      outDiv.scrollTop = outDiv.scrollHeight;
-			/*
+      var pOnDiv;
+      if(action==="stdout"){
+        pOnDiv = onStdOut;
+      }else{
+        pOnDiv = onStdErr;
+      }
+      if (!pOnDiv) {
+        if (!document.getElementById) 
+          return;
+        var outDiv = document.getElementById(action);
+        outDiv.scrollTop = outDiv.scrollHeight;
+      }
+      /*
 			window.clearTimeout(outTimer);
 			window.clearTimeout(errTimer);
 			if(action == "stdout"){
