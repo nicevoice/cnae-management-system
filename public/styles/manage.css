@@ -116,7 +116,7 @@ margin:8px;
 #mongoskinUrl{
 width: 380px;
 }
-#gitInfo #npmName{
+#gitInfo,#npmName{
   width:450px;
   font-size:15px;
   overflow: auto; 

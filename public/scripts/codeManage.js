@@ -195,7 +195,7 @@ function install(){
 		if(data.status==="ok"){
       showNpmInfo("模块安装成功!\n"+data.msg);
 		}else{
-			 showGitInfo("发现错误！\n"+data.msg);
+			 showNpmInfo("发现错误！\n"+data.msg);
 		}
 	}
 	})

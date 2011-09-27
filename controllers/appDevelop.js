@@ -329,11 +329,12 @@ exports.doUploadImg = function(req, res){
  * @param {Object} res
  */
 exports.npmInstall = function(req, res){
-  console.log(req.session.email+ " "+ req.params.id+" git pull");
   var domain = req.params.id||'',
       npmName = req.body.npmName||'',
       install = "npm install "+npmName,
       cwd = process.cwd();
+      
+  console.log(req.session.email+ " "+ req.params.id+" npm install "+ npmName);
     try{
   		process.chdir(uploadDir+'/'+domain);
   	}catch(err){
