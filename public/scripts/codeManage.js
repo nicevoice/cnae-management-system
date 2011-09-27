@@ -83,7 +83,7 @@ function removenpmTips(){
   if(name.val()===npmTips)
     name.val("");
 }
-upload = function(){
+function upload(){
   var str = '可能会覆盖之前存在的代码，确定上传吗？';
 	if(!confirm(str))
 		return false;
@@ -99,7 +99,7 @@ upload = function(){
 	}
 	$("#uploading").css("display", "block");
 }
-download = function(){
+function download(){
 	var domain = $("#appDomain").html();
 	$.ajax({
 	cache:false,
@@ -124,7 +124,7 @@ download = function(){
 	})
 }
 
-clone = function(){
+function clone(){
   var gitUrl = $("#gitUrl").val()||'',
       domain = $("#appDomain").html();
   if(gitUrl === ""){
@@ -153,7 +153,7 @@ clone = function(){
 	})
 }
 
-pull = function(){
+function pull(){
   var domain = $("#appDomain").html();
   var str = '可能会存在冲突，确定进行此操作吗？';
 	if(!confirm(str))
@@ -178,6 +178,28 @@ pull = function(){
 	})
 }
 
+function install(){
+  var domain = $("#appDomain").html()||'',
+      npmName = $("#npmName").val()||'';
+  showNpmInfo("正在获取中，请稍后...");
+ 	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/npminstall",
+	dataType:"json",
+	data:{npmName:npmName},
+	error:function(err){
+		 showNpmInfo("连接错误,请稍后再试。");
+	},
+	success:function(data){
+		if(data.status==="ok"){
+      showNpmInfo("模块安装成功!\n"+data.msg);
+		}else{
+			 showGitInfo("发现错误！\n"+data.msg);
+		}
+	}
+	})
+}
 showGitInfo = function(msg){
   msg = htmlSpecial(msg);
   if (hasGitInfo) {
