@@ -415,8 +415,8 @@ exports.getStdOutput = function(req, res){
     var lines = data.split('\n');
     if (lines&&lines.length>0) {
       lines.reverse();
-      console.log(lines);
-      while(lines.length>0 && lines[0].indexOf("/home/admin/cnae/git/cnode-app-engine/lib/modules/net.js") != -1){
+      console.log(lines.shift()+lines.length);
+      while(lines.length>0 && lines[0].indexOf("/home/admin/cnae/git/cnode-app-engine/lib/modules/net.js") !== -1){
         console.log(lines.shift());
       } 
       data = lines.join('\n');
