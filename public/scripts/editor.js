@@ -2,7 +2,7 @@ var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currDir = ROOT_PATH; // 当前路径
 var currNode; // 当前文件DOM
-var outTimer, errTimer, interval=1000;	//获取stdoutput的定时器，点击重启应用以后开始每10s获取一次
+var outTimer, errTimer, interval=5000;	//获取stdoutput的定时器，点击重启应用以后开始每5s获取一次
 var openedFiles = []; // 打开的文件数组
 var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
