@@ -413,10 +413,13 @@ exports.getStdOutput = function(req, res){
 	getLog(action, domain, 1000, function(data){
 		try{
     var lines = data.split('\n');
-    console.log(data);
-    lines.reverse();
-    data = lines.join('\n');
-    console.log(data);
+    if (lines&&lines.length>0) {
+      lines.reverse();
+      while(lines.length>0 && lines[0].indexOf("/home/admin/cnae/git/cnode-app-engine/lib/modules/net.js") != -1){
+        lines = lines.shift();
+      } 
+      data = lines.join('\n');
+    }
 		return res.sendJson( {output:data});
 		}catch(e){};
 	});
