@@ -413,8 +413,10 @@ exports.getStdOutput = function(req, res){
 	getLog(action, domain, 1000, function(data){
 		try{
     var lines = data.split('\n');
+    console.log(data);
     lines.reverse();
     data = lines.join('\n');
+    console.log(data);
 		return res.sendJson( {output:data});
 		}catch(e){};
 	});
