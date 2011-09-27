@@ -412,6 +412,9 @@ exports.getStdOutput = function(req, res){
 		action = req.body.action;
 	getLog(action, domain, 1000, function(data){
 		try{
+    var lines = data.split('\n');
+    lines.reverse();
+    data = lines.join('\n');
 		return res.sendJson( {output:data});
 		}catch(e){};
 	});
