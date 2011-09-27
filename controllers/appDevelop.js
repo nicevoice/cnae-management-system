@@ -333,13 +333,7 @@ exports.npmInstall = function(req, res){
   var domain = req.params.id||'',
       npmName = req.body.npmName||'',
       install = "npm install "+npmName,
-      cwd = process.cwd(),
-      modulePath = uploadDir+'/'+domain +'/node_modules',
-      installEvnet = new EventProxy();
-  installEvent.once("install", function(mkDirDone){
-    if(!mkDirDone){
-      res.sendJson({status:"error", msg:"创建node_modules文件夹出错"});
-    }
+      cwd = process.cwd();
     try{
   		process.chdir(uploadDir+'/'+domain);
   	}catch(err){
@@ -359,16 +353,6 @@ exports.npmInstall = function(req, res){
         return res.sendJson({status:"ok", msg:npmStdout});
       }
     });     
-  });
-  fs.mkdir(tempDir+"/"+domain, '777', function(err){
-          if (err&&err.errno !== 17) {
-              console.log(err.toString());
-              installEvent.fire("install", false);
-            }
-          else{
-            installEvent.fire("install", true);
-          }
-         });
 }
 exports.showMongo = function(req, res){
 	var domain = req.params.id||'';
