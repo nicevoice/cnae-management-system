@@ -406,6 +406,9 @@ function getOutput(action){
 			var d = htmlspecialchars(data.output);
       d = getColor(d);
 			$("#"+action).html(d);
+      if(!document.getElementById) return;
+      var outDiv = document.getElementById(action);
+      outDiv.scrollTop = outDiv.scrollHeight;
 			/*
 			window.clearTimeout(outTimer);
 			window.clearTimeout(errTimer);
