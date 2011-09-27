@@ -28,6 +28,9 @@ function getOutput(action){
 		window.setTimeout(function(){	
 			getOutput(action);
 		},10000);
+    if(!document.getElementById) return;
+    var outDiv = document.getElementById(action);
+    outDiv.scrollTop = outDiv.scrollHeight;
 	}
 	});	
 }
