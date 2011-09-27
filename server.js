@@ -242,7 +242,7 @@ app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), appDeve
 app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), appDevelop.doDownload);
 app.get("/application/download/:id.zip", hasLogin, appDevelop.downloading);
 //npm install
-app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), appDevelop.npmInstall());
+app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), appDevelop.npmInstall);
 //更改协作者权限
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 //控制APP上下线
