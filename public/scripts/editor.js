@@ -216,18 +216,18 @@ $(window).resize(function(){
 
 //绑定鼠标进出std DIV的事件
 function mouseOnStdDiv(){
-  $("#stdout").mouseenter = function(){
+  $("#stdout").mouseenter(function(){
     onStdOut = true;
-  }
-  $("#stderr").mouseenter = function(){
+  });
+  $("#stderr").mouseenter(function(){
     onStdErr = true;
-  }
-   $("#stdout").mouseleave = function(){
+  });
+   $("#stdout").mouseleave(function(){
     onStdOut = false;
-  }
-   $("#stderr").mouseleave = function(){
+  });
+   $("#stderr").mouseleave(function(){
     onStdErr = false;
-  } 
+  }) 
 }
 
 window.onload = function() {
