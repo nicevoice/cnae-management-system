@@ -241,6 +241,8 @@ app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), appDeve
 //代码打包下载
 app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), appDevelop.doDownload);
 app.get("/application/download/:id.zip", hasLogin, appDevelop.downloading);
+//npm install
+app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), appDevelop.npmInstall);
 //更改协作者权限
 app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), manager.doChangeRole);
 //控制APP上下线
@@ -251,7 +253,7 @@ app.post("/application/manage/:id/getStdOutput", hasLogin,checkAuth, manager.get
 app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, manager.getStatus);
 //添加应用管理记录
 app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, manager.addRecord);
-//上传图片接口
+//上传接口
 app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), appDevelop.doUploadImg);
 //给应用分配mongoDB
 app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), appDevelop.createMongo);

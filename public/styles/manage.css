@@ -116,9 +116,10 @@ margin:8px;
 #mongoskinUrl{
 width: 380px;
 }
-#gitInfo{
+#gitInfo,#npmInfo{
   width:450px;
   font-size:15px;
+  overflow: auto; 
 }
 .stdoutputs{ font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 200px; width: 700px; }
 .infoColor{color:#ffffff}

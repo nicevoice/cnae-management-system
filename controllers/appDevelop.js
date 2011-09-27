@@ -51,6 +51,9 @@ exports.doUpload = function(req, res){
       fs.mkdir(tempDir+"/"+domain, '777', function(err){
           if (err&&err.errno !== 17) {
               console.log(err.toString());
+                  return res.render("error", {
+                    message: "创建文件夹失败。请稍后再试。"
+                  });
             }
               var unCompress = "";
               if (type === "gz") {
@@ -320,7 +323,38 @@ exports.doUploadImg = function(req, res){
 			});
 	}
 }
-
+/***
+ * 进行npm install 操作
+ * @param {Object} req
+ * @param {Object} res
+ */
+exports.npmInstall = function(req, res){
+  var domain = req.params.id||'',
+      npmName = req.body.npmName||'',
+      install = "npm install "+npmName,
+      cwd = process.cwd();
+      
+  console.log(req.session.email+ " "+ req.params.id+" npm install "+ npmName);
+    try{
+  		process.chdir(uploadDir+'/'+domain);
+  	}catch(err){
+      console.log(err.toString());
+  		return res.sendJson( {status:"error", msg:"安装模块失败，请稍后再试"});
+  	}
+    exec(install, function(err, npmStdout, npmStderr){
+      try{
+  			process.chdir(cwd);
+  		}catch(err){
+  			console.log(err.toString());
+  		}
+      if(err){
+        console.log(err.toString());
+  		  return res.sendJson( {status:"error", msg:err.toString()});
+      }else{
+        return res.sendJson({status:"ok", msg:npmStdout});
+      }
+    });     
+}
 exports.showMongo = function(req, res){
 	var domain = req.params.id||'';
 		url = req.url;

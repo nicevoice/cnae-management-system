@@ -1,7 +1,9 @@
-var hasInfo = false,
-    tips = "git clone操作请在此输入Git Read-Only url";
+var hasGitInfo = false, hasNpmInfo = false,
+    gitTips = "git clone操作请在此输入Git Read-Only url",
+    npmTips = "在此输入需要安装的模块名";
 $(function(){
-  $("#gitUrl").blur(addTips).focus(removeTips).val(tips);
+  $("#gitUrl").blur(addgitTips).focus(removegitTips).val(gitTips);
+  $("#npmName").blur(addnpmTips).focus(removenpmTips).val(npmTips);
 	$.ajax({
 	cache:false,
 	url:"/getOwnAuthInfo",
@@ -12,10 +14,16 @@ $(function(){
 			$("#submitUpload").click(upload);
 			$("#download").click(download);;
       $("#gitPull").click(pull);
-      $("#gitClone").click(clone);     
+      $("#gitClone").click(clone);
+      $("#npmInstall").click(install);     
       $("#gitUrl").keydown(function(e){
 		    if(e.keyCode===13){
 		  	  clone();
+		    }
+  	  })
+      $("#npmName").keydown(function(e){
+		    if(e.keyCode===13){
+		  	  install();
 		    }
   	  })
 	},
@@ -25,38 +33,57 @@ $(function(){
 			$("#download").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitClone").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
       $("#gitPull").click(function(){sAlert("警告","没有权限进行此操作"); return false;});
-      $("#gitUrl").keydown(function(e){
+      $("#npmInstall").click(function(){sAlert("警告","没有权限进行此操作"); return false;});     
+      $("#npmName").keydown(function(e){
 		    if(e.keyCode===13){
 		  	  sAlert("警告","没有权限进行此操作");
 		    }
   	  })
 		}else{
 			$("#submitUpload").click(upload);
-			$("#download").click(download);
+			$("#download").click(download);;
       $("#gitPull").click(pull);
       $("#gitClone").click(clone);
+      $("#npmInstall").click(install);     
       $("#gitUrl").keydown(function(e){
 		    if(e.keyCode===13){
 		  	  clone();
+		    }
+  	  })
+      $("#npmName").keydown(function(e){
+		    if(e.keyCode===13){
+		  	  install();
 		    }
   	  })
 		}
 	}
 	});
 });
-function addTips(){
+function addgitTips(){
   var url = $("#gitUrl"),
       urlContent = url.val()||'';
   if (urlContent === '') {
-    url.val(tips);
+    url.val(gitTips);
   }
 }
-function removeTips(){
+function removegitTips(){
   var url = $("#gitUrl");
-  if(url.val()===tips)
+  if(url.val()===gitTips)
     url.val("");
 }
-upload = function(){
+function addnpmTips(){
+  var name = $("#npmName"),
+      nameContent = name.val()||'';
+  if (nameContent === '') {
+    name.val(npmTips);
+  }
+}
+function removenpmTips(){
+  var name = $("#npmName");
+  if(name.val()===npmTips)
+    name.val("");
+}
+function upload(){
   var str = '可能会覆盖之前存在的代码，确定上传吗？';
 	if(!confirm(str))
 		return false;
@@ -72,7 +99,7 @@ upload = function(){
 	}
 	$("#uploading").css("display", "block");
 }
-download = function(){
+function download(){
 	var domain = $("#appDomain").html();
 	$.ajax({
 	cache:false,
@@ -97,7 +124,7 @@ download = function(){
 	})
 }
 
-clone = function(){
+function clone(){
   var gitUrl = $("#gitUrl").val()||'',
       domain = $("#appDomain").html();
   if(gitUrl === ""){
@@ -106,7 +133,7 @@ clone = function(){
   var str = '可能会覆盖之前存在的代码，确定进行此操作吗？';
 	if(!confirm(str))
 		return false;
-  showInfo("正在获取中，请稍后...");
+  showGitInfo("正在获取中，请稍后...");
  	$.ajax({
 	cache:false,
 	type:"post",
@@ -114,24 +141,24 @@ clone = function(){
 	dataType:"json",
 	data:{gitUrl:gitUrl},
 	error:function(err){
-		 showInfo("连接错误,请稍后再试。");
+		 showGitInfo("连接错误,请稍后再试。");
 	},
 	success:function(data){
 		if(data.status==="ok"){
-      showInfo("代码获取成功。");
+      showGitInfo("代码获取成功。");
 		}else{
-			 showInfo("发现错误\n"+data.msg);
+			 showGitInfo("发现错误\n"+data.msg);
 		}
 	}
 	})
 }
 
-pull = function(){
+function pull(){
   var domain = $("#appDomain").html();
   var str = '可能会存在冲突，确定进行此操作吗？';
 	if(!confirm(str))
 		return false;
-  showInfo("正在获取中，请稍后...");
+  showGitInfo("正在获取中，请稍后...");
  	$.ajax({
 	cache:false,
 	type:"post",
@@ -139,27 +166,61 @@ pull = function(){
 	dataType:"json",
 	data:{},
 	error:function(err){
-		 showInfo("连接错误,请稍后再试。");
+		 showGitInfo("连接错误,请稍后再试。");
 	},
 	success:function(data){
 		if(data.status==="ok"){
-      showInfo("代码获取成功!\n"+data.msg);
+      showGitInfo("代码获取成功!\n"+data.msg);
 		}else{
-			 showInfo("发现错误！\n"+data.msg);
+			 showGitInfo("发现错误！\n"+data.msg);
 		}
 	}
 	})
 }
 
-showInfo = function(msg){
+function install(){
+  var domain = $("#appDomain").html()||'',
+      npmName = $("#npmName").val()||'';
+  showNpmInfo("正在获取中，请稍后...");
+ 	$.ajax({
+	cache:false,
+	type:"post",
+	url:"/application/manage/"+domain+"/npminstall",
+	dataType:"json",
+	data:{npmName:npmName},
+	error:function(err){
+		 showNpmInfo("连接错误,请稍后再试。");
+	},
+	success:function(data){
+		if(data.status==="ok"){
+      showNpmInfo("模块安装成功!\n"+data.msg);
+		}else{
+			 showNpmInfo("发现错误！\n"+data.msg);
+		}
+	}
+	})
+}
+showGitInfo = function(msg){
   msg = htmlSpecial(msg);
-  if (hasInfo) {
+  if (hasGitInfo) {
     $("#gitInfo").html(msg);
   }
   else{
-    hasInfo = true;
+    hasGitInfo = true;
     var info = $('<pre id="gitInfo" class="borderRadius5"></pre>');
     info.html(msg);
     info.insertAfter($("#pull-p"));
+  }
+}
+showNpmInfo = function(msg){
+  msg = htmlSpecial(msg);
+  if (hasNpmInfo) {
+    $("#npmInfo").html(msg);
+  }
+  else{
+    hasNpmInfo = true;
+    var info = $('<pre id="npmInfo" class="borderRadius5"></pre>');
+    info.html(msg);
+    info.insertAfter($("#npmName"));
   }
 }
