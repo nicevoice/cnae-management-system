@@ -231,8 +231,6 @@ function mouseOnStdDiv(){
 }
 
 window.onload = function() {
-  mouseOnStdDiv();
-  
 	// 初始化编辑器和控制台尺寸
 	setElementsSize();
 	
@@ -287,6 +285,7 @@ window.onload = function() {
 	
 	// 加载样式
 	setSidebarUI();
+  mouseOnStdDiv();
 };
 
 window.onbeforeunload = function() {
