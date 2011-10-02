@@ -298,7 +298,7 @@ window.onload = function() {
 		complete:		function() {
 			$("#msg").hide();
 		},
-		url:			"/editor/" + DOMAIN + "/upload",
+		url:			"/application/manage/" + DOMAIN + "/uploadImg",
 		type:			"post",
 		dataType:		"json",
 		resetForm:		true,
