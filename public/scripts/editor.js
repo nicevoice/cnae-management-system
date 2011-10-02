@@ -283,9 +283,37 @@ window.onload = function() {
 	
 	setConsoleResize();
 	
+	var options = { 
+		beforeSubmit:	function() {
+			showMsg1("正在上传..");
+		},
+		success:		function(data) {
+			if(typeof data.error != "undefined" && data.error == "false") {
+				listFiles(currDir);
+				showMsg2("上传成功");
+			} else {
+				showMsg2("上传失败！");
+			}
+		},
+		complete:		function() {
+			//$("#msg").hide();
+		},
+		url:			"/application/manage/" + DOMAIN + "/uploadImg",
+		type:			"post",
+		dataType:		"json",
+		resetForm:		true,
+		timeout:		30000
+	};
+	
+	$('#upload-form').submit(function() {
+		options.data = {dirPath: currDir};
+		$(this).ajaxSubmit(options);
+		return false;
+	});
+	
 	// 加载样式
 	setSidebarUI();
-  mouseOnStdDiv();
+	mouseOnStdDiv();
 };
 
 window.onbeforeunload = function() {
@@ -533,7 +561,9 @@ function listFiles(dirPath) {
 					res += '<div class="list-item"><dl class="up clearfix" name="up" title="返回上一层"><dt class="item-name">返回上一层..</dt><dd></dd></dl></div>';
 				}
 				$.each(data.content, function(fileIndex, file) {
-					res += '<div class="list-item"><dl class="' + file["type"] + ' clearfix" name="' + file["type"] + '" title="' + file["name"] + '">';
+					var ext = getFileExt(file["name"])
+					  , icon = (ext == ".jpg" || ext == ".jpeg" || ext == ".gif" || ext == ".bmp" || ext == ".png") ? "img" : file["type"];
+					res += '<div class="list-item"><dl class="' + icon + ' clearfix" name="' + file["type"] + '" title="' + file["name"] + '">';
 					res += '<dt class="item-name">' + file["name"] + '</dt>';
 					res += '<dd><div class="menu-btn"><img src="/images/icon_menu.png" />';
 					res += setSubmenu(file);
@@ -1180,12 +1210,14 @@ function setToolbarAction() {
 			});
 	});
 	// 上传文件
-	$("#tb-upload").click(function() {
-		if(actionLock) return false;
-		actionLock = true;
-		showMsg("上传功能即将开放，敬请关注！");
-		actionLock = false;
-	});
+	$("#tb-upload").toggle(
+		function () {
+			$("#upload-box").slideDown(200);
+		},
+		function () {
+			$("#upload-box").slideUp(200);
+		}
+	);
 }
 
 function setConsoleResize(minHeight) {

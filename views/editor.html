@@ -3,13 +3,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><%=domain%> - NAE IDE</title>
-	<link href="/styles/editor.css?v=1.0.2" rel="stylesheet" type="text/css" />
-	<script src="/scripts/head.load.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/scripts/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<link href="/styles/editor.css?v=1.0.3" rel="stylesheet" type="text/css" />
+	<script src="/scripts/head.load.min.js"></script>
+	<script src="/scripts/ace/ace.js"></script>
 	<script src="/scripts/jquery-1.6.2.min.js"></script>
 	<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
+	<script src="/scripts/jquery.form.js"></script>
 	<script src="/scripts/global.js?v=1.0.2" type="text/javascript" charset="utf-8"></script>
-	<script src="/scripts/editor.js?v=1.0.6" type="text/javascript" charset="utf-8"></script>
+	<script src="/scripts/editor.js?v=1.0.9" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
@@ -32,6 +33,12 @@
                 <li id="tb-fresh"><img src="/images/icon_refresh.png" title="刷新" /></li>
                 <li id="tb-upload"><img src="/images/icon_upload.png" title="上传文件" /></li>
             </ul>
+        </div>
+        <div id="upload-box">
+        	<form id="upload-form" action="" method="" enctype="multipart/form-data">
+				<div class="fields"><input type="file" id="upload-file" name="upload"></div>
+				<div class="fields"><input type="submit" id="upload-submit" value="上传"></div>
+			</form>
         </div>
         <div id="file-list"></div>
     </div>
