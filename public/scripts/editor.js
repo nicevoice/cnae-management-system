@@ -296,7 +296,7 @@ window.onload = function() {
 			}
 		},
 		complete:		function() {
-			$("#msg").hide();
+			//$("#msg").hide();
 		},
 		url:			"/application/manage/" + DOMAIN + "/uploadImg",
 		type:			"post",
