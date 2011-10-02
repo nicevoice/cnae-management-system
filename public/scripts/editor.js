@@ -295,6 +295,9 @@ window.onload = function() {
 				showMsg2("上传失败！");
 			}
 		},
+		complete:		function() {
+			$("#msg").hide();
+		},
 		url:			"/editor/" + DOMAIN + "/upload",
 		type:			"post",
 		dataType:		"json",
