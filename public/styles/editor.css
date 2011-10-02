@@ -25,6 +25,7 @@ html[xmlns] .clearfix { display: block; }
 #file-list dl { padding: 5px; border-bottom: #ccc 1px solid; cursor: pointer; width: 200px; height:24px; }
 #file-list .d { background: url(../images/icon_folder.png) 3px 8px no-repeat; }
 #file-list .f { background: url(../images/icon_script.png) 3px 8px no-repeat; }
+#file-list .img { background: url(../images/icon_image.png) 3px 8px no-repeat; }
 #file-list .up { background: url(../images/icon_up.png) 3px 8px no-repeat; }
 #file-list dl dt { margin-left: 22px; float: left; height: 24px; width:152px; word-break: keep-all; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 #file-list dl dt .input { width: 148px; overflow: hidden; }
@@ -53,6 +54,8 @@ html[xmlns] .clearfix { display: block; }
 #console #stdout, #console #stderr { font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 95px; width: 48%; }
 #console #console-nav { position: absolute; right: 10px; top: 0; cursor: pointer; }
 #wrapper #content #editor-panel #tabs .active { background-color: #E8E8E8; border-left: #C7F83E 3px solid; }
+#upload-box { background-color: #999; padding: 5px; overflow: hidden; display:none; }
+#upload-box .fields { margin: 3px 0; text-align: right; }
 /*
  * jQuery UI Resizable 1.8.16
  *

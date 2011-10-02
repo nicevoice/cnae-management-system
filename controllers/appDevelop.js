@@ -23,7 +23,7 @@ var config = require('../config')
 	var domain = req.params.id||'';
 	res.render("appManageCode", {layout:"layoutApp", domain:domain,url:url,
 	nickName:req.session.nickName, email:req.session.email});
-};
+  };
   
 /***
  * 上传代码，gz zip格式
@@ -307,21 +307,23 @@ exports.downloading = function(req, res){
  * @param {} req
  * @param {} res
  */
-exports.doUploadImg = function(req, res){
-	var domain = req.params.id||'';
-    var fields = req.form.fields, files = req.form.files;
-	var filePath = files.upload ? files.upload.filename : null;	
-	if(filePath){
-			var savePath = uploadDir+'/'+domain +'/'+ fields + "/"+files.upload.name;
-			fs.rename(files.upload.path, savePath, function(err){
-				if(err){
-					console.log(err);
-					return res.sendJson( {done:false});
-				}else{
-					return res.sendJson( {done:true});
-				}
-			});
+exports.doUploadImg = function(req, res) {
+	try {
+		var domain = req.params.id || ""
+		  , fields = req.form.fields
+	      , files = req.form.files
+	      , filePath = files.upload ? files.upload.filename : null
+	      , dirPath = req.body.dirPath || ""
+	      , savePath = require('path').join(uploadDir, domain, dirPath, files.upload.name);
+	} catch(e) {
+		return res.sendJson({error:"true",msg:"invalid param"});
 	}
+	
+	if(!filePath) return res.sendJson({error:"true", msg:"invalid filePath"});
+	fs.rename(files.upload.path, savePath, function(err) {
+		if(err) return res.sendJson({error:"true", msg:"rename file error"});
+		return res.sendJson({error:"false", msg:"succeed"});
+	});
 }
 /***
  * 进行npm install 操作
