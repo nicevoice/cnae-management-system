@@ -290,9 +290,9 @@ window.onload = function() {
 		success:		function(data) {
 			if(typeof data.error != "undefined" && data.error == "false") {
 				listFiles(currDir);
-				showMsg2("上传成功", 2000);
+				showMsg2("上传成功");
 			} else {
-				showMsg2("上传失败！", 2000);
+				showMsg2("上传失败！");
 			}
 		},
 		complete:		function() {
