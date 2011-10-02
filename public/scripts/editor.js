@@ -290,9 +290,9 @@ window.onload = function() {
 		success:		function(data) {
 			if(typeof data.error != "undefined" && data.error == "false") {
 				listFiles(currDir);
-				showMsg2("上传成功");
+				showMsg2("上传成功", 2000);
 			} else {
-				showMsg2("上传失败！");
+				showMsg2("上传失败！", 2000);
 			}
 		},
 		complete:		function() {
@@ -302,7 +302,7 @@ window.onload = function() {
 		type:			"post",
 		dataType:		"json",
 		resetForm:		true,
-		timeout:		3000
+		timeout:		30000
 	};
 	
 	$('#upload-form').submit(function() {
