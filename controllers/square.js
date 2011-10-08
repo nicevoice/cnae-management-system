@@ -35,8 +35,7 @@ exports.post = function(req, res){
     limit: limit
   }).toArray(function(err, data){
     if (err) {
-      console.log("not find apps");
-      console.log(err.toString());
+      log.error(err.toString());
       return res.sendJson({
         status: "error",
         msg: "数据获取失败"
@@ -61,8 +60,7 @@ exports.post = function(req, res){
         }
       }).toArray(function(err, mems){
         if (err) {
-          console.log("not find mems");
-          console.log(err.toString());
+          log.error(err.toString());
           return res.sendJson({
             status: "error",
             msg: "数据获取失败"
@@ -98,7 +96,7 @@ exports.post = function(req, res){
             nickName: 1
           }).toArray(function(err, userInfos){
             if (err) {
-              console.log(err.toString());
+              log.error(err.toString());
               return res.sendJson({
                 status: "error",
                 msg: "数据获取失败"
@@ -162,7 +160,7 @@ exports.apply = function(req, res){
       joinTime:new Date().getTime()
     }, function(err){
       if (err) {
-        console.log(err.toString());
+        log.error(err.toString());
         res.sendJson({
           status: "error",
           msg: "数据更新失败"
@@ -192,7 +190,7 @@ exports.apply = function(req, res){
     email: email
   }, function(err, data){
     if (err) {
-      console.log(err.toString());
+      log.error(err.toString());
       applyEvent.fire("checkTarget", {
         status: "error",
         msg: "数据获取错误"
@@ -217,7 +215,7 @@ exports.apply = function(req, res){
     email: req.session.email
   }, function(err, data){
     if (err) {
-      console.log(err.toString());
+      log.error(err.toString());
       applyEvent.fire("checkOwn", {
         status: "error",
         msg: "数据获取错误"
@@ -251,7 +249,7 @@ exports.personalSquare = function(req, res){
     nickName: nickName
   }, function(err, owner){
     if (err) {
-      console.log(err.toString());
+      log.error(err.toString());
       return res.sendJson({
         status: error,
         msg: "获取数据失败"
@@ -270,7 +268,7 @@ exports.personalSquare = function(req, res){
           email: email
         }).toArray(function(err ,mems){
           if (err) {
-            console.log(err.toString());
+            log.error(err.toString());
             return res.sendJson({
               status: "error",
               msg: "获取数据失败"
@@ -288,8 +286,7 @@ exports.personalSquare = function(req, res){
               sort: [['appCreateDate', -1]]
             }).toArray(function(err, data){
               if (err) {
-                console.log("not find apps");
-                console.log(err.toString());
+                log.error(err.toString());
                 return res.sendJson({
                   status: "error",
                   msg: "数据获取失败"
@@ -308,8 +305,7 @@ exports.personalSquare = function(req, res){
                   }
                 }).toArray(function(err, mems){
                   if (err) {
-                    console.log("not find mems");
-                    console.log(err.toString());
+                    log.error(err.toString());
                     return res.sendJson({
                       status: "error",
                       msg: "数据获取失败"
@@ -345,7 +341,7 @@ exports.personalSquare = function(req, res){
                         nickName: 1
                       }).toArray(function(err, userInfos){
                         if (err) {
-                          console.log(err.toString());
+                          log.error(err.toString());
                           return res.sendJson({
                             status: "error",
                             msg: "数据获取失败"

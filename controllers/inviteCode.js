@@ -20,14 +20,14 @@ exports.showInviteCode = function(req, res){
 	var page = urlMoudle.parse(url, true).query.page||'1';
 	inviteCode.find({},{code:1}).count(function(err, count){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			res.render("error", {message:"查询数目错误"});
 		}else{
 			totalPage = Math.ceil(count/pageNum);
 			inviteCode.find({},{skip:pageNum*(page-1), limit:pageNum}
 			).toArray(function(err, data){
 			if(err){
-				log.error(err);
+				log.error(err.toString());
 				res.render("error", {message:"数据库查询错误"});
 			}
 			res.render("inviteCode", {layout:"layoutMain", nickName:req.session.nickName||'',
@@ -46,7 +46,7 @@ exports.generateInviteCode = function(req, res){
 	console.log(123);
 	inviteCode.find({},{id:1}).toArray(function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.sendJson( {done:false});
 		}
 		if(!data||data.length<1){
@@ -64,7 +64,7 @@ exports.generateInviteCode = function(req, res){
 		console.log(code);
 		inviteCode.save({id:num, code:code},function(){
 			if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.sendJson( {done:false});
 			}else{
 				//return res.sendJson( {done:true, code:code});	
@@ -110,6 +110,7 @@ exports.deleteInviteCode = function(req, res){
 	var code = req.body.code||'';
 	inviteCode.remove({code:code},function(err){
 		if(err){
+      log.error(err.toString());
 			return res.sendJson( {done:false});
 		}else{
 			return res.sendJson( {done:true});

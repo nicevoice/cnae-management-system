@@ -31,7 +31,7 @@ exports.sum = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	app_basic.findOne({appDomain:domain}, function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
@@ -99,7 +99,7 @@ exports.appmng = function(req, res){
 	//获取应用数据
 	app_basic.findOne({appDomain:domain.toString()}, function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
 			res.render("appManageInfo", {layout:"layoutApp", appInfo:data, 
@@ -140,7 +140,7 @@ exports.doAppmng = function(req, res){
 		{$set:{appName:newAppName.toString(), appDes:newAppDes.toString()}},
 		function(err){
 			if(err){
-				log.error(err);
+				log.error(err.toString());
 				updateInfoEvent.fire("updatedBasic", false);
 			}else
 				updateInfoEvent.fire("updatedBasic", true);
@@ -148,7 +148,7 @@ exports.doAppmng = function(req, res){
 		app_mem.update({appDomain:domain.toString()}, {$set:{appName:newAppName.toString()}},{multi:true},
 		function(err){
 			if(err){
-				log.error(err);
+				log.error(err.toString());
 				updateInfoEvent.fire("updatedMem", false);
 			}else
 				updateInfoEvent.fire("updatedMem", true);
@@ -156,7 +156,7 @@ exports.doAppmng = function(req, res){
 		records.save({appDomain:domain.toString(), email:req.session.email.toString(),
 		action:"修改应用信息", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(err){
 			if(err){
-			log.error(err);
+			log.error(err.toString());
 			updateInfoEvent.fire("saveRecords", false);
 			}else{
 			updateInfoEvent.fire("saveRecords", true);
@@ -176,7 +176,7 @@ exports.coopmng = function(req, res){
 	});
 	app_mem.find({appDomain:domain},{sort:[['joinTime', 1]]}).toArray(function(err, data){
 		if(err){
-			log.error();
+			log.error(err.toString());
 			coopEvent.unbind();
 			return res.render("error", {message:"查询数据库错误，请稍后再试"});
 		}else{
@@ -185,7 +185,7 @@ exports.coopmng = function(req, res){
 	});
 	app_mem.findOne({appDomain:domain, email:req.session.email},function(err, data){
 		if(err){
-			log.error();
+			log.error(err.toString());
 			coopEvent.unbind();
 			return res.render("error", {message:"查询数据库错误，请稍后再试"});
 		}else{
@@ -238,6 +238,7 @@ exports.doCoopmng = function(req, res){
 	else{
 		app_mem.findOne({email:email,appDomain:domain}, function(err, data){
 			if(err){
+        log.error(err.toString());
 				return res.sendJson( {done:false, why:"数据库查询错误"});
 			}else
 			if(data){
@@ -246,12 +247,13 @@ exports.doCoopmng = function(req, res){
 			//插入
 			app_basic.findOne({appDomain:domain}, function(err, name){
 	 		if(err){
+        log.error(err.toString());
 	 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
 	 		}else if(name){
 			 	app_mem.save({appDomain:domain.toString(), appName:name.appName.toString(),
 			 	email:email.toString(), role:parseInt(role), active:0,joinTime:new Date().getTime()}, function(err){
 			 		if(err){
-			 			log.error(err);
+			 			log.error(err.toString());
 			 			res.sendJson( {done:false, why:"数据库查询错误，请稍后再试"});
 			 			}
 			 		else{
@@ -348,6 +350,7 @@ exports.doChangeRole = function(req, res){
 	app_mem.update({email:email, appDomain:domain}, {$set:{role:parseInt(role)}},
 	function(err){
 		if(err){
+      log.error(err.toString());
 			res.sendJson( {done:false});
 		}else{
 			res.sendJson( {done:true});
@@ -379,6 +382,7 @@ exports.mnglog = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	records.find({appDomain:domain.toString()}).count(function(err, count){
 		if(err){
+      log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误"});
 		}else{
 			totalPage = Math.ceil(count/pageNum);
@@ -386,7 +390,7 @@ exports.mnglog = function(req, res){
 				{sort:[['recordTime', -1]],skip:pageNum*(page-1), limit:pageNum}).toArray(
 			function(err, data){
 				if(err){
-					console.log(err);
+          log.error(err.toString());
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
 			

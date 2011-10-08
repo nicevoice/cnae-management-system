@@ -38,7 +38,7 @@ var config = require('../config')
  	app_mem.find({email:req.session.email.toString(), 
  	role:0}, {appDomain:1, appName:1}).toArray(function(err, data){
  		if(err){
- 			log.error(err);
+ 			log.error(err.toString());
  			getAppEvent.unbind();
  			return res.render("error", "数据库查询出错，请稍后再试");
     	}else{
@@ -49,7 +49,7 @@ var config = require('../config')
     app_mem.find({email:req.session.email.toString(),
     role:{$ne:0}}, {appDomain:1, appName:1, active:1}).toArray(function(err, data){
     	if(err){
-    		log.error(err);
+    		log.error(err.toString());
     		getAppEvent.unbind();
  			return res.render("error", "数据库查询出错，请稍后再试");
     	}else{
@@ -98,14 +98,14 @@ var config = require('../config')
 				fs.mkdir(saveDir, '777', function(err){
 					console.log("mkdir");
 					if(err){
-						console.log("创建应用文件夹失败");
+						log.error(err.toString());
 					}else{
 						var initFile = __dirname.slice(0, __dirname.lastIndexOf('/')+1)+"init.tar.gz";
 						console.log(initFile);
 						console.log(saveDir);
 						exec('tar -xf '+ initFile + ' -C '+ saveDir, function(err){
 						if(err){
-							console.log("初始文件夹失败:"+err.toString());
+							log.error(err.toString());
 						}
 					}); 
 				}
@@ -117,7 +117,7 @@ var config = require('../config')
  			app_basic.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
  			appDes:newAppDes.toString(), appState:0, appCreateDate:now}, function(err){
  				if(err){
- 					log.error(err);
+ 					log.error(err.toString());
  					createAppEvent.unbind();
  					return res.render("error", {message:"创建应用失败，请稍后再试"});
  				}
@@ -128,7 +128,7 @@ var config = require('../config')
  			app_mem.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
  			email:req.session.email.toString(), role:0, active:1,joinTime:new Date().getTime()}, function(err){
  				if(err){
- 					log.error(err);
+ 					log.error(err.toString());
  					createAppEvent.unbind();
  					return res.render("error", {message:"创建应用失败，请稍后再试"});
  				}
@@ -139,7 +139,7 @@ var config = require('../config')
  			records.save({appDomain:newAppDomain.toString(), email:req.session.email,
  			action:"创建应用", recordTime:now}, function(err){
  				if(err){
- 					log.error(err);
+ 					log.error(err.toString());
  				}else{
  					createAppEvent.fire("saveRecord", true);
  				}
@@ -149,7 +149,7 @@ var config = require('../config')
  	})
  	app_mem.findOne({appDomain:newAppDomain.toString()},function(err, item){
  		if(err){
- 			log.error(err);
+ 			log.error(err.toString());
  			checkRepetition.unbind();
  			return res.render("error", {message:"创建应用失败，请稍后再试"});
  		}
@@ -177,7 +177,7 @@ var config = require('../config')
     }, function(err, data){
       console.log("应用数目:" + data);
       if (err) {
-        log.error(err);
+        log.error(err.toString());
         checkRepetition.unbind();
         return res.render("error", {
           message: "创建应用失败，请稍后再试"
@@ -275,7 +275,7 @@ exports.deleteApp = function(req, res){
 		onOff("stop", delDomain, function(){
 			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
 			if(err){
-				console.log(err);
+				log.error(err.toString());
 				deleteEvent.fire("deleteDir", false);
 			}else{
 				deleteEvent.fire("deleteDir", true);
@@ -295,13 +295,24 @@ exports.joinApp = function(req, res){
 	else{
 		app_mem.update({appDomain:domain, email:req.session.email},
 		{$set:{active:1}}, function(err){
-			if(err)
-				res.sendJson( {done:false});
-			else{
-				res.sendJson( {done:true});
-				records.save({appDomain:domain, email:req.session.email,
-				action:"接受邀请", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(){});
-			}
+			if (err) {
+       log.error(err.toString());
+        res.sendJson({
+          done: false
+        });
+      }
+      else {
+        res.sendJson({
+          done: true
+        });
+        records.save({
+          appDomain: domain,
+          email: req.session.email,
+          action: "接受邀请",
+          recordTime: new Date().format("YYYY-MM-dd hh:mm:ss")
+        }, function(){
+        });
+      }
 		})
   	}
 }
@@ -317,6 +328,7 @@ exports.deleteCoop = function(req, res){
 		app_mem.remove({appDomain:domain, email:req.session.email},
 		function(err){
 			if(err){
+        log.error(err.toString());
 				res.sendJson( {done:false});
 			}
 			else{
@@ -335,12 +347,17 @@ exports.deleteCoop = function(req, res){
 exports.checkAppDomain = function(req, res){
 	var domain = req.body.domain||'';
 	app_basic.findOne({appDomain:domain}, function(err, data){
-		if(err)
-			res.sendJson( {});
-		else if(data)
-			res.sendJson( {warn:"域名已经被使用"});
-			else
-			res.sendJson( {});
+		if (err) {
+      log.error(err.toString());
+      res.sendJson({});
+    }
+    else 
+      if (data) 
+        res.sendJson({
+          warn: "域名已经被使用"
+        });
+      else 
+        res.sendJson({});
 	})
 }
 /***
@@ -354,6 +371,7 @@ exports.getOwnAuthInfo = function(req, res){
 			//查找权限
 			app_mem.findOne({appDomain:domain, email:email}, function(err ,data){
 				if(err){
+          log.error(err.toString());
 					return res.sendJson( {status:"error",msg:"数据库查询错误"});
 				}else{
           if(data)

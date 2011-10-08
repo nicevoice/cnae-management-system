@@ -28,7 +28,6 @@ exports.regist = function(req, res){
 	var queryString = urlMoudle.parse(req.url, true).query,
 		email = queryString.email||'',
 		code = queryString.code||'';
-	console.log(code);
 	res.render("regist",{email:email,code:code});
 }
 /***
@@ -51,7 +50,7 @@ exports.checkLogin = function(req, res){
 	//数据库查找
 	users.findOne({email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
-			console.log(err.toString());
+			log.error(err.toString());
 			return res.render("login", { warn:"数据获取失败"});
 		}
 		else{
@@ -63,6 +62,7 @@ exports.checkLogin = function(req, res){
       }
       else {
         console.log(userEmail+" login");
+        log.info(userEmail + "login");
         req.session.email = userEmail;
         req.session.nickName = item.nickName;
         if (autoLogin) {
@@ -129,7 +129,7 @@ exports.checkRegist = function(req, res){
 			users.save({email:userEmail, nickName:userNickName, password:md5(userPassword+config.md5_secret), 
 			dbUserName:randomStringNum(12), dbPassword:randomStringNum(10)}, function(err){
 				if(err){
-					log.error(err);
+					log.error(err.toString());
 					return res.render("error", {message:"注册失败，请稍后再试"});
 				}
 				else{
@@ -143,7 +143,7 @@ exports.checkRegist = function(req, res){
 	//检查email是否已经存在
 	users.findOne({email:userEmail.toString()},function(err, item){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			checkEventProxy.trigger("checkEmail", false);
 		}else{
 			if(item)
@@ -155,7 +155,7 @@ exports.checkRegist = function(req, res){
 	//检查昵称是否已经存在
 	users.findOne({nickName:userNickName.toString()}, function(err, item){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			checkEventProxy.trigger("checkName", false);
 		}else{
 			if(item)
@@ -177,7 +177,7 @@ exports.checkRegist = function(req, res){
 	}else{
 	inviteCode.findOne({code:code}, function(err, item){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			checkEventProxy.trigger("checkCode", false);
 		}else{
 			if(!item)
@@ -187,7 +187,7 @@ exports.checkRegist = function(req, res){
 				//删除改邀请码
 				inviteCode.remove({code:code}, function(err){
 					if(err){
-						log.error(err);
+						log.error(err.toString());
 					}
 				});
 		}	
@@ -211,6 +211,7 @@ exports.checkEmail = function(req, res){
 		return res.sendJson( {warn:"请输入合法的email地址"});
 	users.findOne({email:userEmail}, function(err, data){
 		if(err){
+      log.error(err.toString());
 			res.sendJson( {});
 		}else{
 			if(data){
@@ -236,6 +237,7 @@ exports.checkName = function(req, res){
 		return res.sendJson( {warn:""});
 	users.findOne({nickName:name}, function(err, data){
 		if(err){
+      log.error(err.toString());
 			res.sendJson( {});
 		}else{
 			if(data){
@@ -266,7 +268,7 @@ exports.postRetrieve = function(req, res){
     }},
     function(err, userInfo){
     if(err){
-      console.log(err.toString());
+      log.error(err.toString());
       if(err.toString().indexOf("No matching object found")===-1){
 		    return res.render("error", { message:"数据获取失败，请稍后再试"});
       }else{
@@ -303,6 +305,7 @@ exports.showResetPassword = function(req, res){
       key = queryString.p||'';
   users.findOne({email:email, retrieveKey:key}, function(err, data){
     if(err){
+      log.error(err.toString());
       return res.render("error", {message:"数据获取失败，请稍后再试"});
     }else{
       if(!data){
@@ -345,7 +348,7 @@ exports.resetPassword = function(req, res){
         }
       }, function(err){
         if (err) {
-          console.log(err.toString());
+          log.error(err.toString());
           return res.render("error", {
             message: "密码修改错误"
           });

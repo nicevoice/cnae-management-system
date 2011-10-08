@@ -307,7 +307,6 @@ app.get("*", main.pageNotFound);
 
 
 app.listen(config.port);
-console.log("server start http://localhost:" + config.port);
 
 startDel();
 model.ensureIndexes();
