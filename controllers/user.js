@@ -25,7 +25,7 @@ exports.userInfo = function(req, res){
 	console.log(email);
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
 			res.render("userInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
@@ -41,7 +41,7 @@ exports.changeInfo = function(req, res){
 	var email = req.session.email;
 	users.findOne({email:email.toString()}, function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
 			res.render("changeInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
@@ -72,7 +72,7 @@ exports.doChangeInfo = function(req, res){
 	}
 	users.findOne({nickName:newNickName.toString()}, function(err, data){
 		if(err){
-			log.error(err);
+			log.error(err.toString());
 			return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 		}else{
 			if(data && data.nickName!=req.session.nickName){
@@ -83,7 +83,7 @@ exports.doChangeInfo = function(req, res){
 				telNumber:newTelNumber.toString(), mainPage:newMainPage.toString()}},
 				function(err){
 					if(err){
-						log.error(err);
+						log.error(err.toString());
 						return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 					}else{
 						req.session.nickName = newNickName;
@@ -121,6 +121,7 @@ exports.doChangePassword = function(req, res){
 				users.update({email:req.session.email.toString()}, {$set:{password:md5(newPassword.toString()+config.md5_secret)}},
 				function(err){
 					if(err){
+            log.error(err.toString());
 						return res.sendJson( {done:false,message:"连接错误，请稍后再试"});
 					}else{
 						return res.sendJson( {done:true});					
@@ -131,7 +132,7 @@ exports.doChangePassword = function(req, res){
 		users.findOne({email:req.session.email.toString(), password:md5(oldPassword.toString()+config.md5_secret)},
 		function(err, data){
 			if(err){
-				log.error(err);
+				log.error(err.toString());
 				checkEvent.trigger("checkOK", false);
 			}else{
 				if(data){
