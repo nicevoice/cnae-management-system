@@ -44,7 +44,7 @@ exports.regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 //log
 var log = require("./lib/log");
-exports.logWithFile = log.create(log.INFO, "./logs/system.log");
+exports.logWithFile = log.create(log.INFO);
 //mail的配置
 //协作邀请邮件的模板
 exports.mailTitle =  configInfo.mailTitle;
