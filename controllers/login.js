@@ -63,6 +63,7 @@ exports.checkLogin = function(req, res){
       }
       else {
         console.log(userEmail+" login");
+        log.info(userEmail + "login");
         req.session.email = userEmail;
         req.session.nickName = item.nickName;
         if (autoLogin) {
