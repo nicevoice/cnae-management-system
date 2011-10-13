@@ -42,9 +42,13 @@ function setEditingFile(index, noStore) {
 	if((typeof noStore == "undefined" || !noStore) && activeFile >= 0 && typeof openedFiles[activeFile] != "undefined") {
 		var oriContent = e.getValue();
 		openedFiles[activeFile].content = oriContent;
+		openedFiles[activeFile].activeRow = e.getSelection().getCursor().row + 1;
+		openedFiles[activeFile].activeCol = e.getSelection().getCursor().column;
 	}
 	if(typeof openedFiles[index] == "undefined") return false;
 	var newContent = openedFiles[index].content;
+	var newActiveRow = openedFiles[index].activeRow;
+	var newActiveCol = openedFiles[index].activeCol;
 	// 更新当前文件指针
 	activeFile = index;
 	
@@ -54,6 +58,8 @@ function setEditingFile(index, noStore) {
 	changeLock = true; // 上锁
 	// 将文件内容写入editor
 	e.setValue(newContent);
+	// 光标移动到活动行
+	editor.gotoLine(newActiveRow, newActiveCol);
 	changeLock = false; // 解除锁
 }
 
