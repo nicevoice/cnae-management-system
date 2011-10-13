@@ -246,7 +246,7 @@ exports.gitPull = function(req, res){
 		}
     if(err){
       log.error(err.toString());
-		  return res.sendJson( {status:"error", msg:"拉取代码失败，请稍后再试"});
+		  return res.sendJson( {status:"error", msg:err.toString()});
     }else{
       return res.sendJson({status:"ok", msg:gitStdout});
     }
