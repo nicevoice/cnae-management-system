@@ -285,7 +285,6 @@ window.onload = function() {
 	setNavAction();
 	setToolbarAction();
 	setTabAction();
-	$('#restart').click(restart); // 绑定重启事件
 	
 	setConsoleResize();
 	
@@ -427,7 +426,7 @@ function restart(){
 		}
 		getOutput("stdout");
 		getOutput("stderr");
-		setConsoleHeight();
+		//setConsoleHeight();
 	}
 	});	
 }
@@ -1131,6 +1130,13 @@ function setNavAction() {
 		} else {
 			saveFile();
 		}
+		actionLock = false;
+	});
+	// 绑定重启事件
+	$('#restart').click(function() {
+		if(actionLock) return false;
+		actionLock = true;
+		restart();
 		actionLock = false;
 	});
 }
