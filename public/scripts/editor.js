@@ -2,13 +2,14 @@ var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currDir = ROOT_PATH; // 当前路径
 var currNode; // 当前文件DOM
-var outTimer, errTimer, interval=2000;	//获取stdoutput的定时器，点击重启应用以后开始每2s获取一次
-var onStdErr=false, onStdOut=false;    //鼠标是否在std的div区域内，如果在则不把滚动条往下拉
+var outTimer, errTimer, interval = 2000;	//获取stdoutput的定时器，点击重启应用以后开始每2s获取一次
+var onStdErr = false, onStdOut = false;    //鼠标是否在std的div区域内，如果在则不把滚动条往下拉
 var openedFiles = []; // 打开的文件数组
 var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
+var lang_cannotSaveFile = "无法保存文件，因为：";
 
 function setTabAction() {
 	$(".tab").live({
@@ -200,7 +201,13 @@ function initEditor() {
 			sender: 'editor'
 		},
 		exec: function(env, args, request) {
+			if(actionLock) {
+				showMsg(lang_cannotSaveFile + "锁未被解除。");
+				return false;
+			}
+			actionLock = true;
 			saveFile(activeFile);
+			actionLock = false;
 		}
 	});
 	
@@ -888,7 +895,10 @@ function closeFile(index) {
 	if(typeof openedFiles[index] != "undefined") {
 		if(openedFiles[index].changed) {
 			if(confirm("文件尚未保存，现在关闭将丢失修改的内容。保存该文件吗？")) {
+				if(actionLock) return false;
+				actionLock = true;
 				saveFile(index);
+				actionLock = false;
 				setStatusBar(1, getFileName(openedFiles[index].filePath));
 				return false;
 			}
@@ -911,7 +921,9 @@ function closeFile(index) {
  * 保存文件
  */
 function saveFile(index) {
-	if(typeof index == "undefined") index = activeFile;
+	if(typeof index == "undefined") {
+		index = activeFile;
+	}
 	// showMsg1("正在保存..");
 	var content = editor.getSession().getValue();
 	var fileName = getFileName(openedFiles[index].filePath);
@@ -1122,7 +1134,11 @@ function dyRenameUI(that, oriName, dl, dt) {
  */
 function setNavAction() {
 	$("#nav-save").click(function() {
-		if(actionLock) return false;
+		showMsg1("按下“保存”按钮..");
+		if(actionLock) {
+			showMsg(lang_cannotSaveFile + "锁未被解除。");
+			return false;
+		}
 		actionLock = true;
 		// 检查编辑器对象是否存在
 		if(typeof editor == "undefined" || !editor) {
@@ -1131,6 +1147,7 @@ function setNavAction() {
 			saveFile();
 		}
 		actionLock = false;
+		showMsg2("保存结束。");
 	});
 	// 绑定重启事件
 	$('#restart').click(function() {
