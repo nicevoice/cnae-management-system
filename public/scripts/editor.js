@@ -201,9 +201,7 @@ function initEditor() {
 			sender: 'editor'
 		},
 		exec: function(env, args, request) {
-			if(actionLock) {
-				return false;
-			}
+			if(actionLock) return false;
 			actionLock = true;
 			saveFile(activeFile);
 			actionLock = false;
@@ -241,6 +239,20 @@ function mouseOnStdDiv(){
     onStdErr = false;
   }) 
 }
+
+$(document).keydown(function(e) {
+	// 捕获editor的快捷键
+	if(e.ctrlKey && editor) {
+		var key = 'S';
+		if(e.keyCode == key.charCodeAt(0)) {
+			if(actionLock) return false;
+			actionLock = true;
+			saveFile(activeFile);
+			actionLock = false;
+			return false;
+		}
+	}
+});
 
 window.onload = function() {
 	// 初始化编辑器和控制台尺寸
