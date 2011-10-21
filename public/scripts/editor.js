@@ -9,7 +9,6 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
-var lang_cannotSaveFile = "无法保存文件，因为：";
 
 function setTabAction() {
 	$(".tab").live({
@@ -62,6 +61,7 @@ function setEditingFile(index, noStore) {
 	// 光标移动到活动行
 	editor.gotoLine(newActiveRow, newActiveCol);
 	changeLock = false; // 解除锁
+	editor.focus(); // 将焦点置于editor之上
 }
 
 function findOpenedFile() {
@@ -202,7 +202,6 @@ function initEditor() {
 		},
 		exec: function(env, args, request) {
 			if(actionLock) {
-				showMsg(lang_cannotSaveFile + "锁未被解除。");
 				return false;
 			}
 			actionLock = true;
@@ -307,9 +306,7 @@ window.onload = function() {
 				showMsg2("上传失败！");
 			}
 		},
-		complete:		function() {
-			//$("#msg").hide();
-		},
+		complete:		function() {},
 		url:			"/application/manage/" + DOMAIN + "/uploadImg",
 		type:			"post",
 		dataType:		"json",
@@ -318,8 +315,11 @@ window.onload = function() {
 	};
 	
 	$('#upload-form').submit(function() {
+		if(actionLock) return false;
 		options.data = {dirPath: currDir};
+		actionLock = true;
 		$(this).ajaxSubmit(options);
+		actionLock = false;
 		return false;
 	});
 	
@@ -886,7 +886,6 @@ function openFile(fileName) {
 			}
 		});
 	} else { // 已经打开
-		// alert(isOpened);
 		setEditingFile(isOpened);
 	}
 }
@@ -924,12 +923,11 @@ function saveFile(index) {
 	if(typeof index == "undefined") {
 		index = activeFile;
 	}
-	// showMsg1("正在保存..");
-	var content = editor.getSession().getValue();
+	var e = editor.getSession();
+	var content = e.getValue();
 	var fileName = getFileName(openedFiles[index].filePath);
 	writeFile(openedFiles[index].filePath, content, function(status, msg) {
 		if(status) {
-			// showMsg2("保存成功：" + openedFiles[index].filePath);
 			// 处理tab
 			starTab(activeFile, false);
 			openedFiles[activeFile].changed = false;
@@ -1134,9 +1132,7 @@ function dyRenameUI(that, oriName, dl, dt) {
  */
 function setNavAction() {
 	$("#nav-save").click(function() {
-		showMsg1("按下“保存”按钮..");
 		if(actionLock) {
-			showMsg(lang_cannotSaveFile + "锁未被解除。");
 			return false;
 		}
 		actionLock = true;
@@ -1147,7 +1143,7 @@ function setNavAction() {
 			saveFile();
 		}
 		actionLock = false;
-		showMsg2("保存结束。");
+		editor.focus(); // 重新将焦点置于editor之上
 	});
 	// 绑定重启事件
 	$('#restart').click(function() {
@@ -1155,6 +1151,7 @@ function setNavAction() {
 		actionLock = true;
 		restart();
 		actionLock = false;
+		editor.focus(); // 重新将焦点置于editor之上
 	});
 }
 
@@ -1241,10 +1238,16 @@ function setToolbarAction() {
 	// 上传文件
 	$("#tb-upload").toggle(
 		function () {
+			if(actionLock) return false;
+			actionLock = true;
 			$("#upload-box").slideDown(200);
+			actionLock = false;
 		},
 		function () {
+			if(actionLock) return false;
+			actionLock = true;
 			$("#upload-box").slideUp(200);
+			actionLock = false;
 		}
 	);
 }
