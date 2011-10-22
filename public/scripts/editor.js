@@ -880,8 +880,12 @@ function createFileAfter(fileName, this_div, content) {
 
 /*
  * 打开文件
+ * @param String fileName 文件名或文件路径
+ * @param boolean fileNameIsPath 第一个参数是文件名还是文件路径，true为路径，false为文件名。
+ * @param int rownum 打开文件后光标定位到的行号
+ * @param int colnum 打开文件后光标定位到的列号
  */
-function openFile(fileName, fileNameIsPath) {
+function openFile(fileName, fileNameIsPath, rownum, colnum) {
 	if(typeof editor == "undefined" || editor == null) initEditor();
 	if(typeof fileNameIsPath === "undefined") fileNameIsPath = false;
 	if(fileNameIsPath) {
@@ -899,12 +903,20 @@ function openFile(fileName, fileNameIsPath) {
 				// 添加tab
 				addTab(fileName, index);
 				setEditingFile(index);
+				if(typeof rownum !== "undefined") {
+					editor.gotoLine(rownum, colnum);
+					editor.focus();
+				}
 			} else {
 				showMsg(content + "，请稍后再尝试");
 			}
 		});
 	} else { // 已经打开
 		setEditingFile(isOpened);
+		if(typeof rownum !== "undefined") {
+			editor.gotoLine(rownum, colnum);
+			editor.focus();
+		}
 	}
 }
 
@@ -1304,29 +1316,22 @@ function setGotoLineSpan(str) {
 	   ,stackInf = filesInCurrDir + ":[\\d]+(:[\\d]+)?"
 	   ,reg = new RegExp(stackInf, "g");
  	return str.replace(reg, function(s) {
- 		var tmp = s.toString().split(DOMAIN);
- 		var n = tmp[1].toString().split(":")
- 		   ,filePath = n[0] || ""
- 		   ,rownum = n[1] || -1
- 		   ,colnum = n[2] || 1;
- 		return '<span class="stderr_gotoline" name="' + filePath + ',' + rownum + ',' + colnum + '">' + s + '</span>';
+ 		var inf = s.toString().split(DOMAIN)[1] || "";
+ 		return '<span class="stderr_gotoline" name="' + inf + '">' + s + '</span>';
  	});
 }
 
 function setConsoleAction() {
 	$(".stderr_gotoline").live("click", function() {
 		if(actionLock) return false;
-		if(!editor) return false;
-		var n = $(this).attr("name").toString().split(",")
-		   ,filePath = n[0]
-		   ,rownum = n[1]
-		   ,colnum = n[2];
+		var n = $(this).attr("name").toString().split(":")
+ 		   ,filePath = n[0] || ""
+ 		   ,rownum = n[1] || -1
+ 		   ,colnum = n[2] || 1;
 		if(filePath !== "") {
 			actionLock = true;
-			openFile(filePath, true);
+			openFile(filePath, true, rownum, colnum);
 			actionLock = false;
-			editor.gotoLine(rownum, colnum);
-			editor.focus();
 		}
 		return false;
 	});
