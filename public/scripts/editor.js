@@ -474,7 +474,8 @@ function getOutput(action){
 		},
 		success:function(data){
 			var d = htmlspecialchars(data.output);
-      d = getColor(d);
+      		d = getColor(d);
+      		if(action === "stderr") d = setGotoLineSpan(d);
 			$("#"+action).html(d);
       var pOnDiv;
       if(action==="stdout"){
@@ -1290,4 +1291,13 @@ function setConsoleHeight(height) {
 	var h = height - 30;
 	$('#stdout').css("height", h);
 	$('#stderr').css("height", h);
+}
+
+function setGotoLineSpan(str) {
+	if(typeof openedFiles[activeFile] === "undefined") return str;
+ 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+", "g");
+ 	return str.replace(reg, function(s) {
+ 		var rownum = s.toString().split(":")[1] || -1;
+ 		return '<span class="stderr_gotoline" name="' + rownum + '">' + s + '</span>';
+ 	});
 }
