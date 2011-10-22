@@ -303,7 +303,7 @@ window.onload = function() {
 	setNavAction();
 	setToolbarAction();
 	setTabAction();
-	
+	setConsoleAction();
 	setConsoleResize();
 	
 	var options = { 
@@ -1302,4 +1302,16 @@ function setGotoLineSpan(str) {
  		   ,colnum = n[2] || 1;
  		return '<span class="stderr_gotoline" name="' + rownum + ',' + colnum + '">' + s + '</span>';
  	});
+}
+
+function setConsoleAction() {
+	$(".stderr_gotoline").live("click", function() {
+		if(!editor) return false;
+		var n = $(this).attr("name").toString().split(",")
+		   ,rownum = n[0]
+		   ,colnum = n[1];
+		editor.gotoLine(rownum, colnum);
+		editor.focus();
+		return false;
+	});
 }

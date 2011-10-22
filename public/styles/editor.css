@@ -53,6 +53,8 @@ html[xmlns] .clearfix { display: block; }
 #console .console-label { height: 20px; width: 200px; }
 #console #stdout, #console #stderr { font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 95px; width: 48%; }
 #console #console-nav { position: absolute; right: 10px; top: 0; cursor: pointer; }
+#console .stderr_gotoline { background:#333; cursor: pointer; }
+#console .stderr_gotoline:hover { text-decoration:underline; }
 #wrapper #content #editor-panel #tabs .active { background-color: #E8E8E8; border-left: #C7F83E 3px solid; }
 #upload-box { background-color: #999; padding: 5px; overflow: hidden; display:none; }
 #upload-box .fields { margin: 3px 0; text-align: right; }
