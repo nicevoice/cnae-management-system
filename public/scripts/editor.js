@@ -881,9 +881,14 @@ function createFileAfter(fileName, this_div, content) {
 /*
  * 打开文件
  */
-function openFile(fileName) {
+function openFile(fileName, fileNameIsPath) {
 	if(typeof editor == "undefined" || editor == null) initEditor();
-	var filePath = currDir + fileName;
+	if(typeof fileNameIsPath === "undefined") fileNameIsPath = false;
+	if(fileNameIsPath) {
+		var filePath = fileName;
+	} else {
+		var filePath = currDir + fileName;
+	}
 	// 检查这个文件是否已经打开了
 	var isOpened = isFileOpened(filePath);
 	if(isOpened < 0) { // 没有打开
@@ -1294,24 +1299,35 @@ function setConsoleHeight(height) {
 }
 
 function setGotoLineSpan(str) {
-	if(typeof openedFiles[activeFile] === "undefined") return str;
- 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+(:[\\d]+)?", "g");
+	var currDirFull = "/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN
+	   ,filesInCurrDir = currDirFull + "[\\/\\.\\w]+"
+	   ,stackInf = filesInCurrDir + ":[\\d]+(:[\\d]+)?"
+	   ,reg = new RegExp(stackInf, "g");
  	return str.replace(reg, function(s) {
- 		var n = s.toString().split(":")
+ 		var tmp = s.toString().split(DOMAIN);
+ 		var n = tmp[1].toString().split(":")
+ 		   ,filePath = n[0] || ""
  		   ,rownum = n[1] || -1
  		   ,colnum = n[2] || 1;
- 		return '<span class="stderr_gotoline" name="' + rownum + ',' + colnum + '">' + s + '</span>';
+ 		return '<span class="stderr_gotoline" name="' + filePath + ',' + rownum + ',' + colnum + '">' + s + '</span>';
  	});
 }
 
 function setConsoleAction() {
 	$(".stderr_gotoline").live("click", function() {
+		if(actionLock) return false;
 		if(!editor) return false;
 		var n = $(this).attr("name").toString().split(",")
-		   ,rownum = n[0]
-		   ,colnum = n[1];
-		editor.gotoLine(rownum, colnum);
-		editor.focus();
+		   ,filePath = n[0]
+		   ,rownum = n[1]
+		   ,colnum = n[2];
+		if(filePath !== "") {
+			actionLock = true;
+			openFile(filePath, true);
+			actionLock = false;
+			editor.gotoLine(rownum, colnum);
+			editor.focus();
+		}
 		return false;
 	});
 }
