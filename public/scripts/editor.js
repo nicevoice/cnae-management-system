@@ -888,10 +888,12 @@ function createFileAfter(fileName, this_div, content) {
 function openFile(fileName, fileNameIsPath, rownum, colnum) {
 	if(typeof editor == "undefined" || editor == null) initEditor();
 	if(typeof fileNameIsPath === "undefined") fileNameIsPath = false;
+	var filePath = "";
 	if(fileNameIsPath) {
-		var filePath = fileName;
+		filePath = fileName;
+		fileName = getFileName(filePath);
 	} else {
-		var filePath = currDir + fileName;
+		filePath = currDir + fileName;
 	}
 	// 检查这个文件是否已经打开了
 	var isOpened = isFileOpened(filePath);
