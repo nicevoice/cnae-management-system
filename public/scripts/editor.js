@@ -1156,7 +1156,7 @@ function setNavAction() {
 			saveFile();
 		}
 		actionLock = false;
-		editor.focus(); // 重新将焦点置于editor之上
+		if(editor) editor.focus(); // 重新将焦点置于editor之上
 	});
 	// 绑定重启事件
 	$('#restart').click(function() {
@@ -1164,7 +1164,7 @@ function setNavAction() {
 		actionLock = true;
 		restart();
 		actionLock = false;
-		editor.focus(); // 重新将焦点置于editor之上
+		if(editor) editor.focus(); // 重新将焦点置于editor之上
 	});
 }
 
