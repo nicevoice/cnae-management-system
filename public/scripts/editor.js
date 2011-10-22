@@ -1295,9 +1295,11 @@ function setConsoleHeight(height) {
 
 function setGotoLineSpan(str) {
 	if(typeof openedFiles[activeFile] === "undefined") return str;
- 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+", "g");
+ 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+:[\\d]+", "g");
  	return str.replace(reg, function(s) {
- 		var rownum = s.toString().split(":")[1] || -1;
- 		return '<span class="stderr_gotoline" name="' + rownum + '">' + s + '</span>';
+ 		var n = s.toString().split(":")
+ 		   ,rownum = n[1] || -1
+ 		   ,colnum = n[2] || 1;
+ 		return '<span class="stderr_gotoline" name="' + rownum + ',' + colnum + '">' + s + '</span>';
  	});
 }
