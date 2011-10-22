@@ -1295,7 +1295,7 @@ function setConsoleHeight(height) {
 
 function setGotoLineSpan(str) {
 	if(typeof openedFiles[activeFile] === "undefined") return str;
- 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+:[\\d]+", "g");
+ 	var reg = new RegExp("/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN + openedFiles[activeFile].filePath + ":[\\d]+(:[\\d]+)?", "g");
  	return str.replace(reg, function(s) {
  		var n = s.toString().split(":")
  		   ,rownum = n[1] || -1
