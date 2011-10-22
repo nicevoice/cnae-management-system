@@ -10,7 +10,7 @@
 	<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
 	<script src="/scripts/jquery.form.js"></script>
 	<script src="/scripts/global.js?v=1.0.2" type="text/javascript" charset="utf-8"></script>
-	<script src="/scripts/editor.js?v=1.1.7" type="text/javascript" charset="utf-8"></script>
+	<script src="/scripts/editor.js?v=1.2.0" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
@@ -47,14 +47,179 @@
     <div id="content">
     	<div id="nav">
             <ul>
-                <li id="nav-save">保存</li>
+                <li id="nav-save" title="快捷键：Ctrl+S(PC), Command+S(Mac)">保存</li>
 				<li id="restart">重启</li>
+				<li id="console-display" title="快捷键：Ctrl+Shift+X(PC), Command+Shift+X(Mac)">隐藏控制台</li>
             </ul>
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
         </div>
         <div id="editor-panel">
         	<div id="tabs"></div>
-            <div id="editor" tabindex="1"></div>
+            <div id="editor" tabindex="1">
+            	<div id="welcome">
+            		<h2>你知道吗？</h2>
+            		<p>目前 NAE IDE 支持大部分常用的快捷键，并且很快我们将支持自定义配置文件，希望能给您带来更好的开发体验。<br />当前 NAE IDE 支持的快捷键为：</p>
+					<table>
+						<thead><tr>
+						<td align="left">PC (Windows/Linux)</td>
+						<td align="left">Mac</td>
+						<td align="left">action</td>
+						</tr></thead>
+						<tbody>
+						<tr>
+						<td align="left">Ctrl-Shift-X</td>
+						<td align="left">Command-Shift-X</td>
+						<td align="left">显示/隐藏控制台</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-F5</td>
+						<td align="left">Command-F5</td>
+						<td align="left">重启应用</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-7</td>
+						<td align="left">Command-7</td>
+						<td align="left">注释/取消注释</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-F</td>
+						<td align="left">Command-F</td>
+						<td align="left">查找</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-K</td>
+						<td align="left">Command-G</td>
+						<td align="left">查找下一个</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-K</td>
+						<td align="left">Command-Shift-G</td>
+						<td align="left">查找上一个</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-R</td>
+						<td align="left">Command-Option-F</td>
+						<td align="left">替换</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-R</td>
+						<td align="left">Command-Shift-Option-F</td>
+						<td align="left">替换所有</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-A</td>
+						<td align="left">Command-A</td>
+						<td align="left">全选</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-L</td>
+						<td align="left">Command-L</td>
+						<td align="left">跳转到指定行</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-End,Ctrl-Down</td>
+						<td align="left">Command-End,Command-Down</td>
+						<td align="left">跳转到文档末尾</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Home,Ctrl-Up</td>
+						<td align="left">Command-Home,Command-Up</td>
+						<td align="left">跳转到文档开头</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Right,End</td>
+						<td align="left">Command-Right,End,Ctrl-E</td>
+						<td align="left">跳转到行末尾</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Left,Home</td>
+						<td align="left">Command-Left,Home,Ctrl-A</td>
+						<td align="left">跳转到行首</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Left</td>
+						<td align="left">Option-Left</td>
+						<td align="left">向右跳一个单词</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Right</td>
+						<td align="left">Option-Right</td>
+						<td align="left">向左跳一个单词</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Down</td>
+						<td align="left">Option-Down</td>
+						<td align="left">下移当前行</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Up</td>
+						<td align="left">Option-Up</td>
+						<td align="left">上移当前行</td>
+						</tr>
+						<tr>
+						<td align="left">Shift-Tab</td>
+						<td align="left">Shift-Tab</td>
+						<td align="left">减少缩进</td>
+						</tr>
+						<tr>
+						<td align="left">Insert</td>
+						<td align="left">Insert</td>
+						<td align="left">覆盖</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Z</td>
+						<td align="left">Command-Z</td>
+						<td align="left">撤销</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-Z,Ctrl-Y</td>
+						<td align="left">Command-Shift-Z,Command-Y</td>
+						<td align="left">重做</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-D</td>
+						<td align="left">Command-D</td>
+						<td align="left">删除整行</td>
+						</tr>
+						<tr>
+						<td align="left">Shift-方向键</td>
+						<td align="left">Shift-方向键</td>
+						<td align="left">选择</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-End,Alt-Shift-Down</td>
+						<td align="left">Command-Shift-Down</td>
+						<td align="left">选择到文档末尾</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-Home,Alt-Shift-Up</td>
+						<td align="left">Command-Shift-Up</td>
+						<td align="left">选择到文档开头</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Shift-Right</td>
+						<td align="left">Command-Shift-Right</td>
+						<td align="left">选择到行末尾</td>
+						</tr>
+						<tr>
+						<td align="left">Alt-Shift-Left</td>
+						<td align="left">Command-Shift-Left</td>
+						<td align="left">选择到行首</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-Left</td>
+						<td align="left">Option-Shift-Left</td>
+						<td align="left">向左选择一个单词</td>
+						</tr>
+						<tr>
+						<td align="left">Ctrl-Shift-Right</td>
+						<td align="left">Option-Shift-Right</td>
+						<td align="left">向右选择一个单词</td>
+						</tr>
+						</tbody>
+					</table>
+            	</div>
+            </div>
             <div id="statbar"></div>
         </div>
     </div>

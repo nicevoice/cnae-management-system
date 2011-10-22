@@ -9,6 +9,7 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
+var CONSOLE_HEIGHT = 125;
 
 function setTabAction() {
 	$(".tab").live({
@@ -36,38 +37,42 @@ function setTabAction() {
 	});
 }
 
-function setEditingFile(index, noStore) {
+function setEditingFile(index, noStore, rownum, colnum) {
+	// 检查目标文件是否存在于已打开文件数组中
+	if(!openedFiles[index]) {
+		return false;
+	}
+	// 检查是否就是当前正在编辑的文件
+	if(index === activeFile) {
+		if(rownum) editor.gotoLine(rownum, colnum); // 光标移动到活动行
+		editor.focus();
+		return false;
+	}
 	var e = editor.getSession();
 	// 先保存原来的文件信息
-	if((typeof noStore == "undefined" || !noStore) && activeFile >= 0 && typeof openedFiles[activeFile] != "undefined") {
+	if(!noStore && openedFiles[activeFile]) {
 		var oriContent = e.getValue();
 		openedFiles[activeFile].content = oriContent;
 		openedFiles[activeFile].activeRow = e.getSelection().getCursor().row + 1;
 		openedFiles[activeFile].activeCol = e.getSelection().getCursor().column;
 	}
-	if(typeof openedFiles[index] == "undefined") return false;
 	var newContent = openedFiles[index].content;
-	var newActiveRow = openedFiles[index].activeRow;
-	var newActiveCol = openedFiles[index].activeCol;
-	// 更新当前文件指针
-	activeFile = index;
-	
-	// 处理Tab
-	activeTab(activeFile);
-	setEditorMode(getFileExt(openedFiles[index].filePath));
+	var newActiveRow = rownum ? rownum : openedFiles[index].activeRow;
+	var newActiveCol = colnum ? colnum : openedFiles[index].activeCol;
+	activeFile = index; // 更新当前文件指针
+	activeTab(activeFile); // 处理Tab
+	setEditorMode(getFileExt(openedFiles[index].filePath)); // 根据文件后缀名设置语法模式
 	changeLock = true; // 上锁
-	// 将文件内容写入editor
-	e.setValue(newContent);
-	// 光标移动到活动行
-	editor.gotoLine(newActiveRow, newActiveCol);
-	changeLock = false; // 解除锁
+	e.setValue(newContent); // 将文件内容写入editor
+	editor.gotoLine(newActiveRow, newActiveCol); // 光标移动到活动行
 	editor.focus(); // 将焦点置于editor之上
+	changeLock = false; // 解除锁
 }
 
 function findOpenedFile() {
 	var len = openedFiles.length;
 	for(i = len - 1; i >= 0; i--) {
-		if(typeof openedFiles[i] != "undefined") return i;
+		if(openedFiles[i]) return i;
 	}
 	return -1;
 }
@@ -75,7 +80,7 @@ function findOpenedFile() {
 function hasFileChanged() {
 	var len = openedFiles.length;
 	for(i = 0; i < len; i++) {
-		if(typeof openedFiles[i] != "undefined" && openedFiles[i].changed) return i;
+		if(openedFiles[i] && openedFiles[i].changed) return i;
 	}
 	return -1;
 }
@@ -83,13 +88,15 @@ function hasFileChanged() {
 function isFileOpened(filePath) {
 	var len = openedFiles.length;
 	for(i = 0; i < len; i++) {
-		if(typeof openedFiles[i] != "undefined" && openedFiles[i].filePath == filePath) return i;
+		if(openedFiles[i] && openedFiles[i].filePath === filePath) return i;
 	}
 	return -1;
 }
 
-function addOpenedFile(filePath, content) {
+function addOpenedFile(filePath, content, rownum, colnum) {
 	var newFile = {filePath: filePath, content: content, changed: false};
+	newFile.activeRow = rownum ? rownum : 0;
+	newFile.activeCol = colnum ? colnum : 0;
 	var len = openedFiles.push(newFile);
 	return len - 1;
 }
@@ -134,7 +141,7 @@ function starTab(index, add) {
 }
 
 function activeTab(index) {
-	if(typeof index == "undefined") index = activeFile;
+	if(typeof index === "undefined") index = activeFile;
 	$(".tab").removeClass("active");
 	$("#tabs ." + index).addClass("active");
 }
@@ -142,11 +149,12 @@ function activeTab(index) {
 /*
  * 动态设定编辑器尺寸
  */
-function setEditorSize(h, w) {
-	if(typeof h == "undefined") {
-		h = document.documentElement.clientHeight - (80 + 130);
+function setEditorSize(h, w, hideConsole) {
+	if(!h) {
+		h = document.documentElement.clientHeight - (80 + 5);
+		if(!hideConsole) h -= CONSOLE_HEIGHT;
 	}
-	if(typeof w == "undefined") {
+	if(!w) {
 		w = document.body.clientWidth - 260;
 	}
 	$('#editor').css("height", h).css("width", w);
@@ -156,8 +164,7 @@ function setEditorSize(h, w) {
  * 动态设定控制台尺寸
  */
 function setConsoleSize(w) {
-	if(typeof w == "undefined")
-		w = (document.body.clientWidth - 25) / 2;
+	if(!w) w = (document.body.clientWidth - 25) / 2;
 	$('#stdout').css("width", w);
 	$('#stderr').css("width", w);
 }
@@ -168,8 +175,15 @@ function setFileListSize() {
 }
 
 function setElementsSize() {
-	setEditorSize();
-	setConsoleSize();
+	// 检查console的cookis
+	var isHide = cookieHandler.get("NAEIDE_console_hide");
+	if(isHide != null && isHide === '1') {// 隐藏console
+		consoleHandler.hide();
+		setEditorSize(null, null, true);
+	} else {
+		setEditorSize(null, null, false);
+		setConsoleSize();
+	}
 	setFileListSize();
 }
 
@@ -208,6 +222,18 @@ function initEditor() {
 		}
 	});
 	
+	canon.addCommand({
+		name: 'ConsoleDisplay',
+		bindKey: {
+			win: 'Ctrl-Shift-X',
+			mac: 'Command-Shift-X',
+			sender: 'editor'
+		},
+		exec: function(env, args, request) {
+			consoleHandler.toggle();
+		}
+	});
+	
 	// 绑定编辑器事件
 	editor.getSession().on('change', onChange);
 }
@@ -242,14 +268,29 @@ function mouseOnStdDiv(){
 
 $(document).keydown(function(e) {
 	// 捕获editor的快捷键
-	if(e.ctrlKey && editor) {
-		var key = 'S';
-		if(e.keyCode == key.charCodeAt(0)) {
+	if(e.metaKey || e.ctrlKey) {
+		var save = 'S';
+		var hideConsole = 'X';
+		if(e.keyCode === save.charCodeAt(0) && editor) {
 			if(actionLock) return false;
 			actionLock = true;
 			saveFile(activeFile);
 			actionLock = false;
 			return false;
+		}
+		if(e.keyCode === 116) {
+			if(actionLock) return false;
+			actionLock = true;
+			restart();
+			actionLock = false;
+			if(editor) editor.focus(); // 重新将焦点置于editor之上
+			return false;
+		}
+		if(e.shiftKey) {
+			if(e.keyCode === hideConsole.charCodeAt(0)) {
+				consoleHandler.toggle();
+				return false;
+			}
 		}
 	}
 });
@@ -311,7 +352,7 @@ window.onload = function() {
 			showMsg1("正在上传..");
 		},
 		success:		function(data) {
-			if(typeof data.error != "undefined" && data.error == "false") {
+			if(typeof data.error != "undefined" && data.error === "false") {
 				listFiles(currDir);
 				showMsg2("上传成功");
 			} else {
@@ -353,8 +394,8 @@ function showMsg1(content) {
 }
 
 function showMsg2(content, waiting, speed) {
-	if(typeof waiting == "undefined") waiting = 1200;
-	if(typeof speed == "undefined") speed = 600;
+	if(typeof waiting === "undefined") waiting = 1200;
+	if(typeof speed === "undefined") speed = 600;
 	var msger = $("#msg");
 	msger.html(content);
 	setTimeout(function() { msger.slideUp(speed); }, waiting);
@@ -388,65 +429,64 @@ addRecord = function(domain, action){
 //重启应用
 function restart(){
 	$.ajax({
-	cache:false,
-	type:"post",
-	url:"/application/manage/"+DOMAIN+"/controlApp",
-	dataType:"json",
-	data:{action:"restart"},
-	beforeSend: function() {
-		showMsg1("正在重启，请稍候..");
-	},
-	error:function(){
-		showMsg2("重启失败");
-	},
-	success:function(data){
-		if(data.status!=="ok"){
-			if(data.code==202){	//not found错误，则改为上线
-				$.ajax({
-					cache:false,
-					type:"post",
-					url:"/application/manage/"+DOMAIN+"/controlApp",
-					dataType:"json",
-					data:{action:"start"},
-					error:function(){
-						showMsg2("重启失败");
-					},
-					success:function(data){
-						if(data.status==="ok"){
-						    showMsg2("重启成功");
-							window.clearInterval(outTimer);
-							window.clearInterval(errTimer);
-							outTimer = window.setInterval(function(){
-								getOutput("stdout");
-							}, interval);
-							errTimer = window.setInterval(function(){
-								getOutput("stderr");
-							}, interval);
-							addRecord(DOMAIN, "应用重启");
-						}else{
-							showMsg2("重启失败:"+data.msg);
+		cache:false,
+		type:"post",
+		url:"/application/manage/"+DOMAIN+"/controlApp",
+		dataType:"json",
+		data:{action:"restart"},
+		beforeSend: function() {
+			showMsg1("正在重启，请稍候..");
+		},
+		error:function(){
+			showMsg2("重启失败");
+		},
+		success:function(data){
+			if(data.status!=="ok"){
+				if(data.code==202){	//not found错误，则改为上线
+					$.ajax({
+						cache:false,
+						type:"post",
+						url:"/application/manage/"+DOMAIN+"/controlApp",
+						dataType:"json",
+						data:{action:"start"},
+						error:function(){
+							showMsg2("重启失败");
+						},
+						success:function(data){
+							if(data.status==="ok"){
+							    showMsg2("重启成功");
+								window.clearInterval(outTimer);
+								window.clearInterval(errTimer);
+								outTimer = window.setInterval(function(){
+									getOutput("stdout");
+								}, interval);
+								errTimer = window.setInterval(function(){
+									getOutput("stderr");
+								}, interval);
+								addRecord(DOMAIN, "应用重启");
+							}else{
+								showMsg2("重启失败:"+data.msg);
+							}
 						}
-					}
-				})
+					})
+				}else{
+					showMsg2("重启失败:"+data.msg);
+				}
 			}else{
-				showMsg2("重启失败:"+data.msg);
+			    showMsg2("重启成功");
+				window.clearInterval(outTimer);
+				window.clearInterval(errTimer);
+				outTimer = window.setInterval(function(){
+					getOutput("stdout");
+				}, interval);
+				errTimer = window.setInterval(function(){
+					getOutput("stderr");
+				}, interval);
+				addRecord(DOMAIN, "应用重启");
 			}
-		}else{
-		    showMsg2("重启成功");
-			window.clearInterval(outTimer);
-			window.clearInterval(errTimer);
-			outTimer = window.setInterval(function(){
-				getOutput("stdout");
-			}, interval);
-			errTimer = window.setInterval(function(){
-				getOutput("stderr");
-			}, interval);
-			addRecord(DOMAIN, "应用重启");
+			getOutput("stdout");
+			getOutput("stderr");
 		}
-		getOutput("stdout");
-		getOutput("stderr");
-		//setConsoleHeight();
-	}
 	});	
 }
 //获取stdErr和stdOut
@@ -510,8 +550,8 @@ function getOutput(action){
  * 显示顶部提示信息
  */
 function showMsg(content, waiting, speed) {
-	if(typeof waiting == "undefined") waiting = 1200;
-	if(typeof speed == "undefined") speed = 600;
+	if(typeof waiting === "undefined") waiting = 1200;
+	if(typeof speed === "undefined") speed = 600;
 	var msger = $("#msg");
 	msger.html(content).slideDown(speed, function() {
 		setTimeout(function() { msger.slideUp(speed); }, waiting);
@@ -522,9 +562,9 @@ function setStatusBar(type, content) {
 	var d = new Date();
 	var curr = d.toLocaleString();
 	var statbar = $("#statbar");
-	if(type == 1) { // 保存
+	if(type === 1) { // 保存
 		statbar.html("已保存：" + content + "，于" + curr);
-	} else if(type == 2) { // 创建
+	} else if(type === 2) { // 创建
 		statbar.html("已创建：" + content + "，于" + curr);
 	}
 }
@@ -551,10 +591,10 @@ function setSidebarUI() {
 function setSubmenu(item) {
 	var res = '<div class="sub-menu"><ul>';
 	if(item["name"] && item["type"]) {
-		if(item["type"] == "d") { // 文件夹
+		if(item["type"] === "d") { // 文件夹
 			res += '<li class="sub-menu-item" name="open-folder"><img src="/images/icon_folder.png" title="打开文件夹" /> <strong>打开' + item["name"] + '</strong></li>';
 			res += '<li class="sub-menu-item" name="del-folder"><img src="/images/icon_delete.png" title="删除文件夹" /> 删除</li>';
-		} else if (item.type == "f") { // 文件
+		} else if (item.type === "f") { // 文件
 			res += '<li class="sub-menu-item" name="edit-file"><img src="/images/icon_script.png" title="编辑文件" /> <strong>编辑' + item["name"] + '</strong></li>';
 			res += '<li class="sub-menu-item" name="del-file"><img src="/images/icon_delete.png" title="删除文件" /> 删除</li>';
 			res += '<li class="sub-menu-item" name="rename-file"><img src="/images/icon_rename.png" title="重命名" /> 重命名</li>';
@@ -581,13 +621,13 @@ function listFiles(dirPath) {
 			// file_list.empty().html("<p>正在加载文件列表</p>");
 		},
 		success: function(data) {
-			if(data.status && data.status == "succeed") {
+			if(data.status && data.status === "succeed") {
 				if(currDir != ROOT_PATH) { // 当前不是根目录
 					res += '<div class="list-item"><dl class="up clearfix" name="up" title="返回上一层"><dt class="item-name">返回上一层..</dt><dd></dd></dl></div>';
 				}
 				$.each(data.content, function(fileIndex, file) {
 					var ext = getFileExt(file["name"])
-					  , icon = (ext == ".jpg" || ext == ".jpeg" || ext == ".gif" || ext == ".bmp" || ext == ".png") ? "img" : file["type"];
+					  , icon = (ext === ".jpg" || ext === ".jpeg" || ext === ".gif" || ext === ".bmp" || ext === ".png") ? "img" : file["type"];
 					res += '<div class="list-item"><dl class="' + icon + ' clearfix" name="' + file["type"] + '" title="' + file["name"] + '">';
 					res += '<dt class="item-name">' + file["name"] + '</dt>';
 					res += '<dd><div class="menu-btn"><img src="/images/icon_menu.png" />';
@@ -619,7 +659,7 @@ function readFile(filePath, next) {
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true, data.content);
 			} else {
 				return next(false, "读文件失败");
@@ -643,7 +683,7 @@ function writeFile(filePath, content, next) {
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true, data.mtime);
 			} else {
 				return next(false, "写文件失败");
@@ -667,7 +707,7 @@ function delFile(filePath, next) {
 		dataType: "JSON",
 		beforeSend: function() {},
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true);
 			} else {
 				return next(false, "删文件失败");
@@ -688,7 +728,7 @@ function mkDir(dirPath, next) {
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true);
 			} else {
 				return next(false, "创建目录失败");
@@ -713,7 +753,7 @@ function delDir(dirPath, next) {
 		beforeSend: function() {
 		},
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true);
 			} else {
 				return next(false, "删除目录失败");
@@ -736,7 +776,7 @@ function renameFile(oriPath, newPath, next) {
 		data: {oriPath: oriPath, newPath: newPath},
 		dataType: "JSON",
 		success: function(data) {
-			if(data.status == "succeed") {
+			if(data.status === "succeed") {
 				return next(true);
 			} else {
 				return next(false, "重命名失败");
@@ -773,24 +813,23 @@ function getFileName(filePath) {
  * 根据文件后缀名动态更换编辑器的语法检查模式
  */
 function setEditorMode(ext) {
-	var _mode;
-	if(ext == ".js") {
-		// JavaSctip
-		_mode = modes["js"];
-	} else if (ext == ".css") {
-		// Css
-		_mode = modes["css"];
-	} else if (ext == ".htm" || ext == ".html" || ext == ".sthml") {
-		// Html
-		_mode = modes["html"];
-	} else if (ext == ".json") {
-		// Json
-		_mode = modes["json"];
-	} else if(ext == ".xml") {
-		// Xml
-		_mode = modes["xml"];
-	} else {
-		// 默认为文本
+	if(ext) {
+		var _mode;
+		ext = ext.toString();
+		if(ext === ".js") {
+			_mode = modes["js"]; // JavaSctip
+		} else if (ext === ".css") {
+			_mode = modes["css"]; // Css
+		} else if (ext === ".htm" || ext === ".html" || ext === ".sthml") {
+			_mode = modes["html"]; // Html
+		} else if (ext === ".json") {
+			_mode = modes["json"]; // Json
+		} else if(ext === ".xml") {
+			_mode = modes["xml"]; // Xml
+		} else {
+			_mode = modes["txt"]; // 默认为文本
+		}
+	} else { // 默认为文本
 		_mode = modes["txt"];
 	}
 	head.js(_mode.scriptPath, function() {
@@ -816,13 +855,13 @@ function createFile(type, content) {
 	this_div.appendTo(file_list);
 	var this_dl = this_div.children("dl");
 	var this_dt = this_dl.children("dt"); // 文件名要插到这个里面
-	if(type == 1) { // 弹出输入框输入文件名
+	if(type === 1) { // 弹出输入框输入文件名
 		var fileName = prompt("请输入文件名", "");
 		fileName = htmlspecialchars(fileName);
 		this_dt.html(fileName);
 		this_dl.attr("title", fileName);
 		createFileAfter(fileName, this_div, content);
-	} else if(type == 2) { // 在文件树里面输入
+	} else if(type === 2) { // 在文件树里面输入
 		var input = '<input name="filename" value="" type="text" class="input" />';
 		showMsg1("输入文件名后按回车键继续");
 		$(input)
@@ -835,7 +874,7 @@ function createFile(type, content) {
 //				createFileAfter(fileName, this_div, content);
 //			})
 			.keyup(function(e) {
-				if(e.which == 13) {
+				if(e.which === 13) {
 					var fileName = $(this).val(); // 取出<input>元素此时的值
 					fileName = htmlspecialchars(fileName);
 					$(this).remove(); // 移除该<input>元素
@@ -848,12 +887,12 @@ function createFile(type, content) {
 }
 
 function createFileAfter(fileName, this_div, content) {
-	if(fileName == null || fileName == "") {
+	if(fileName === null || fileName === "") {
 		this_div.remove();
 		showMsg("文件名不能为空");
 	} else {
 		var filePath = currDir + fileName;
-		if(typeof content == "undefined") content = "";
+		if(typeof content === "undefined") content = "";
 		writeFile(filePath, content, function(status, msg) {
 			if(!status) { // 失败
 				this_div.remove();
@@ -869,7 +908,7 @@ function createFileAfter(fileName, this_div, content) {
 			var index = addOpenedFile(filePath, content);
 			addTab(fileName, index);
 			
-			if(typeof editor == "undefined" || !editor) initEditor();
+			if(typeof editor === "undefined" || !editor) initEditor();
 			
 			setEditingFile(index);
 			setStatusBar(2, fileName);
@@ -886,14 +925,19 @@ function createFileAfter(fileName, this_div, content) {
  * @param int colnum 打开文件后光标定位到的列号
  */
 function openFile(fileName, fileNameIsPath, rownum, colnum) {
-	if(typeof editor == "undefined" || editor == null) initEditor();
-	if(typeof fileNameIsPath === "undefined") fileNameIsPath = false;
+	if(!editor || editor === null) initEditor();
+	if(!fileNameIsPath) fileNameIsPath = false;
 	var filePath = "";
 	if(fileNameIsPath) {
 		filePath = fileName;
 		fileName = getFileName(filePath);
 	} else {
 		filePath = currDir + fileName;
+	}
+	// 检查这个文件是否就是当前的活动文件
+	if(openedFiles[activeFile] && filePath === openedFiles[activeFile].filePath) {
+		editor.focus();
+		return false;
 	}
 	// 检查这个文件是否已经打开了
 	var isOpened = isFileOpened(filePath);
@@ -904,21 +948,13 @@ function openFile(fileName, fileNameIsPath, rownum, colnum) {
 				var index = addOpenedFile(filePath, content);
 				// 添加tab
 				addTab(fileName, index);
-				setEditingFile(index);
-				if(typeof rownum !== "undefined") {
-					editor.gotoLine(rownum, colnum);
-					editor.focus();
-				}
+				setEditingFile(index, false, rownum, colnum);
 			} else {
 				showMsg(content + "，请稍后再尝试");
 			}
 		});
 	} else { // 已经打开
-		setEditingFile(isOpened);
-		if(typeof rownum !== "undefined") {
-			editor.gotoLine(rownum, colnum);
-			editor.focus();
-		}
+		setEditingFile(isOpened, false, rownum, colnum);
 	}
 }
 
@@ -952,7 +988,7 @@ function closeFile(index) {
  * 保存文件
  */
 function saveFile(index) {
-	if(typeof index == "undefined") {
+	if(typeof index === "undefined") {
 		index = activeFile;
 	}
 	var e = editor.getSession();
@@ -981,7 +1017,7 @@ function rmFile(filePath, node) {
 		if(status) { // 删除成功
 			// 删除 DOM 结点
 			node.hide(200);
-			if (typeof openedFiles[activeFile] != "undefined" && filePath == openedFiles[activeFile].filePath) {
+			if (openedFiles[activeFile] && filePath === openedFiles[activeFile].filePath) {
 				rmTab(activeFile);
 				rmOpenedFile(activeFile);
 				if(typeof editor != "undefined" && editor && typeof e != "undefined") e.setValue("");
@@ -1040,18 +1076,18 @@ function itemActionCb() {
 	var itemName = $(this).find(".item-name").html();
 	var itemType = $(this).children("dl").attr("name");
 	var curPathDiv = $("#currentPath");
-	if(itemType == "f") { // is a file
+	if(itemType === "f") { // is a file
 		actionLock = true;
 		openFile(itemName);
 		currNode = $(this);
 		actionLock = false;
-	} else if (itemType == "d") { // is a directory
+	} else if (itemType === "d") { // is a directory
 		actionLock = true;
 		currDir = currDir + itemName + "/";
 		listFiles(currDir);
 		curPathDiv.html(currDir); // 更新当前路径
 		actionLock = false;
-	} else if (itemType == "up") {
+	} else if (itemType === "up") {
 		actionLock = true;
 		var _t = currDir.split("/");
 		currDir = '';
@@ -1079,7 +1115,7 @@ function setItemAction() {
 		var _name = this_div.children("dl").attr("title");
 		var action = $(this).attr("name");
 		var curPathDiv = $("#currentPath");
-		if(action == "rename-file") { // 重命名文件
+		if(action === "rename-file") { // 重命名文件
 			actionLock = true;
 			// 首先隐藏所有的二级目录
 			$(".sub-menu").hide(200);
@@ -1098,27 +1134,27 @@ function setItemAction() {
 //					dyRenameUI(this, oriName, dt);
 //				})
 				.keyup(function(e) {
-					if(e.which == 13) {
+					if(e.which === 13) {
 						dyRenameUI(this, oriName, this_dl, this_dt);
 					}
 				});
-		} else if(action == "edit-file") { // 编辑文件
+		} else if(action === "edit-file") { // 编辑文件
 			actionLock = true;
 			openFile(_name);
 			currNode = $(this);
 			actionLock = false;
-		} else if(action == "open-folder") {
+		} else if(action === "open-folder") {
 			actionLock = true;
 			currDir = curPathDiv.html() + _name + "/";
 			listFiles(currDir);
 			curPathDiv.html(currDir); // 更新当前路径
 			actionLock = false;
-		} else if(action == "del-file") { // 删除文件
+		} else if(action === "del-file") { // 删除文件
 			actionLock = true;
 			var _path = currDir + _name;
 			rmFile(_path, this_div);
 			actionLock = false;
-		} else if(action == "del-folder") { // 删除文件夹
+		} else if(action === "del-folder") { // 删除文件夹
 			actionLock = true;
 			var _dirPath = currDir + _name;
 			rmDir(_dirPath, this_div);
@@ -1130,7 +1166,7 @@ function setItemAction() {
 
 function dyRenameUI(that, oriName, dl, dt) {
 	var newName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
-	if(newName == null || newName == "") {
+	if(newName === null || newName === "") {
 		dt.html(oriName);
 		showMsg("目录名不能为空");
 	} else {
@@ -1169,7 +1205,7 @@ function setNavAction() {
 		}
 		actionLock = true;
 		// 检查编辑器对象是否存在
-		if(typeof editor == "undefined" || !editor) {
+		if(!editor || editor === null) {
 			showMsg("没有正在编辑的文件");
 		} else {
 			saveFile();
@@ -1189,7 +1225,7 @@ function setNavAction() {
 
 function dyCreateDirUI(that, that_div, dl, dt) {
 	var dirName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
-	if(dirName == null || dirName == "") {
+	if(dirName === null || dirName === "") {
 		that_div.remove();
 		showMsg("目录名不能为空");
 	} else {
@@ -1262,7 +1298,7 @@ function setToolbarAction() {
 //				dyCreateDirUI(this, this_div, dt);
 //			})
 			.keyup(function(e) {
-				if(e.which == 13) {
+				if(e.which === 13) {
 					dyCreateDirUI(this, this_div, this_dl, this_dt);
 				}
 			});
@@ -1285,7 +1321,7 @@ function setToolbarAction() {
 }
 
 function setConsoleResize(minHeight) {
-	if(typeof minHeight == "undefined") minHeight = 125;
+	if(typeof minHeight === "undefined") minHeight = CONSOLE_HEIGHT;
 	maxHeight = document.documentElement.clientHeight - 100;
 	$("#console").resizable({
 		handles: 'n',
@@ -1303,7 +1339,7 @@ function setConsoleResize(minHeight) {
 }
 
 function setConsoleHeight(height) {
-	if(typeof height == "undefined") {
+	if(typeof height === "undefined") {
 		height = Math.round(document.documentElement.clientHeight * 0.5);
 	}
 	$("#console").removeAttr("style").css("height", height);
@@ -1337,4 +1373,64 @@ function setConsoleAction() {
 		}
 		return false;
 	});
-}
+	$("#console-display").click(function() {
+		consoleHandler.toggle();
+	});
+};
+
+var consoleHandler = {
+	// 控制台高度：CONSOLE_HEIGHT
+	show: function() { // 显示控制台
+		$("#console-display").html("隐藏控制台");
+		$("#console").show();
+		var e = $("#editor");
+		setEditorSize(e.height() - CONSOLE_HEIGHT);
+		setConsoleSize();
+		cookieHandler.set("NAEIDE_console_hide", '0');
+	},
+	hide: function() { // 隐藏控制台
+		$("#console-display").html("显示控制台");
+		$("#console").hide();
+		var e = $("#editor");
+		setEditorSize(e.height() + CONSOLE_HEIGHT);
+		cookieHandler.set("NAEIDE_console_hide", '1');
+	},
+	toggle: function() {
+		var isHide = cookieHandler.get("NAEIDE_console_hide");
+		if(isHide === null || isHide === "0") {
+			consoleHandler.hide();
+		} else {
+			consoleHandler.show();
+		}
+	}
+};
+
+var cookieHandler = {
+	set: function(name, value, expires, path, domain) {
+		if (typeof expires == "undefined") {
+			expires = new Date(new Date().getTime() + 365 * 24 * 3600 * 100);
+		}
+
+		document.cookie = name + "=" + escape(value) +
+			((expires) ? "; expires=" + expires.toGMTString() : "") +
+			((path) ? "; path=" + path : "; path=/") +
+			((domain) ? "; domain=" + domain : "");
+	},
+
+	get: function(name) {
+		var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+		if (arr != null) {
+			return unescape(arr[2]);
+		}
+		return null;
+	},
+
+	clear: function(name, path, domain) {
+		if (this.get(name)) {
+			document.cookie = name + "=" +
+				((path) ? "; path=" + path : "; path=/") +
+				((domain) ? "; domain=" + domain : "") +
+				";expires=Fri, 02-Jan-1970 00:00:00 GMT";
+		}
+	}
+};
