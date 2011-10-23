@@ -10,6 +10,14 @@ var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
 var CONSOLE_HEIGHT = 125;
+var LANG = {};
+LANG.console = {
+	show: "显示控制台",
+	hide: "隐藏控制台",
+};
+LANG.file = {
+	
+};
 
 function setTabAction() {
 	$(".tab").live({
@@ -151,13 +159,13 @@ function activeTab(index) {
  */
 function setEditorSize(h, w, hideConsole) {
 	if(!h) {
-		h = document.documentElement.clientHeight - (80 + 5);
-		if(!hideConsole) h -= CONSOLE_HEIGHT;
+		h = document.documentElement.clientHeight - (80 + 5); // 减去header和statusBar的部分
+		if(!hideConsole) h -= CONSOLE_HEIGHT; // 如果显示console，则要减去console的部分
 	}
 	if(!w) {
-		w = document.body.clientWidth - 260;
+		w = document.body.clientWidth - 260; // 减去sidebar的部分
 	}
-	$('#editor').css("height", h).css("width", w);
+	$("#editor").css("height", h).css("width", w);
 }
 
 /*
@@ -178,13 +186,23 @@ function setElementsSize() {
 	// 检查console的cookis
 	var isHide = cookieHandler.get("NAEIDE_console_hide");
 	if(isHide != null && isHide === '1') {// 隐藏console
-		consoleHandler.hide();
 		setEditorSize(null, null, true);
 	} else {
 		setEditorSize(null, null, false);
+		consoleHandler.show();
 		setConsoleSize();
 	}
 	setFileListSize();
+}
+
+function initLang() {
+	// 检查console的cookis
+	var isHide = cookieHandler.get("NAEIDE_console_hide");
+	if(isHide != null && isHide === '1') {// 隐藏console
+		$("#console-display").html(LANG.console.show);
+	} else {
+		$("#console-display").html(LANG.console.hide);
+	}
 }
 
 function onChange() {
@@ -221,7 +239,6 @@ function initEditor() {
 			actionLock = false;
 		}
 	});
-	
 	canon.addCommand({
 		name: 'ConsoleDisplay',
 		bindKey: {
@@ -233,21 +250,18 @@ function initEditor() {
 			consoleHandler.toggle();
 		}
 	});
-	
-	// 绑定编辑器事件
-	editor.getSession().on('change', onChange);
+	editor.getSession().on('change', onChange); // 绑定编辑器事件
 }
 
 function closeEditor() {
-	editor = null;
-	canon = null;
-	Renderer = null;
+	editor = null
+   ,canon = null
+   ,Renderer = null;
 	$("#editor").html("");
 }
 
 $(window).resize(function(){
-	// 编辑器和控制台尺寸自适应
-	setElementsSize();
+	setElementsSize(); // 编辑器和控制台尺寸自适应
 });
 
 //绑定鼠标进出std DIV的事件
@@ -267,23 +281,15 @@ function mouseOnStdDiv(){
 }
 
 $(document).keydown(function(e) {
-	// 捕获editor的快捷键
+	// 捕获键盘按键
 	if(e.metaKey || e.ctrlKey) {
 		var save = 'S';
 		var hideConsole = 'X';
-		if(e.keyCode === save.charCodeAt(0) && editor) {
+		if(editor && e.keyCode === save.charCodeAt(0)) {
 			if(actionLock) return false;
 			actionLock = true;
 			saveFile(activeFile);
 			actionLock = false;
-			return false;
-		}
-		if(e.keyCode === 116) {
-			if(actionLock) return false;
-			actionLock = true;
-			restart();
-			actionLock = false;
-			if(editor) editor.focus(); // 重新将焦点置于editor之上
 			return false;
 		}
 		if(e.shiftKey) {
@@ -291,16 +297,26 @@ $(document).keydown(function(e) {
 				consoleHandler.toggle();
 				return false;
 			}
+			if(e.keyCode === 49) {
+				if(actionLock) return false;
+				actionLock = true;
+				restart();
+				actionLock = false;
+				if(editor) editor.focus(); // 重新将焦点置于editor之上
+				return false;
+			}
 		}
 	}
 });
 
 window.onload = function() {
-	// 初始化编辑器和控制台尺寸
-	setElementsSize();
-	
-	// 初始化应用域名
-	DOMAIN = $("#domain").html();
+	initLang(); // 初始化界面上的文字
+	$('#editor') // 首先将editor的尺寸设置为最大
+		.css("height", document.documentElement.clientHeight - (80 + 5))
+		.css("width", document.body.clientWidth - 260);
+	setElementsSize(); // 初始化编辑器和控制台尺寸
+
+	DOMAIN = $("#domain").html(); // 初始化应用域名
 	url = {
 		listfile: "/editor/" + DOMAIN + "/filelist",
 		readfile: "/editor/" + DOMAIN + "/readfile",
@@ -1381,18 +1397,18 @@ function setConsoleAction() {
 var consoleHandler = {
 	// 控制台高度：CONSOLE_HEIGHT
 	show: function() { // 显示控制台
-		$("#console-display").html("隐藏控制台");
+		$("#console-display").html(LANG.console.hide);
 		$("#console").show();
 		var e = $("#editor");
-		setEditorSize(e.height() - CONSOLE_HEIGHT);
+		setEditorSize(null, null, false);
 		setConsoleSize();
 		cookieHandler.set("NAEIDE_console_hide", '0');
 	},
 	hide: function() { // 隐藏控制台
-		$("#console-display").html("显示控制台");
+		$("#console-display").html(LANG.console.show);
 		$("#console").hide();
 		var e = $("#editor");
-		setEditorSize(e.height() + CONSOLE_HEIGHT);
+		setEditorSize(null, null, true);
 		cookieHandler.set("NAEIDE_console_hide", '1');
 	},
 	toggle: function() {
