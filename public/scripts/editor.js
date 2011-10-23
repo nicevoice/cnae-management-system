@@ -51,7 +51,7 @@ function setEditingFile(index, noStore, rownum, colnum) {
 		return false;
 	}
 	// 检查是否就是当前正在编辑的文件
-	if(index === activeFile) {
+	if(openedFiles[activeFile] && index === activeFile) {
 		if(rownum) editor.gotoLine(rownum, colnum); // 光标移动到活动行
 		editor.focus();
 		return false;
@@ -949,11 +949,6 @@ function openFile(fileName, fileNameIsPath, rownum, colnum) {
 		fileName = getFileName(filePath);
 	} else {
 		filePath = currDir + fileName;
-	}
-	// 检查这个文件是否就是当前的活动文件
-	if(openedFiles[activeFile] && filePath === openedFiles[activeFile].filePath) {
-		editor.focus();
-		return false;
 	}
 	// 检查这个文件是否已经打开了
 	var isOpened = isFileOpened(filePath);
