@@ -3,13 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><%=domain%> - NAE IDE</title>
-	<link href="/styles/editor.css?v=1.0.3" rel="stylesheet" type="text/css" />
+	<link href="/styles/editor.css?v=1.0.5" rel="stylesheet" type="text/css" />
 	<script src="/scripts/head.load.min.js"></script>
 	<script src="/scripts/ace/ace.js"></script>
 	<script src="/scripts/jquery-1.6.2.min.js"></script>
 	<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
 	<script src="/scripts/jquery.form.js"></script>
-	<script src="/scripts/global.js?v=1.0.2" type="text/javascript" charset="utf-8"></script>
+	<script src="/scripts/global.js?v=1.0.3" type="text/javascript" charset="utf-8"></script>
 	<script src="/scripts/editor.js?v=1.2.0" type="text/javascript" charset="utf-8"></script>
 </head>
 
@@ -48,7 +48,7 @@
     	<div id="nav">
             <ul>
                 <li id="nav-save" title="快捷键：Ctrl+S(PC), Command+S(Mac)">保存</li>
-				<li id="restart">重启</li>
+				<li id="restart" title="快捷键：Ctrl-Shift-1(PC), Command-Shift-1(Mac)">重启</li>
 				<li id="console-display" title="快捷键：Ctrl+Shift+X(PC), Command+Shift+X(Mac)">隐藏控制台</li>
             </ul>
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
@@ -57,8 +57,8 @@
         	<div id="tabs"></div>
             <div id="editor" tabindex="1">
             	<div id="welcome">
-            		<h2>你知道吗？</h2>
-            		<p>目前 NAE IDE 支持大部分常用的快捷键，并且很快我们将支持自定义配置文件，希望能给您带来更好的开发体验。<br />当前 NAE IDE 支持的快捷键为：</p>
+            		<h2>Tips: NAE IDE 快捷键</h2>
+            		<p>很快 NAE IDE 还将支持自定义配置文件，让您使用起来更加得心应手。</p>
 					<table>
 						<thead><tr>
 						<td align="left">PC (Windows/Linux)</td>
@@ -72,8 +72,8 @@
 						<td align="left">显示/隐藏控制台</td>
 						</tr>
 						<tr>
-						<td align="left">Ctrl-F5</td>
-						<td align="left">Command-F5</td>
+						<td align="left">Ctrl-Shift-1</td>
+						<td align="left">Command-Shift-1</td>
 						<td align="left">重启应用</td>
 						</tr>
 						<tr>
