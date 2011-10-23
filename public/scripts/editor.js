@@ -1353,7 +1353,7 @@ function setConsoleHeight(height) {
 	if(typeof height === "undefined") {
 		height = Math.round(document.documentElement.clientHeight * 0.5);
 	}
-	$("#console").removeAttr("style").css("height", height);
+	$("#console").removeAttr("style").css("display", "block").css("height", height);
 	var h = height - 30;
 	$('#stdout').css("height", h);
 	$('#stderr').css("height", h);
