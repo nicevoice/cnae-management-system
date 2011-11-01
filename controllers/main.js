@@ -137,7 +137,7 @@ var config = require('../config')
  				}
  			});
  			records.save({appDomain:newAppDomain.toString(), email:req.session.email,
- 			action:"创建应用", recordTime:now}, function(err){
+ 			action:"创建应用", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(err){
  				if(err){
  					log.error(err.toString());
  				}else{
