@@ -46,7 +46,7 @@ function render(data, owner){
   if(ownHtml===""){
     $("#own-apps").html('<div>没有创建任何应用</div>');
   }
-  if(otherHtml.html()===""){
+  if(otherHtml===""){
     $("#other-apps").html('<div>没有创建任何应用</div>');
   }
   bindDiv();

@@ -18,6 +18,7 @@ exports.session_secret = configInfo.session_secret;
 var port = exports.port = configInfo.port;
 exports.email = configInfo.email;
 exports.site_name = configInfo.site_name;
+exports.domain = configInfo.domain;
 
 exports.db_url = configInfo.dbUserName+":"+configInfo.dbPassword+"@127.0.0.1:27017/"+configInfo.dbName;
 /***
