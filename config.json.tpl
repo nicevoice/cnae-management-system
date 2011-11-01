@@ -14,6 +14,7 @@
   "md5_secret":"",
   "session_secret":"",
   "timeOut":,
+  "domain": "cnodejs.net",
   "port":,
   "debug":,
   "site_name":"",
