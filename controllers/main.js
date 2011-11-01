@@ -36,7 +36,7 @@ var config = require('../config')
  	});
  	//从app_mem中查找自己的应用
  	app_mem.find({email:req.session.email.toString(), 
- 	role:0}, {appDomain:1, appName:1}).toArray(function(err, data){
+ 	role:0}, {appDomain:1, appName:1}, {sort:[['joinTime', 1]]}).toArray(function(err, data){
  		if(err){
  			log.error(err.toString());
  			getAppEvent.unbind();
@@ -47,7 +47,7 @@ var config = require('../config')
     });
     //从app_mem中查找参与的应用
     app_mem.find({email:req.session.email.toString(),
-    role:{$ne:0}}, {appDomain:1, appName:1, active:1}).toArray(function(err, data){
+    role:{$ne:0}}, {appDomain:1, appName:1, active:1}, {sort:[['joinTime', 1]]}).toArray(function(err, data){
     	if(err){
     		log.error(err.toString());
     		getAppEvent.unbind();
