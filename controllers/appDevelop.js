@@ -21,8 +21,8 @@ var config = require('../config')
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	var domain = req.params.id||'';
-        app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+        app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -388,8 +388,8 @@ exports.showMongo = function(req, res){
 					log.error(err.toString());
 					res.render("error", {msg:"数据库错误，请稍后再试"});
 				}
-      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+      app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -503,8 +503,8 @@ exports.showTodo = function(req, res){
   var domain = req.params.id || '',
   		url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
-  app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+  app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if (err) {
           log.error(err.toString());
