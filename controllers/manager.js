@@ -186,7 +186,7 @@ exports.coopmng = function(req, res){
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	var coopEvent = new EventProxy();
-	coopEvent.assign("getMems", "getOwn", function(){
+	coopEvent.assign("getMems", "getOwn", function(mems, own){
          app_mem.find({email:req.session.email},{appDomain:1, appName:1}
       ,{sort:[['role',-1], ['joinTime',1]]}
       ).toArray(function(err, apps){
@@ -195,7 +195,7 @@ exports.coopmng = function(req, res){
           return res.render("error",{message:"查询数据库错误，请稍后再试"});
         }
 		return res.render("appManageCoop", {layout:"layoutApp", url:url, nickName:req.session.nickName,
-		mems:arguments[0], own:arguments[1], email:req.session.email, domain:domain, apps:apps});	
+		mems:mems, own:own, email:req.session.email, domain:domain, apps:apps});	
       });
 
 	});
@@ -421,7 +421,7 @@ exports.mnglog = function(req, res){
 			
 					return res.render("appManageRecords", {layout:"layoutApp", records:data,
 					domain:domain, nickName:req.session.nickName,
-					url:url, pages:totalPage, page:page, email:req.session.email});
+					url:url, pages:totalPage, page:page, email:req.session.email, apps:apps});
 				
 				}
 			})	
@@ -432,8 +432,16 @@ exports.applog = function(req, res){
 	var url = req.url,
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
-	res.render("appLogManage", {layout:"layoutApp", url:url, nickName:req.session.nickName,
-	email:req.session.email,domain:domain});
+       app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
+			return res.render("appLogManage", {layout:"layoutApp", url:url, nickName:req.session.nickName,
+	email:req.session.email,domain:domain, apps:apps});
+	});
 };
 exports.getStdOutput = function(req, res){
 	var domain = req.params.id||'',
