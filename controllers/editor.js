@@ -227,5 +227,8 @@ exports.deldir = function(req, res) {
 
 exports.querytool = function(req, res) {
 	var domain = req.params.id;
-	res.render("editor.querytool", {domain: domain, layout: false});
+	res.render("editor.querytool", {
+				domain : domain,
+				layout : false
+			});
 }
