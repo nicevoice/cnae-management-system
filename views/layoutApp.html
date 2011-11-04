@@ -65,7 +65,16 @@
 
     		</ul>
     	</div>
-    <div class="right borderRadius5">
+    <div class="right borderRadius5">      
+    	<span id="appDomain" style="display:none"><%=domain%></span>
+    	<div class="subTitle"><img src="/images/arrow.gif"></img>
+    	<select id="select_app">
+         <%for(var i=0, len=apps.length; i<len; ++i){
+          var app=apps[i];%>
+           <option value="<%=app.appDomain%>" <%if(app.appDomain===domain){%>selected<%}%> ><%=app.appName%></option>
+          <%}%>
+      </select>
+      <img src="/images/arrow.gif"></img>
     <%-body%>
     </div>
     </div>

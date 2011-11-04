@@ -1,6 +1,7 @@
 $(function(){
 	highlightPage();
 	highlightSide();
+  changeApp();
 });
 function highlightPage() {
   if (!document.getElementsByTagName) return false;
@@ -138,22 +139,13 @@ function getColor(res){
   res = res.replace(/\x1B\[0m/g, '</span>');
   return res;
 }
-/*
-function highlightPage() {
-  if (!document.getElementsByTagName) return false;
-  if (!document.getElementById) return false;
-  if (!document.getElementById("navigation")) return false;
-  var nav = document.getElementById("navigation");
-  var links = nav.getElementsByTagName("a");
-  for (var i=0; i<links.length; i++) {
-    var linkurl = links[i].getAttribute("href");
-    var currenturl = window.location.href;
-    if (currenturl.indexOf(linkurl) != -1) {
-      links[i].className = "here";
-      var linktext = links[i].lastChild.nodeValue.toLowerCase();
-      document.body.setAttribute("id",linktext);
-    }
-  }
+function change(){
+  var domain = this.options[this.options.selectedIndex].value;
+  location.href = location.href.replace(/manage\/\w+/, "manage/"+domain);
 }
-
-addLoadEvent(highlightPage);*/
+function changeApp(){
+  if(!document.getElementById) return false;
+  var select = document.getElementById("select_app");
+  if(!select) return false;
+  select.onchange = change;
+}

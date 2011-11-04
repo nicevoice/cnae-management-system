@@ -35,8 +35,16 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
+      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
 			return res.render("appManageSum", {layout:"layoutApp", url:url, domain:domain,appName:data.appName,appDes:data.appDes,
-			dbType:data.appDbType, dbName:data.appDbName, nickName:req.session.nickName, email:req.session.email});
+			dbType:data.appDbType, dbName:data.appDbName, nickName:req.session.nickName, email:req.session.email,apps:apps});
+      });
 		}
 		else{
 			return res.render("error", {message:"数据库不存在该应用"});
@@ -102,8 +110,16 @@ exports.appmng = function(req, res){
 			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-			res.render("appManageInfo", {layout:"layoutApp", appInfo:data, 
-			nickName:req.session.nickName, url:url, email:req.session.email});
+     app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
+			return res.render("appManageInfo", {layout:"layoutApp", appInfo:data, 
+			nickName:req.session.nickName, url:url, email:req.session.email, apps:apps, domain:domain});
+      });
 		}
 	})
 };
@@ -171,8 +187,17 @@ exports.coopmng = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	var coopEvent = new EventProxy();
 	coopEvent.assign("getMems", "getOwn", function(){
+         app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
 		return res.render("appManageCoop", {layout:"layoutApp", url:url, nickName:req.session.nickName,
-		mems:arguments[0], own:arguments[1], email:req.session.email});	
+		mems:arguments[0], own:arguments[1], email:req.session.email, domain:domain, apps:apps});	
+      });
+
 	});
 	app_mem.find({appDomain:domain},{sort:[['joinTime', 1]]}).toArray(function(err, data){
 		if(err){
@@ -402,7 +427,6 @@ exports.mnglog = function(req, res){
 			})	
 		}
 	})
-
 };
 exports.applog = function(req, res){
 	var url = req.url,
