@@ -13,7 +13,7 @@ window.QUERYTOOL = {
 			// 主窗口
 			var html = '<div id="__qt_ifrm_" style="position:fixed; background-color:#FFFFF8; border:1px solid #22252C; box-shadow:3px 3px 12px 0px #22252C; width:450px; text-align:center; z-index:99999; opacity:1;">' +
 						'<div id="__qt_ifrm_title" title="可拖拽改变位置" style="height:30px; background-color:#22252C; color:#FFFFF8; cursor:move; line-height: 28px; padding: 0 5px 0 10px;">' +
-						'<div style="float:left;">Query Tool</div><div style="float:right;"><button onclick="$(\'#__qt_ifrm_\').remove();" style="width: 20px; height: 20px;">X</button></div></div>' +
+						'<div style="float:left;">Query Tool</div><div style="float:right;"><button onclick="$(\'#__qt_ifrm_\').remove(); if(editor) editor.focus();" style="width: 20px; height: 20px;">X</button></div></div>' +
 						'<iframe src="/editor/' + domain + '/querytool" width="440" height="400" style="border-style: none;" id="__qt_ifrm_iframe"></iframe></div>';
 			$(document.body).append(html);
 			var $__qt_ifrm_ = $('#__qt_ifrm_');

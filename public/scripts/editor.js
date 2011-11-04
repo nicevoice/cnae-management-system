@@ -1222,9 +1222,7 @@ var setNavAction = function() {
 		consoleHandler.toggle();
 	});
 	$("#nav-query").click(function() {
-		head.js(NAEIDE_config.SCRIPTPATH.querytool, function() {
-			QUERYTOOL.open(DOMAIN);
-		});
+		QUERYTOOL.open(DOMAIN);
 	});
 }
 
