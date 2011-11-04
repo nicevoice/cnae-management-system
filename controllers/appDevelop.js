@@ -21,8 +21,17 @@ var config = require('../config')
 	var url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
 	var domain = req.params.id||'';
-	res.render("appManageCode", {layout:"layoutApp", domain:domain,url:url,
-	nickName:req.session.nickName, email:req.session.email});
+        app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
+			return 	res.render("appManageCode", {layout:"layoutApp", domain:domain,url:url,
+	nickName:req.session.nickName, email:req.session.email, apps:apps});
+      });
+
   };
   
 /***
@@ -379,9 +388,17 @@ exports.showMongo = function(req, res){
 					log.error(err.toString());
 					res.render("error", {msg:"数据库错误，请稍后再试"});
 				}
-				res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
+      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
+			return res.render("appManageMongo",{layout:"layoutApp", url:url, domain:domain,dbType:data.appDbType,
 				nickName:req.session.nickName, email:req.session.email, dbUserName:user.dbUserName, dbPassword:user.dbPassword,
-				dbName:data.appDbName});
+				dbName:data.appDbName, apps:apps});
+      });        
 			});
 		}
 	})
@@ -486,6 +503,15 @@ exports.showTodo = function(req, res){
   var domain = req.params.id || '',
   		url = req.url;
 	url = url.slice(0, url.lastIndexOf('/'));
+  app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if (err) {
+          log.error(err.toString());
+          return res.render("error", {
+            message: "查询数据库错误，请稍后再试"
+          });
+        }
   app_basic.findOne({
     appDomain: domain
   },function(err, data){
@@ -501,7 +527,8 @@ exports.showTodo = function(req, res){
         domain: domain,
         email: req.session.email,
         nickName: req.session.nickName,
-        url: url
+        url: url,
+        apps:apps
       });
     }
     else {
@@ -526,7 +553,8 @@ exports.showTodo = function(req, res){
             domain: domain,
             email: req.session.email,
             nickName: req.session.nickName,
-            url: url
+            url: url,
+            apps:apps
           });          
         }
         else if(userInfos){
@@ -545,12 +573,15 @@ exports.showTodo = function(req, res){
             domain: domain,
             email: req.session.email,
             nickName: req.session.nickName,
-            url: url
+            url: url,
+            apps:apps
           });
         };
       })
     }
   })
+      });
+
 }
 
 exports.newTodo = function(req, res){
