@@ -35,8 +35,8 @@ exports.sum = function(req, res){
 			return res.render("error",{message:"查询数据库错误，请稍后再试"});
 		}
 		else if(data){
-      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+      app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -110,8 +110,8 @@ exports.appmng = function(req, res){
 			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else{
-     app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+     app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -187,8 +187,8 @@ exports.coopmng = function(req, res){
 	url = url.slice(0, url.lastIndexOf('/'));
 	var coopEvent = new EventProxy();
 	coopEvent.assign("getMems", "getOwn", function(mems, own){
-         app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+         app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -418,8 +418,8 @@ exports.mnglog = function(req, res){
           log.error(err.toString());
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
-			      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+			      app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
@@ -440,8 +440,8 @@ exports.applog = function(req, res){
 	var url = req.url,
 		domain = req.params.id||'';
 	url = url.slice(0, url.lastIndexOf('/'));
-       app_mem.find({email:req.session.email},{appDomain:1, appName:1}
-      ,{sort:[['role',-1], ['joinTime',1]]}
+       app_mem.find({email:req.session.email, active:1},{appDomain:1, appName:1}
+      ,{sort:[['role',1], ['joinTime',1]]}
       ).toArray(function(err, apps){
         if(err){
           log.error(err.toString());
