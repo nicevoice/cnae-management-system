@@ -74,7 +74,8 @@ window.QUERYTOOL = {
 		return res;
 	},
 	
-	submitForm: function(options, outer) {
+	submitForm: function(options) {
+		if(!options || !options.url || !options.method) return false;
 		var _form = {};
 		// 创建form
 		html = '<form action="' + options.url + '" method="' + options.method + '" id="hidden-form">';
@@ -82,14 +83,8 @@ window.QUERYTOOL = {
 			html += '<input name="' + options.params[i].k + '" type="text" value="' + options.params[i].v + '">';
 		}
 		html += '<input type="submit"></form>';
-		if(outer) {
-			var frameContent = $("#__qt_ifrm_iframe").contents();
-			frameContent.find("#wrapper").html(html);
-			_form = frameContent.find('#hidden-form');
-		} else {
-			$("#wrapper").html(html);
-			_form = $('#hidden-form');
-		}
+		$("#wrapper").html(html);
+		_form = $('#hidden-form');
 		_form.submit();
 	},
 	
