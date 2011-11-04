@@ -14,7 +14,7 @@ window.QUERYTOOL = {
 			var html = '<div id="__qt_ifrm_" style="position:fixed; background-color:#FFFFF8; border:1px solid #22252C; box-shadow:3px 3px 12px 0px #22252C; width:450px; text-align:center; z-index:99999; opacity:1;">' +
 						'<div id="__qt_ifrm_title" title="可拖拽改变位置" style="height:30px; background-color:#22252C; color:#FFFFF8; cursor:move; line-height: 28px; padding: 0 5px 0 10px;">' +
 						'<div style="float:left;">Query Tool</div><div style="float:right;"><button onclick="$(\'#__qt_ifrm_\').remove();" style="width: 20px; height: 20px;">X</button></div></div>' +
-						'<iframe src="/editor/' + domain + '/querytool" width="440" height="400" style="border-style: none;"></iframe></div>';
+						'<iframe src="/editor/' + domain + '/querytool" width="440" height="400" style="border-style: none;" id="__qt_ifrm_iframe"></iframe></div>';
 			$(document.body).append(html);
 			var $__qt_ifrm_ = $('#__qt_ifrm_');
 			
@@ -74,10 +74,28 @@ window.QUERYTOOL = {
 		return res;
 	},
 	
-	submitForm: function() {
+	submitForm: function(options, outer) {
+		var _form = {};
+		// 创建form
+		html = '<form action="' + options.url + '" method="' + options.method + '" id="hidden-form">';
+		for(var i = 0; i < options.params.length; i++) {
+			html += '<input name="' + options.params[i].k + '" type="text" value="' + options.params[i].v + '">';
+		}
+		html += '<input type="submit"></form>';
+		if(outer) {
+			var frameContent = $("#__qt_ifrm_iframe").contents();
+			frameContent.find("#wrapper").html(html);
+			_form = frameContent.find('#hidden-form');
+		} else {
+			$("#wrapper").html(html);
+			_form = $('#hidden-form');
+		}
+		_form.submit();
+	},
+	
+	submitOnce: function() {
 		var options = {},
 			params = [],
-			_form = {}, 
 			cookieStr = "", 
 			html = "";
 		// 检查参数
@@ -94,15 +112,6 @@ window.QUERYTOOL = {
 		cookieHandler.set(NAEIDE_config.COOKIE.querytool_options, cookieStr);
 		// 解析params
 		options.params = this.getParams($("#qt-params").val().trim());
-		// 创建form
-		html = '<form action="' + options.url + '" method="' + options.method + '" id="hidden-form">';
-		for(var i = 0; i < options.params.length; i++) {
-			html += '<input name="' + options.params[i].k + '" type="text" value="' + options.params[i].v + '">';
-		}
-		html += '<input type="submit"></form>';
-
-		$("#wrapper").html(html);
-		_form = $('#hidden-form');
-		_form.submit();
+		this.submitForm(options);
 	}
 }

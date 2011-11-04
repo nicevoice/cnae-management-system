@@ -50,6 +50,6 @@ NAEIDE_config.LANG.file = {
 
 NAEIDE_config.SCRIPTPATH = {
 	jquery: "/scripts/jquery-1.6.2.min.js",
-	querytool: "/scripts/editor.querytool.js?v=0.0.3",
+	querytool: "/scripts/editor.querytool.js?v=0.0.1",
 	cookie: "/scripts/editor.cookie.js?v=0.0.1",
 };
