@@ -418,10 +418,18 @@ exports.mnglog = function(req, res){
           log.error(err.toString());
 					return res.render("error", {message:"数据库查询错误"});
 				}else{
-			
+			      app_mem.find({email:req.session.email},{appDomain:1, appName:1}
+      ,{sort:[['role',-1], ['joinTime',1]]}
+      ).toArray(function(err, apps){
+        if(err){
+          log.error(err.toString());
+          return res.render("error",{message:"查询数据库错误，请稍后再试"});
+        }
 					return res.render("appManageRecords", {layout:"layoutApp", records:data,
 					domain:domain, nickName:req.session.nickName,
 					url:url, pages:totalPage, page:page, email:req.session.email, apps:apps});
+	});
+
 				
 				}
 			})	
