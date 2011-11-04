@@ -3,14 +3,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><%=domain%> - NAE IDE</title>
-	<link href="/styles/editor.css?v=1.0.8" rel="stylesheet" type="text/css" />
+	<link href="/styles/editor.css?v=1.0.9" rel="stylesheet" type="text/css" />
 	<script src="/scripts/head.load.min.js"></script>
 	<script src="/scripts/ace/ace.js"></script>
 	<script src="/scripts/jquery-1.6.2.min.js"></script>
-	<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
-	<script src="/scripts/jquery.form.js"></script>
-	<script src="/scripts/global.js?v=1.0.3" type="text/javascript" charset="utf-8"></script>
-	<script src="/scripts/editor.js?v=1.2.4" type="text/javascript" charset="utf-8"></script>
+	<script src="/scripts/global.js?v=1.0.3"></script>
+	<script src="/scripts/editor.config.js"></script>
+	<script src="/scripts/editor.cookie.js?v=0.0.1"></script>
+	<script src="/scripts/editor.js?v=1.2.5"></script>
 </head>
 
 <body>
@@ -50,6 +50,7 @@
                 <li id="nav-save" title="快捷键：Ctrl+S(PC), Command+S(Mac)">保存</li>
 				<li id="nav-restart" title="快捷键：Ctrl-Shift-1(PC), Command-Shift-1(Mac)">重启</li>
 				<li id="nav-console" title="快捷键：Ctrl+Shift+X(PC), Command+Shift+X(Mac)">隐藏控制台</li>
+				<li id="nav-query" title="">QueryTool</li>
             </ul>
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
         </div>
@@ -76,4 +77,6 @@
 </div>
 <div id="msg"></div>
 </body>
+<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/scripts/jquery.form.js"></script>
 </html>

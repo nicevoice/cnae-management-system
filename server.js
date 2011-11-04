@@ -302,6 +302,7 @@ app.post('/editor/:id/renamefile', hasLogin, checkChangeAuth(2), editor.renamefi
 app.post('/editor/:id/delfile', hasLogin, checkChangeAuth(2), editor.delfile); // 删除文件
 app.post('/editor/:id/mkdir', hasLogin, checkChangeAuth(2), editor.mkdir); // 创建目录
 app.post('/editor/:id/deldir', hasLogin, checkChangeAuth(2), editor.deldir); // 删除目录
+app.get('/editor/:id/querytool', hasLogin, checkChangeAuth(2), editor.querytool); // Query Tool
 
 app.get("*", main.pageNotFound);
 

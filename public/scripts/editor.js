@@ -10,48 +10,6 @@ var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
 var CONSOLE_HEIGHT = 125;
-var LANG = {};
-LANG.global = {
-	error: "出错了",
-	tryLater: "请稍后再尝试",
-};
-LANG.page = {
-	leaveNotify: "文件尚未保存，现在离开本页面将丢失已修改的内容。确认离开页面？",
-	closeNotify: "文件尚未保存，现在关闭将丢失修改的内容。保存该文件吗？",
-};
-LANG.apps = {
-	restart: "应用重启",
-	restarting: "正在重启，请稍候..",
-	restartSucceed: "重启成功",
-	restartFailed: "重启失败",
-	getInfFailed: "获取失败",
-};
-LANG.editor = {
-	noEditingFile: "没有正在编辑的文件",
-}
-LANG.console = {
-	show: "显示控制台",
-	hide: "隐藏控制台",
-};
-LANG.file = {
-	readFileFailed: "读文件失败",
-	writeFileFailed: "写文件失败",
-	removeFileFailed: "删文件失败",
-	createDirFailed: "创建目录失败",
-	removeDirFailed: "删目录失败",
-	renameFailed: "重命名失败",
-	plzInputFileName: "请输入文件名",
-	plzInputDirName: "请输入目录名",
-	inputFileName: "输入文件名后按回车键继续",
-	inputDirName: "输入目录名后按回车键继续",
-	emptyFileName: "文件名不能为空",
-	emptyDirName: "目录名不能为空",
-	uploading: "正在上传..",
-	uploadSucceed: "上传成功",
-	uploadFailed: "上传失败！",
-	createSucceed: "创建成功",
-	modifySucceed: "修改成功",
-};
 
 var setTabAction = function() {
 	$(".tab").live({
@@ -218,7 +176,7 @@ var setFileListSize = function() {
 
 var setElementsSize = function() {
 	// 检查console的cookis
-	var isHide = cookieHandler.get("NAEIDE_console_hide");
+	var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
 	if(isHide != null && isHide === '1') {// 隐藏console
 		setEditorSize(null, null, true);
 	} else {
@@ -231,11 +189,11 @@ var setElementsSize = function() {
 
 var initLang = function() {
 	// 检查console的cookis
-	var isHide = cookieHandler.get("NAEIDE_console_hide");
+	var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
 	if(isHide != null && isHide === '1') {// 隐藏console
-		$("#nav-console").html(LANG.console.show);
+		$("#nav-console").html(NAEIDE_config.LANG.console.show);
 	} else {
-		$("#nav-console").html(LANG.console.hide);
+		$("#nav-console").html(NAEIDE_config.LANG.console.hide);
 	}
 }
 
@@ -399,14 +357,14 @@ window.onload = function() {
 	
 	var options = { 
 		beforeSubmit:	function() {
-			showMsg1(LANG.file.uploading);
+			showMsg1(NAEIDE_config.LANG.file.uploading);
 		},
 		success:		function(data) {
 			if(typeof data.error != "undefined" && data.error === "false") {
 				listFiles(currDir);
-				showMsg2(LANG.file.uploadSucceed);
+				showMsg2(NAEIDE_config.LANG.file.uploadSucceed);
 			} else {
-				showMsg2(LANG.file.uploadFailed);
+				showMsg2(NAEIDE_config.LANG.file.uploadFailed);
 			}
 		},
 		complete:		function() {},
@@ -435,7 +393,7 @@ window.onbeforeunload = function() {
 	var index = hasFileChanged();
 	if(index >= 0 && editor) { // 有尚未保存的文件，且编辑器尚未关闭
 		setEditingFile(index);
-		return LANG.page.leaveNotify;
+		return NAEIDE_config.LANG.page.leaveNotify;
 	}
 };
 
@@ -485,10 +443,10 @@ function restart(){
 		dataType:"json",
 		data:{action:"restart"},
 		beforeSend: function() {
-			showMsg1(LANG.apps.restarting);
+			showMsg1(NAEIDE_config.LANG.apps.restarting);
 		},
 		error:function(){
-			showMsg2(LANG.apps.restartFailed);
+			showMsg2(NAEIDE_config.LANG.apps.restartFailed);
 		},
 		success:function(data){
 			if(data.status !== "ok") {
@@ -500,11 +458,11 @@ function restart(){
 						dataType:"json",
 						data:{action:"start"},
 						error:function(){
-							showMsg2(LANG.apps.restartFailed);
+							showMsg2(NAEIDE_config.LANG.apps.restartFailed);
 						},
 						success:function(data) {
 							if(data.status === "ok") {
-							    showMsg2(LANG.apps.restartSucceed);
+							    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
 								window.clearInterval(outTimer);
 								window.clearInterval(errTimer);
 								outTimer = window.setInterval(function(){
@@ -513,17 +471,17 @@ function restart(){
 								errTimer = window.setInterval(function(){
 									getOutput("stderr");
 								}, interval);
-								addRecord(DOMAIN, LANG.apps.restart);
+								addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 							} else {
-								showMsg2(LANG.apps.restartFailed + ": " + data.msg);
+								showMsg2(NAEIDE_config.LANG.apps.restartFailed + ": " + data.msg);
 							}
 						}
 					})
 				} else {
-					showMsg2(LANG.apps.restartFailed + ": " + data.msg);
+					showMsg2(NAEIDE_config.LANG.apps.restartFailed + ": " + data.msg);
 				}
 			} else {
-			    showMsg2(LANG.apps.restartSucceed);
+			    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
 				window.clearInterval(outTimer);
 				window.clearInterval(errTimer);
 				outTimer = window.setInterval(function(){
@@ -532,7 +490,7 @@ function restart(){
 				errTimer = window.setInterval(function(){
 					getOutput("stderr");
 				}, interval);
-				addRecord(DOMAIN, LANG.apps.restart);
+				addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 			}
 			getOutput("stdout");
 			getOutput("stderr");
@@ -548,7 +506,7 @@ function getOutput(action){
 		dataType:"json",
 		data:{action:action},
 		error:function(){
-			$("#"+action).html(action + LANG.apps.getInfFailed);
+			$("#"+action).html(action + NAEIDE_config.LANG.apps.getInfFailed);
 			/*window.clearTimeout(outTimer);
 			window.clearTimeout(errTimer);
 			if(action == "stdout"){
@@ -712,11 +670,11 @@ var readFile = function(filePath, next) {
 			if(data.status === "succeed") {
 				return next(true, data.content);
 			} else {
-				return next(false, LANG.file.readFileFailed);
+				return next(false, NAEIDE_config.LANG.file.readFileFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -736,11 +694,11 @@ var writeFile = function(filePath, content, next) {
 			if(data.status === "succeed") {
 				return next(true, data.mtime);
 			} else {
-				return next(false, LANG.file.writeFileFailed);
+				return next(false, NAEIDE_config.LANG.file.writeFileFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -760,11 +718,11 @@ var delFile = function(filePath, next) {
 			if(data.status === "succeed") {
 				return next(true);
 			} else {
-				return next(false, LANG.file.removeFileFailed);
+				return next(false, NAEIDE_config.LANG.file.removeFileFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -781,11 +739,11 @@ var mkDir = function(dirPath, next) {
 			if(data.status === "succeed") {
 				return next(true);
 			} else {
-				return next(false, LANG.file.createDirFailed);
+				return next(false, NAEIDE_config.LANG.file.createDirFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -806,11 +764,11 @@ var delDir = function(dirPath, next) {
 			if(data.status === "succeed") {
 				return next(true);
 			} else {
-				return next(false, LANG.file.removeDirFailed);
+				return next(false, NAEIDE_config.LANG.file.removeDirFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -829,11 +787,11 @@ var renameFile = function(oriPath, newPath, next) {
 			if(data.status === "succeed") {
 				return next(true);
 			} else {
-				return next(false, LANG.file.renameFailed);
+				return next(false, NAEIDE_config.LANG.file.renameFailed);
 			}
 		},
 		error: function() {
-			return next(false, LANG.global.error);
+			return next(false, NAEIDE_config.LANG.global.error);
 		}
 	});
 }
@@ -906,14 +864,14 @@ var createFile = function(type, content) {
 	var this_dl = this_div.children("dl");
 	var this_dt = this_dl.children("dt"); // 文件名要插到这个里面
 	if(type === 1) { // 弹出输入框输入文件名
-		var fileName = prompt(LANG.file.plzInputFileName, "");
+		var fileName = prompt(NAEIDE_config.LANG.file.plzInputFileName, "");
 		fileName = htmlspecialchars(fileName);
 		this_dt.html(fileName);
 		this_dl.attr("title", fileName);
 		createFileAfter(fileName, this_div, content);
 	} else if(type === 2) { // 在文件树里面输入
 		var input = '<input name="filename" value="" type="text" class="input" />';
-		showMsg1(LANG.file.inputFileName);
+		showMsg1(NAEIDE_config.LANG.file.inputFileName);
 		$(input)
 			.appendTo(this_dt)
 			.focus() // 把焦点移到该元素上
@@ -939,17 +897,17 @@ var createFile = function(type, content) {
 var createFileAfter = function(fileName, this_div, content) {
 	if(fileName === null || fileName === "") {
 		this_div.remove();
-		showMsg(LANG.file.emptyFileName);
+		showMsg(NAEIDE_config.LANG.file.emptyFileName);
 	} else {
 		var filePath = currDir + fileName;
 		if(typeof content === "undefined") content = "";
 		writeFile(filePath, content, function(status, msg) {
 			if(!status) { // 失败
 				this_div.remove();
-				showMsg(msg + "，" + LANG.global.tryLater);
+				showMsg(msg + "，" + NAEIDE_config.LANG.global.tryLater);
 				return false;
 			}
-			showMsg2(LANG.file.createSucceed);
+			showMsg2(NAEIDE_config.LANG.file.createSucceed);
 			// 在文件树里添加文件节点
 			var _t = this_div.find(".menu-btn");
 			var _file = {"name": fileName, "type": "f", "size": 0, "mtime": 0};
@@ -984,18 +942,16 @@ var openFile = function(fileName, fileNameIsPath, rownum, colnum) {
 	} else {
 		filePath = currDir + fileName;
 	}
-	// 检查这个文件是否已经打开了
-	var isOpened = isFileOpened(filePath);
+	var isOpened = isFileOpened(filePath); // 检查这个文件是否已经打开了
 	if(isOpened < 0) { // 没有打开
 		var e = editor.getSession();
 		readFile(filePath, function(status, content) {
 			if(status) {
 				var index = addOpenedFile(filePath, content);
-				// 添加tab
-				addTab(fileName, index);
+				addTab(fileName, index); // 添加tab
 				setEditingFile(index, false, rownum, colnum);
 			} else {
-				showMsg(content + "，" + LANG.global.tryLater);
+				showMsg(content + "，" + NAEIDE_config.LANG.global.tryLater);
 			}
 		});
 	} else { // 已经打开
@@ -1006,7 +962,7 @@ var openFile = function(fileName, fileNameIsPath, rownum, colnum) {
 var closeFile = function(index) {
 	if(typeof openedFiles[index] != "undefined") {
 		if(openedFiles[index].changed) {
-			if(confirm(LANG.page.closeNotify)) {
+			if(confirm(NAEIDE_config.LANG.page.closeNotify)) {
 				if(actionLock) return false;
 				actionLock = true;
 				saveFile(index);
@@ -1047,7 +1003,7 @@ var saveFile = function(index) {
 			setStatusBar(1, fileName);
 			// TODO:更新文件的mtime
 		} else {
-			showMsg(msg + "，" + LANG.global.tryLater);
+			showMsg(msg + "，" + NAEIDE_config.LANG.global.tryLater);
 		}
 	});
 }
@@ -1068,7 +1024,7 @@ var rmFile = function(filePath, node) {
 				if(typeof editor != "undefined" && editor && typeof e != "undefined") e.setValue("");
 			}
 		} else {
-			showMsg(msg + "，" + LANG.global.tryLater);
+			showMsg(msg + "，" + NAEIDE_config.LANG.global.tryLater);
 		}
 	});
 }
@@ -1084,7 +1040,7 @@ var rmDir = function(dirPath, node) {
 			node.hide(200);
 			// TODO:判断当前编辑的文件是否在该目录下，如果是则丢弃editor中的内容
 		} else {
-			showMsg(msg + "，" + LANG.global.tryLater);
+			showMsg(msg + "，" + NAEIDE_config.LANG.global.tryLater);
 		}
 	});
 }
@@ -1171,13 +1127,10 @@ var setItemAction = function() {
 			this_dt.html(""); // 清空自己
 			// 将文本改变为编辑框
 			var input = '<input name="filename" value="' + _name + '" type="text" class="input" />';
-			showMsg1(LANG.file.inputFileName);
+			showMsg1(NAEIDE_config.LANG.file.inputFileName);
 			$(input)
 				.appendTo(this_dt)
 				.focus() // 把焦点移到该元素上
-//				.blur(function() { // 绑定focusout事件
-//					dyRenameUI(this, oriName, dt);
-//				})
 				.keyup(function(e) {
 					if(e.which === 13) {
 						dyRenameUI(this, oriName, this_dl, this_dt);
@@ -1213,14 +1166,14 @@ var dyRenameUI = function(that, oriName, dl, dt) {
 	var newName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
 	if(newName === null || newName === "") {
 		dt.html(oriName);
-		showMsg(LANG.file.emptyDirName);
+		showMsg(NAEIDE_config.LANG.file.emptyDirName);
 	} else {
 		var oriPath = currDir + oriName;
 		var newPath = currDir + newName;
 		renameFile(oriPath, newPath, function(status, errMsg) {
 			$(that).remove(); // 移除该<input>元素
 			if(status) { // 成功
-				showMsg2(LANG.file.modifySucceed);
+				showMsg2(NAEIDE_config.LANG.file.modifySucceed);
 				dt.html(newName);
 				dl.attr("title", newName);
 				dl.find(".sub-menu .sub-menu-item[name='edit-file']").children("strong").html(newName);
@@ -1251,7 +1204,7 @@ var setNavAction = function() {
 		actionLock = true;
 		// 检查编辑器对象是否存在
 		if(!editor || editor === null) {
-			showMsg(LANG.editor.noEditingFile);
+			showMsg(NAEIDE_config.LANG.editor.noEditingFile);
 		} else {
 			saveFile();
 		}
@@ -1268,19 +1221,24 @@ var setNavAction = function() {
 	$("#nav-console").click(function() {
 		consoleHandler.toggle();
 	});
+	$("#nav-query").click(function() {
+		head.js(NAEIDE_config.SCRIPTPATH.querytool, function() {
+			QUERYTOOL.open(DOMAIN);
+		});
+	});
 }
 
 var dyCreateDirUI = function(that, that_div, dl, dt) {
 	var dirName = htmlspecialchars($(that).val()); // 取出<input>元素此时的值
 	if(dirName === null || dirName === "") {
 		that_div.remove();
-		showMsg(LANG.file.emptyDirName);
+		showMsg(NAEIDE_config.LANG.file.emptyDirName);
 	} else {
 		var dirPath = currDir + dirName;
 		mkDir(dirPath, function(status, msg) {
 			$(that).remove(); // 移除该<input>元素
 			if(status) {
-				showMsg2(LANG.file.createSucceed);
+				showMsg2(NAEIDE_config.LANG.file.createSucceed);
 				var _t = dl.children("dd").children(".menu-btn");
 				var _mtime = new Date();
 				_mtime = _mtime.toLocaleString();
@@ -1290,7 +1248,7 @@ var dyCreateDirUI = function(that, that_div, dl, dt) {
 				dl.attr("title", dirName);
 			} else {
 				that_div.remove();
-				showMsg(msg + "，" + LANG.global.tryLater);
+				showMsg(msg + "，" + NAEIDE_config.LANG.global.tryLater);
 			}
 		});
 	}
@@ -1337,13 +1295,10 @@ var setToolbarAction = function() {
 		var this_dl = this_div.children("dl");
 		var this_dt = this_dl.children("dt");
 		var input = '<input name="filename" value="" type="text" class="input" />';
-		showMsg1(LANG.file.inputDirName);
+		showMsg1(NAEIDE_config.LANG.file.inputDirName);
 		$(input)
 			.appendTo(this_dt)
 			.focus() // 把焦点移到该元素上
-//			.blur(function() {
-//				dyCreateDirUI(this, this_div, dt);
-//			})
 			.keyup(function(e) {
 				if(e.which === 13) {
 					dyCreateDirUI(this, this_div, this_dl, this_dt);
@@ -1366,7 +1321,6 @@ var setToolbarAction = function() {
 		}
 	);
 }
-
 
 /*
  * Console
@@ -1432,56 +1386,26 @@ var setConsoleHeight = function(height) {
 var consoleHandler = {
 	// 控制台高度：CONSOLE_HEIGHT
 	show: function() { // 显示控制台
-		$("#nav-console").html(LANG.console.hide);
+		$("#nav-console").html(NAEIDE_config.LANG.console.hide);
 		$("#console").show();
 		var e = $("#editor");
 		setEditorSize(null, null, false);
 		setConsoleSize();
-		cookieHandler.set("NAEIDE_console_hide", '0');
+		cookieHandler.set(NAEIDE_config.COOKIE.console_hide, '0');
 	},
 	hide: function() { // 隐藏控制台
-		$("#nav-console").html(LANG.console.show);
+		$("#nav-console").html(NAEIDE_config.LANG.console.show);
 		$("#console").hide();
 		var e = $("#editor");
 		setEditorSize(null, null, true);
-		cookieHandler.set("NAEIDE_console_hide", '1');
+		cookieHandler.set(NAEIDE_config.COOKIE.console_hide, '1');
 	},
 	toggle: function() {
-		var isHide = cookieHandler.get("NAEIDE_console_hide");
+		var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
 		if(isHide === null || isHide === "0") {
 			consoleHandler.hide();
 		} else {
 			consoleHandler.show();
-		}
-	}
-};
-
-var cookieHandler = {
-	set: function(name, value, expires, path, domain) {
-		if (typeof expires == "undefined") {
-			expires = new Date(new Date().getTime() + 365 * 24 * 3600 * 100);
-		}
-
-		document.cookie = name + "=" + escape(value) +
-			((expires) ? "; expires=" + expires.toGMTString() : "") +
-			((path) ? "; path=" + path : "; path=/") +
-			((domain) ? "; domain=" + domain : "");
-	},
-
-	get: function(name) {
-		var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
-		if (arr != null) {
-			return unescape(arr[2]);
-		}
-		return null;
-	},
-
-	clear: function(name, path, domain) {
-		if (this.get(name)) {
-			document.cookie = name + "=" +
-				((path) ? "; path=" + path : "; path=/") +
-				((domain) ? "; domain=" + domain : "") +
-				";expires=Fri, 02-Jan-1970 00:00:00 GMT";
 		}
 	}
 };
