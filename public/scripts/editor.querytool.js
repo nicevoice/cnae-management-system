@@ -107,7 +107,6 @@ window.QUERYTOOL = {
 		cookieHandler.set(NAEIDE_config.COOKIE.querytool_options, cookieStr);
 		// 解析params
 		options.params = this.getParams($("#qt-params").val().trim());
-		alert(options.url);
 		this.submitForm(options);
 	}
 }
