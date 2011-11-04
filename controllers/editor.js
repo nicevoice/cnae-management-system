@@ -224,3 +224,8 @@ exports.deldir = function(req, res) {
 				return res.json(resMsg, 200);
 			});
 }
+
+exports.querytool = function(req, res) {
+	var domain = req.params.id;
+	res.render("editor.querytool.html", {domain: domain});
+}
