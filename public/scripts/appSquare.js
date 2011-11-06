@@ -1,10 +1,10 @@
 var appNums = 0,
     onceNum = 20;
-$(function(){
+$(function(){ 
   window.onscroll = function(){
     var backTop = $("#back-top");
     if(!backTop) return false;
-    if(document.body.scrollTop<500){
+    if(document.body.scrollTop<10){
       backTop.css("display", "none");
     }else{
       backTop.css("display", "block");
