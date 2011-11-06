@@ -1,5 +1,6 @@
 var middleware = require('./middleware'),
     hasLogin = middleware.hasLogin,
+    isAdmin = middleware.isAdmin,
     ctrInvitation = require('../controllers/invitation');
     
 module.exports = function(app){

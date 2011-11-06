@@ -1,6 +1,6 @@
 var onOff = require('../lib/socket').onOff
   , model = require('../models/index')
-  , log = config.logWithFile
+  , log = require('../config').logWithFile
   , app_mem = model.app_mem
   , app_basic = model.app_basic;
   

@@ -1,5 +1,5 @@
 var model = require('../models/index')
-  , log = config.logWithFile
+  , log = require('../config').logWithFile
   , app_mem = model.app_mem
   , getLog = require('../lib/socket').getLog;
   

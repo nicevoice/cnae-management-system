@@ -47,7 +47,7 @@ function render(data, owner){
     $("#own-apps").html('<div>没有创建任何应用</div>');
   }
   if(otherHtml===""){
-    $("#other-apps").html('<div>没有创建任何应用</div>');
+    $("#other-apps").html('<div>没有参与任何应用</div>');
   }
   bindDiv();
 }

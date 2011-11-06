@@ -3,12 +3,12 @@ var middleware = require('./middleware'),
     hasNotLogin = middleware.hasNotLogin,
     ctrLogin = require('../controllers/login'),
     ctrRegist = require('../controllers/regist'),
-    ctrRetieve = require('../controllers/retieve');
+    ctrRetrieve = require('../controllers/retrieve');
     
 module.exports = function(app){
   //login
   app.get('/login', ctrLogin.show);
-  app.get('/checkLogin', ctrLogin.runLogin);
+  app.post('/checkLogin', ctrLogin.checkLogin);
   app.get('/logout', hasLogin, ctrLogin.logout);
   //regist
   app.get("/regist", hasNotLogin, ctrRegist.regist);
@@ -16,9 +16,9 @@ module.exports = function(app){
   app.post("/regist/checkEmail", hasNotLogin, ctrRegist.checkEmail);
   app.post("/regist/checkName", ctrRegist.checkName);
   //retrieve
-  app.get("/retrieve", hasNotLogin, ctrRetieve.showRetrieve);
-  app.post("/retrieve", hasNotLogin, ctrRetieve.postRetrieve);
-  app.get("/retrieveTips", hasNotLogin, ctrRetieve.showRetrieveTips);
-  app.get("/resetPassword", hasNotLogin, ctrRetieve.showResetPassword);
-  app.post("/resetPassword", hasNotLogin, ctrRetieve.resetPassword);
+  app.get("/retrieve", hasNotLogin, ctrRetrieve.showRetrieve);
+  app.post("/retrieve", hasNotLogin, ctrRetrieve.postRetrieve);
+  app.get("/retrieveTips", hasNotLogin, ctrRetrieve.showRetrieveTips);
+  app.get("/resetPassword", hasNotLogin, ctrRetrieve.showResetPassword);
+  app.post("/resetPassword", hasNotLogin, ctrRetrieve.resetPassword);
 }

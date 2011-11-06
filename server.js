@@ -7,7 +7,8 @@ if(!config.debug) {
 var express = require('express'),
 	ejs = require('ejs'),
 	fs = require('fs'),
-  startDel = require('./lib/deleteDownload').startDel,
+    model = require('./models/index'),
+    startDel = require('./lib/deleteDownload').startDel,
 	form = require('connect-form'),
 	RedisStore = require('connect-redis')(express);
 	
@@ -100,7 +101,7 @@ require('./routes/user')(app);
 require('./routes/square')(app);
 require('./routes/invitation')(app);
 require('./routes/editor')(app);
-requier('./routes/appManager')(app);
+require('./routes/appManager')(app);
 
 app.get("*", function(req, res){
   res.redirect("/application");

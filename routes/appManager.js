@@ -36,7 +36,7 @@ module.exports = function(app){
   app.post("/application/manage/:id/pull", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitPull);  //git pull代码
   app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUpload);  //上传代码
   app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), ctrAppDevelop.doDownload);  //代码打包下载
-  app.get("/application/download/:id.zip", hasLogin, appDevelop.downloading);
+  app.get("/application/download/:id.zip", hasLogin, ctrAppDevelop.downloading);
   app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
   app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUploadImg);  //上传接口
   app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), ctrAppDevelop.createMongo);  //给应用分配mongoDB
