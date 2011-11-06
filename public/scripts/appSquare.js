@@ -1,6 +1,15 @@
 var appNums = 0,
     onceNum = 20;
 $(function(){
+  window.onscroll = function(){
+    var backTop = $("#back-top");
+    if(!backTop) return false;
+    if(document.body.scrollTop<500){
+      backTop.css("display", "none");
+    }else{
+      backTop.css("display", "block");
+    }
+  }
   getMore();
   $("#getMore").click(getMore);
 })
