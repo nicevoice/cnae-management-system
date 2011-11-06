@@ -96,3 +96,12 @@ border: 1px solid #054388;
   padding:0px;
   display:none;
 }
+
+#back-top{
+  position:fixed;
+  bottom:100px;
+  border:1px solid #BBB;
+  width:20px;
+  padding:5px;
+  left:1150px;
+}
