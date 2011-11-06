@@ -110,5 +110,6 @@ border: 1px solid #054388;
   -moz-border-radius: 3px;
   -o-border-radius: 3px;
   border-radius: 3px;
+  display:"none";
 }
 
