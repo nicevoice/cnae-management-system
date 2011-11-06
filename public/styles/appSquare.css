@@ -104,4 +104,10 @@ border: 1px solid #054388;
   width:20px;
   padding:5px;
   left:1150px;
+  text-decoration: none;
+  text-align: center;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
 }
