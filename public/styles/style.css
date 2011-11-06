@@ -25,7 +25,7 @@ html[xmlns] .clearfix {
 * html .clearfix {
 	height: 1%;
 }
-body { background:#EEE; }
+body { background:#DDD; }
 .clear { clear:both; }
 .float_left { float:left; }
 .float_right { float:right; }
