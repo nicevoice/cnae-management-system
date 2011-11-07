@@ -1,6 +1,6 @@
 var config = require('../config'),
 log = config.logWithFile,
-md5 = require('../lib/md5').hex_md5,
+md5 = require('hashlib').md5,
 model = require('../models/index'),
 users = model.users;
 /***
