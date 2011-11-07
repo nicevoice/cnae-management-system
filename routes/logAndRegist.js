@@ -2,17 +2,17 @@ var middleware = require('./middleware'),
     hasLogin = middleware.hasLogin,
     hasNotLogin = middleware.hasNotLogin,
     runLogin = middleware.runLogin,
-    ctrLogin = require('../controllers/login'),
-    ctrTaobaoLogin = require('../labs/controllers/login'),
     ctrRegist = require('../controllers/regist'),
     ctrRetrieve = require('../controllers/retrieve'),
-    labs = require('../config').labs;
-    
+    labs = require('../config').labs,
+    ctrLogin;
+    if(!labs){
+      ctrLogin = require('../controllers/login');
+    }else{
+      ctrLogin = require('../labs/controllers/login');
+    }
 module.exports = function(app){
   //login
-  if(labs){
-    ctrLogin = ctrTaobaoLogin;
-  }
   app.get('/login', ctrLogin.show);
   if (!labs) {
     app.post('/checkLogin', ctrLogin.checkLogin);
