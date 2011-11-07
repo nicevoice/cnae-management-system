@@ -54,46 +54,6 @@ app.set("view engine", "html");
 app.set("views", __dirname + '/views');
 app.register("html", ejs);
 
-//格式化Date
-/**
-* 时间对象的格式化;
-*/
-Date.prototype.format = function(format){
- /*
-  * eg:format="YYYY-MM-dd hh:mm:ss";
-  */
- var o = {
-  "M+" :  this.getMonth()+1,  //month
-  "d+" :  this.getDate(),     //day
-  "h+" :  this.getHours(),    //hour
-      "m+" :  this.getMinutes(),  //minute
-      "s+" :  this.getSeconds(), //second
-      "q+" :  Math.floor((this.getMonth()+3)/3),  //quarter
-      "S"  :  this.getMilliseconds() //millisecond
-   }
-  
-   if(/((|Y|)+)/.test(format)) {
-    format = format.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-   }
- 
-   for(var k in o) {
-    if(new RegExp("("+ k +")").test(format)) {
-      format = format.replace(RegExp.$1, RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
-    }
-   }
- return format;
-}
-
-String.prototype.trim = function() {
-return this.replace(/^\s+|\s+$/g, "");
-}
-
-
-require('http').ServerResponse.prototype.sendJson = function(data){
-  body = new Buffer(JSON.stringify(data));
-	this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
-	this.end(body);
-}
 //routing
 require('./routes/logAndRegist')(app);
 require('./routes/application')(app);
@@ -107,11 +67,13 @@ app.get("*", function(req, res){
   res.redirect("/application");
 });
 
-
 app.listen(config.port);
 
 startDel();
 model.ensureIndexes();
+
+
+
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
 process.on('SIGINT', function () {
