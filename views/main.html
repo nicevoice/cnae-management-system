@@ -2,7 +2,7 @@
     <h2 id="appH2">应用列表</h2>
     <div class="clearfix">
     <div id="myApp">
-    <p class="appDivTitle">我创建的应用</p>
+    <p class="appDivTitle"><% if(!config.labs){ %>我创建的应用<%}%></p>
     <div class="applications">
       <ul>
         <% for(var i = 0, len = ownApps.length; i < len; i++) {
@@ -13,25 +13,31 @@
         <img src="/images/arrow.gif"></img>
         &nbsp;
         <a href="/application/manage/<%= app.appDomain%>/sum" title="管理" class="title"><%= app.appName %></a>
+        <% if (!config.labs) { %>
         <span class="appActions" id="appAction-<%=app.appDomain%>">
-        <a class="deleteApp" href="javascript:void(0)" 
+        <a class="deleteApp" href="javascript:void(0)"
         onclick="delApp('<%=app.appDomain%>')">删除</a>
         </span>
+        <%}%>
         </li>
       </div>
       <% } %>
       <div id="createApp">
       <li>
+      <% if(!config.labs){ %>
       <% if(ownApps.length < 10){ %>
       <a href="/application/newApp">创建新应用(<%=ownApps.length%>/10)</a>
       <%}else{%>
         应用数量已达上限
+      <%}%>
       <%}%>
       </li>
       </div>
     </ul>
     </div>
   </div>
+
+      <% if(!config.labs){ %>
   <div id="otherApp">
       <p class="appDivTitle">我参与的应用</p>
     <div class="applications">
@@ -57,15 +63,16 @@
 	        <a class="appActive" id="active-<%=app.appDomain%>"
 	         href="javascript:void(0)" onclick="active('<%=app.appDomain%>')">先点此激活应用</a>
 	        <%}%>
-	        <a class="deleteApp" href="javascript:void(0)" 
+	        <a class="deleteApp" href="javascript:void(0)"
 	        onclick="delCoopApp('<%=app.appDomain%>')">退出</a>
 	        </span>
 	        </li>
 	      </div>
 	  	<%}%>
-      <% } %>     
+      <% } %>
     </ul>
   </div>
   </div>
+  <%}%>
 </div>
   <script type="text/javascript" src="scripts/main.js?v=1.0.1"></script>

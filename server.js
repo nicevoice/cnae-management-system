@@ -54,6 +54,28 @@ app.set("view engine", "html");
 app.set("views", __dirname + '/views');
 app.register("html", ejs);
 
+app.get("/favicon.ico", function(req, res){
+	res.writeHead(404, "Not Found");
+	res.end();
+})
+//routing
+require('./routes/logAndRegist')(app);
+require('./routes/application')(app);
+require('./routes/user')(app);
+require('./routes/square')(app);
+require('./routes/invitation')(app);
+require('./routes/editor')(app);
+require('./routes/appManager')(app);
+
+app.get("*", function(req, res){
+  res.redirect("/application");
+});
+
+app.listen(config.port);
+
+startDel();
+model.ensureIndexes();
+
 //格式化Date
 /**
 * 时间对象的格式化;
@@ -94,24 +116,7 @@ require('http').ServerResponse.prototype.sendJson = function(data){
 	this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
 	this.end(body);
 }
-//routing
-require('./routes/logAndRegist')(app);
-require('./routes/application')(app);
-require('./routes/user')(app);
-require('./routes/square')(app);
-require('./routes/invitation')(app);
-require('./routes/editor')(app);
-require('./routes/appManager')(app);
 
-app.get("*", function(req, res){
-  res.redirect("/application");
-});
-
-
-app.listen(config.port);
-
-startDel();
-model.ensureIndexes();
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
 process.on('SIGINT', function () {
