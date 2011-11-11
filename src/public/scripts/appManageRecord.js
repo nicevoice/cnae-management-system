@@ -7,8 +7,13 @@ $(function(){
 });
 
 function loadRecordContent() {
-  var match = location.href.match(/page=\d+/)[0];
-  var page = match.slice(match.lastIndexOf('=') + 1);
+  var matchs = location.href.match(/page=\d+/);
+  var page;
+  if(matchs){
+    page = matchs[0].slice(matchs[0].lastIndexOf('=') + 1);
+  }else{
+    page = 1;
+  }
   $.ajax({
     cache : false,
     type : "get",
@@ -48,7 +53,7 @@ function renderRecord(content){
     var url = location.href;
     url = url.slice(0, url.lastIndexOf('/'));
     if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
-      html += '<li><a href='+url+'/mnglog?page='+i+'">'+i+'</a></li>';
+      html += '<li><a href='+url+'/mnglog?page='+i+'>'+i+'</a></li>';
     }else{
       if(tooMany===false){
         tooMany = true;

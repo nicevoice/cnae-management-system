@@ -6,8 +6,13 @@ $(function(){
 	loadInviteCode();
 })
 function loadInviteCode(){
-    var match = location.href.match(/page=\d+/)[0];
-    var page = match.slice(match.lastIndexOf('=')+1);
+  var matchs = location.href.match(/page=\d+/);
+  var page;
+  if(matchs){
+    page = matchs[0].slice(matchs[0].lastIndexOf('=') + 1);
+  }else{
+    page = 1;
+  }
     $.ajax({
     cache : false,
     type : "get",

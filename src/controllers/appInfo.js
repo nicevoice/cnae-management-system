@@ -6,7 +6,7 @@ var onOff = require('../lib/socket').onOff
   , app_basic = collectionNames.app_basic
   , find = model.find
   , findOne = model.findOne
-  , update = model.opdate;
+  , update = model.update;
   
   exports.sum = function(req, res){
   var url = req.url;

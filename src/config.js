@@ -3,6 +3,7 @@ var mongo = require("mongoskin");
 var fs = require('fs');
 var configInfo = JSON.parse(fs.readFileSync('./config.json').toString());
 
+
 //exports.labs = configInfo.labs;
 //是否debug模式
 exports.switchs = configInfo.switchs;
