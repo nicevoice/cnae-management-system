@@ -13,8 +13,8 @@ module.exports = testCase({
     var action = "start",
         app = "unittest";
         onOff(action, app, function(data){
-          test.deepEqual({status:data.status, code:data.code},
-            {status:"ok", code:101}, "start exsist error");
+          test.deepEqual({status:data.status},
+            {status:"ok"}, "start exsist error");
           test.done();
         })
   },
