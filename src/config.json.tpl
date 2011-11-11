@@ -1,14 +1,17 @@
 {
-  "dbName":"",
-  "dbUserName":"",
-  "dbPassword":"",
-  "collections":{
-    "user":"",
-     "app_member":"",
-     "app_basic":"",
-     "app_record":"",
-     "inviteCode":"",
-     "app_todo":""
+  "dbInfo": {
+    "host": "",
+    "port": "",
+    "name": "",
+    "userName": "",
+    "password": "",
+    "collections": {
+      "user": "",
+      "app_member": "",
+      "app_basic": "",
+      "app_record": "",
+      "inviteCode": ""
+    }
   },
   
   "md5_secret":"",
@@ -21,6 +24,8 @@
 
   "logPath":"",
   
+  "user": "",
+  "pass": "",
   "email":"",
   "mailTitle":"",
   "mailContentPath":"",
@@ -49,6 +54,11 @@
   "tempDir":"",
   "socketPort":,
   
-  "admins":[]
+  "admins":[],
+  "labs": ,
+  "switchs": {
+    "labs": ,
+    "debug": 
+  }
  
 }
