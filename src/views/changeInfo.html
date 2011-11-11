@@ -1,0 +1,17 @@
+<div class="subTitle">
+	<img src="/images/arrow.gif"></img>我的信息
+</div>
+<div class="subContent">
+   	<div id="changeInfoWarn">
+  		 <p id="nickNameWarn"></p>
+ 	</div>
+ 	<form method="post" action="/userCenter/changeInfo">
+ 	 	<p>昵 称：<input type="text" id="changeNickName" name="changeNickName" value="<%=user.nickName||''%>"></p>
+		<p>姓 名：<input type="text" id="changeRealName" name="changeRealName" value="<%=user.realName||''%>"></p>
+	    <p>手 机：<input type="text" id="changeTelNumber" name="changeTelNumber" value="<%=user.telNumber||''%>"></p>
+	    <p>主 页：<input type="text" id="changeMainPage" name="changeMainPage" value="<%=user.mainPage||''%>"></p>
+	    <p><input type="button" id="submitChangeInfo" class="button_orange r3px" value="修改">
+	    <input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">
+	</form>
+</div>
+    <script type="text/javascript" src="/scripts/changeInfo.js?v=1.0.1"></script> 

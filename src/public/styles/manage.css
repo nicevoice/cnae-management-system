@@ -1,0 +1,133 @@
+.left li{
+  list-style-type:none;
+}
+.left li a {	
+  color:#0060BF;
+  text-decoration: none;
+}
+.left li a:hover {
+  color: #F30;
+}
+
+#sidebar a.here:link,
+#sidebar a.here:visited,
+#sidebar a.here:hover,
+#sidebar a.here:active {
+ text-decoration: none;
+  color: #555;
+}
+.pagination {
+  height: 36px;
+  margin: 18px 0;
+}
+.pagination ul {
+  float: left;
+  margin: 0;
+  border: 1px solid #ddd;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.pagination ul li {
+  display: inline;
+}
+.pagination ul li a {
+  float: left;
+  padding: 0 14px;
+  line-height: 34px;
+  border-right: 1px solid;
+  border-right-color: #ddd;
+  border-right-color: rgba(0, 0, 0, 0.15);
+  *border-right-color: #ddd;
+  /* IE6-7 */
+
+  text-decoration: none;
+}
+.pagination ul li a:hover, .pagination ul li.active a {
+  background-color: #c7eefe;
+}
+.pagination ul li.disabled a, .pagination ul li.disabled a:hover {
+  background-color: none;
+  color: #bfbfbf;
+  disabled:true;
+}
+.pagination ul li.next a {
+  border: 0;
+}
+#appInfos{
+line-height:22px;
+color:#666971;
+padding-left:50px;
+width:70%;
+}
+
+#appInfos td{
+text-align:left;
+width:40px;
+padding:8px;
+margin:8px;
+}
+#controlApp{
+position:relative;
+left:50%
+}
+#controlAppRestart{
+position:relative;
+left:55%
+}
+#records{
+  height:250px;
+}
+#upload{
+    width:60%;
+}
+#uploading{
+display:none;
+}
+
+#submitUpload{
+    position:relative;
+    left:60%;
+}
+#download{  
+    position:relative;
+    left:63%;
+}
+#status{
+position:relative;
+left:-10%;
+width:600px;
+}
+#status, #status td, #status th{
+border:1px solid #aaa;
+}
+#dbInfo{
+margin:8px;
+width:600px;
+height:60px;
+}
+#dbInfo td, #dbInfo tr{
+margin:8px;
+}
+#mongoskinUrl{
+width: 380px;
+}
+#gitInfo,#npmInfo{
+  width:450px;
+  font-size:15px;
+  overflow: auto; 
+}
+#invite-form{
+  display:none;
+}
+.stdoutputs{ font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 200px; width: 700px; }
+.infoColor{color:#ffffff}
+.debugColor{color:#003399}
+.warningColor{color:#660066}
+.errorColor{color:#ff0000}
+.traceColor{color:#00aa00}
+.fileColor{color:#009999}

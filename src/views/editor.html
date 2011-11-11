@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><%=domain%> - NAE IDE</title>
+	<link href="/styles/editor.css?v=1.0.9" rel="stylesheet" type="text/css" />
+	<script src="/scripts/head.load.min.js"></script>
+	<script src="/scripts/ace/ace.js"></script>
+	<script src="/scripts/jquery-1.6.2.min.js"></script>
+	<script src="/scripts/global.js?v=1.0.3"></script>
+	<script src="/scripts/editor.config.js"></script>
+	<script src="/scripts/editor.cookie.js?v=0.0.1"></script>
+	<script src="/scripts/editor.querytool.js?v=0.0.2"></script>
+	<script src="/scripts/editor.js?v=1.2.5"></script>
+</head>
+
+<body>
+<div id="domain" style="display: none;"><%=domain%></div>
+<div id="sidebar">
+    <div id="app-info">
+        <p class="item">
+            应用：<span id="appname"><a href="http://<%=domain%>.cnodejs.net" target="_blank"><%=domain%></a></span>
+        </p>
+        <p class="item">
+        	当前路径：<div id="currentPath"></div>
+        </p>
+    </div>
+    <div id="file-explorer">
+        <div id="tool-bar">
+            <ul>
+            	<li id="tb-home"><img src="/images/icon_home.png" title="返回根目录" /></li>
+                <li id="tb-newf"><img src="/images/icon_file_add.png" title="新建文件" /></li>
+                <li id="tb-newd"><img src="/images/icon_folder_add.png" title="新建文件夹" /></li>
+                <li id="tb-fresh"><img src="/images/icon_refresh.png" title="刷新" /></li>
+                <li id="tb-upload"><img src="/images/icon_upload.png" title="上传文件" /></li>
+            </ul>
+        </div>
+        <div id="upload-box">
+        	<form id="upload-form" action="" method="" enctype="multipart/form-data">
+				<div class="fields"><input type="file" id="upload-file" name="upload"></div>
+				<div class="fields"><input type="submit" id="upload-submit" value="上传"></div>
+			</form>
+        </div>
+        <div id="file-list"></div>
+    </div>
+</div>
+<div id="wrapper">
+    <div id="content">
+    	<div id="nav">
+            <ul>
+                <li id="nav-save" title="快捷键：Ctrl+S(PC), Command+S(Mac)">保存</li>
+				<li id="nav-restart" title="快捷键：Ctrl-Shift-1(PC), Command-Shift-1(Mac)">重启</li>
+				<li id="nav-console" title="快捷键：Ctrl+Shift+X(PC), Command+Shift+X(Mac)">隐藏控制台</li>
+				<li id="nav-query" title="">QueryTool</li>
+            </ul>
+            <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
+        </div>
+        <div id="editor-panel">
+        	<div id="tabs"></div>
+            <div id="editor" tabindex="1"></div>
+            <div id="statbar"></div>
+        </div>
+    </div>
+</div>
+<div id="console" class="clearfix">
+	<ul id="console-nav">
+		<li id="console-min" title="最小化">min</li>
+		<li id="console-close" title="关闭">close</li>
+	</ul>
+    <div id="stdout-panel">
+    	<div class="console-label">stdout</div>
+    	<div id="stdout"></div>
+    </div>
+    <div id="stderr-panel">
+    	<div class="console-label">stderr</div>
+    	<div id="stderr"></div>
+    </div>
+</div>
+<div id="msg"></div>
+</body>
+<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/scripts/jquery.form.js"></script>
+</html>

@@ -1,0 +1,166 @@
+
+input{
+	-webkit-border-radius: 3px;
+	
+}
+.log{
+position: relative;
+left:29%;
+
+padding:2% 2% 0% 2%;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+-moz-border-radius-bottomright: 5px;
+-moz-border-radius-bottomleft: 5px;
+border-radius-left: 5px;
+border-radius-right: 5px;
+-o-border-radius-left: 5px;
+-o-border-radius-right: 5px;
+width:38%;
+height:auto !important;
+height:200px; /*假定最低高度是200px*/
+min-height:200px; 
+border:1px solid #CCC;
+background:#f0f5f8;
+}
+.warn{
+  position:relative;
+  left:20%;
+  color:red;
+  text-align:center;
+  width:150px;
+  padding: 5px 5px 5px 5px;
+  margin:10px 10px 10px 10px;
+  border: 1px solid red;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  display:none;
+}
+.inputText{
+  width:50%;
+}
+.loginInput{
+position: relative;
+left:10%;
+}
+
+.loginInputCheck{
+position:relative;
+left:25%;
+}
+
+.retrieveTitle{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+.retrieveContent{
+  margin-top:30px;
+}
+.rightButton{
+  position:relative;
+  left:70%;
+}
+#retrievePassword p{
+  margin:8px;
+}
+.separator {
+    border-bottom: 1px solid #F	FFFFF;
+    border-top: 1px solid #CCCCCC;
+    height: 0;
+    margin: 18px 0 15px;
+    overflow: hidden;
+}
+
+.noCount{
+    font-size: 14px;
+    text-align: center;
+}
+
+#warn{
+font-size:12px;
+color:#F00;
+
+}
+
+#newAccount{
+	position:relative;
+	left:27%;
+	width:40%;
+	border:1px solid #CCC;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-radius-left: 5px;
+	border-radius-right: 5px;
+	-o-border-radius-left: 5px;
+	-o-border-radius-right: 5px;
+	padding:20px 20px 20px;
+	background:#f0f5f8;
+	text-align:center;
+}
+#newAccount input{
+	margin:8px;
+}
+
+.registH2{
+	position:relative;
+	left:27%;
+	width:40%;
+	padding:0px 20px 0px;
+}
+.loginH2{
+	position:relative;
+	padding:0% 2% 0% 2%;
+	left:29%;
+	width:38%;
+}
+#registWarn{
+  position:relative;
+  left:20%;  
+  color:red;
+  text-align:center;
+  width:250px;
+  height:50px;
+}
+#invite{
+	position:relative;
+	left:25%;
+	width:50%;
+	border:1px solid #CCC;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-radius-left: 5px;
+	border-radius-right: 5px;
+	-o-border-radius-left: 5px;
+	-o-border-radius-right: 5px;
+	padding:20px 20px 20px;
+	background:#f0f5f8;
+	text-align:left;
+}
+#invite p{
+padding:5px;
+}
+#invite table{
+padding:40px;
+margin:30px;
+}
+.inviteH2{
+	position:relative;
+	left:25%;
+	width:50%;
+	padding:0px 20px 0px;
+}
+#codes{
+    height:300px;
+    position:relative;
+}
+#codes .pagination{
+    position:absolute;
+    left:50px;
+    top:220px;
+}
