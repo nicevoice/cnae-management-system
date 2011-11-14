@@ -1,7 +1,7 @@
 var statusTimer;
 //获取状态信息的定时器
 var savePort = true;
-var appRunning = false;
+var run = false;
 var url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
@@ -134,11 +134,11 @@ function setStatus() {
       if(status.running === true) {
         appRunning = "已上线";
         appButtonName = "下线";
-        appRunning = true;
+        run = true;
       } else {
         appRunning = "未上线";
         appButtonName = "上线";
-        appRunning = false;
+        run = false;
       }
       //填入详细应用信息
       appStatusInfo = '<td>' + parseFloat((status.rss / 1048576).toFixed(2)) + 'MB</td>' + '<td>' + parseFloat((status.heap / 1048576).toFixed(2)) + 'MB</td>' + '<td>' + formatUptime(status.uptime) + '</td>' + '<td>' + status.last + '</td>' + '<td>' + status.pid + '</td>';
@@ -168,7 +168,7 @@ function addRecord(domain, action) {
 
 function controlApp() {
   var action = "start";
-  if(appRunning){
+  if(run){
     action = "stop";
   };
   var thisApp = $(this), stateDes = $("#appStateDes");
