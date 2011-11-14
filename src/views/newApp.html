@@ -8,7 +8,7 @@
     <form method="post" action="/createApp">
       <p>子域名<span id="domainWarn" class="redText">*(4～20位,小写字母/数字/下划线,首位字母)</span></p>
       <p> <input type="text" id="appDomain"
-      name="appDomain"><span id="domain">.cnodejs.net</span></p>
+      name="appDomain"><span id="domain"><%=config.toplevelDomain%></span></p>
       <p>应用名称<span class="redText">*</span></p>
       <p><input type="text" class="newLongInput" id="appName" name="appName"></p>
       <p>应用描述</p>

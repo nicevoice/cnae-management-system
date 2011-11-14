@@ -66,7 +66,7 @@ require('./routes/square')(app);
 require('./routes/invitation')(app);
 require('./routes/editor')(app);
 require('./routes/appManager')(app);
-
+require('./routes/interface')(app);
 app.get("*", function(req, res){
   res.redirect("/application");
 });

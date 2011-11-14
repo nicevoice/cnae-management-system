@@ -1,7 +1,8 @@
 var onOff = require('../lib/socket').onOff
   , model = require('../models/index')
-  , log = require('../config').logWithFile
-  , collectionNames = require('../config').dbInfo.collections
+  , config = require('../config')
+  , log = config.logWithFile
+  , collectionNames = config.dbInfo.collections
   , app_mem = collectionNames.app_member
   , app_basic = collectionNames.app_basic
   , find = model.find
@@ -50,13 +51,15 @@ exports.doControlApp = function(req, res){
 
 exports.getStatus = function(req, res){
 	var domain = req.params.id||'',
-      savePort = req.body.savePort||'';
+      savePort = req.body.savePort||'',
+      appDomain = domain + config.toplevelDomain;
 	onOff("status", domain, function(socketRes){
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
-			last:"",pid:"",autorun:"",running:"", ports:[]};
+			last:"",pid:"",autorun:"",running:"", ports:[], appDomain:appDomain};
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
+			socketRes.appDomain = socketRes.appDomain;
 		}
       var ports = socketRes.ports;
       if(savePort&&ports&&ports[0]){

@@ -118,7 +118,7 @@ function setStatus() {
       //显示button的名字
       //填入域名信息
       if(!status.ports || status.ports.length == 0) {
-        appDomains = '<a href="http://' + domain + '.cnodejs.net" target="_blank">' + domain + '.cnodejs.net</a> <span class="redText">未启用</sapn>';
+        appDomains = '<a href="http://' + status.appDomain + '" target="_blank">' + status.appDomain + '</a> <span class="redText">未启用</sapn>';
       } else {
         for(var i = 0, len = status.ports.length; i < len; ++i) {
           var port = status.ports[i];
