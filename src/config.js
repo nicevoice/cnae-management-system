@@ -44,9 +44,12 @@ exports.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbInfo.
 //session
 exports.session_timeOut = configInfo.timeOut;
 //正则
-exports.regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
+exports.regEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 exports.regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
+exports.regMobile = /^((\(\d{2,3}\))|(\d{3}\-))?1(3|5|8)\d{9}$/;
+exports.regUrl = /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?$/;
+
 //log
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.INFO, configInfo.logPath);
@@ -91,6 +94,7 @@ exports.uploadDir = configInfo.uploadDir;
 exports.tempDir = configInfo.tempDir;
 exports.socketPort = configInfo.socketPort;
 
+exports.toplevelDomain = configInfo.toplevelDomain;
 //管理员帐号表
 exports.admins = configInfo.admins;
 //格式化Date
