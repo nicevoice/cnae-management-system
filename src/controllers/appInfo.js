@@ -56,11 +56,11 @@ exports.getStatus = function(req, res){
 	onOff("status", domain, function(socketRes){
 		if(!socketRes || socketRes.msg){
 			socketRes={rss:"", heap:"",uptime:"",
-			last:"",pid:"",autorun:"",running:"", ports:[], appDomain:appDomain};
+			last:"",pid:"",autorun:"",running:"", ports:[]};
 		}else{
 			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
-			socketRes.appDomain = socketRes.appDomain;
 		}
+		socketRes.appDomain = appDomain;
       var ports = socketRes.ports;
       if(savePort&&ports&&ports[0]){
       update(app_basic, {appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
