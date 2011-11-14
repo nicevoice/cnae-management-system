@@ -493,7 +493,7 @@ exports.createMongo = function(req, res) {
       } else {
         var dbName = randomStringNum(12);
         var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + data.dbUserName + " " + data.dbPassword;
-        exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
+         exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
           if(err) {
             log.error(err.toString());
             return res.render("error", {
