@@ -128,22 +128,8 @@ exports.doUpload = function(req, res) {
                         move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
                       }
                       exec(move, function(err) {
-                        if(err && err.toString().indexOf("No such file or directory")||
-                        err.toString().indexOf("没有那个文件或目录") === -1) {
-                          log.error(err.toString());
-                          exec("rm -rf " + path, function(err) {
-                            if(err) {
-                              log.error(err.toString());
-                            }
-                          });
-                          exec("rm -rf " + tempDir + '/' + domain, function(err) {
-                            if(err) {
-                              log.error(err.toString());
-                            }
-                          });
-                          return res.render("error", {
-                            message : "上传失败,请稍后再试"
-                          });
+                      	if(err){
+                      		log.error(err.toString());
                         } else {
                           exec("rm -rf " + path, function(err) {
                             if(err) {
