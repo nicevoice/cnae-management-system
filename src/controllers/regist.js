@@ -53,7 +53,6 @@ exports.checkRegist = function(req, res){
 		
 	//检查是否数据库中已经存在
 	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
-		console.log(goodName);
 		if(!goodName)
 			return res.render("error", {message:"昵称已经被注册"});
 		if(!goodEmail)
@@ -68,6 +67,12 @@ exports.checkRegist = function(req, res){
 					return res.render("error", {message:"注册失败，请稍后再试"});
 				}
 				else{
+				//删除改邀请码
+        remove(inviteCode, {code:code}, function(err){
+          if(err){
+            log.error(err.toString());
+          }
+        });
 					req.session.email = userEmail;
 					req.session.nickName = userNickName;
 					res.redirect("/application");
@@ -119,12 +124,6 @@ exports.checkRegist = function(req, res){
 				checkEventProxy.trigger("checkCode", false);
 			else
 				checkEventProxy.trigger("checkCode", true);
-				//删除改邀请码
-				remove(inviteCode, {code:code}, function(err){
-					if(err){
-						log.error(err.toString());
-					}
-				});
 		}	
 	});
 	}

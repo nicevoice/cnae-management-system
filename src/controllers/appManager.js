@@ -95,10 +95,10 @@ exports.loadAppmng = function(req, res) {
 exports.doAppmng = function(req, res) {
   var domain = req.params.id || '';
   var newAppName = req.body.newAppName || '';
-  var body;
   if(!newAppName) {
     res.sendJson({
-      done : false
+      status : "error",
+      msg:"请输入应用名称"
     });
   } else {
     if(newAppName.length > 20) {
@@ -112,11 +112,12 @@ exports.doAppmng = function(req, res) {
     updateInfoEvent.assign("updatedBasic", "updatedMem", "saveRecords", function() {
       if(!arguments[0] || !arguments[1] || !arguments[2]) {
         res.sendJson({
-          done : false
+          status : "error",
+          msg:"数据库更新失败，请稍后再试"
         });
       } else {
         res.sendJson({
-          done : true
+          status : "ok"
         });
       }
     })
@@ -246,26 +247,33 @@ function send(email, words) {
  * @param {} res
  */
 exports.doCoopmng = function(req, res) {
-  var email = req.body.inviteEmail || '', words = req.body.inviteWords || '', role = req.body.role, domain = req.params.id, regEmail = config.regEmail; body;
+  var email = req.body.inviteEmail || '', words = req.body.inviteWords || '', role = req.body.role, domain = req.params.id, regEmail = config.regEmail;
+  role = parseInt(role);
+  if(role!==1&&role!==2&&role!==3&&role!==4){
+  		res.sendJson({
+  			status:"error",
+  			msg:"错误的角色信息"
+  		})
+  	}
   //未输入
   if(!email) {
     res.sendJson({
-      done : false,
-      why : "请输入邮箱"
+      status : "error",
+      msg : "请输入邮箱"
     })
   } else
   //输入不合法
   if(!regEmail.exec(email)) {
     res.sendJson({
-      done : false,
-      why : "请输入合法的email地址"
+      status : "error",
+      msg : "请输入正确的email地址"
     })
   } else
   //输入自身
   if(email === req.session.email) {
     res.sendJson({
-      done : false,
-      why : "不能邀请自己"
+      status : "error",
+      msg : "不能邀请自己"
     });
   } else {
     findOne(app_mem, {
@@ -275,13 +283,13 @@ exports.doCoopmng = function(req, res) {
       if(err) {
         log.error(err.toString());
         return res.sendJson({
-          done : false,
-          why : "数据库查询错误"
+    	  status : "error",
+          msg : "数据库查询错误"
         });
       } else if(data) {
         return res.sendJson({
-          done : false,
-          why : "不能邀请已参加用户"
+    	  status : "error",
+          msg : "不能邀请已参加用户"
         });
       } else {
         //插入
@@ -291,30 +299,30 @@ exports.doCoopmng = function(req, res) {
           if(err) {
             log.error(err.toString());
             res.sendJson({
-              done : false,
-              why : "数据库查询错误，请稍后再试"
+    	 	 status : "error",
+              msg : "数据库查询错误，请稍后再试"
             });
           } else if(name) {
             insert(app_mem, {
               appDomain : domain.toString(),
               appName : name.appName.toString(),
               email : email.toString(),
-              role : parseInt(role),
+              role : role,
               active : 0,
               joinTime : new Date().getTime()
             }, function(err) {
               if(err) {
                 log.error(err.toString());
                 res.sendJson({
-                  done : false,
-                  why : "数据库查询错误，请稍后再试"
+    			  status : "error",
+                  msg : "数据库查询错误，请稍后再试"
                 });
               } else {
                 send(email, words);
                 res.sendJson({
-                  done : true,
+    	  		  status : "ok",
                   domain : domain,
-                  role : parseInt(role)
+                  role : role
                 });
                 insert(app_record, {
                   appDomain : domain.toString(),
@@ -383,7 +391,8 @@ exports.agreeCoop = function(req, res) {
     if(err) {
       log.error(err.toString());
       return res.sendJson({
-        done : false
+		status:'error',
+		msg:'数据库更新失败，请稍后再试'
       });
     } else {
       var nickName = email.split('@')[0], agreeInfo = req.session.nickName + '( ' + req.session.email + ' )同意了您对项目"' + domain + '"的参与申请。';
@@ -403,7 +412,7 @@ exports.agreeCoop = function(req, res) {
       }, function() {
       });
       return res.sendJson({
-        done : true
+        status:"ok"
       });
     }
   })
@@ -419,7 +428,8 @@ exports.refuseCoop = function(req, res) {
     if(err) {
       log.error(err.toString());
       return res.sendJson({
-        done : false
+		status:'error',
+		msg:'数据库更新失败，请稍后再试'
       });
     } else {
       var nickName = email.split('@')[0], refuseReason = req.session.nickName + '( ' + req.session.email + ' )拒绝了您对项目"' + domain + '"的参与申请。<br />拒绝原因：' + reason;
@@ -432,29 +442,37 @@ exports.refuseCoop = function(req, res) {
       });
       mailEvent.fire("getMail");
       return res.sendJson({
-        done : true
+        status:"ok"
       });
     }
   })
 }
 exports.doChangeRole = function(req, res) {
   var email = req.body.email || '', domain = req.params.id || '', role = req.body.role || '';
+  role = parseInt(role);
+  if(role!==1&&role!==2&&role!==3&&role!==4){
+  		res.sendJson({
+  			status:"error",
+  			msg:"错误的角色信息"
+  		})
+  	}  
   update(app_mem, {
     email : email,
     appDomain : domain
   }, {
     $set : {
-      role : parseInt(role)
+      role : role
     }
   }, function(err) {
     if(err) {
       log.error(err.toString());
       res.sendJson({
-        done : false
+  		status:"error",
+  		msg:"数据库更新失败，请稍后再试"
       });
     } else {
       res.sendJson({
-        done : true
+        status:'ok'
       });
       var roleName = "";
       switch(parseInt(role)) {

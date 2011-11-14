@@ -66,6 +66,7 @@ exports.doUpload = function(req, res) {
         } else {
           unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
         }
+        console.log(unCompress);
         exec(unCompress, function(err, stdout, stderr) {
           if(err) {
             log.error(err.toString());
@@ -73,6 +74,11 @@ exports.doUpload = function(req, res) {
               if(err) {
                 log.error(err.toString());
               }
+            });
+            exec("rm -rf " + tempDir + '/' + domain, function(err) {
+                  if(err) {
+                    log.error(err.toString());
+                  }
             });
             return res.render("error", {
               message : "上传失败,请稍后再试"
@@ -150,6 +156,7 @@ exports.doUpload = function(req, res) {
                           });
                           var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
                           sumManage += '/sum';
+                          console.log(sumManage);
                           return res.redirect(sumManage);
                         }
                       });
@@ -332,7 +339,7 @@ exports.downloading = function(req, res) {
         return res.render("/download/" + name + ".zip");
       } else {
         return res.render("error", {
-          msg : "不够权限下载这个应用"
+          msg : "没有权限下载这个应用"
         });
       }
     }
@@ -469,8 +476,8 @@ exports.createMongo = function(req, res) {
   console.log(req.session.email + " " + req.params.id + " create mongo");
   var domain = req.params.id || '', url = req.url, email = req.session.email;
   url = url.slice(0, url.lastIndexOf('/'));
-  findOne(user, {
-    email : email
+  findOne(app_basic, {
+    appDomain : domain,
   }, function(err, data) {
     if(err) {
       log.error(err.toString());
@@ -478,7 +485,8 @@ exports.createMongo = function(req, res) {
         message : "数据库错误，请稍后再试"
       });
     } else {
-      if(data.dbType) {//如果已经创建过数据库
+      
+      if(data.appDbType) {//如果已经创建过数据库
         return res.render("error", {
           message : "已经创建数据库"
         });
@@ -553,7 +561,7 @@ exports.queryMongo = function(req, res) {
         if(appInfos.appDbType !== "mongo") {
           return res.sendJson({
             status : "error",
-            msg : "数据库未申请或者不是mongoDB"
+            msg : "数据库未申请或者数据库类型不是mongoDB"
           });
         }
         var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString;

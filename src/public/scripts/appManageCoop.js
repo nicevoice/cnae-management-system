@@ -164,8 +164,8 @@ function submitInvite() {
       sAlert("警告", "没有权限进行此操作");
     },
     success : function(data) {
-      if(data.done === false)
-        sAlert("警告", data.why);
+      if(data.status === "error")
+        sAlert("警告", data.msg);
       else {
         sAlert("", "邀请已成功发送！");
         var role = data.role;
@@ -208,8 +208,8 @@ function deleteCoop() {
       sAlert("警告", "连接错误，请稍后再试！");
     },
     success : function(data) {
-      if(data.done === false)
-        sAlert("警告", "连接错误，请稍后再试");
+      if(data.status === 'error')
+        sAlert("警告", data.msg);
       else {
         var deleteNode = document.getElementById(infos[0] + "Tr");
         deleteNode.parentNode.removeChild(deleteNode);
@@ -236,8 +236,8 @@ function agreeCoop() {
       sAlert("警告", "连接错误，请稍后再试！");
     },
     success : function(data) {
-      if(data.done === false)
-        sAlert("警告", "连接错误，请稍后再试");
+      if(data.status === 'error')
+        sAlert("警告", data.msg);
       else {
         sAlert("", "操作成功，请修改申请者权限");
         //location.reload();
@@ -278,8 +278,8 @@ function refuseCoop() {
       sAlert("警告", "连接错误，请稍后再试！");
     },
     success : function(data) {
-      if(data.done === false)
-        sAlert("警告", "连接错误，请稍后再试");
+      if(data.status === 'error')
+        sAlert("警告", data.msg);
       else {
         var deleteNode = document.getElementById(infos[0] + "Tr");
         deleteNode.parentNode.removeChild(deleteNode);
@@ -306,7 +306,7 @@ function changeRole() {
       if(data.done) {
         sAlert("", "修改权限成功");
       } else {
-        sAlert("警告", "修改权限失败，请稍后再试");
+        sAlert("警告", data.msg);
       }
     }
   })

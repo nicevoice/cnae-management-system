@@ -70,11 +70,11 @@ function submitNewAppInfo() {
       newAppDes : newAppDes
     },
     error : function() {
-      sAlert("警告", "没有权限进行此操作");
+      sAlert("警告", "提交请求错误，请稍后再试");
     },
     success : function(data) {
-      if(data.done === false)
-        sAlert("警告", "没有权限进行此操作");
+      if(data.status === 'error')
+        sAlert("警告", data.msg);
       else {
         sAlert("", "修改成功！");
       }

@@ -20,17 +20,9 @@ exports.show = function(req, res){
  * @return {}
  */
 exports.checkLogin = function(req, res){
-	var queryString = urlMoudle.parse(req.url, true).query,
-	    userEmail = req.body.userEmail,
+	var	userEmail = req.body.userEmail,
 		  password = req.body.password,
 		  autoLogin = req.body.autoLogin;
-	//验证用户输入
-	var regEmail = config.regEmail;
-	if(!regEmail.exec(userEmail))
-		return res.render("login", { warn:"用户名格式不正确"});
-	var regPassword = /^(\w){6,20}$/;
-	if(!regPassword.exec(password))
-		return res.render("login", { warn:"密码须为6～20个字母或者数字组成"});
 	//数据库查找
 	findOne(user, {email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){

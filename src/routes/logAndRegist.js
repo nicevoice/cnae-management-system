@@ -17,7 +17,7 @@ module.exports = function(app){
   if (!labs) {
     app.post('/checkLogin', ctrLogin.checkLogin);
   }else{
-    app.get('/checkLogin', ctrLogin.runLogin);
+    app.get('/checkLogin', ctrLogin.checkLogin);
   }
   app.get('/logout', hasLogin, ctrLogin.logout);
   if (!labs) {

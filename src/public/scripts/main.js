@@ -107,8 +107,8 @@ function delApp(domain){
       sAlert("警告","连接错误，请稍后再试");
     },
     success:function(data){
-      if(data.id==-1)
-        sAlert("警告","连接错误，请稍后再试");
+      if(data.status==="error")
+        sAlert("警告",data.msg);
       else{
 	      var deleteDiv = document.getElementById(domain+"-div");
 	      deleteDiv.parentNode.removeChild(deleteDiv);

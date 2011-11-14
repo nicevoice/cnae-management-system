@@ -66,9 +66,20 @@ exports.doChangeInfo = function(req, res){
 		newRealName = req.body.changeRealName||'',
 		newTelNumber = req.body.changeTelNumber||'',
 		newMainPage = req.body.changeMainPage||'';
-	var regName = config.regName;
+  if(newRealName.length>25){
+    newRealName = newRealName.slice(0, 25);
+  }
+	var regName = config.regName,
+	    regMobile = config.regMobile,
+	    regUrl = config.regUrl;
 	if(!regName.exec(newNickName)){
-		return res.sendJson({done:false, message:"请输入合法的昵称"});
+		return res.sendJson({done:false, message:"请输入正确的昵称"});
+	}
+	if(!regUrl.exec(newMainPage)){
+    return res.sendJson({done:false, message:"请输入正确的个人主页"});
+	}
+	if(!regMobile.exec(newTelNumber)){
+	  return res.sendJson({done:false, message:"请输入正确的手机号码"});
 	}
 	findOne(user, {nickName:newNickName.toString()}, function(err, data){
 		if(err){
@@ -116,7 +127,7 @@ exports.doChangePassword = function(req, res){
 		var checkEvent = new EventProxy();
 		checkEvent.once("checkOK", function(ok){
 			if(!ok){
-				return res.sendJson( {done:false,message:"错误的原始密码"});
+				return res.sendJson( {done:false,message:"原始密码错误"});
 			}else{
 				update(user, {email:req.session.email.toString()}, {$set:{password:md5(newPassword.toString()+config.md5_secret)}},
 				function(err){

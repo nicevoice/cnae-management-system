@@ -1,6 +1,7 @@
 var statusTimer;
 //获取状态信息的定时器
 var savePort = true;
+var appRunning = false;
 var url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
@@ -133,9 +134,11 @@ function setStatus() {
       if(status.running === true) {
         appRunning = "已上线";
         appButtonName = "下线";
+        appRunning = true;
       } else {
         appRunning = "未上线";
         appButtonName = "上线";
+        appRunning = false;
       }
       //填入详细应用信息
       appStatusInfo = '<td>' + parseFloat((status.rss / 1048576).toFixed(2)) + 'MB</td>' + '<td>' + parseFloat((status.heap / 1048576).toFixed(2)) + 'MB</td>' + '<td>' + formatUptime(status.uptime) + '</td>' + '<td>' + status.last + '</td>' + '<td>' + status.pid + '</td>';
@@ -164,6 +167,10 @@ function addRecord(domain, action) {
 }
 
 function controlApp() {
+  var action = "start";
+  if(appRunning){
+    action = "stop";
+  };
   var thisApp = $(this), stateDes = $("#appStateDes");
   $.ajax({
     cache : false,
@@ -171,7 +178,7 @@ function controlApp() {
     url : "/application/manage/" + domain + "/controlApp",
     dataType : "json",
     data : {
-      action : thisApp.val()
+      action : action
     },
     error : function() {
       sAlert("警告", "操作失败");
@@ -197,13 +204,17 @@ function controlApp() {
 
 function restart() {
   var stateDes = $("#appStateDes");
+  var action = "restart";
+  if(!appRunning){
+    action = "start";
+  }
   $.ajax({
     cache : false,
     type : "post",
     url : "/application/manage/" + domain + "/controlApp",
     dataType : "json",
     data : {
-      action : "restart"
+      action : action
     },
     error : function() {
       sAlert("警告", "操作失败");

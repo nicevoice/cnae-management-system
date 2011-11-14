@@ -18,7 +18,7 @@ var config = require('../config')
   , onOff = require('../lib/socket').onOff
   , exec  = require('child_process').exec;
   
-  /***
+      /***
    * 临时用来显示文档中心。（暂时不存在）
    * @param {} req
    * @param {} res
@@ -79,9 +79,6 @@ var config = require('../config')
  	var newAppName = req.body.appName || '';
  	var newAppDes = req.body.appDes || '';
  	var checkRepetition = new EventProxy();
-  if(!newAppDomain){
-   return res.render("error", {message:"应用必须有子域名"}); 
-  }
   if(!newAppName){
  	return res.render("error", {message:"必须有应用名称"});
  }
@@ -97,13 +94,19 @@ var config = require('../config')
 
 		//检查域名是否重复，用户创建的应用数目是否达到上限
   checkRepetition.assign("checkDomain", "checkNumbers", function(goodDomain, checkNumbers){
- 		if(!goodDomain)
+ 		if(goodDomain===1)
  			return res.render("error", {message:"该域名已经被占用"});
- 		if(!checkNumbers)
+ 		if(checkNumbers===1)
  			return res.render("error", {message:"创建的应用数目已经达到上限"});
+ 		if(goodDomain===2 || checkNumbers===2){
+      return res.render("error", {message:"数据库查询错误"});
+ 		}
  		else{
  			var createAppEvent = new EventProxy();
  			createAppEvent.assign("savedBasic", "savedMem", "saveRecord", function(){
+ 			  if(!arguments[0] || !arguments[1] || !arguments[2]){
+ 			    return res.render("error", {message:"创建应用错误，请稍后再试"});
+ 			  }
  				var saveDir = uploadDir+"/"+newAppDomain;
  				var initFile = __dirname.slice(0, __dirname.lastIndexOf('/')+1)+"init.tar.gz";
 				fs.mkdir(saveDir, '777', function(err){
@@ -129,8 +132,7 @@ var config = require('../config')
  			appDes:newAppDes.toString(), appState:0, appCreateDate:now}, function(err){
  				if(err){
  					log.error(err.toString());
- 					createAppEvent.unbind();
- 					return res.render("error", {message:"创建应用失败，请稍后再试"});
+          createAppEvent.fire("savedBasic", false);         
  				}
  				else{
  					createAppEvent.fire("savedBasic", true);
@@ -141,7 +143,7 @@ var config = require('../config')
  				if(err){
  					log.error(err.toString());
  					createAppEvent.unbind();
- 					return res.render("error", {message:"创建应用失败，请稍后再试"});
+ 					createAppEvent.fire("savedMem", false);
  				}
  				else{
  					createAppEvent.fire("savedMem", true);
@@ -151,6 +153,7 @@ var config = require('../config')
  			action:"创建应用", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(err){
  				if(err){
  					log.error(err.toString());
+ 					createAppEvent.fire("saveRecord", false);
  				}else{
  					createAppEvent.fire("saveRecord", true);
  				}
@@ -161,14 +164,13 @@ var config = require('../config')
  	findOne(app_mem, {appDomain:newAppDomain.toString()},function(err, item){
  		if(err){
  			log.error(err.toString());
- 			checkRepetition.unbind();
- 			return res.render("error", {message:"创建应用失败，请稍后再试"});
+        checkRepetition.fire("checkDomain", 2);
  		}
  		else{
  			if(item){
- 				checkRepetition.fire("checkDomain", false);
+ 				checkRepetition.fire("checkDomain", 1);
  			}
- 			checkRepetition.fire("checkDomain", true);
+ 			checkRepetition.fire("checkDomain", 0);
  		}
  	});
  var isAdmin = false;
@@ -186,19 +188,15 @@ var config = require('../config')
       email: req.session.email,
       role: 0
     }, function(err, data){
-      console.log("应用数目:" + data);
       if (err) {
         log.error(err.toString());
-        checkRepetition.unbind();
-        return res.render("error", {
-          message: "创建应用失败，请稍后再试"
-        });
+        checkRepetition.fire("checkNumbers", 2);
       }
       else 
         if (data >= 10) 
-          checkRepetition.fire("checkNumbers", false);
+          checkRepetition.fire("checkNumbers", 1);
         else 
-          checkRepetition.fire("checkNumbers", true);
+          checkRepetition.fire("checkNumbers", 0);
     });
   }
 }
@@ -207,94 +205,128 @@ var config = require('../config')
  * @param {} req
  * @param {} res
  */
-exports.showNewApp = function(req, res){
-  res.render("newApp", {layout:"layoutMain",nickName:req.session.nickName, email:req.session.email});
+
+exports.showNewApp = function(req, res) {
+  res.render("newApp", {
+    layout : "layoutMain",
+    nickName : req.session.nickName,
+    email : req.session.email
+  });
 }
 
-exports.deleteApp = function(req, res){
-	var delDomain = req.body.domain||'';
-	var body;
-	if(!delDomain){
-		res.sendJson( {done:false});
-	}else{
-		var deleteEvent = new EventProxy();
-		deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function(){
-			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
-				res.sendJson( {done:false});
-			else{
-				res.sendJson( {done:true});
-			}
-		});
-		deleteEvent.once("deleteDb", function(deleteDb){
-			if(!deleteDb){
-				return deleteEvent.fire("deleteBasic", false);
-			}
-			remove(app_basic, {appDomain:delDomain}, function(err){
-				if(err){
-          log.error(err.toString());
-					deleteEvent.fire("deletedBasic", false);
-				}
-				else{
-					deleteEvent.fire("deletedBasic", true);
-				}
-			});
-		});
-		findOne(app_basic, {appDomain:delDomain}, function(err, data){
-			if(err){
-        log.error(err.toString());
-				return deleteEvent.fire("deleteDb", false);
-			}if(!data){
-         return log.error("在app_basic中没有找到这个应用");
-      }
-      if (!data.appDbName) {
-        deleteEvent.fire("deleteDb", true);
-      }
-      else {
-        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoDeletor.sh " +
-        data.appDbName;
-        exec(command, function(err){
-          console.log(command);
-          if (err) {
-            log.error(err.toString());
-            deleteEvent.fire("deleteDb", false);
-          }
+exports.deleteApp = function(req, res) {
+  var delDomain = req.body.domain || '';
+  var body;
+  if(!delDomain) {
+    res.sendJson({
+      status:"error",
+      msg:"缺少参数应用子域名"
+    });
+  } else {
+    findOne(app_mem, {
+      appDomain : delDomain,
+      email : req.session.email,
+      role : 0
+    }, function(err, data) {
+      if(err) {
+        return res.sendJson({
+          status : "error",
+          msg : "数据库查询错误"
+        });
+      } else if(!data) {
+        return res.sendJson({
+          status : "error",
+          msg : "该应用不存在或没有权限删除此应用"
+        });
+      } else {
+        var deleteEvent = new EventProxy();
+        deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function() {
+          if(!arguments[0] || !arguments[1] || !arguments[2] || !arguments[3] || !arguments[4])
+            return res.sendJson({
+              status : "error",
+              msg : "删除应用错误"
+            });
           else {
-            deleteEvent.fire("deleteDb", true);
+            return res.sendJson({
+              status : "ok"
+            });
           }
         });
+        deleteEvent.once("deleteDb", function(deleteDb) {
+          if(!deleteDb) {
+            return deleteEvent.fire("deleteBasic", false);
+          }
+          remove(app_basic, {
+            appDomain : delDomain
+          }, function(err) {
+            if(err) {
+              log.error(err.toString());
+              deleteEvent.fire("deletedBasic", false);
+            } else {
+              deleteEvent.fire("deletedBasic", true);
+            }
+          });
+        });
+        findOne(app_basic, {
+          appDomain : delDomain
+        }, function(err, data) {
+          if(err) {
+            log.error(err.toString());
+            return deleteEvent.fire("deleteDb", false);
+          }
+          if(!data) {
+            return deleteEvent.fire("deleteDb", false);
+          }
+          if(!data.appDbName) {
+            deleteEvent.fire("deleteDb", true);
+          } else {
+            var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoDeletor.sh " + data.appDbName;
+            exec(command, function(err) {
+              console.log(command);
+              if(err) {
+                log.error(err.toString());
+                deleteEvent.fire("deleteDb", false);
+              } else {
+                deleteEvent.fire("deleteDb", true);
+              }
+            });
+          }
+        });
+        remove(app_mem, {
+          appDomain : delDomain
+        }, function(err) {
+          if(err) {
+            log.error(err.toString());
+            deleteEvent.fire("deletedMem", false);
+          } else {
+            deleteEvent.fire("deletedMem", true);
+          }
+        });
+        remove(app_record, {
+          appDomain : delDomain
+        }, function(err) {
+          if(err) {
+            log.error(err.toString());
+            deleteEvent.fire("deletedRecords", false);
+          } else {
+            deleteEvent.fire("deletedRecords", true);
+          }
+        });
+        onOff("stop", delDomain, function() {
+          exec('rm -rf ' + uploadDir + "/" + delDomain, function(err) {
+            if(err) {
+              log.error(err.toString());
+              deleteEvent.fire("deleteDir", false);
+            } else {
+              deleteEvent.fire("deleteDir", true);
+            }
+          });
+        });
       }
-		});
-		remove(app_mem, {appDomain:delDomain}, function(err){
-			if(err){
-        log.error(err.toString());
-				deleteEvent.fire("deletedMem", false);
-			}
-			else{
-				deleteEvent.fire("deletedMem", true);
-			}
-		});
-		remove(app_record, {appDomain:delDomain}, function(err){
-			if(err){
-        log.error(err.toString());
-				deleteEvent.fire("deletedRecords", false);
-			}
-			else{
-				deleteEvent.fire("deletedRecords", true);
-			}
-		});	
-
-		onOff("stop", delDomain, function(){
-			exec('rm -rf ' + uploadDir+"/"+delDomain, function(err){
-			if(err){
-				log.error(err.toString());
-				deleteEvent.fire("deleteDir", false);
-			}else{
-				deleteEvent.fire("deleteDir", true);
-			}
-			});
-		});
-	}
+    })
+  }
 }
+
 /***
  * 处理参加应用请求
  * @param {} req
