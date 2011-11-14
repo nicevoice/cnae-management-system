@@ -128,7 +128,8 @@ exports.doUpload = function(req, res) {
                         move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
                       }
                       exec(move, function(err) {
-                        if(err && err.toString().indexOf("No such file or directory") === -1) {
+                        if(err && err.toString().indexOf("No such file or directory")||
+                        err.toString().indexOf("没有那个文件或目录") === -1) {
                           log.error(err.toString());
                           exec("rm -rf " + path, function(err) {
                             if(err) {
