@@ -40,7 +40,7 @@ var onOff = require('../lib/socket').onOff
 exports.doControlApp = function(req, res){
 	var domain = req.params.id,
 		action = req.body.action;
-		if(action!=="start"||action!=="stop"||action!=="restart"){
+		if(action!=="start"&&action!=="stop"&&action!=="restart"){
 		  return res.sendJson({status:"error", msg:"命令错误"});
 		}
   console.log(req.session.email + " " + domain + " " + action);
