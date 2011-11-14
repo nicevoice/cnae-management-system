@@ -1,5 +1,5 @@
 var config = require('../../config'),
-    md5 = require('hashlib').md5,
+    md5 = require('../../lib/md5').hex_md5,
     httpReq = require('../../lib/httpReq.js').httpReq,
   	log = config.logWithFile,
   	model = require('../../models/index'),
@@ -89,7 +89,7 @@ var checkLogin = exports.checkLogin = function(req, res){
     checkUserOption.host = labsConf.checkUserOption.host;
     checkUserOption.port = labsConf.checkUserOption.port;
     checkUserOption.path = labsConf.checkUserOption.path;
-    
+    var bufferId = new Buffer(sessionId, 'utf-8');
     checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+md5(secret + sessionId + secret).toUpperCase();
 		httpReq(checkUserOption, function(checkRes){
       if(checkRes.status==="false"){
