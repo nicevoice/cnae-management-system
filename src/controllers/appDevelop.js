@@ -130,7 +130,8 @@ exports.doUpload = function(req, res) {
                       exec(move, function(err) {
                       	if(err){
                       		log.error(err.toString());
-                        } else {
+                        }
+                        
                           exec("rm -rf " + path, function(err) {
                             if(err) {
                               log.error(err.toString());
@@ -145,7 +146,7 @@ exports.doUpload = function(req, res) {
                           sumManage += '/sum';
                           console.log(sumManage);
                           return res.redirect(sumManage);
-                        }
+                        
                       });
                     });
                     if(files.length === 1) {
