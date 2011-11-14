@@ -124,6 +124,9 @@ width: 380px;
 #invite-form{
   display:none;
 }
+#info-td{
+	width:100px;
+}
 .stdoutputs{ font-family: "Courier New"; overflow: auto; line-height: normal; white-space: pre-wrap; word-wrap: break-word; background-color: #000; border: #999 1px solid; resize: none; color: #fff; height: 200px; width: 700px; }
 .infoColor{color:#ffffff}
 .debugColor{color:#003399}
