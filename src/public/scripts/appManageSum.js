@@ -127,7 +127,7 @@ function setStatus() {
           } else {
             port = ":" + port;
           }
-          appDomains += '<a href="http://' + domain + '.cnodejs.net' + port + '" target="_blank">' + domain + '.cnodejs.net' + port + '</a><br />';
+          appDomains += '<a href="http://' + status.appDomain + port + '" target="_blank">' + status.appDomain + '.cnodejs.net' + port + '</a><br />';
         }
       }
       //填入是否启用信息
