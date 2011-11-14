@@ -491,9 +491,14 @@ exports.createMongo = function(req, res) {
           message : "已经创建数据库"
         });
       } else {
+      	var proxy = new EventProxy();
+      	proxy.once('dbUser', function(dbUser){
+      	if(dbUser===false){
+      		return res.render("error", {message:"数据库查询错误，请稍后再试"});
+      	}
         var dbName = randomStringNum(12);
-        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + data.dbUserName + " " + data.dbPassword;
-         exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
+        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
+        exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
           if(err) {
             log.error(err.toString());
             return res.render("error", {
@@ -518,6 +523,15 @@ exports.createMongo = function(req, res) {
               }
             })
           }
+        })
+        });
+        findOne(user, {email:req.session.email}, {dbUserName:1, dbPassword:1}, function(err, data){
+        	if(err){
+        		log.error(err.toString());
+        		proxy.fire('dbUser',false);
+        	}else{
+        		proxy.fire('dbUser', data);
+        	}
         })
       }
     }
