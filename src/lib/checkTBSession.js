@@ -25,6 +25,7 @@ var getFromCookie = function(str, name, sign) {
 
 module.exports = function(req, cb){
 	 var sessionId = getFromCookie(req.headers.cookie, "cookie2") || '';
+	 console.log(sessionId);
     //检查用户是否是开发者
     var secret = unescape(labsConf.secret);
     var checkUserOption = {};
@@ -33,6 +34,7 @@ module.exports = function(req, cb){
     checkUserOption.path = labsConf.checkUserOption.path;
     checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+md5(secret + sessionId + secret).toUpperCase();
 	httpReq(checkUserOption, function(checkRes){
+		  console.log(checkRes);
 		  cb(checkRes);
     });
 }
