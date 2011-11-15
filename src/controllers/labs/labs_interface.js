@@ -160,7 +160,7 @@ exports.appDel = function(req, res){
 			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
 				return res.sendJson({"status":"false", "code":"1", "msg":"System error:delete error"});
 			else{
-				return res.sendJson({"status":"ture", "code":"0", "msg":"Delete app success"});
+				return res.sendJson({"status":"true", "code":"0", "msg":"Delete app success"});
 			}
 		});
 		deleteEvent.once("deleteDb", function(deleteDb){
