@@ -66,7 +66,6 @@ exports.loadInviteCode = function(req, res) {
  */
 exports.generateInviteCode = function(req, res){
 	var num=1;
-	console.log(123);
 	find(inviteCode, {},{id:1}, function(err, data){
 		if(err){
 			log.error(err.toString());

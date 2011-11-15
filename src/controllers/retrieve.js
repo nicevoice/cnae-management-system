@@ -38,11 +38,11 @@ exports.postRetrieve = function(req, res){
       if(err.toString().indexOf("No matching object found")===-1){
 		    return res.render("error", { message:"数据获取失败，请稍后再试"});
       }else{
-		    return res.render("error", { message:"email未被注册"});      
+		    return res.render("error", { message:"email未注册"});      
       }      
     }else{
       if(!userInfo){
-		    return res.render("error", { message:"email未被注册"});      
+		    return res.render("error", { message:"email未注册"});      
       }else{
         var link = config.retrieveLink+"?p="+retrieveKey+"&e="+email;
         var nickName = email.split('@')[0];

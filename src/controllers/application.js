@@ -59,7 +59,7 @@ var config = require('../config')
     });
     //从app_mem中查找参与的应用
     find(app_mem, {email:req.session.email.toString(),
-    role:{$ne:0}}, {appDomain:1, appName:1, active:1}, {sort:[['joinTime', 1]]}, function(err, data){
+    role:{$ne:0}, active:1}, {appDomain:1, appName:1}, {sort:[['joinTime', 1]]}, function(err, data){
     	if(err){
     		log.error(err.toString());
     		getAppEvent.fire("getOthers", false);
