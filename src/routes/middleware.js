@@ -14,8 +14,10 @@ exports.hasLogin = function(req, res, next){
 				if(httpRes.status === 'error'){
 					return res.redirect('/login');
 				}else{
+					console.log(httpRes.taobao_nick);
 					req.session.email = httpRes.taobao_nick;
 					req.session.nickName = httpRes.taobao_nick;
+					console.log(req.session.email);
 					return next();
 				}
 			});
