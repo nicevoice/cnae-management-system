@@ -33,7 +33,6 @@ module.exports = function(req, cb){
     checkUserOption.path = labsConf.checkUserOption.path;
     checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+md5(secret + sessionId + secret).toUpperCase();
 	httpReq(checkUserOption, function(checkRes){
-		  console.log(checkRes);
 		  cb(checkRes);
     });
 }
