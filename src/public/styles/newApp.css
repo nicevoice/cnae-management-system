@@ -1,0 +1,43 @@
+#newApp{
+position: relative;
+left:29%;
+top:20%;
+padding:2% 2% 5% 10%;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+-moz-border-radius-bottomright: 5px;
+-moz-border-radius-bottomleft: 5px;
+border-radius-left: 5px;
+border-radius-right: 5px;
+-o-border-radius-left: 5px;
+-o-border-radius-right: 5px;
+width:30%;
+height:auto !important;
+height:200px; /*假定最低高度是200px*/
+min-height:200px; 
+border:1px solid #CCC;
+background:#f0f5f8;
+margin:0px 0px 20px 0px;
+line-height:20px;
+}
+
+#domain{
+color:#0060BF;
+font-size:16px;
+}
+#newAppSubmit,#newAppCancer{
+position:relative;
+left:30%;
+margin:50px 30px 0px 0px;
+}
+.newLongInput{
+width:65%;
+}
+#newAppWarn{
+  position:relative;
+  left:-10%;  
+  color:red;
+  text-align:center;
+  width:250px;
+  height:50px;
+}

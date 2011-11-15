@@ -1,0 +1,132 @@
+#navigation {
+  position:relative;
+  width:95%;
+  padding-left:5%;
+  background-image: url(images/navbar.gif);
+  background-position: bottom left;
+  background-repeat: repeat-x;
+  font-size:80%;
+}
+#navigation a:link,#navigation a:visited {
+  color: #eef;
+  background-color: transparent;
+  border-color: #99a;
+}
+#navigation a:hover {
+  color: #445;
+  background-color: #eb6;
+}
+#navigation a:active {
+  color: #667;
+  background-color: #ec8;
+}
+#navigation a.here:link,
+#navigation a.here:visited,
+#navigation a.here:hover,
+#navigation a.here:active {
+ text-decoration: none;
+  color: #eef;
+  background-color: #799;
+}
+#navigation ul {
+  //width: 100%;
+  overflow: hidden;
+
+}
+#navigation li {
+  display: inline;
+}
+#navigation li a {
+  display: block;
+  padding: .5em 2em;
+  text-decoration: none;
+  font-weight: bold;
+}
+#leftNav{
+position:relative;
+float:left;
+width:70%;
+}
+#leftNav a{
+float: left;
+}
+#rightNav{
+position:relative;
+float:right;
+width:30%;
+}
+#rightNav a, #rightNav li{
+float:right;
+}   
+.nickName{
+  color:#eef;
+  padding: .5em 2em;
+  text-decoration: none;
+  font-weight: bold;
+}
+#appH2{
+  padding: 10px;
+  margin: 30px 20px 0px 20px;
+  color:#0060BF;
+}
+.applications{
+position:float;
+left:10%;
+min-height:50px;
+border: 1px solid #CCC;
+padding: 10px;
+margin: 0px 20px 30px 20px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+-o-border-radius: 5px;
+border-radius: 5px;
+}
+.applications li {
+  display: inline;
+}
+.application{
+min-height: 22px;
+padding: 5px 0;
+border-bottom: 1px solid #E8E8E8;
+}
+
+.application li a {	
+  font-size:16px;
+  text-decoration: none;
+}
+.appActions a:hover {
+color:#F30; 
+}
+.appActions{
+  color:#aaa;
+  float:right;
+  display:none;
+}
+
+
+.appActions a{
+  color:#aaa;  
+}
+.appActions .appActive{
+  color:red;
+}
+#createApp{
+  text-align:right;
+}
+#myApp{
+float:left;
+width:50%;
+}
+#otherApp{
+float:right;
+width:50%;
+}
+.appDivTitle{
+margin: 0px 20px 10px;
+}
+.inactiveApp{
+color:#333;
+}
+#domainWarn{
+  font-size:12px;
+}

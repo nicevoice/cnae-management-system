@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><%= config.site_name %></title>
+    <link href="/styles/reset.css?v=1.0.1" rel="stylesheet" type="text/css" />
+<%if(!config.labs){%>
+<link href="/styles/style.css?v=1.0.5" rel="stylesheet" type="text/css" />
+<%}else{%>
+<link href="/styles/labsStyle.css?v=1.0.5" rel="stylesheet" type="text/css" />
+<%}%>
+    <script type="text/javascript" src="/scripts/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/scripts/global.js?v=1.0.3"></script>
+    <script type="text/javascript" src="/scripts/loadSelector.js?v=1.0.1"></script>  
+  </head>
+  <body>
+    <div class="page">
+      <% if(!config.labs){ %>
+      <div class="header box">
+        <a href="http://cnodejs.net"><img src="/images/logo.png" alt="CnodeJS"></img></a>
+      </div>
+      <%}%>
+      <div class="main box">
+        <div id="navigation" class="clearfix">
+          <div id="leftNav">
+            <ul>
+              <li>
+                <a href="/application">我的应用</a>
+              </li>
+              <li>
+                <a href="/userCenter">个人中心</a>
+              </li>
+              <% if(!config.labs){ %>
+              <li>
+                <a href="/square">应用广场</a>
+              </li>
+              <li>
+                <a href="http://blog.cnodejs.net/post/4e686bb00716ac9910000003" target="_blank">反馈信息</a>
+              </li>
+              <%}%>
+              <li>
+                <a href="http://blog.cnodejs.net/post/4e686c290716ac9910000009" target="_blank">文档中心</a>
+              </li>
+              <%var isAdmin = false;
+              for(var i=0, len=config.admins.length; i
+              <len; ++i){
+              if(email == config.admins[i]){
+              isAdmin = true;
+              }
+              }
+              if(isAdmin){%>
+                <li>
+                  <a href="/inviteCode">发出邀请</a>
+                </li>
+                <%}%>
+            </ul>
+          </div>
+          <% if(!config.labs){ %>
+          <div id="rightNav">
+            <ul>
+              <li>
+                <a href="/logout">退出</a>
+              </li>
+              <li class="nickName">
+                <%=nickName%>,欢迎登录！<li>
+            </ul>
+          </div>
+          <%}%>
+        </div>
+        <div id="appManage" class="clearfix">
+          <div class="left borderRadius5">
+            <ul id="sidebar">
+              <li>
+                <h3>应用信息</h3>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/sum">汇总信息</a>
+              </li>
+              <hr />
+              <li>
+                <h3>应用开发</h3>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/vermng">代码管理</a>
+              </li>
+              <li class="littleRight">
+                <a id="editorSidebar" href = "<%=url.replace('application/manage', 'editor')%>"
+                target="_blank">在线编辑</a>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/mongo">mongoDB</a>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/todo">待办事项</a>
+              </li>
+              <hr />
+              <li>
+                <h3>应用管理</h3>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/appmng">应用设置</a>
+              </li>
+              <% if(!config.labs){ %>
+              <li class="littleRight">
+                <a href="<%=url%>/coopmng">成员管理</a>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/mnglog">管理记录</a>
+              </li>
+              <%}%>
+              <hr />
+              <li>
+                <h3>应用调优</h3>
+              </li>
+              <li class="littleRight">
+                <a href="<%=url%>/applog">日志中心</a>
+              </li>
+            </ul>
+          </div>
+          <div class="right borderRadius5">
+              <%-body%>
+            </div>
+          </div>
+        </div>
+        <% if(!config.labs){ %>
+        <div class="foot">
+          Copyright&copy; <%= config.site_name %> <a href="http://cnodejs.org/">CNode</a>
+        </div>
+        <%}%>
+      </div>
+  </body>
+</html>

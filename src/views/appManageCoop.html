@@ -1,0 +1,37 @@
+<div class="subTitle">
+  <img src="/images/arrow.gif"></img>
+  <span id="app-selector"> </span>
+  <img src="/images/arrow.gif"></img>
+  成员管理
+</div>
+<div id='coop-infos'></div>
+<div id="invite-form" class=" subContent">
+  <strong>邀请朋友加入开发，我们会将邀请通过电子邮件发送给他。</strong>
+  <form method="post" action="<%=url%>/coopmng">
+    <p>
+      邮 箱：
+      <input type="text" id="inviteEmail" name="inviteEmail">
+    </p>
+    <input type="text" style="display:none">
+    <p>
+      角 色：
+      <select id="roles" name="roles">
+        <option value = "1" selected>管理者</option>
+        <option value = "2" >参与者</option>
+        <option value = "3" >观察者</option>
+      </select>
+      <span id="rights"></span>
+    </p>
+    <p>
+      邀请语:
+    </p>
+    <p>
+      <textarea rows="3" class="newLongInput" name="inviteWords" id="inviteWords"
+      				></textarea>
+    </p>
+    <p>
+      <input id="submitInvite" type="button" class="button_orange r3px" value="邀请">
+      <input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">
+  </form>
+</div>
+<script type="text/javascript" src="/scripts/appManageCoop.js?v=1.0.1"></script>
