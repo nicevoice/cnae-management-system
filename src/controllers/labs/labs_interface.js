@@ -1,14 +1,19 @@
 var config = require('../../config'),
     log = config.logWithFile,
     model = require('../../models/index'),
-    app_mem = model.app_mem,
-    app_basic = model.app_basic,
-    records = model.records,
+    collectionNames = config.dbInfo.collections,
+    app_mem = collectionNames.app_member,
+    app_basic = collectionNames.app_basic,
+    app_record = collectionNames.app_record,
+    find = model.find,
+    findOne = model.findOne,
+    insert = model.insert,
+    remove = model.remove,
     urlMoudle = require('url'),
     EventProxy = require('EventProxy.js').EventProxy,
     fs = require('fs'),
     md5 = require('../../lib/md5').hex_md5,
-    labsConf = require('../config.json'),
+    labsConf = config.labsConf,
     uploadDir = config.uploadDir,
     onOff = require('../../lib/socket').onOff,
     exec  = require('child_process').exec;
@@ -68,7 +73,6 @@ exports.appAdd = function(req, res){
 							log.error(err.toString());
               return res.sendJson({"status":"false", "code":"1", "msg":"System error:Create example error"});
 						}else{
-              log.info(userName +" add app "+appName);
  				      return res.sendJson({status:"true", "code":"0", "msg":"Add app success"});              
             }
 					});
@@ -77,7 +81,7 @@ exports.appAdd = function(req, res){
  			})
  			//执行插入
       var now = new Date().getTime();
- 			app_basic.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
+ 			insert(app_basic, {appDomain:newAppDomain.toString(), appName:newAppName.toString(),
  			appDes:newAppDes.toString(), appState:0, appCreateDate:now}, function(err){
  				if(err){
  					log.error(err.toString());
@@ -87,8 +91,8 @@ exports.appAdd = function(req, res){
  					createAppEvent.fire("savedBasic", true);
  				}
  			});
- 			app_mem.save({appDomain:newAppDomain.toString(), appName:newAppName.toString(),
- 			email:userName, role:0, active:1,joinTime:new Date().getTime()}, function(err){
+			insert(app_mem, {appDomain:newAppDomain.toString(), appName:newAppName.toString(),
+ 			email:req.session.email.toString(), role:0, active:1,joinTime:new Date().getTime()}, function(err){
         if(err){
  					log.error(err.toString());
  					createAppEvent.fire("saveMem", false);
@@ -97,7 +101,7 @@ exports.appAdd = function(req, res){
  					createAppEvent.fire("savedMem", true);
  				}
  			});
- 			records.save({appDomain:newAppDomain.toString(), email:userName,
+ 			insert(app_record, {appDomain:newAppDomain.toString(), email:req.session.email,
  			action:"创建应用", recordTime:new Date().format("YYYY-MM-dd hh:mm:ss")}, function(err){
  				if(err){
  					log.error(err.toString());
@@ -108,7 +112,7 @@ exports.appAdd = function(req, res){
  			})
  		}   
  })
- 	app_basic.findOne({appDomain:newAppDomain.toString()},function(err, item){
+ 	findOne(app_mem, {appDomain:newAppDomain.toString()},function(err, item){
     if(err){
  			log.error(err.toString());
  			checkRepetition.fire("checkDomain", 1);
@@ -156,7 +160,6 @@ exports.appDel = function(req, res){
 			if(!arguments[0] || !arguments[1] || !arguments[2]||!arguments[3] || !arguments[4], arguments[5])
 				return res.sendJson({"status":"false", "code":"1", "msg":"System error:delete error"});
 			else{
-        log.info(userName +" delete app "+appName);
 				return res.sendJson({"status":"ture", "code":"0", "msg":"Delete app success"});
 			}
 		});
@@ -164,7 +167,7 @@ exports.appDel = function(req, res){
 			if(!deleteDb){
 				return deleteEvent.fire("deleteBasic", false);
 			}
-			app_basic.remove({appDomain:delDomain}, function(err){
+			remove(app_basic,{appDomain:delDomain}, function(err){
 				if(err){
           log.error(err.toString());
 					deleteEvent.fire("deletedBasic", false);
@@ -174,7 +177,7 @@ exports.appDel = function(req, res){
 				}
 			});
 		});
-		app_basic.findOne({appDomain:delDomain}, function(err, data){
+		findOne(app_basic,{appDomain:delDomain}, function(err, data){
 			if(err){
         log.error(err.toString());
 				return deleteEvent.fire("deleteDb", false);
@@ -199,7 +202,7 @@ exports.appDel = function(req, res){
         });
       }
 		});
-		app_mem.remove({appDomain:delDomain}, function(err){
+		remove(app_mem, {appDomain:delDomain}, function(err){
 			if(err){
         log.error(err.toString());
 				deleteEvent.fire("deletedMem", false);
@@ -208,7 +211,7 @@ exports.appDel = function(req, res){
 				deleteEvent.fire("deletedMem", true);
 			}
 		});
-		records.remove({appDomain:delDomain}, function(err){
+		remove(records,{appDomain:delDomain}, function(err){
 			if(err){
         log.error(err.toString());
 				deleteEvent.fire("deletedRecords", false);
@@ -230,7 +233,7 @@ exports.appDel = function(req, res){
 		});    
     }
   });
-  app_mem.findOne({email:userName, appDomain:delDomain,role:0}, function(err, data){
+  findOne(app_mem,{email:userName, appDomain:delDomain,role:0}, function(err, data){
     if(err){
       log.error(err.toString());
       return res.sendJson({"status":"false", "code":"1", "msg":"System error:Database error"});

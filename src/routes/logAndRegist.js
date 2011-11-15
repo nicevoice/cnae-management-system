@@ -9,7 +9,7 @@ var middleware = require('./middleware'),
     if(!labs){
       ctrLogin = require('../controllers/login');
     }else{
-      ctrLogin = require('../labs/controllers/login');
+      ctrLogin = require('../controllers/labs/login');
     }
 module.exports = function(app){
   //login

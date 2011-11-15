@@ -1,4 +1,4 @@
-var ctrLabsInterface = require('../labs/controllers/labs_interface');
+var ctrLabsInterface = require('../controllers/labs/labs_interface');
     
 module.exports = function(app){
     app.get('/labs/appadd', ctrLabsInterface.appAdd);

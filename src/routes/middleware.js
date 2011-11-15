@@ -1,12 +1,27 @@
 var admins = require('../config').admins,
-    app_mem = require('../models/index').app_mem;
+	labs = require('../config').labs,
+	checkTBSession = require('../lib/checkTBSession'),
+	findOne = require('../models/index').findOne,
+    app_mem = require('../config').dbInfo.collections.app_member;
+
 //路由中间件
-
-
 exports.hasLogin = function(req, res, next){
 	//如果session不存在，
 	if(!req.session.email || !req.session.nickName){
-		return res.redirect("/login");
+		if(labs){
+			//检查session
+			checkTBSession(function(httpRes){
+				if(httpRes.status === 'error'){
+					return res.redirect('/login');
+				}else{
+					req.session.email = httpRes.taobao_nick;
+					req.session.nickName = httpRes.taobao_nick;
+					return next();
+				}
+			});
+		}else{
+			return res.redirect('/login');
+		}
 	}else{	//如果session存在
 		return next();
 	}
@@ -26,7 +41,7 @@ exports.hasNotLogin = function(req, res, next){
 exports.checkAuth = function(req, res, next){
 	var domain = req.params.id||"";
 	var email = req.session.email||"";
-	app_mem.findOne({appDomain: domain.toString(), email:email.toString()},
+	findOne(app_mem, {appDomain: domain.toString(), email:email.toString()},
 	function(err , data){
 		if(err){
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
@@ -44,7 +59,7 @@ exports.checkChangeAuth = function(role) {
   return function(req, res, next) {
   	var domain = req.params.id||'';
   	var email = req.session.email||'';
-	app_mem.findOne({appDomain: domain.toString(), email:email.toString()},
+	findOne(app_mem, {appDomain: domain.toString(), email:email.toString()},
 	function(err , data){
 		if(err){
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
