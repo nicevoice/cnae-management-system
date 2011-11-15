@@ -40,7 +40,7 @@ function addNewUser(res, name, cb){
  */
 
 var checkLogin = exports.checkLogin = function(req, res) {
-	checkTBSession(function(checkRes) {
+	checkTBSession(req, function(checkRes) {
 		if(checkRes.status === "false") {
 			console.log("err");
 			res.render(error, {
