@@ -95,6 +95,7 @@ exports.tempDir = configInfo.tempDir;
 exports.socketPort = configInfo.socketPort;
 
 exports.toplevelDomain = configInfo.toplevelDomain;
+exports.labsConf = configInfo.labsConf;
 //管理员帐号表
 exports.admins = configInfo.admins;
 //格式化Date
