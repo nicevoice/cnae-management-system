@@ -10,15 +10,12 @@ exports.hasLogin = function(req, res, next){
 	if(!req.session.email || !req.session.nickName){
 		if(labs){
 			//检查session
-			console.log("check");
 			checkTBSession(req, function(httpRes){
-				if(httpRes.status === 'error'){
+				if(httpRes.status === 'false'){
 					return res.redirect('/login');
 				}else{
-					console.log(httpRes.taobao_nick);
 					req.session.email = httpRes.taobao_nick;
 					req.session.nickName = httpRes.taobao_nick;
-					console.log(req.session.email);
 					return next();
 				}
 			});
