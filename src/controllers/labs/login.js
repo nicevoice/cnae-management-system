@@ -3,7 +3,7 @@ var config = require('../../config'),
   	model = require('../../models/index'),
 	users = model.users,
   	randomStringNum = require('../../lib/randomString').getRandomStringNum,
-  	checkTBSession = require('../../lib/checkTBSession').check,
+  	checkTBSession = require('../../lib/checkTBSession'),
     labsConf = config.labsConf;
 /***
  * 显示登录页面
@@ -40,7 +40,7 @@ function addNewUser(res, name, cb){
  */
 
 var checkLogin = exports.checkLogin = function(req, res) {
-	checkDBSession(function(checkRes) {
+	checkTBSession(function(checkRes) {
 		if(checkRes.status === "false") {
 			console.log("err");
 			res.render(error, {

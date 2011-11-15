@@ -23,7 +23,7 @@ var getFromCookie = function(str, name, sign) {
     return value;
 };
 
-exports.check = function(cb){
+module.exports = function(cb){
 	 var sessionId = getFromCookie(req.headers.cookie, "cookie2") || '';
     //检查用户是否是开发者
     var secret = unescape(labsConf.secret);
