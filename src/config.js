@@ -16,7 +16,7 @@ var root_dir = pathutil.dirname(__dirname)
 // proxy config
 exports.proxy_sock = pathutil.join(cnae_dir, 'run', 'proxy.sock');
 exports.listen_sock_dir = pathutil.dirname(exports.proxy_sock);
-
+exports.domain = configInfo.domain;
 exports.md5_secret = configInfo.md5_secret;
 exports.session_secret = configInfo.session_secret;
 var port = exports.port = configInfo.port;

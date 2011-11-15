@@ -70,7 +70,6 @@ require('./routes/interface')(app);
 app.get("*", function(req, res){
   res.redirect("/application");
 });
-
 app.listen(config.port);
 
 startDel();
