@@ -65,9 +65,9 @@ exports.appAdd = function(req, res){
 				fs.mkdir(saveDir, '777', function(err){
 					if(err){
 						log.error(err.toString());
-            return res.sendJson({"status":"false", "code":"1", "msg":"System error:Create appdir error"});
+                        return res.sendJson({"status":"false", "code":"1", "msg":"System error:Create appdir error"});
 					}else{
-						var initFile = __dirname.slice(0, __dirname.lastIndexOf('/labs')+1)+"init.tar.gz";
+						var initFile = __dirname.slice(0, __dirname.lastIndexOf('/controllers')+1)+"init.tar.gz";
 						exec('tar -xf '+ initFile + ' -C '+ saveDir, function(err){
 						if(err){
 							log.error(err.toString());
@@ -92,7 +92,7 @@ exports.appAdd = function(req, res){
  				}
  			});
 			insert(app_mem, {appDomain:newAppDomain.toString(), appName:newAppName.toString(),
- 			email:req.session.email.toString(), role:0, active:1,joinTime:new Date().getTime()}, function(err){
+ 			email:userName, role:0, active:1,joinTime:new Date().getTime()}, function(err){
         if(err){
  					log.error(err.toString());
  					createAppEvent.fire("saveMem", false);
@@ -211,7 +211,7 @@ exports.appDel = function(req, res){
 				deleteEvent.fire("deletedMem", true);
 			}
 		});
-		remove(records,{appDomain:delDomain}, function(err){
+		remove(app_record,{appDomain:delDomain}, function(err){
 			if(err){
         log.error(err.toString());
 				deleteEvent.fire("deletedRecords", false);
