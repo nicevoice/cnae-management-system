@@ -1,6 +1,6 @@
 var admins = require('../config').admins,
 	labs = require('../config').labs,
-	checkTBSession = require('../lib/checkTBSession'),
+	checkTBSession = require('../lib/checkTBSession').check,
 	findOne = require('../models/index').findOne,
     app_mem = require('../config').dbInfo.collections.app_member;
 

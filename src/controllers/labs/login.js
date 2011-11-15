@@ -3,7 +3,7 @@ var config = require('../../config'),
   	model = require('../../models/index'),
 	users = model.users,
   	randomStringNum = require('../../lib/randomString').getRandomStringNum,
-  	checkTBSession = require('../../lib/checkTBSession'),
+  	checkTBSession = require('../../lib/checkTBSession').check,
     labsConf = config.labsConf;
 /***
  * 显示登录页面
