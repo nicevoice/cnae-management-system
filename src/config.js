@@ -8,9 +8,10 @@ var configInfo = JSON.parse(fs.readFileSync('./config.json').toString());
 //是否debug模式
 exports.switchs = configInfo.switchs;
 exports.labs = configInfo.switchs.labs;
+exports.daily = configInfo.switchs.daily;
 var debug = exports.debug = exports.switchs.debug;
 
-var root_dir = pathutil.dirname(__dirname)
+var root_dir = pathutil.dirname(pathutil.dirname(__dirname))
   , cnae_dir = pathutil.join(root_dir, 'cnode-app-engine');
 
 // proxy config
@@ -93,8 +94,15 @@ if(!debug) {
 exports.uploadDir = configInfo.uploadDir;
 exports.tempDir = configInfo.tempDir;
 exports.socketPort = configInfo.socketPort;
-
-exports.toplevelDomain = configInfo.toplevelDomain;
+if(exports.switchs.labs){
+  if(exports.switchs.daily){
+    exports.toplevelDomain = configInfo.toplevelDomainDaily;
+  }else{
+    exports.toplevelDomain = configInfo.toplevelDomainLabs;
+  }
+}else{
+  exports.toplevelDomain = configInfo.toplevelDomainNAE;
+}
 exports.labsConf = configInfo.labsConf;
 //管理员帐号表
 exports.admins = configInfo.admins;
