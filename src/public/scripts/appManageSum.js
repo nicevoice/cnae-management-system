@@ -205,7 +205,7 @@ function controlApp() {
 function restart() {
   var stateDes = $("#appStateDes");
   var action = "restart";
-  if(!appRunning){
+  if(!run){
     action = "start";
   }
   $.ajax({
