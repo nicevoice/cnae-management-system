@@ -86,7 +86,7 @@ function renderAppInfos(app) {
   var appName = app.appName || '', appDes = app.appDes || '';
   var html = "<table>" + '<tr><td style="width:120px">应用域名：</td><td style="width:350px" id="appDomains"></td></tr>' + '<tr><td>应用名称：</td><td width="250px">' + appName + '</td></tr>' + '<tr><td>应用描述：</td><td>' + appDes + '</td></tr>' + '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>' + '<tr><td>数据库：</td><td id="appDbName">';
   if(app.dbType === 'mongo') {
-    html += app.dbName + '</td><td>端口号:20088</td>';
+    html += app.dbName + '</td><td style="width:150px">端口号:20088</td>';
   } else {
     var url = location.href;
     url = url.slice(0, url.lastIndexOf('/'));
