@@ -10,7 +10,7 @@ exports.hasLogin = function(req, res, next){
 	if(!req.session.email || !req.session.nickName){
 		if(labs){
 			//检查session
-			console.log(check);
+			console.log("check");
 			checkTBSession(req, function(httpRes){
 				if(httpRes.status === 'error'){
 					return res.redirect('/login');
