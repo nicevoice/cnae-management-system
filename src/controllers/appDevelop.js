@@ -39,7 +39,6 @@ exports.vermng = function(req, res) {
  * @return {}
  */
 exports.doUpload = function(req, res) {
-  console.log(req.session.email + " upload");
   var domain = req.params.id || '';
   var fields = req.form.fields, files = req.form.files;
   var filePath = files.upload ? files.upload.filename : null;
@@ -66,7 +65,6 @@ exports.doUpload = function(req, res) {
         } else {
           unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
         }
-        console.log(unCompress);
         exec(unCompress, function(err, stdout, stderr) {
           if(err) {
             log.error(err.toString());
@@ -144,7 +142,6 @@ exports.doUpload = function(req, res) {
                           });
                           var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
                           sumManage += '/sum';
-                          console.log(sumManage);
                           return res.redirect(sumManage);
                         
                       });
@@ -194,7 +191,6 @@ exports.gitClone = function(req, res) {
   var gitUrl = req.body.gitUrl||'';
   var matchs = gitUrl.match(config.regGit);
   gitUrl = matchs?matchs[0]:null;
-  console.log(gitUrl);
   if(!gitUrl){
       return res.sendJson({
           status:'error',
@@ -213,7 +209,6 @@ exports.gitClone = function(req, res) {
       });
     } else {
       fs.mkdir(savePath, '777', function(err) {
-        console.log("mkdir");
         if(err && err.errno !== 17) {
           log.error(err.toString());
           exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
@@ -282,7 +277,6 @@ exports.gitPull = function(req, res) {
  * @param {} res
  */
 exports.doDownload = function(req, res) {
-  console.log(req.session.email + " " + req.params.id + " download");
   var domain = req.params.id || '';
   var cwd = process.cwd();
   var now = new Date();
@@ -291,7 +285,7 @@ exports.doDownload = function(req, res) {
   try {
     process.chdir(uploadDir);
   } catch(err) {
-    console.log(err.toString());
+    log.error(err.toString());
     return res.sendJson({
       status : "error",
       msg : "修改工作目录失败"
@@ -302,7 +296,7 @@ exports.doDownload = function(req, res) {
     try {
       process.chdir(cwd);
     } catch(err) {
-      console.log(err.toString());
+      log.error(err.toString());
     }
     if(err) {
       log.error(err.toString());
@@ -326,7 +320,7 @@ exports.downloading = function(req, res) {
     appDomain : domain
   }, function(err, data) {
     if(err) {
-      console.log(err.toString());
+      log.error(err.toString());
       return res.render("error", {
         msg : "查询数据库出错，请稍后再试"
       });
@@ -351,7 +345,7 @@ exports.doUploadImg = function(req, res) {
   try {
     var domain = req.params.id || "", fields = req.form.fields, files = req.form.files, filePath = files.upload ? files.upload.filename : null, dirPath = req.body.dirPath || "", savePath = require('path').join(uploadDir, domain, dirPath, files.upload.name);
   } catch(err) {
-    console.log(err.toString());
+    log.error(err.toString());
     return res.sendJson({
       error : "true",
       msg : "invalid param"
@@ -365,7 +359,7 @@ exports.doUploadImg = function(req, res) {
     });
   fs.rename(files.upload.path, savePath, function(err) {
     if(err) {
-      console.log(err.toString());
+      log.error(err.toString());
       return res.sendJson({
         error : "true",
         msg : "rename file error"
@@ -381,7 +375,7 @@ exports.upload = function(req, res, callback){
   try {
     var domain = req.params.id || "", fields = req.form.fields, files = req.form.files, filePath = files.upload ? files.upload.filename : null, dirPath = req.body.dirPath || "", savePath = require('path').join(uploadDir, domain, dirPath, files.upload.name);
   } catch(err) {
-    console.log(err.toString());
+    log.error(err.toString());
   }  
 }
 /***
@@ -400,8 +394,6 @@ exports.npmInstall = function(req, res) {
       })
   } 
   var domain = req.params.id || '', install = "npm install " + npmName, cwd = process.cwd();
-
-  console.log(req.session.email + " " + req.params.id + " npm install " + npmName);
   try {
     process.chdir(uploadDir + '/' + domain);
   } catch(err) {
@@ -478,7 +470,6 @@ exports.loadMongoContent = function(req, res) {
   })
 }
 exports.createMongo = function(req, res) {
-  console.log(req.session.email + " " + req.params.id + " create mongo");
   var domain = req.params.id || '', url = req.url, email = req.session.email;
   url = url.slice(0, url.lastIndexOf('/'));
   findOne(app_basic, {
@@ -556,7 +547,6 @@ checkQueryString = function(queryString) {
 
 exports.queryMongo = function(req, res) {
   var domain = req.params.id || '', queryString = req.body.queryString.trim() || '';
-  console.log(req.session.email + " " + domain + " query mongo " + queryString);
   if(!checkQueryString(queryString)) {
     return res.sendJson({
       status : "error",
@@ -584,7 +574,6 @@ exports.queryMongo = function(req, res) {
           });
         }
         var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString;
-        console.log(command);
         exec(command, function(err, stdout, stderr) {
           if(err) {
             log.error(err.toString());
@@ -722,7 +711,6 @@ exports.newTodo = function(req, res) {
 }
 exports.finishTodo = function(req, res) {
   var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
-  console.log(email + title + "finish");
   update(app_basic, {
     appDomain : domain,
     todo : {
@@ -750,7 +738,6 @@ exports.finishTodo = function(req, res) {
 }
 exports.recoverTodo = function(req, res) {
   var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
-  console.log(email + title + "recover");
   update(app_basic, {
     appDomain : domain,
     todo : {
@@ -778,7 +765,6 @@ exports.recoverTodo = function(req, res) {
 }
 exports.deleteTodo = function(req, res) {
   var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
-  console.log(email + title);
   update(app_basic, {
     appDomain : domain,
   }, {
