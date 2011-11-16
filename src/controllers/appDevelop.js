@@ -192,9 +192,9 @@ exports.doUpload = function(req, res) {
 
 exports.gitClone = function(req, res) {
   var gitUrl = req.body.gitUrl||'';
-  var array = gitUrl.match(config.regGit)[0];
-  gitUrl = array?array[0]:'';
-  console.log(array);
+  var matchs = gitUrl.match(config.regGit);
+  gitUrl = matchs?matchs[0]:null;
+  console.log(gitUrl);
   if(!gitUrl){
       return res.sendJson({
           status:'error',
@@ -391,16 +391,15 @@ exports.upload = function(req, res, callback){
  */
 exports.npmInstall = function(req, res) {
   var npmName = req.body.npmName||'';
-  var array = npmName.match(config.regNpm);
-  console.log(array);
-  npmName = array? array[0] : '';
+  var items = npmName.match(config.regNpm);
+  npmName = items ? items[0] : null;
   if(!npmName){
       return res.sendJson({
           status:'error',
           msg:'请输入正确的模块名'
       })
   } 
-  var domain = req.params.id || '', npmName = req.body.npmName || '', install = "npm install " + npmName, cwd = process.cwd();
+  var domain = req.params.id || '', install = "npm install " + npmName, cwd = process.cwd();
 
   console.log(req.session.email + " " + req.params.id + " npm install " + npmName);
   try {
