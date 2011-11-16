@@ -48,7 +48,7 @@ exports.postRetrieve = function(req, res){
         var nickName = email.split('@')[0];
        	var codeHtml = "<a href="+link+">"+link+"</a>";
        	mails.push({
-          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          sender: 'NAE <heyiyu.deadhorse@gmail.com>',
           to : nickName + " <"+email + ">",
           subject: config.retrieveMailTitle,
           html: config.retrieveMailContent+codeHtml,
