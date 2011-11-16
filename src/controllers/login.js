@@ -11,7 +11,11 @@ user = config.dbInfo.collections.user;
  * @param {} res
  */
 exports.show = function(req, res){
-  res.render("login", {warn:""});
+    var queryString = urlMoudle.parse(req.url, true).query,
+        redirectUrl="";
+    if(queryString&&queryString.redirect_url)
+        redirectUrl = queryString.redirect_url;
+    res.render("login", {warn:"", redirectUrl:redirectUrl});
 };
 /***
  * 检测登录请求
@@ -22,23 +26,24 @@ exports.show = function(req, res){
 exports.checkLogin = function(req, res){
 	var	userEmail = req.body.userEmail,
 		  password = req.body.password,
+		  redirectUrl = req.body.redirectUrl,
 		  autoLogin = req.body.autoLogin;
 	//数据库查找
 	findOne(user, {email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
 			log.error(err.toString());
-			return res.render("login", { warn:"数据获取失败"});
+			return res.render("login", { warn:"数据获取失败", redirectUrl:redirectUrl});
 		}
 		else{
 			if (!item) {
         console.log("验证失败");
         return res.render("login", {
-          warn: "用户名或密码错误"
+          warn: "用户名或密码错误",
+          redirectUrl:redirectUrl
         });
       }
       else {
-        console.log(userEmail+" login");
-        log.info(userEmail + "login");
+        log.info(userEmail + " login");
         req.session.email = userEmail;
         req.session.nickName = item.nickName;
         if (autoLogin) {
@@ -49,7 +54,8 @@ exports.checkLogin = function(req, res){
         else {
           req.session.cookie.expires = false;
         }
-        res.redirect("/application");
+        redirectUrl = redirectUrl?redirectUrl:'/application';
+        res.redirect(redirectUrl);
       }
 		}
 	});
