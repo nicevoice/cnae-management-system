@@ -191,8 +191,17 @@ exports.doUpload = function(req, res) {
 }
 
 exports.gitClone = function(req, res) {
-  console.log(req.session.email + " " + req.params.id + " git clone");
-  var tempDirLast = randomStringNum(15), tempDir = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "temp", gitClone = "git clone " + req.body.gitUrl + " " + tempDir + "/" + tempDirLast, domain = req.params.id || '', savePath = uploadDir + '/' + domain + '/', move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
+  var gitUrl = req.body.gitUrl||'';
+  var array = gitUrl.match(config.regGit)[0];
+  gitUrl = array?array[0]:'';
+  console.log(array);
+  if(!gitUrl){
+      return res.sendJson({
+          status:'error',
+          msg:'请输入正确的git-url'
+      })
+  }
+  var tempDirLast = randomStringNum(15), tempDir = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "temp", gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, domain = req.params.id || '', savePath = uploadDir + '/' + domain + '/', move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
   exec(gitClone, function(err, gitStdout, gitStderr) {
     if(err) {
       log.error(err.toString());
@@ -237,7 +246,6 @@ exports.gitClone = function(req, res) {
 }
 
 exports.gitPull = function(req, res) {
-  console.log(req.session.email + " " + req.params.id + " git pull");
   var domain = req.params.id || '', pull = "git pull", cwd = process.cwd(), savePath = uploadDir + '/' + domain + '/';
   try {
     process.chdir(savePath);
@@ -382,6 +390,16 @@ exports.upload = function(req, res, callback){
  * @param {Object} res
  */
 exports.npmInstall = function(req, res) {
+  var npmName = req.body.npmName||'';
+  var array = npmName.match(config.regNpm);
+  console.log(array);
+  npmName = array? array[0] : '';
+  if(!npmName){
+      return res.sendJson({
+          status:'error',
+          msg:'请输入正确的模块名'
+      })
+  } 
   var domain = req.params.id || '', npmName = req.body.npmName || '', install = "npm install " + npmName, cwd = process.cwd();
 
   console.log(req.session.email + " " + req.params.id + " npm install " + npmName);

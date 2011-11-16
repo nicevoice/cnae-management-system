@@ -50,7 +50,8 @@ exports.regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/;
 exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 exports.regMobile = /^((\(\d{2,3}\))|(\d{3}\-))?1(3|5|8)\d{9}$/;
 exports.regUrl = /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?$/;
-
+exports.regGit = /^(git:\/\/github.com\/)[\w-.]+\/[\w-_.]+$/;
+exports.regNpm = /^[\w\d.-]+$/;
 //log
 var log = require("./lib/log");
 exports.logWithFile = log.create(log.INFO, configInfo.logPath);
