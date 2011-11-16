@@ -4,6 +4,7 @@
     <div id="log" class="log">
     <div class="warn" id="loginWarn"><%= warn %></div>
     <form id="loginForm" action="/checkLogin" method="post">
+        <input type="hidden" name="redirectUrl" value=<%=redirectUrl%>>
         <p class="loginInput">
         <label for="userEmail">邮箱：</label>
         <input type="text" id="userEmail" class="inputText" name="userEmail">

@@ -8,11 +8,12 @@ var admins = require('../config').admins,
 exports.hasLogin = function(req, res, next){
 	//如果session不存在，
 	if(!req.session.email || !req.session.nickName){
+        var urlEncode = encodeURIComponent(req.url);
 		if(labs){
 			//检查session
 			checkTBSession(req, function(httpRes){
 				if(httpRes.status === 'false'){
-					return res.redirect('/login');
+					return res.redirect('/login?redirect_url='+urlEncode);
 				}else{
 					req.session.email = httpRes.taobao_nick;
 					req.session.nickName = httpRes.taobao_nick;
@@ -20,7 +21,7 @@ exports.hasLogin = function(req, res, next){
 				}
 			});
 		}else{
-			return res.redirect('/login');
+			return res.redirect('/login?redirect_url='+urlEncode);
 		}
 	}else{	//如果session存在
 		return next();
@@ -33,7 +34,7 @@ exports.hasNotLogin = function(req, res, next){
 	if(!req.session.email || !req.session.nickName){
 		return next();
 	} else {
-		return res.redirect("/");
+		return res.redirect("/application");
 	}
 }
 

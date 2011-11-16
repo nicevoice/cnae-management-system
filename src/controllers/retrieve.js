@@ -5,6 +5,7 @@ EventProxy = require('EventProxy.js').EventProxy,
 model = require('../models/index'),
 find = model.find,
 findAndModify = model.findAndModify,
+update = model.update,
 findOne = model.findOne,
 user = config.dbInfo.collections.user,
 urlMoudle = require('url'),
@@ -79,10 +80,12 @@ exports.showResetPassword = function(req, res){
       }else{
         var now = new Date().getTime(),
             oneDay = 1000*60*60*24;
+            console.log(data.retrieveTime);
+            console.log(now);
         if(!data.retrieveTime || now - data.retrieveTime >oneDay){
           return res.render("error", {message:"该链接已过期，请重新申请"});
         }else{
-          return res.render("resetPassword",{email:email});
+          return res.render("resetPassword",{email:email, key:key});
         }
       }
     }
@@ -90,6 +93,7 @@ exports.showResetPassword = function(req, res){
 }
 exports.resetPassword = function(req, res){
   var email = req.body.email||'',
+      key = req.body.key||'',
       password = req.body.changePassword||'',
       con = req.body.changeConfirmation||'';
 	var regPass = /^(\w){6,20}$/;
@@ -104,25 +108,55 @@ exports.resetPassword = function(req, res){
       });
     }
     else {
-      findAndModify(user, {
-        email: email
-      }, [], {
-        $set: {
-          password: md5(password+config.md5_secret),
-          retrieveKey: undefined,
-          retrieveTime: undefined
-        }
-      }, function(err){
-        if (err) {
-          log.error(err.toString());
-          return res.render("error", {
-            message: "密码修改错误"
-          });
-        }
-        else {
-          return res.redirect("/login");
-        }
-      });
+      // findAndModify(user, {
+        // email: email,
+        // retrieveKey:key
+      // }, [], {
+        // $set: {
+          // password: md5(password+config.md5_secret),
+          // retrieveKey: undefined,
+          // retrieveTime: undefined
+        // }
+      // }, function(err){
+        // if (err) {
+          // log.error(err.toString());
+          // return res.render("error", {
+            // message: "密码修改错误"
+          // });
+        // }
+        // else {
+          // return res.redirect("/login");
+        // }
+      // });
+      findOne(user, {
+          email:email,
+          retrieveKey:key
+      }, function(err, data){
+          if(err){
+              log.error(err.toString());
+              return res.render('error', {
+                  message:"密码修改错误"
+              });
+          }
+          if(!data||data.length===0){
+              return res.render('error', {
+                  message:"错误的验证码"
+              });              
+          }
+          update(user, {email:email}, {$set:{
+              password:md5(password+config.md5_secret),
+              retrieveKey: undefined,
+              retrieveTime: undefined
+          }}, function(err){
+              if(err){
+                  log.error(err.toString());
+                  return res.render('error', {
+                      message:"密码修改错误"
+                  });
+              }
+              return res.redirect('/login');
+          })
+      })
     }
 	}
 }
