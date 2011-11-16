@@ -44,7 +44,7 @@ exports.postRetrieve = function(req, res){
     }else{
       if(!userInfo){
 		    return res.render("error", { message:"email未注册"});      
-      }else{/*
+      }else{
         var link = config.retrieveLink+"?p="+retrieveKey+"&e="+email;
         var nickName = email.split('@')[0];
        	var codeHtml = "<a href="+link+">"+link+"</a>";
@@ -55,7 +55,7 @@ exports.postRetrieve = function(req, res){
           html: config.retrieveMailContent+codeHtml,
           debug: true
        	});
-      	mailEvent.fire("getMail");*/
+      	mailEvent.fire("getMail");
         return res.redirect("/retrieveTips");
       }
     }
