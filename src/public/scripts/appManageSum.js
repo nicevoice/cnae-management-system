@@ -64,7 +64,6 @@ function loadAppInfoContent() {
     url : "/application/manage/" + domain + "/load_sum",
     dataType : "json",
     error : function() {
-      sAlert("警告", "服务器连接错误");
     },
     success : function(data) {
       if(data.status === "ok") {
@@ -76,25 +75,35 @@ function loadAppInfoContent() {
           setStatus();
         }, 10000);
       } else {
-        sAlert("警告", "服务器连接错误");
+        sAlert("警告", data.msg);
       }
     }
   });
 }
+var tplSum  =  '<table style="width:600px">'+
+               '<tr><td style="width:150px">应用域名：</td><td style="width:400px" id="appDomains"></td></tr>'+
+               '<tr><td>应用名称：</td><td>$appName$</td></tr>'+
+               '<tr><td>应用描述：</td><td>$appDes$</td></tr>'+
+               '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>'+
+               '<tr><td>数据库：</td><td id="appDbName">$db$</td><tr>'+
+               '</table>'+
+               '<h3>应用状态信息</h3><table id="status">'+
+               '<tr><th>内存消耗</th><th>堆内存</th><th>运行时间</th><th>心跳时间</th><th>PID</th></tr>'+
+               '<tr id="statusInfo"></tr>'+
+               '</table>';
 
-function renderAppInfos(app) {
-  var appName = app.appName || '', appDes = app.appDes || '';
-  var html = "<table>" + '<tr><td style="width:120px">应用域名：</td><td style="width:350px" id="appDomains"></td></tr>' + '<tr><td>应用名称：</td><td width="250px">' + appName + '</td></tr>' + '<tr><td>应用描述：</td><td>' + appDes + '</td></tr>' + '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>' + '<tr><td>数据库：</td><td id="appDbName">';
-  if(app.dbType === 'mongo') {
-    html += app.dbName + '</td><td style="width:150px">端口号:20088</td>';
-  } else {
-    var url = location.href;
-    url = url.slice(0, url.lastIndexOf('/'));
-    html += '<a href="' + url + '/mongo">点此启用mongoDB</a></td>';
-  }
-  html += '</tr></table>';
-  html += '<h3>应用状态信息</h3><table id="status">' + '<tr><th>内存消耗</th><th>堆内存</th><th>运行时间</th><th>心跳时间</th><th>PID</th></tr>' + '<tr id="statusInfo"></tr></table>';
-  $('#appInfos').html(html);
+function renderAppInfos(app){
+    var params = {};
+    params['$appName$'] = app.appName;
+    params['$appDes$'] = app.appDes;
+    if(app.dbType === 'mongo'){
+        params['$db$'] = (app.dbName + '</td><td style="width:150px">端口号:'+ app.appDbPort +'</td>');
+    }else{
+        var url = location.href;
+        url = url.slice(0, url.lastIndexOf('/'));        
+        params['$db$']=('<a href="' + url + '/mongo">点此启用mongoDB</a></td>');
+    }
+    $('#appInfos').html(tplReplace(tplSum, params));
 }
 
 //设置应用信息

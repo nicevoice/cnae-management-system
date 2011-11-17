@@ -35,63 +35,88 @@ function loadContent(){
     }
   });
 }
+var  tplOwnApp ='<div class="application ownApp" id="$appDomain$-div">'+
+                '<li class="appLi">'+
+                '<img src="/images/arrow.gif"></img> '+
+                '<a href="/application/manage/$appDomain$/sum" title="管理" class="title">$appName$</a>'+
+                '$delete$'+
+                '</li></div>',
+     tplDelete = '<span class="appActions" id="appAction-$appDomain$">'+
+                 '<a class="deleteApp" href="javascript:void(0)"'+
+                 'onclick="delApp(\'$appDomain$\')">删除</a></span>',
+     tplAppMax = '<div id="createApp"><li>应用数量已达上限</li></div>',
+     tplCreateApp = '<div id="createApp"><li>'+
+                    '<a href="/application/newApp">创建新应用($length$/10)</a>'+
+                    '</li></div>';
 function loadOwnApps(ownApps, labs){
-	var length = ownApps.length;
-	var html = "<ul>";
-	for(var i=0; i!=length; ++i){
-		var app = ownApps[i];
-		html += '<div class="application ownApp" id="'+
-		app.appDomain+'-div"><li class="appLi">' + '<img src="/images/arrow.gif"></img>' +
-		'&nbsp;'+'<a href="/application/manage/' + app.appDomain + '/sum" title="管理" class="title">'+
-		app.appName + '</a>';
-		if(!labs){
-			html += '<span class="appActions" id="appAction-'+ app.appDomain +'">' + 
-			'<a class="deleteApp" href="javascript:void(0)"'+
-			'onclick="delApp(\'' + app.appDomain +'\')">删除</a></span>';
-		}
-		html+='</li></div>';
-	}
-	if(!labs){
-		html += '<div id="createApp"><li>' ;
-		if(length < 10){
-			html += '<a href="/application/newApp">创建新应用('+length+'/10)</a>';
-		}else{
-			html += '应用数量已达上限';
-		}
-		html += '</li></div>'
-	}
-	html +='</ul>';
-	$("#myApp-content").html(html);
-}
+    var appContent = "",
+        len = ownApps.length;
+    for(var i=0; i!=len; ++i){
+        var app = ownApps[i], del='';
+        if(labs){
+            del = '';
+        }else{
+            del = tplReplace(tplDelete, {
+                '$appDomain$':app.appDomain
+            });
+        }
+        appContent += tplReplace(tplOwnApp, {
+            '$appDomain$':app.appDomain,
+            '$appName$':app.appName,
+            '$delete$':del
+        })
+    }
+    if(!labs){
+        if(len<10){
+            appContent += tplReplace(tplCreateApp, {
+                '$length$':len
+            })
+        }else{
+            appContent += tplAppMax;
+        }
+    }
+    $("#myApp-content").html('<ul>'+appContent+'</ul>');
+} 
+var  tplInactive = '<div class="application otherApp" id="coop-$appDomain$">' + 
+                   '<li class="appLi">' + 
+                   '<img src="/images/inactive.gif"></img>&nbsp;'+
+                   '<a href="/application/manage/$appDomain$/sum" title="管理" id="inactived$appDomain$"'+
+                   ' class="title inactiveApp">$appName$</a>' +
+                   '<span class="appActions" id="appAction-$appDomain$">'+
+                   '<a class="appActive" id="active-$appDomain$" href="javascript:void(0)"'+
+                   'onclick="active(\'$appDomain$\')">先点此激活应用 </a>'+
+                   '<a class="deleteApp" href="javascript:void(0)"' +
+                   'onclick="delCoopApp(\'$appDomain$\')">退出</a>'+
+                   '</span></li></div>',
+
+      tplActive =  '<div class="application otherApp" id="coop-$appDomain$">' + 
+                   '<li class="appLi">' + 
+                   '<img src="/images/arrow.gif"></img>&nbsp;'+
+                   '<a href="/application/manage/$appDomain$/sum" title="管理" id="inactived$appDomain$"'+
+                   ' class="title">$appName$</a>' +
+                   '<span class="appActions" id="appAction-$appDomain$">'+
+                   '<a class="deleteApp" href="javascript:void(0)"' +
+                   'onclick="delCoopApp(\'$appDomain$\')">退出</a>'+
+                   '</span></li></div>';
 function loadOtherApps(otherApps){
-	var length = otherApps.length;
-	var html = "<ul>";
-	for(var i=0; i!=length; ++i){
-		var app = otherApps[i];
-		html += '<div class="application otherApp" id="coop-' + app.appDomain + '">'+
-		'<li class="appLi">';
-		if(app.active === 0){
-			html += '<img src = "/images/inactive.gif"></img>&nbsp;';
-		}else{
-			html += '<img src="/images/arrow.gif"></img>&nbsp;';
-		}
-		html += '<a href="/application/manage/' + app.appDomain + '/sum" title="管理" id="inactived' + 
-		app.appDomain + '" class="title';
-		if(app.active === 0){
-			html += ' inactiveApp';
-		}
-		html += '">' + app.appName + '</a>' + '<span class="appActions" id="appAction-' + app.appDomain + '">';
-		if(app.active === 0){
-			html += '<a class="appActive" id="active-' + app.appDomain + '" href="javascript:void(0)"' + 
-			'onclick="active(\'' + app.appDomain + '\')">先点此激活应用 </a>'  
-		}
-		html += '<a class="deleteApp" href="javascript:void(0)"' + 
-		'onclick="delCoopApp(\'' + app.appDomain +'\')">退出</a>' + 
-		'</span></li></div>';
-	}
-	html += '</ul>'
-	$("#otherApp-content").html(html);
-}
+    var appContent = "";
+    for(var i=0, len=otherApps.length; i!=len; ++i){
+        var app = otherApps[i];
+        if(app.active===0){
+            appContent += tplReplace(tplInactive, {
+                '$appDomain$':app.appDomain,
+                '$appName$':app.appName
+            })
+        }else{
+            appContent += tplReplace(tplActive, {
+                '$appDomain$':app.appDomain,
+                '$appName$':app.appName
+            })            
+        }
+    }
+    $("#otherApp-content").html('<ul>'+appContent+'</ul>');
+}                   
+
 //删除自己的应用
 function delApp(domain){
 	str = '删除应用将清空对应的一切数据，确定要删除吗？';

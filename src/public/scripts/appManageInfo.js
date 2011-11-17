@@ -23,12 +23,23 @@ function loadAppInfo() {
     }
   });
 }
-
+var tplInfo = '<form method="post" action="$url$/appmng">'+
+              '<p>子域名：<span id="submitAppDomain">$appDomain$</span></p>'+
+              '<p>应用名：<input type="text" id="newAppName" name="newAppName" value="$appName$"></p>'+
+              '<p>应用描述:</p>'+
+              '<p><textarea rows="3" class="newLongInput" name="newAppDes" id="newAppDes">$appDes$</textarea></p>'+
+              '<p><input id="submitAppInfo" type="button" class="button_orange r3px" value="修改">'+
+              '<input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">'+
+              '</form>';
 function renderAppInfo(appInfo) {
-  var html = "", appDomain = appInfo.appDomain || '', appName = appInfo.appName || '', appDes = appInfo.appDes || '', url = location.href;
+  var appDomain = appInfo.appDomain || '', appName = appInfo.appName || '', appDes = appInfo.appDes || '', url = location.href;
   url = url.slice(0, url.lastIndexOf('/'));
-  html += '<form method="post" action="' + url + '/appmng">' + '<p>子域名：<span id="submitAppDomain">' + appDomain + '</span></p>' + '<p>应用名：<input type="text" id="newAppName" name="newAppName" value="' + appName + '"></p>' + '<input type="text" style="display:none">' + '<p>应用描述:</p>' + '<p><textarea rows="3" class="newLongInput" name="newAppDes" id="newAppDes">' + appDes + '</textarea></p>' + '<p><input id="submitAppInfo" type="button" class="button_orange r3px" value="修改">' + '<input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">' + '</form>';
-  $("#appmng-content").html(html);
+  $("#appmng-content").html(tplReplace(tplInfo, {
+      '$url$':url,
+      '$appDomain$':appDomain,
+      '$appName$':appName,
+      '$appDes$':appDes,
+  }));
 }
 
 function bindButtons() {

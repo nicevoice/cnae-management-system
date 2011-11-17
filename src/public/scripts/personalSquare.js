@@ -1,5 +1,5 @@
 $(function(){
-  getApps();
+  getPersonApps();
 })
 function bindDiv(){
     $("div .app-info").each(function(index){
@@ -11,7 +11,7 @@ function bindDiv(){
 			});
   });
 }
-function getApps(){
+function getPersonApps(){
   var nickName = $("#ownerNickName").html()||'';
   $.ajax({
     cache:false,
@@ -24,7 +24,7 @@ function getApps(){
     },
     success:function(data){
       if (data.status === "ok") {
-        render(data.apps, data.owner);
+        renderPersonSqual(data.apps, data.owner);
       }
       else{
         $("#square-apps").html(data.msg);        
@@ -32,7 +32,7 @@ function getApps(){
     }
   });
 }
-function render(data, owner){
+function renderPersonSqual(data, owner){
   var ownHtml="", otherHtml="";
   for (var i = 0, len = data.length; i < len; ++i) {
     if (owner === data[i].creatorEmail){ 

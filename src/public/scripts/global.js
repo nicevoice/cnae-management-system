@@ -140,3 +140,8 @@ function getColor(res){
   return res;
 }
 
+function tplReplace(tpl, params){
+    return tpl.replace(/\$.*?\$/g, function(data){
+        return params[data];
+    });
+}

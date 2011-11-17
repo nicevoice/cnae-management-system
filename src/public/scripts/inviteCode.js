@@ -31,7 +31,50 @@ function loadInviteCode(){
     }
   });
 }
-
+var tplInviteCodes = '<table padding="40px">'+ 
+                     '</tr><th width="70%">邀请码</th><th>操作</th></th></tr>'+
+                     '$code$'+'</table>',
+    tplCode = '<tr><td>$inviteHref$$code$</td>'+
+              '<td><a id="send&$inviteHref$$code$" href="javascript:void(0)" onclick="sendThisInvite(this);">发送</a> | '+
+              '<a id="delete&$code$" href="javascript:void(0)" onclick="deleteInvite(this);">删除</a></td></tr>',
+    tplPagination = '<div class="pagination"><ul>'+
+                    '<li class="prev"><a href="#">&larr; 前一页</a></li>'+
+                    '$pages$'+
+                    '<li class="next"><a href="#">后一页 &rarr;</a></li>'+
+                    '</ul></div>',
+    tplPage = '<li><a href=$url$/mnglog?page=$i$>$i$</a></li>';
+    tplEllipses = '<li class="disabled"><a href="javascript:void(0)">…</a></li>';
+function renderInviteCode(content){
+    var codes = content.codes,
+        pages = content.pages,
+        page = content.page,
+        codeContent = '', pageContent = '';
+    for(var i=0, len=codes.length; i!=len; ++i){
+        var code = codes[i];
+        codeContent += tplReplace(tplCode, {
+            '$inviteHref$':inviteHref,
+            'code':code.code,
+        });
+    }
+    var tooMany = false;
+    for(var i=1; i<=pages; ++i){
+        var url = location.href;
+        url = url.slice(0, url.lastIndexOf('/'));
+        if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
+            pageContent += tplReplace(tplPage, {
+                '$url$':url,
+                '$i$':i
+            });           
+        }else{
+            if(!tooMany){
+                tooMany = true;
+                pageContent+=tplEllipses;
+            }
+        }
+    }
+    $("#codes").html(tplReplace(tplInviteCodes, {'$codes$':codeContent})+
+                     tplReplace(tplPagination, {'$pages$':pageContent}));  
+}
 function renderInviteCode(content){
   var codes = content.codes,
       length = codes.length,

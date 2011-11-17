@@ -23,79 +23,86 @@ function loadCoopInfo() {
     }
   });
 }
-
-function renderCoopInfo(own, mems) {
-  var length = mems.length, html = "";
-  html += '<table id="allCoops"><tr><th>CNAE帐号</th><th>状态</th><th>操作</th><th>权限</th></tr>';
-  for(var i = 0; i != length; ++i) {
-    var mem = mems[i];
-    html += '<tr id="' + mem.email + 'Tr">' + '<td>' + mem.email + '</td><td>';
-    switch(mem.active) {
-      case 0:
-        html += "inactive";
-        break;
-      case 1:
-        html += "active";
-        break;
-      case 2:
-        html += "applying";
-        break;
+var tplCoop = '<table id="allCoops">'+
+              '<tr><th>CNAE帐号</th><th>状态</th><th>操作</th><th>权限</th></tr>'+
+              '$mems$'+
+              '</table>',
+    tplMem =  '<tr id="$email$Tr">'+
+              '<td>$email$</td><td>$status$</td><td>$operate$</td><td>$role$</td>'+
+              '</tr>',
+    tplDelete='<a href="javascript:void(0);" id="$email$#$appDomain$#delete">删除此参与者</a>',
+    tplHandleApply = '<a href="javascript:void(0);" id="$email$#$appDomain$#agree">同意</a> | '+
+                     '<a href="javascript:void(0);" id="$email$#$appDomain$#refuse">拒绝</a>',
+    tplSelectRole = '<select id="$email$#role">'+
+                   '<option value="1" $s1$>管理者</option>'+
+                   '<option value="2" $s2$>参与者</option>'+
+                   '<option value="3" $s3$>观察者</option>'+
+                   '</select>';
+function renderCoopInfo(own, mems){
+    //把每个参与者填入table里面
+    var memInfo = '';
+    for(var i=0, len=mems.length; i!=len; ++i){
+        var mem = mems[i],
+            memParams = {
+                '$email$':mem.email,
+            };
+        switch(mem.active){
+            case 0:memParams['$status$'] = 'inactive';break;
+            case 1:memParams['$status$'] = 'active';break;
+            case 2:memParams['$status$'] = 'applying';break;
+        }
+        if(mem.active<2){//非申请者的处理
+            if(mem.role===0){//成员是创建者
+                memParams['$operate$'] = '无法删除创建者';
+            }else if(own.role === 0){//管理员可以删除
+                memParams['$operate$'] = tplReplace(tplDelete, {
+                    '$email$':mem.email,
+                    '$appDomain':mem.appDomain
+                });
+            }else{//其他人不可以删除
+                memParams['$operate$'] = '没有权限进行操作';
+            }
+        }else{//申请者的处理
+            if(own.role<=1){//创建者和管理者可以处理申请请求
+                memParams['$operate$'] = tplReplace(tplHandleApply, {
+                    '$email$':mem.email,
+                    '$appDomain':mem.appDomain                       
+                });
+            }else{
+                memParams['$operate$'] = '没有权限进行操作';                    
+            }
+        };
+        if(own.role===0){
+            if(mem.role===0){
+                memParams['$role$'] = '创建者';
+            }else{
+                var roleParams = {
+                    '$email$':mem.email,
+                    '$s1$':'',
+                    '$s2$':'',
+                    '$s3$':''
+                }
+                switch(mem.role){
+                    case 1: roleParams['$s1$']='selected';break;
+                    case 2: roleParams['$s2$']='selected';break;
+                    case 3: roleParams['$s3$']='selected';break;
+                }
+                memParams['$role$'] = tplReplace(tplSelectRole, roleParams);
+            }
+        }else{
+            switch(mem.role){
+                case 0:memParams['$role$'] = '创建者'; break;
+                case 1:memParams['$role$'] = '管理者'; break;
+                case 2:memParams['$role$'] = '参与者'; break;
+                case 3:memParams['$role$'] = '观察者'; break;
+            }
+        }
+        memInfo += tplReplace(tplMem, memParams);      
     }
-    html += '</td><td>';
-    if(mem.active < 2) {
-      if(mem.role === 0) {
-        html += '无法删除应用创建者';
-      } else if(own.role === 0) {
-        html += '<a href="javascript:void(0);" id="' + mem.email + '#' + mem.appDomain + '#delete">删除此参与者</a>';
-      } else {
-        html += '没有权限进行操作';
-      }
-    } else {
-      html += '<a href="javascript:void(0);" id="' + mem.email + '#' + mem.appDomain + '#agree">同意</a> | ' + '<a href="javascript:void(0);" id="' + mem.email + '#' + mem.appDomain + '#refuse">拒绝</a>';
-    }
-    html += '</td><td>';
-    var role;
-    switch(mem.role) {
-      case 0:
-        role = "创建者";
-        break;
-      case 1:
-        role = "管理者";
-        break;
-      case 2:
-        role = "参与者";
-        break;
-      case 3:
-        role = "观察者";
-        break;
-      default:
-        role = "";
-    }
-    if(own.role === 0) {
-      if(mem.role === 0) {
-        html += '创建者';
-      } else {
-        html += '<select id="' + mem.email + 'Role">' + '<option value="1" ';
-        if(mem.role === 1)
-          html += 'selected';
-        html += '>管理者</option>' + '<option value="2" ';
-        if(mem.role === 2)
-          html += 'selected';
-        html += '>参与者</option>' + '<option value="3" ';
-        if(mem.role === 3)
-          html += 'selected';
-        html += '>观察者</option></select>';
-      }
-    } else {
-      html += role;
-    }
-    html += '</td></tr>'
-  }
-  html += '</table>';
-  $("#coop-infos").html(html);
+  $("#coop-infos").html(tplReplace(tplCoop, {'$mems$':memInfo}));
   if(own.role === 0) {
     $("#invite-form").css("display", "block");
-  }
+  }    
 }
 
 function bindButtons() {
@@ -289,7 +296,7 @@ function refuseCoop() {
 }
 
 function changeRole() {
-  var newRole = this.options[this.options.selectedIndex].value, email = $(this).attr("id").slice(0, -4);
+  var newRole = this.options[this.options.selectedIndex].value, email = $(this).attr("id").slice(0, -5);
   $.ajax({
     cache : false,
     type : "POST",
@@ -303,7 +310,7 @@ function changeRole() {
       sAlert("警告", "修改权限失败，请稍后再试");
     },
     success : function(data) {
-      if(data.done) {
+      if(data.status==="ok") {
         sAlert("", "修改权限成功");
       } else {
         sAlert("警告", data.msg);

@@ -32,38 +32,49 @@ function loadRecordContent() {
     }
   });
 }
-
+var tplRecords = '<div id="records">'+
+                 '<table><tr><th>用户</th><th>操作</th><th>时间</th></tr>'+
+                 '$records$</table></div>',
+    tplRecord = '<tr id="$email$Tr"><td>$email$</td><td>$action$</td><td>$recordTime$</td></tr>',
+    tplPagination = '<div class="pagination"><ul>'+
+                    '<li class="prev"><a href="#">&larr; 前一页</a></li>'+
+                    '$pages$'+
+                    '<li class="next"><a href="#">后一页 &rarr;</a></li>'+
+                    '</ul></div>',
+    tplPage = '<li><a href=$url$/mnglog?page=$i$>$i$</a></li>';
+    tplEllipses = '<li class="disabled"><a href="javascript:void(0)">…</a></li>';
 function renderRecord(content){
-  var records = content.records,
-      pages = content.pages,
-      html = "";
-  html += '<div id="records">'+
-  '<table><tr><th>用户</th><th>操作</th><th>时间</th></tr>';
-  for(var i=0, len=records.length; i!=len; ++i){
-    var record = records[i];
-    html += '<tr id="'+record.email+'Tr">' + 
-    '<td>' + record.email + '</td>' + 
-    '<td>' + record.action + '</td>' +
-    '<td>' + record.recordTime + '</td></tr>'
-  }
-  html += '</table></div>';
-  html += '<div class="pagination"><ul><li class="prev"><a href="#">&larr; 前一页</a></li>';
-  var tooMany = false;
-  for(var i=1; i<=pages; ++i){
-    var url = location.href;
-    url = url.slice(0, url.lastIndexOf('/'));
-    if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
-      html += '<li><a href='+url+'/mnglog?page='+i+'>'+i+'</a></li>';
-    }else{
-      if(tooMany===false){
-        tooMany = true;
-        html+='<li class="disabled"><a href="javascript:void(0)">…</a></li>';
-      }
+    var records = content.records,
+        pages = content.pages;
+    var recordContent = "", pageContent="";
+    for(var i=0, len=records.length; i!=len; ++i){
+        record = records[i];
+        recordContent += tplReplace(tplRecord, {
+            '$email$':record.email,
+            '$action$':record.action,
+            '$recordTime$':record.recordTime
+        });
     }
-  }
-  html += '<li class="next"><a href="#">后一页 &rarr;</a></li></ul></div>';
-  $("#record-content").html(html);
+    var tooMany = false;
+    for(var i=1; i<=pages; ++i){
+        var url = location.href;
+        url = url.slice(0, url.lastIndexOf('/'));
+        if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
+            pageContent += tplReplace(tplPage, {
+                '$url$':url,
+                '$i$':i
+            });           
+        }else{
+            if(!tooMany){
+                tooMany = true;
+                pageContent+=tplEllipses;
+            }
+        }
+    }
+    $("#record-content").html(tplReplace(tplRecords, {'$records$':recordContent})
+     + tplReplace(tplPagination, {'$pages$':pageContent}));
 }
+
 function pagination(){
 	var url = window.location.href;
 	var prev = $("li.prev"), next = $("li.next");

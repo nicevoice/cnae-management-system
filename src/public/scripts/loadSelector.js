@@ -26,22 +26,27 @@ function loadSelector() {
     }
   });
 }
-
-function renderSelector(apps) {
-  var length = apps.length, html = "";
-  html += '<select id="select_app">';
-  for(var i = 0; i != length; ++i) {
-    var app = apps[i];
-    html += '<option value="' + app.appDomain + '"';
-    if(app.appDomain === domain) {
-      html += 'selected';
+var tplSelecte = '<select id="select_app">'+
+                  '$options$'+
+                  '</select>',
+    tplOption = '<option value="$appDomain$" $selected$>$appName$</option>';
+function renderSelector(apps){
+    var optionContent = "";
+    for(var i=0, len=apps.length; i!=len; ++i){
+        var app = apps[i], selected="";
+        if(app.appDomain === domain){
+            selected="selected";
+        }
+        optionContent += tplReplace(tplOption, {
+            '$appDomain$':app.appDomain,
+            '$appName$':app.appName,
+            '$selected$':selected
+        })
     }
-    html += '>' + app.appName + '</option>';
-  }
-  html += '</select>';
-  $("#app-selector").html(html);
+  $("#app-selector").html(tplReplace(tplSelecte, {
+      '$options$':optionContent
+  }));
 }
-
 function change() {
   var domain = this.options[this.options.selectedIndex].value;
   location.href = location.href.replace(/manage\/\w+/, "manage/" + domain);

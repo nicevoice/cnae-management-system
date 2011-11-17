@@ -29,7 +29,7 @@ var onOff = require('../lib/socket').onOff
 		}
 		else if(data){
 			return res.sendJson({status:"ok", content:{appName:data.appName,appDes:data.appDes,
-			dbType:data.appDbType, dbName:data.appDbName}});
+			dbType:data.appDbType, dbName:data.appDbName, appDbPort:config.appDb.port}});
 		}
 		else{
       return res.sendJson({status:"error", msg:"未找到应用"});

@@ -55,7 +55,14 @@ function render(data){
   $("#all-apps").html($("#all-apps").html()+html);
   bindDiv();
 }
-
+var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' + 
+                   '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://$appDomain$.cnodejs.net$port$" target="_blank">$appName$</a></p>'+
+                   '<p class="app-des">描述：$appDes$</p>'+
+                   '<p class="app-mem"><a href="/square/$creatorNickName$">$photo$$creatorNickName$</a>'+
+                   '创建于$appCreateDate$ • 有$memberNums$个参与者  </p></div>'+
+                   '<div class="app-info-right">'+
+                   '<a class="blockA likeBlue" href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a>'+
+                   '</div></div>';
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
      !app.creatorEmail || !app.creatorNickName ||
@@ -70,16 +77,19 @@ function renderApp(app){
   if(app.photoUrl){
     photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
   }
-  var div = '<div class="app-info clearfix"><div class="app-info-left">' +
-            '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://'+app.appDomain+'.cnodejs.net'+port+'" target="_blank">'+
-            app.appName +'</a></p>' + 
-            '<p class="app-des">描述：'+app.appDes+'</p>' +
-            '<p class="app-mem"><a href="/square/'+app.creatorNickName+'">'+ photo +
-            app.creatorNickName + '</a> 创建于' + app.appCreateDate +' • 有'+app.memberNums +'个参与者  '+
-            '</p></div><div class="app-info-right">'+'<a class="blockA likeBlue" href="javascript:void(0)" onclick="apply(\''+app.appDomain+'\',\''+app.appName+'\',\''+app.creatorEmail+'\',\''+app.creatorNickName+'\')">申请参加</a>'+
-            '</div></div>';
-  return div;
-}
+  return tplReplace(tplSquareApp, {
+      '$appName$':app.appName,
+      '$appDomain$':app.appDomain,
+      '$creatorEmail$':app.creatorEmail,
+      '$creatorNickName$':app.creatorNickName,
+      '$memberNums$':app.memberNums,
+      '$photo$':photo,
+      '$appDes$':app.appDes,
+      '$appCreateDate$':app.appCreateDate,
+      '$port$':port
+  });
+} 
+
 
 function apply(domain, name, email, nickName){
   var reason = "";
