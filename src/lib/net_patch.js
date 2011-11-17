@@ -8,6 +8,22 @@ var net = require('net')
   , util = require('util')
   , config = require('../config');
 
+//hack remoteAddress and remotePort for NAE proxy
+var Socket = net.Socket;
+Socket.prototype.__defineSetter__('remoteAddress', function(address) {
+    this._nae_address = address;
+});
+Socket.prototype.__defineGetter__('remoteAddress', function() {
+    return this._nae_address || this._getpeername().address;
+});
+
+Socket.prototype.__defineSetter__('remotePort', function(port) {
+    this._nae_port = port;
+});
+Socket.prototype.__defineGetter__('remotePort', function() {
+    return this._nae_port || this._getpeername().port;
+});
+
 var Server = net.Server;
 
 var __listen_ports = {};
