@@ -6,7 +6,11 @@ var middleware = require('./middleware'),
 
 module.exports = function(app){
   //我的应用模块
-  app.get("/", hasLogin, ctrApplication.show);
+  if(!labs){
+      app.get("/", hasNotLogin, ctrApplication.showMainPage);
+  }else{
+      app.get("/", hasLogin, ctrApplication.show);
+  }
   app.get("/application", hasLogin, ctrApplication.show);
   app.get("/application/load_apps", hasLogin, ctrApplication.loadMainContent);
   app.post("/getOwnAuthInfo", hasLogin, ctrApplication.getOwnAuthInfo);
