@@ -27,8 +27,11 @@ var config = require('../config')
   	 res.render("doc", {layout:"layoutMain", nickName:req.session.nickName, email:req.session.email});
   }
 
+ exports.showMainPage = function(req, res){
+     res.render('index', {layout:false});
+ }
   /***
-   * 显示主页面
+   * 显示主应用
    * @param {} req
    * @param {} res
    */

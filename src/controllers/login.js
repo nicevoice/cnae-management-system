@@ -69,7 +69,7 @@ exports.logout = function(req, res){
 	req.session.email = '';
 	req.session.nickName = '';
 	res.clearCookie('user');
-	res.redirect('/login');
+	res.redirect('/');
 }
 
 
