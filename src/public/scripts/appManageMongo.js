@@ -23,17 +23,43 @@ function loadAppDbInfo() {
     }
   });
 }
-
+var tplNonDb = '<form method="post" action="$url$/createMongo">'+
+               ' <p class="redText">数据库尚未创建</p>'+
+               '<p class="redText">点击创建应用的数据库:<input type="submit" class="button_orange r3px" id="createDb" value="创建"></p>'+
+               '</form>',
+    tplNotMongo = '<p class="redText">已使用其他数据库</p>';
+    tplMongo = '<div class="divCenter">' +
+               '<input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="执行">'
+               +'<span class="redText">tips: use mongo shell</span>'+
+               '</div>'+
+               '<pre id="queryOutput"></pre>'+
+               '<div class="r3px subContent littleBlue">'+
+               '<table id="dbInfo">'+
+               '<tr><td>数据库帐号：</td><td>$dbUserName$</td><td>数据库名称</td>$dbName$</td></tr>'+
+               '<tr><td>数据库密码：</td><td>$dbPassword$</td><td>数据库端口：</td><td>$dbPort$</td></tr>'+
+               '</table>'+
+               '<p>mongoSkin连接url：</p>'+
+               '<p><input type="text" id="mongoskinUrl" readonly="readonly" value="$dbUserName$:$dbPassword$@$dbHost$:$dbPort$/$dbName$</p>'+
+               '</div>';
+            
 function renderAppDbInfo(dbInfo) {
-  var html = "<br />";
+  var html = "";
   if(!dbInfo.dbType) {
-    var url = location.href;
-    url = url.slice(0, url.lastIndexOf('/'));
-    html += '<form method="post" action="' + url + '/createMongo">' + ' <p class="redText">数据库尚未创建</p> <p class="redText">点击创建应用的数据库:' + '<input type="submit" class="button_orange r3px" id="createDb" value="创建"></p></form>';
+      var url = location.href;
+      url = url.slice(0, url.lastIndexOf('/'));
+      html += tplReplace(tplNonDb, {
+          '$url$':url
+      });
   } else if(dbInfo.dbType !== 'mongo') {
-    html += ' <p class="redText">已使用其他数据库</p>';
+      html += tplNotMongo;
   } else {
-    html += '<div class="divCenter">' + '<input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="执行">' + '<span class="redText">tips: use mongo shell</span>' + ' </div><pre id="queryOutput"></pre>' + '<div class="r3px subContent littleBlue">' + ' <h3>自行连接数据库，请使用以下参数</h3>' + ' <table id="dbInfo">' + '<tr><td>数据库帐号：</td><td>' + dbInfo.dbUserName + '</td><td>数据库名称：</td><td>' + dbInfo.dbName + '</td></tr>' + '<tr><td>数据库密码：</td><td>' + dbInfo.dbPassword + '</td><td>数据库端口：</td><td>20088</td>' + '</tr></table>' + '<p>mongoSkin连接url：</p>' + '<p><input type="text" id="mongoskinUrl" readonly="readonly" value="' + dbInfo.dbUserName + ':' + dbInfo.dbPassword + '@127.0.0.1:20088/' + dbInfo.dbName + '"></p></div>';
+      html += tplReplace(tplMongo, {
+          '$dbUserName$':dbInfo.dbUserName,
+          '$dbPassword$':dbInfo.dbUserName,
+          '$dbName$':dbInfo.dbUserName,
+          '$dbPort$':dbInfo.appDb.port,
+          '$dbHost':dbInfo.appDb.host
+      })
   }
   $("#mongoDb-Info").html(html);
 }

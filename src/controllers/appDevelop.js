@@ -462,7 +462,8 @@ exports.loadMongoContent = function(req, res) {
             dbType : data.appDbType,
             dbUserName : user.dbUserName,
             dbPassword : user.dbPassword,
-            dbName : data.appDbName
+            dbName : data.appDbName,
+            appDb : config.appDb
           }
         });
       });

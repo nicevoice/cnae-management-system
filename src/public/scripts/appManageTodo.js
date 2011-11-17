@@ -24,22 +24,41 @@ function loadTodoContent() {
     }
   });
 }
-
-function renderTodoContent(todos) {
-  var length = todos.length, html = '<div class="post subContent">' + '<form action="/application/manage/' + domain + '/todo/new" method="post" id="post_new">' + '<p> <input type="text" id="titleContent" name="title" class="longInput" /></p></form></div>' + '<div class="todos"><ul>';
-  for(var i = 0; i != length; ++i) {
-    var todo = todos[i];
-    var status = todo.finished == 1 ? 'class="finished"' : '';
-    html += '<li ' + status + '>';
-    if(todo.finished === 0) {
-      html += todo.nickName + '&nbsp;:' + todo.title + '<span class="todoAction"><a href="javascript:void(0)" id="' + todo.email + '#' + todo.title + '" + class="doFinish">完成</a>';
-    } else {
-      html += '<img src="/images/ok.gif"></img>' + todo.nickName + '&nbsp;:<del>' + todo.title + '</del>' + '<span class = "todoAction"><a href="javascript:void(0)" id="' + todo.email + '#' + todo.title + '" class="doRecover">恢复</a>';
+var tplTodos = '<div class="post subContent">'+
+               '<form action="/application/manage/$domain$/todo/new" method="post" id="post_new">'+
+               '<p> <input type="text" id="titleContent" name="title" class="longInput" /></p>'+
+               '</form></div>'+
+               '<div class="todos"><ul>$todos$</ul></div>',
+     tplFinished = '<li class="finished">'+
+               '<img src="/images/ok.gif"></img> $nickName$ : <del>$title$</del><span class="todoAction">'+
+               '<a href="javascript:void(0)" id="$email$#$title$" class="doRecover">恢复</a>'+
+               ' , <a href="javascript:void(0)" class="doDelete">删除</a></span></li>';
+     tplNotFinished = '<li>'+
+               '$nickName$ : $title$ <span class="todoAction">'+
+               '<a href="javascript:void(0)" id="$email$#$title$" class="doFinish">完成</a>'+
+               ' , <a href="javascript:void(0)" class="doDelete">删除</a></span></li>';
+function renderTodoContent(todos){
+    var todoContent = "";
+    for(var i=0, len=todos.length; i!=len; ++i){
+        var todo = todos[i];
+        if(todo.finished===0){
+            todoContent += tplReplace(tplNotFinished, {
+                '$nickName$':todo.nickName,
+                '$title$':todo.title,
+                '$email$':todo.email
+            });
+        }else{
+            todoContent += tplReplace(tplFinished, {
+                '$nickName$':todo.nickName,
+                '$title$':todo.title,
+                '$email$':todo.email
+            })
+        } 
     }
-    html += ' , <a href="javascript:void(0)" class="doDelete">删除</a></span></li>';
-  }
-  html += '</ul></div>';
-  $("#todo-content").html(html);
+    $('#todo-content').html(tplReplace(tplTodos, {
+        '$domain$':domain,
+        '$todos$':todoContent
+    }));
 }
 
 function prepare() {

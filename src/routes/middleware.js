@@ -47,7 +47,7 @@ exports.checkAuth = function(req, res, next){
 		if(err){
 			return res.render("error", {message:"数据库查询错误，请稍后再试"});
 		}else
-		if(!data || data.active===2){  //active===2为申请者
+		if(!data || data.active!==1){  //active===1为已加入
 			return res.render("error", {message:"没有权限访问这个应用"});
 		}else{
 			next();
