@@ -81,10 +81,43 @@ function loadAppInfoContent() {
     }
   });
 }
-
-function renderAppInfos(app) {
+var tplSum  =  '<table style="width:600px">'+
+               '<tr><td style="width:150px">应用域名：</td><td style="width:400px" id="appDomains"></td></tr>'+
+               '<tr><td>应用名称：</td><td>$appName$</td></tr>'+
+               '<tr><td>应用描述：</td><td>$appDes$</td></tr>'+
+               '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>'+
+               '<tr><td>数据库：</td><td id="appDbName">$dbPort$</td><tr>'+
+               '</table>'+
+               '<h3>应用状态信息</h3><table id="status">'+
+               '<tr><th>内存消耗</th><th>堆内存</th><th>运行时间</th><th>心跳时间</th><th>PID</th></tr>'+
+               '<tr id="statusInfo"></tr>'+
+               '</table>';
+function replace(tpl, params){
+    var i=0,len = params.length;
+    return tpl.replace(/$.*?$/g, function(data){
+        return params[i++];
+    });
+}
+function renderAppInfos(app){
+    var params = [];
+    params.push(app.appName).push(app.appDes);
+    if(app.dbType === 'mongo'){
+        params.push(app.dbName + '</td><td style="width:150px">端口号:20088</td>');
+    }else{
+        var url = location.href;
+        url = url.slice(0, url.lastIndexOf('/'));        
+        params.push('<a href="' + url + '/mongo">点此启用mongoDB</a></td>');
+    }
+    $('#appInfos').html(replace(tplSum, params));
+}
+function renderAppInfos_back(app) {
   var appName = app.appName || '', appDes = app.appDes || '';
-  var html = '<table style="width:600px">' + '<tr><td style="width:150px">应用域名：</td><td style="width:400px" id="appDomains"></td></tr>' + '<tr><td>应用名称：</td><td width="250px">' + appName + '</td></tr>' + '<tr><td>应用描述：</td><td>' + appDes + '</td></tr>' + '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>' + '<tr><td>数据库：</td><td id="appDbName">';
+  var html = '<table style="width:600px">' + 
+  '<tr><td style="width:150px">应用域名：</td><td style="width:400px" id="appDomains"></td></tr>' + 
+  '<tr><td>应用名称：</td><td width="250px">' + appName + '</td></tr>' + 
+  '<tr><td>应用描述：</td><td>' + appDes + '</td></tr>' + 
+  '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>' + 
+  '<tr><td>数据库：</td><td id="appDbName">';
   if(app.dbType === 'mongo') {
     html += app.dbName + '</td><td style="width:150px">端口号:20088</td>';
   } else {
