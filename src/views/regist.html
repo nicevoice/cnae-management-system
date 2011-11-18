@@ -1,27 +1,141 @@
-<div class="notMain" id="regist">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>免费注册 - Node App Engine</title>
+<link href="styles/reset.css" rel="stylesheet" type="text/css" />
+<link href="styles/global.css" rel="stylesheet" type="text/css" />
+<script src="scripts/jquery-1.6.2.min.js" type="text/javascript"></script>
+<style>
+body{ background: #FAFBFC; }
+</style>
+</head>
 
-  <form action="/checkRegist" method="post">
-    <h2 class="orangeH2 registH2">用户注册</h2>
-    <div id="newAccount">
-   <div id="registWarn">
-   <p id="emailWarn"></p>
-   <p id="nameWarn"></p>
-   <p id="passwordWarn"></p>
-   </div>
-    <p><label for="newEmail">邮&nbsp;&nbsp;&nbsp;箱</label>
-    <input type="text" id="newEmail" name="newEmail" value="<%=email%>"></p>
-    <p><label for="newUserName">昵&nbsp;&nbsp;&nbsp;称 </label>
-    <input type="text" id = "newUserName" name="newUserName"></p>
-    <p><label for="newPassword">密&nbsp;&nbsp;&nbsp;码 </label>
-    <input type="password" id="newPassword" name="newPassword"></p>
-    <p><label for="passwordCon">确&nbsp;&nbsp;&nbsp;认 </label>
-    <input type="password" id="passwordCon" name="passwordCon"></p>
-	<p><label for="inviteCode">邀请码</label>
-	<input type="text" name="inviteCode" id="inviteCode" value="<%=code%>"><span class="redText">*</span></p> 
-    <p><input type="submit" class = "r3px button_orange submit"value="提交">
-    <input type="button" class="r3px button_orange" id="registCancer" onclick="javascript: history.back();" value="取消"></p>
-  	
-  </form>
+<body>
+<div id="header-frame">
+    <div class="header-body">
+        <div class="logo"><a href="/"><h1>Node App Engine</h1></a></div>
+        <div class="main-nav">
+            <!--
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="square.html">应用广场</a></li>
+                <li><a href="#">文档中心</a></li>
+                <li><a href="#">意见反馈</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+            -->
+        </div>
+        <div class="account">
+            <span><a href="regist">免费注册</a></span>
+            <span><a href="login">登录</a></span>
+        </div>
+    </div>
 </div>
+<div id="header-banner">
+	<div class="header-banner-box">
+    	<p class="banner-title">免费注册</p>
+        <p class="banner-descr">Node App Engine 提供易于构建，易于维护，易于扩展的开发和部署环境，使开发者可以专注于实现自己的创意。</p>
+    </div>
 </div>
-<script type="text/javascript" src="scripts/regist.js?v=1.0.1"></script>
+<div id="body">
+	<div class="page-title-sub"></div>
+    <form action="checkRegist" method="post">
+    	<div id="form-submit">
+        	<div style="float:left;width:700px;">
+            	<fieldset>
+	            	<legend style="color:#555;">填写注册信息</legend>
+                    <div class="field-group">
+                        <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
+                        <input type="text" name="email" id="newEmail" tabindex="1" class="input1" value="<%=email%>" style="width:250px">
+                        <span id="emailWarn" class="error"></span>
+                        <br />
+                        <span class="tips">Email 将是您的登录帐号和唯一身份标识。</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="required title" for="newUserName"><span style="color:red;">*</span> 昵称:</label>
+                        <input type="text" name="nickname" id="newUserName" tabindex="1" class="input1" value="" style="width:250px">
+                        <span id="nameWarn" class="error"></span>
+                        <br />
+                    </div>
+                    <div class="field-group">
+                        <label class="required title" for="newPassword"><span style="color:red;">*</span> 密码:</label>
+                        <input type="password" name="pwd" id="newPassword" tabindex="1" class="input1" value="" style="width:250px">
+                        <span id="passwordWarn" class="error"></span>
+                        <br />
+                    </div>
+                    <div class="field-group">
+                        <label class="required title" for="passwordCon"><span style="color:red;">*</span> 重复密码:</label>
+                        <input type="password" name="repwd" id="passwordCon" tabindex="1" class="input1" value="" style="width:250px">
+                        <span id="conWarn" class="error"></span>
+                        <br />
+                    </div>
+                    <!--
+                    <div class="field-group clr">
+                        <label class="title" for="from_type">如何知道 NAE ？</label>
+                        <div style="float:left;margin-top:5px;margin-left:15px;">
+                            <select name="from_type">
+                                <option value="0">请选择</option>
+                                <option value="1">别人告诉我的</option>
+                                <option value="2">搜索引擎</option>
+                                <option value="3">CNodeJS 社区</option>
+                                <option value="4">线下活动</option>
+                                <option value="5">微博</option>
+                                <option value="6">博客</option>
+                                <option value="7">邀请</option>
+                                <option value="8">论坛</option>
+                                <option value="9">其它</option>
+                            </select>
+                        </div>
+                    </div>
+                    -->
+                    <div class="spacer"></div>
+                    <div class="field-group">
+                        <label class="required title" for="inviteCode"><span style="color:red;">*</span> 邀请码:</label>
+                        <input type="text" name="invite" id="inviteCode" tabindex="1" class="input1" value="<%=code%>" style="width:150px" maxlength="11">
+                        	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://cnodejs.org/blog/?p=2521" target="_blank">如何获得？</a><br />
+                        <span class="error" id="__err_invite"></span>
+                    </div>
+                    <!--
+                    <div class="field-group">
+                        <label class="required title" for="captcha"><span style="color:red;">*</span> 验证码:</label>
+                        <input type="text" name="captcha" id="captcha" tabindex="1" class="input1" value="" style="width:60px; float:left;">
+                        <span style="height:40px; float:left; padding:0 10px;"><img id="__captcha" src="temp_imgs/signup_captcha.png">
+                        	<a href="" onClick="return false;">点击刷新</a>
+                        </span>
+                        <br />
+                        <span class="error" id="__err_captcha"></span>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="field-group">
+                        <div style="margin:20px 0 0 260px;line-height:20px;color:#666;">
+                            <input type="checkbox" id="__1" checked="checked"> <label for="__1">允许 NAE 发送系统通知到我的注册 Email</label><br />
+                            <input type="checkbox" id="__2" checked="checked"> <label for="__2">允许 NAE 发送新功能介绍到我的注册 Email</label><br />
+                        </div>
+                    </div>
+                    -->
+                </fieldset>
+                <div style="text-align:right;" id="div-submit">
+                    <span id="btn-submit"><input type="submit" class="btn1" value="注册"></span>
+                    <span id="loading-submit"><img src="/images/ajax_loader.gif"></span>
+                </div>
+            </div>
+            <div class="clr"></div>
+        </div>
+    </form>
+    <div id="succ-tips" class="succ-tips" style="margin-left:5px;display:none;"></div>
+    <div style="margin:30px;height:20px;"></div>
+    <div class="clr"></div>
+</div>
+<div id="footer-frame">
+	<div class="footer-body">
+    	<div class="footer-copyright">
+        	<div class="left">&copy; 2011 Node App Engine</div>
+            <div class="right">由 <a href="http://cnodejs.org">CNodeJS 社区</a>提供</div>
+            <div class="spacer"></div>
+        </div>
+    </div>
+</div>
+<script src="scripts/regist.js" type="text/javascript"></script>
+</body>
+</html>

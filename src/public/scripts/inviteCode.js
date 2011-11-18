@@ -33,7 +33,7 @@ function loadInviteCode(){
 }
 var tplInviteCodes = '<table padding="40px">'+ 
                      '</tr><th width="70%">邀请码</th><th>操作</th></th></tr>'+
-                     '$code$'+'</table>',
+                     '$codes$'+'</table>',
     tplCode = '<tr><td>$inviteHref$$code$</td>'+
               '<td><a id="send&$inviteHref$$code$" href="javascript:void(0)" onclick="sendThisInvite(this);">发送</a> | '+
               '<a id="delete&$code$" href="javascript:void(0)" onclick="deleteInvite(this);">删除</a></td></tr>',
@@ -42,7 +42,7 @@ var tplInviteCodes = '<table padding="40px">'+
                     '$pages$'+
                     '<li class="next"><a href="#">后一页 &rarr;</a></li>'+
                     '</ul></div>',
-    tplPage = '<li><a href=$url$/mnglog?page=$i$>$i$</a></li>';
+    tplPage = '<li><a href=$url$/inviteCode?page=$i$>$i$</a></li>';
     tplEllipses = '<li class="disabled"><a href="javascript:void(0)">…</a></li>';
 function renderInviteCode(content){
     var codes = content.codes,
@@ -53,57 +53,32 @@ function renderInviteCode(content){
         var code = codes[i];
         codeContent += tplReplace(tplCode, {
             '$inviteHref$':inviteHref,
-            'code':code.code,
+            '$code$':code.code,
         });
     }
-    var tooMany = false;
+    var tooManyLeft = false, tooManyRight = false;
     for(var i=1; i<=pages; ++i){
         var url = location.href;
         url = url.slice(0, url.lastIndexOf('/'));
-        if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
+        if(i<=1||i>=pages||Math.abs(page-i)<=1){
             pageContent += tplReplace(tplPage, {
                 '$url$':url,
                 '$i$':i
             });           
         }else{
-            if(!tooMany){
-                tooMany = true;
+            if(i<page && !tooManyLeft){
+                tooManyLeft = true;
                 pageContent+=tplEllipses;
+            }else{
+                if(i>page && !tooManyRight){
+                    tooManyRight = true;
+                    pageContent += tplEllipses;
+                }
             }
         }
     }
     $("#codes").html(tplReplace(tplInviteCodes, {'$codes$':codeContent})+
                      tplReplace(tplPagination, {'$pages$':pageContent}));  
-}
-function renderInviteCode(content){
-  var codes = content.codes,
-      length = codes.length,
-      pages = content.pages,
-      page = content.page;
-      html = "";
-  html += '<table padding="40px"></tr><th width="70%">邀请码</th><th>操作</th></th></tr>';
-  for(var i=0; i!=length; ++i){
-    var code = codes[i];
-    html += '<tr><td>' + inviteHref + code.code +'</td>' +
-    '<td><a id="send&'+inviteHref + code.code + '" href="javascript:void(0)"' + 
-    ' onclick="sendThisInvite(this);">发送</a> | ' +
-    '<a id="delete&' + code.code + '" href="javascript:void(0)" onclick="deleteInvite(this);">删除</a></td></tr>';
-  }
-  html += '</table>';
-  html += '<div class="pagination"><ul><li class="prev"><a href="#">&larr; 前一页</a></li>';
-  var tooMany = false;
-  for(var i=1; i<=pages; ++i){
-    if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
-      html += '<li><a href="/inviteCode?page='+i+'">'+i+'</a></li>';
-    }else{
-      if(tooMany===false){
-        tooMany = true;
-        html+='<li class="disabled"><a href="javascript:void(0)">…</a></li>';
-      }
-    }
-  }
-  html += '<li class="next"><a href="#">后一页 &rarr;</a></li></ul></div>';
-  $("#codes").html(html);
 }
 function pagination(){
 	var url = window.location.href;

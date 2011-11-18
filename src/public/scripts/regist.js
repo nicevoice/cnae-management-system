@@ -4,10 +4,9 @@ $(function(){
 	$("#newPassword").blur(passBlur).focus(passFocus);
 	$("#passwordCon").blur(conBlur).focus(conFocus);
 });
-
 emailBlur = function(){
 	var email = $("#newEmail").val()||'';
-	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
+	var regEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 	if(!regEmail.exec(email)){
 		$("#emailWarn").html("请输入合法的email地址"); 
 		return false;
@@ -32,7 +31,7 @@ nameBlur = function(){
 	var name = $("#newUserName").val()||'';
 	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
 	if(!regName.exec(name)){
-		$("#nameWarn").html("昵称由2～20个字母/数字组成"); 
+		$("#nameWarn").html("昵称中不能包含特殊字符"); 
 		return false;
 	}
 	$.ajax({
@@ -54,9 +53,9 @@ nameFocus = function(){
 
 passBlur = function(){
 	var password = $("#newPassword").val()||'';
-	var regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/
+	var regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,}$/
 	if(!regPass.exec(password)){
-		$("#passwordWarn").html("密码必须为6～20位字符和数字"); 
+		$("#passwordWarn").html("密码不能小于6位"); 
 		return false;
 	}else{
 		var con = $("#passwordCon").val()||'';
@@ -73,9 +72,9 @@ conBlur = function(){
 	var password = $("#newPassword").val()||'';
 	var con = $("#passwordCon").val()||'';
 	if(password!==con){
-			$("#passwordWarn").html("两次密码必须一致"); 	
+			$("#conWarn").html("两次密码必须一致"); 	
 		}
 }
 conFocus = function(){
-	$("#passwordWarn").html("");
+	$("#conWarn").html("");
 }

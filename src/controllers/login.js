@@ -12,10 +12,12 @@ user = config.dbInfo.collections.user;
  */
 exports.show = function(req, res){
     var queryString = urlMoudle.parse(req.url, true).query,
-        redirectUrl="";
-    if(queryString&&queryString.redirect_url)
+        redirectUrl="", warn = "";
+    if(queryString&&queryString.redirect_url){
         redirectUrl = queryString.redirect_url;
-    res.render("login", {warn:"", redirectUrl:redirectUrl});
+        warn = "请先登录后再访问此页面"
+    }
+    res.render("login", {layout:false, warn:warn, redirectUrl:redirectUrl});
 };
 /***
  * 检测登录请求
@@ -24,20 +26,20 @@ exports.show = function(req, res){
  * @return {}
  */
 exports.checkLogin = function(req, res){
-	var	userEmail = req.body.userEmail,
-		  password = req.body.password,
-		  redirectUrl = req.body.redirectUrl,
-		  autoLogin = req.body.autoLogin;
+	var	userEmail = req.body.email||'',
+		  password = req.body.pwd||'',
+		  redirectUrl = req.body.redirectUrl||'',
+		  autoLogin = req.body.remeber_me||'';
 	//数据库查找
 	findOne(user, {email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
 			log.error(err.toString());
-			return res.render("login", { warn:"数据获取失败", redirectUrl:redirectUrl});
+			return res.render("login", {layout:false, warn:"数据获取失败", redirectUrl:redirectUrl});
 		}
 		else{
 			if (!item) {
-        console.log("验证失败");
         return res.render("login", {
+          layout:false,
           warn: "用户名或密码错误",
           redirectUrl:redirectUrl
         });

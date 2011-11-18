@@ -1,35 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>登录 - Node App Engine</title>
+<link href="styles/reset.css" rel="stylesheet" type="text/css" />
+<link href="styles/global.css" rel="stylesheet" type="text/css" />
+<script src="scripts/jquery-1.6.2.min.js" type="text/javascript"></script>
+<style>
+body{ background: #FAFBFC; }
+</style>
+</head>
 
-    <div class="notMain">
-    <h2 class="orangeH2 loginH2">欢迎登录网站</h2>
-    <div id="log" class="log">
-    <div class="warn" id="loginWarn"><%= warn %></div>
-    <form id="loginForm" action="/checkLogin" method="post">
-        <input type="hidden" name="redirectUrl" value=<%=redirectUrl%>>
-        <p class="loginInput">
-        <label for="userEmail">邮箱：</label>
-        <input type="text" id="userEmail" class="inputText" name="userEmail">
-        </p>
-        <br />
-        <p class = "loginInput">
-        <label for="passWord">密码：</label>
-        <input type="password" id="password" class="inputText" name="password">
-        <p class = "loginInputCheck">
-        <input id="autoLogin" name="autoLogin" type="checkbox" value="true" />
-        <span class="fontLittle"><label id="autoLoginText" for="autoLogin">下次自动登录</label>&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/retrieve">找回密码</a></span>
-        </p>
-        <p class="loginInputCheck">
-        <input class = "r3px button_orange submit"type="submit" value="登录">
-        </p>
-        <div class="separator"></div>
+<body>
+<div id="header-frame">
+    <div class="header-body">
+        <div class="logo"><a href="/"><h1>Node App Engine</h1></a></div>
+        <div class="main-nav">
+            <!--
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="square.html">应用广场</a></li>
+                <li><a href="#">文档中心</a></li>
+                <li><a href="#">意见反馈</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+            -->
+        </div>
+        <div class="account">
+            <span><a href="regist">免费注册</a></span>
+            <span><a href="login">登录</a></span>
+        </div>
+    </div>
+</div>
+<div id="header-banner">
+	<div class="header-banner-box">
+    	<p class="banner-title">登录</p>
+        <p class="banner-descr">登录 Node App Engine 开发并管理自己的应用，激动人心的旅程即将开始！</p>
+    </div>
+</div>
+<div id="body">
+	<div class="page-title-sub"></div>
+    <form action="checkLogin" method="post">
+    	<div id="form-submit">
+        	<div style="float:left;width:700px;">
+            	<fieldset>
+	            	<legend style="color:#555;">填写登录信息</legend>
+	            	<input type="hidden" name="redirectUrl" value="<%=redirectUrl%>">
+                    <div class="field-group">
+                        <label class="required title" for="email">Email:</label>
+                        <input type="text" name="email" id="email" tabindex="1" class="input1" value="" style="width:250px">
+                        <span class="error" id="loginWarn"><%= warn %></span> 
+                        <br />
+                    </div>
+                    <div class="field-group">
+                        <label class="required title" for="pwd">密码:</label>
+                        <input type="password" name="pwd" id="pwd" tabindex="1" class="input1" value="" style="width:250px">
+                             &nbsp;&nbsp;&nbsp;&nbsp;<a href="#">忘记密码？</a><br />
+                        <span class="error" id="__err_pwd"></span>
+                    </div>
+                    <div class="field-group">
+                        <div style="margin:0px 0 0 140px;line-height:20px;color:#666;">
+                        	<input type="checkbox" id="remeber_me" name="remeber_me" value="1" checked="checked">
+                            <label for="remeber_me">
+                                在这个浏览器上记住我 
+                            </label>
+                            <br />
+                        </div>
+                    </div>
+                </fieldset>
+                <div style="text-align:right;">
+                    <input type="hidden" name="referer" value="">
+                    <input type="submit" class="btn1" value="登录">
+                </div>
+            </div>
+            <div class="clr"></div>
+        </div>
     </form>
-    <p class="noCount">
-    还没有开通您的网站帐号？<a href="/regist">立即注册</a> 
-    </p>
-    <p class="noCount">
-    进入官方博客先睹为快:<a href="http://blog.cnodejs.net/post/4e686c290716ac9910000009" target="_blank">官方blog</a>
-    </p>
+    <div style="margin:30px;height:20px;"></div>
+    <div class="clr"></div>
+</div>
+<div id="footer-frame">
+	<div class="footer-body">
+    	<div class="footer-copyright">
+        	<div class="left">&copy; 2011 Node App Engine</div>
+            <div class="right">由 <a href="http://cnodejs.org">CNodeJS 社区</a>提供</div>
+            <div class="spacer"></div>
+        </div>
     </div>
-    </div>
-
-    <script type="text/javascript" src="scripts/login.js?v=1.0.1"></script>
+</div>
+</body>
+</html>

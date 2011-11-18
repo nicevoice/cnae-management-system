@@ -21,7 +21,7 @@ exports.regist = function(req, res){
 	var queryString = urlMoudle.parse(req.url, true).query,
 		email = queryString.email||'',
 		code = queryString.code||'';
-	res.render("regist",{email:email,code:code});
+	res.render("regist",{layout:false,email:email,code:code});
 }
 
 /***
