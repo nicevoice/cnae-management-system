@@ -113,11 +113,13 @@ exports.doChangeInfo = function(req, res){
  * @return {}
  */
 exports.doChangePassword = function(req, res){
-	var oldPassword = req.body.oldPassword,
-		newPassword = req.body.changePassword,
-		confirmation = req.body.changeConfirmation;
+	var oldPassword = req.body.oldPassword||'',
+		newPassword = req.body.changePassword||'',
+		confirmation = req.body.changeConfirmation||'';
+		console.log("123");
 	var regPass = config.regPass;
 	if(!regPass.exec(newPassword)){
+	       console.log("err");
 			return res.sendJson({done:false, message:"密码不能少于6位"});
 	}
 	if(newPassword != confirmation){

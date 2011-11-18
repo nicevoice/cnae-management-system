@@ -12,7 +12,7 @@ submitChangePassword = function(){
 	var oldPassword= $("#oldPassword").val();
 	var changePassword = $("#changePassword").val();
 	var changeConfirmation = $("#changeConfirmation").val();
-	var regPass = /^(\w){6,20}$/;
+	var regPass = /^(.*){6,}$/;
 	if(!regPass.exec(changePassword)){
 			sAlert("警告","密码不能少于6位");
 			return false;
