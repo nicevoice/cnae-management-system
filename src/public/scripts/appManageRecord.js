@@ -55,19 +55,24 @@ function renderRecord(content){
             '$recordTime$':record.recordTime
         });
     }
-    var tooMany = false;
+    var tooManyLeft = false, tooManyRight = false;
     for(var i=1; i<=pages; ++i){
         var url = location.href;
         url = url.slice(0, url.lastIndexOf('/'));
-        if(i<=3||i>=pages-3||Math.abs(page-i)<=2){
+        if(i<=1||i>=pages||Math.abs(page-i)<=1){
             pageContent += tplReplace(tplPage, {
                 '$url$':url,
                 '$i$':i
             });           
         }else{
-            if(!tooMany){
-                tooMany = true;
+            if(i<page && !tooManyLeft){
+                tooManyLeft = true;
                 pageContent+=tplEllipses;
+            }else{
+                if(i>page && !tooManyRight){
+                    tooManyRight = true;
+                    pageContent += tplEllipses;
+                }
             }
         }
     }
