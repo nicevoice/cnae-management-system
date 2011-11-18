@@ -40,12 +40,10 @@ exports.checkRegist = function(req, res){
 	, userPassword = req.body.newPassword||''
 	, userPasswordCon = req.body.passwordCon||''
 	, code = req.body.inviteCode||'';
-	console.log(req.body.inviteCode);
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
 	var regEmail = config.regEmail;
 	if(!regEmail.exec(userEmail)){
-		console.log(code);
 		return res.render("regist", {
 		    layout:false,
 		    regist:{
