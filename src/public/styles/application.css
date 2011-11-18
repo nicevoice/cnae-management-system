@@ -1,24 +1,21 @@
 #navigation {
   position:relative;
-  width:95%;
-  padding-left:5%;
-  background-image: url(images/navbar.gif);
-  background-position: bottom left;
-  background-repeat: repeat-x;
-  font-size:80%;
+  width:100%;
+  background-color: #393b42;
+  font-size:90%;
 }
 #navigation a:link,#navigation a:visited {
-  color: #eef;
+  color: #e2e2e2;
   background-color: transparent;
   border-color: #99a;
 }
 #navigation a:hover {
-  color: #445;
-  background-color: #eb6;
+  color: #e2e2e2;
+  background-color: #57585e;
 }
 #navigation a:active {
-  color: #667;
-  background-color: #ec8;
+  color: #e2e2e2;
+  background-color: #57585e;
 }
 #navigation a.here:link,
 #navigation a.here:visited,
@@ -26,7 +23,7 @@
 #navigation a.here:active {
  text-decoration: none;
   color: #eef;
-  background-color: #799;
+  background-color: #bac949;
 }
 #navigation ul {
   //width: 100%;
