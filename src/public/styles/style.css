@@ -86,12 +86,12 @@ border-radius:5px;
 	 -webkit-border-top-right-radius: 5px;
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;
-	 background: #555555;
+	 background: #22252d;
 	padding-top:10px;
 	padding-left:20px;
 }
 .header img{
-padding:10px ,10px;
+    margin-top:5px;
 }
 
     .main { 
@@ -242,4 +242,6 @@ padding:40px;
 .littleBlue{
     background-color:#c7dae5;
 }
-
+#head-N, #head-E{
+    color:''
+}
