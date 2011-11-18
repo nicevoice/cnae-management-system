@@ -12,10 +12,12 @@ user = config.dbInfo.collections.user;
  */
 exports.show = function(req, res){
     var queryString = urlMoudle.parse(req.url, true).query,
-        redirectUrl="";
-    if(queryString&&queryString.redirect_url)
+        redirectUrl="", warn = "";
+    if(queryString&&queryString.redirect_url){
         redirectUrl = queryString.redirect_url;
-    res.render("login", {layout:false, warn:"", redirectUrl:redirectUrl});
+        warn = "请先登录后再访问此页面"
+    }
+    res.render("login", {layout:false, warn:warn, redirectUrl:redirectUrl});
 };
 /***
  * 检测登录请求
