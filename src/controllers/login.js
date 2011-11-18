@@ -34,7 +34,7 @@ exports.checkLogin = function(req, res){
 	findOne(user, {email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
 		if(err){
 			log.error(err.toString());
-			return res.render("login", {layout:false, warn:"数据获取失败", redirectUrl:redirectUrl});
+			return res.render("error", {message:"数据库查询错误"});
 		}
 		else{
 			if (!item) {

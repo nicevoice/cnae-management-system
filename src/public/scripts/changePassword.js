@@ -1,35 +1,7 @@
 $(function(){
-		$("#changePassword").blur(passBlur).focus(passFocus);
-		$("#changeConfirmation").blur(conBlur).focus(conFocus);
-		$("#submitChangePassword").click(submitChangePassword);
+    $("#submitChangePassword").click(submitChangePassword);
 });
 
-passBlur = function(){
-	var password = $("#changePassword").val()||'';
-	var regPass = /^(\w){6,20}$/;
-	if(!regPass.exec(password)){
-		$("#passwordWarn").html("密码必须为6～20位字符和数字"); 
-	}else{
-		var con = $("#changeConfirmation").val()||'';
-		if(con && password!==con){
-			$("#passwordWarn").html("两次密码必须一致"); 	
-		}
-	}
-}
-passFocus = function(){
-	$("#passwordWarn").html("");
-}
-
-conBlur = function(){
-	var password = $("#changePassword").val()||'';
-	var con = $("#changeConfirmation").val()||'';
-	if(password!==con){
-			$("#passwordWarn").html("两次密码必须一致"); 	
-		}
-}
-conFocus = function(){
-	$("#passwordWarn").html("");
-}
 submit = function(e){ 
     var ev = document.all ? window.event : e;
     if(ev.keyCode==13) {
@@ -42,7 +14,7 @@ submitChangePassword = function(){
 	var changeConfirmation = $("#changeConfirmation").val();
 	var regPass = /^(\w){6,20}$/;
 	if(!regPass.exec(changePassword)){
-			sAlert("警告","密码必须为6～20位字符或者数字");
+			sAlert("警告","密码不能少于6位");
 			return false;
 	}
 	if(changePassword!==changeConfirmation){ 

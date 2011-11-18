@@ -2,11 +2,12 @@
   <h2 class="orangeH2 loginH2">创建应用</h2>
   <div id="newApp">
    <div id="newAppWarn">
+   <p id="newWarn"><%=warn%></p>
    <p id="domainWarn"></p>
    <p id="appNameWarn"></p> 
    </div>
     <form method="post" action="/createApp">
-      <p>子域名<span id="domainWarn" class="redText">*(4～20位,小写字母/数字/下划线,首位字母)</span></p>
+      <p>子域名<span id="domainTip" class="redText">*(4～20位,小写字母/数字/下划线,首位字母)</span></p>
       <p> <input type="text" id="appDomain"
       name="appDomain"><span id="domain"><%=config.toplevelDomain%></span></p>
       <p>应用名称<span class="redText">*</span></p>

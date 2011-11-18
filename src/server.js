@@ -68,7 +68,7 @@ require('./routes/editor')(app);
 require('./routes/appManager')(app);
 require('./routes/interface')(app);
 app.get("*", function(req, res){
-  res.redirect("/application");
+  res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
 });
 app.listen(config.port);
 

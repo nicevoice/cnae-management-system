@@ -23,6 +23,7 @@ domainBlur = function(){
 	
 domainFocus = function(){
 	$("#domainWarn").html("");
+	$("#newWarn").html("");
 }
 
 nameBlur = function(){
@@ -33,4 +34,5 @@ nameBlur = function(){
 	
 nameFocus = function(){
 	$("#appNameWarn").html("");
+    $("#newWarn").html("");
 }

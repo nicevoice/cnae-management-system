@@ -5,9 +5,9 @@ $(function(){
 
 nickBlur = function(){
 	var name = $("#changeNickName").val()||'';
-	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
+	var regName = /^([a-zA-Z0-9._\-]){1,20}$/;
 	if(!regName.exec(name)){
-		return $("#nickNameWarn").html("昵称由2～20个字母或者数字或者._组成"); 
+		return $("#nickNameWarn").html("昵称不能包含特殊字符"); 
 	}
 	$.ajax({
     cache:false,
@@ -32,7 +32,7 @@ submitChangeInfo = function(){
 	var changeRealName = $("#changeRealName").val();
 	var changeTelNumber = $("#changeTelNumber").val();
 	var changeMainPage = $("#changeMainPage").val();
-	var regName = /^([a-zA-Z0-9]|[._]){2,20}$/;
+	var regName = /^([a-zA-Z0-9]|[._]){1,20}$/;
 	if(!regName.exec(changeNickName)){
     	sAlert("警告","请输入合法的昵称");
     	return false;

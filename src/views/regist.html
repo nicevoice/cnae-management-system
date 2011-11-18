@@ -47,27 +47,27 @@ body{ background: #FAFBFC; }
 	            	<legend style="color:#555;">填写注册信息</legend>
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
-                        <input type="text" name="email" id="newEmail" tabindex="1" class="input1" value="<%=email%>" style="width:250px">
-                        <span id="emailWarn" class="error"></span>
+                        <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" value="<%=regist.email||''%>" style="width:250px">
+                        <span id="emailWarn" class="error"><%=warn.email||''%></span>
                         <br />
                         <span class="tips">Email 将是您的登录帐号和唯一身份标识。</span>
                     </div>
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> 昵称:</label>
-                        <input type="text" name="nickname" id="newUserName" tabindex="1" class="input1" value="" style="width:250px">
-                        <span id="nameWarn" class="error"></span>
+                        <input type="text" name="newUserName" id="newUserName" tabindex="1" class="input1" value="<%=regist.nick||''%>" style="width:250px">
+                        <span id="nameWarn" class="error"><%=warn.nick||''%></span>
                         <br />
                     </div>
                     <div class="field-group">
                         <label class="required title" for="newPassword"><span style="color:red;">*</span> 密码:</label>
-                        <input type="password" name="pwd" id="newPassword" tabindex="1" class="input1" value="" style="width:250px">
-                        <span id="passwordWarn" class="error"></span>
+                        <input type="password" name="newPassword" id="newPassword" tabindex="1" class="input1" value="" style="width:250px">
+                        <span id="passwordWarn" class="error"><%=warn.pass||''%></span>
                         <br />
                     </div>
                     <div class="field-group">
                         <label class="required title" for="passwordCon"><span style="color:red;">*</span> 重复密码:</label>
-                        <input type="password" name="repwd" id="passwordCon" tabindex="1" class="input1" value="" style="width:250px">
-                        <span id="conWarn" class="error"></span>
+                        <input type="password" name="passwordCon" id="passwordCon" tabindex="1" class="input1" value="" style="width:250px">
+                        <span id="conWarn" class="error"><%=warn.con||''%></span>
                         <br />
                     </div>
                     <!--
@@ -92,9 +92,10 @@ body{ background: #FAFBFC; }
                     <div class="spacer"></div>
                     <div class="field-group">
                         <label class="required title" for="inviteCode"><span style="color:red;">*</span> 邀请码:</label>
-                        <input type="text" name="invite" id="inviteCode" tabindex="1" class="input1" value="<%=code%>" style="width:150px" maxlength="11">
-                        	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://cnodejs.org/blog/?p=2521" target="_blank">如何获得？</a><br />
-                        <span class="error" id="__err_invite"></span>
+                        <input type="text" name="inviteCode" id="inviteCode" tabindex="1" class="input1" value="<%=regist.code||''%>" style="width:150px" maxlength="11">
+                        	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://cnodejs.org/blog/?p=2521" target="_blank">如何获得？</a>
+                        <span id="codeWarn" class="error"><%=warn.code||''%></span>
+                        <br />
                     </div>
                     <!--
                     <div class="field-group">
