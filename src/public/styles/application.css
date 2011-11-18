@@ -5,16 +5,16 @@
   font-size:90%;
 }
 #navigation a:link,#navigation a:visited {
-  color: #eef;
+  color: #e2e2e2;
   background-color: transparent;
   border-color: #99a;
 }
 #navigation a:hover {
-  color: #445;
+  color: #e2e2e2;
   background-color: #57585e;
 }
 #navigation a:active {
-  color: #667;
+  color: #e2e2e2;
   background-color: #57585e;
 }
 #navigation a.here:link,
