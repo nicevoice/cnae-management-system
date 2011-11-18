@@ -21,7 +21,10 @@ exports.regist = function(req, res){
 	var queryString = urlMoudle.parse(req.url, true).query,
 		email = queryString.email||'',
 		code = queryString.code||'';
-	res.render("regist",{layout:false,email:email,code:code});
+	res.render("regist",{layout:false,regist:{
+	    email:email,
+	    code:code
+	}, warn:{}});
 }
 
 /***
@@ -32,39 +35,100 @@ exports.regist = function(req, res){
  */
 exports.checkRegist = function(req, res){
 
-	var userEmail = req.body.newEmail
-	, userNickName = req.body.newUserName
-	, userPassword = req.body.newPassword
-	, userPasswordCon = req.body.passwordCon
-	, code = req.body.inviteCode;
+	var userEmail = req.body.newEmail||''
+	, userNickName = req.body.newUserName||''
+	, userPassword = req.body.newPassword||''
+	, userPasswordCon = req.body.passwordCon||''
+	, code = req.body.inviteCode||'';
+	console.log(req.body.inviteCode);
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
 	var regEmail = config.regEmail;
-	if(!regEmail.exec(userEmail))
-		return res.render("error", {message:"请输入合法的email地址"});
-	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
+	if(!regEmail.exec(userEmail)){
+		console.log(code);
+		return res.render("regist", {
+		    layout:false,
+		    regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },warn:{email:"请输入合法的email地址"}});
+		}
+	var regName = config.regName;
+	if(!userNickName){
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{nick:"必须输入昵称"}});	    
+	}
 	if(!regName.exec(userNickName))
-		return res.render("error", {message:"昵称由2～20个字母/数字/._组成"});
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{nick:"昵称不能包含特殊字符"}});
 	if(userPassword != userPasswordCon)
-		return res.render("error", {message:"两次密码输入不一致"});
-	var regPassword = /^(\w){6,20}$/;
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{con:"昵称不能包含特殊字符"}});
+	var regPassword = config.regPass;
 	if(!regPassword.exec(userPassword))
-		return res.render("error", {message:"密码必须为6～20个字母或者数字组成的字符"});
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{pass:"密码必须大于6位"}});
 		
 	//检查是否数据库中已经存在
 	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
 		if(!goodName)
-			return res.render("error", {message:"昵称已经被注册"});
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{nick:"该昵称已经被使用"}});
 		if(!goodEmail)
-			return res.render("error", {message:"email已经被注册"});
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{email:"该邮箱已经被注册"}});
 		if(!goodCode)
-			return res.render("error", {message:"邀请码不正确"});
+        return res.render("regist", {
+            layout:false,
+            regist:{
+            email:userEmail,
+            code:code,
+            nick:userNickName
+            },
+            warn:{code:"邀请码不正确"}});
 		else{
 			insert(user, {email:userEmail, nickName:userNickName, password:md5(userPassword+config.md5_secret), 
 			dbUserName:randomStringNum(12), dbPassword:randomStringNum(10)}, function(err){
 				if(err){
 					log.error(err.toString());
-					return res.render("error", {message:"注册失败，请稍后再试"});
+					return res.render("error", {message:"数据库发生错误，请稍后再试"});
 				}
 				else{
 				//删除改邀请码

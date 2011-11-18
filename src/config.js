@@ -46,8 +46,8 @@ exports.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbInfo.
 exports.session_timeOut = configInfo.timeOut;
 //正则
 exports.regEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-exports.regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,20}$/;
-exports.regName = /^([a-zA-Z0-9._\-]){2,20}$/;
+exports.regPass = /(.*){6,}$/;
+exports.regName = /^([a-zA-Z0-9._\-]){1,20}$/;
 exports.regMobile = /^((\(\d{2,3}\))|(\d{3}\-))?1(3|5|8)\d{9}$/;
 exports.regUrl = /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?$/;
 exports.regGit = /^(git:\/\/github.com\/)[\w-.]+\/[\w-_.]+/;

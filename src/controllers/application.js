@@ -83,7 +83,11 @@ var config = require('../config')
  	var newAppDes = req.body.appDes || '';
  	var checkRepetition = new EventProxy();
   if(!newAppName){
- 	return res.render("error", {message:"必须有应用名称"});
+ 	return res.render("newApp", {
+ 	    layout:"layoutMain",
+ 	    warn:"必须有应用名称",
+ 	    email:req.session.email,
+ 	    nickName:req.session.nickName});
  }
  if(newAppName.length>20){
    newAppName = newAppName.slice(0, 20);
@@ -93,14 +97,25 @@ var config = require('../config')
  }
   var regDomain = /^[a-z][a-z0-9_]{3,19}$/;
   if(!regDomain.exec(newAppDomain))
-		return res.render("error", {message:"子域名格式错误"});
-
+        return res.render("newApp", {
+            layout:"layoutMain",
+            warn:"子域名格式错误",
+            email:req.session.email,
+            nickName:req.session.nickName});
 		//检查域名是否重复，用户创建的应用数目是否达到上限
   checkRepetition.assign("checkDomain", "checkNumbers", function(goodDomain, checkNumbers){
  		if(goodDomain===1)
- 			return res.render("error", {message:"该域名已经被占用"});
+            return res.render("newApp", {
+                layout:"layoutMain",
+                warn:"此域名已被占用",
+                email:req.session.email,
+                nickName:req.session.nickName});
  		if(checkNumbers===1)
- 			return res.render("error", {message:"创建的应用数目已经达到上限"});
+            return res.render("newApp", {
+                layout:"layoutMain",
+                warn:"创建的应用数量达到上限",
+                email:req.session.email,
+                nickName:req.session.nickName});
  		if(goodDomain===2 || checkNumbers===2){
       return res.render("error", {message:"数据库查询错误"});
  		}
@@ -213,7 +228,8 @@ exports.showNewApp = function(req, res) {
   res.render("newApp", {
     layout : "layoutMain",
     nickName : req.session.nickName,
-    email : req.session.email
+    email : req.session.email,
+    warn:""
   });
 }
 

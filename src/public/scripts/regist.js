@@ -29,7 +29,11 @@ emailFocus = function(){
 
 nameBlur = function(){
 	var name = $("#newUserName").val()||'';
-	var regName = /^([a-zA-Z0-9._\-]){2,20}$/;
+	var regName = /^([a-zA-Z0-9._\-]){1,20}$/;
+	if(!name){
+        $("#nameWarn").html("必须输入昵称"); 
+        return false;	    
+	}
 	if(!regName.exec(name)){
 		$("#nameWarn").html("昵称中不能包含特殊字符"); 
 		return false;
