@@ -57,7 +57,7 @@ nameFocus = function(){
 
 passBlur = function(){
 	var password = $("#newPassword").val()||'';
-	var regPass = /^[a-zA-Z0-9_\!\@\#\$\%\^\&\*\(\)]{6,}$/
+	var regPass = /^(.){6,}$/;
 	if(!regPass.exec(password)){
 		$("#passwordWarn").html("密码不能小于6位"); 
 		return false;
