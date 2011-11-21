@@ -14,7 +14,7 @@ user = config.dbInfo.collections.user;
  * @param {} res
  */
 exports.show = function(req, res){
-    find(user, {}, function(err, data){
+/*    find(user, {}, function(err, data){
         for(var i=0, len=data.length; i!=len; ++i){
             var codes = [];
             for(var j=0; j!=config.maxCode; ++j){
@@ -26,7 +26,7 @@ exports.show = function(req, res){
                 update(user, {email:email}, {$set:{inviteCode:codes}});
             })(codes, data[i].email);
         }
-    })
+    })*/
     res.redirect('/userCenter/userInfo');
 };
 /***
