@@ -5,6 +5,7 @@ randomStringNum = require("../lib/randomString").getRandomStringNum,
 md5 = require('../lib/md5').hex_md5,
 model = require('../models/index'),
 findOne = model.findOne,
+find = model.find,
 update = model.update,
 user = config.dbInfo.collections.user;
 /***
@@ -13,6 +14,19 @@ user = config.dbInfo.collections.user;
  * @param {} res
  */
 exports.show = function(req, res){
+    find(user, {}, function(err, data){
+        for(var i=0, len=data.length; i!=len; ++i){
+            var codes = [];
+            for(var j=0; j!=config.maxCode; ++j){
+                codes.push(randomStringNum(11));
+            }
+            (function(codes, email){
+                console.log(email);
+                console.log(codes);
+                update(user, {email:email}, {$set:{inviteCode:codes}});
+            })(codes, data[i].email);
+        }
+    })
     res.redirect('/userCenter/userInfo');
 };
 /***

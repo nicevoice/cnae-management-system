@@ -22,20 +22,6 @@ exports.regist = function(req, res){
 	var queryString = urlMoudle.parse(req.url, true).query,
 		email = queryString.email||'',
 		code = queryString.code||'';
-    //如果用户之前没有邀请码，则在第一次进入的时候分配邀请名额
-    var codes = [];
-    for(var i=0; i!=config.maxCode; ++i){
-        codes.push(randomStringNum(11));
-    }
-    console.log(codes);
-    update(user, {
-        email:req.session.email,
-        inviteCode:{$exists:false}
-        }, {$set:{inviteCode:codes}}, {multi:true}, function(err){
-            if(err){
-                log.error(err.toString());
-            }
-        });
 	res.render("regist",{layout:false,regist:{
 	    email:email,
 	    code:code
