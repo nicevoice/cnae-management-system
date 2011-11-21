@@ -7,10 +7,10 @@ var middleware = require('./middleware'),
 module.exports = function(app){
   //邀请码模块
   if (!labs) {
-    app.get("/inviteCode", hasLogin, isAdmin, ctrInvitation.showInviteCode);
-    app.get("/load_inviteCode", hasLogin, isAdmin, ctrInvitation.loadInviteCode)
+    app.get("/inviteCode", hasLogin, ctrInvitation.showInviteCode);
+    app.get("/load_inviteCode", hasLogin, ctrInvitation.loadInviteCode)
     app.post("/inviteCode", hasLogin, isAdmin, ctrInvitation.generateInviteCode);
-    app.post("/sendInviteCode", hasLogin, isAdmin, ctrInvitation.sendInviteCode);
-    app.post("/deleteInviteCode", hasLogin, isAdmin, ctrInvitation.deleteInviteCode);
+    app.post("/sendInviteCode", hasLogin, ctrInvitation.sendInviteCode);
+    app.post("/deleteInviteCode", hasLogin, ctrInvitation.deleteInviteCode);
   }
 }

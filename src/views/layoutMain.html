@@ -37,10 +37,8 @@
       				if(email == config.admins[i]){
       					isAdmin = true;
       				}
-      			}
-      			if(isAdmin){%>
+      			}%>
       			<li><a href="/inviteCode">发出邀请</a></li>
-      			<%}%>
       			</ul>
      		</div>
         <% if(!config.labs){ %>      

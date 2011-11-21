@@ -13,7 +13,7 @@ user = config.dbInfo.collections.user;
  * @param {} res
  */
 exports.show = function(req, res){
-  res.redirect('/userCenter/userInfo');
+    res.redirect('/userCenter/userInfo');
 };
 /***
  * 显示用户信息

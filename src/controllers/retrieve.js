@@ -108,26 +108,6 @@ exports.resetPassword = function(req, res){
       });
     }
     else {
-      // findAndModify(user, {
-        // email: email,
-        // retrieveKey:key
-      // }, [], {
-        // $set: {
-          // password: md5(password+config.md5_secret),
-          // retrieveKey: undefined,
-          // retrieveTime: undefined
-        // }
-      // }, function(err){
-        // if (err) {
-          // log.error(err.toString());
-          // return res.render("error", {
-            // message: "密码修改错误"
-          // });
-        // }
-        // else {
-          // return res.redirect("/login");
-        // }
-      // });
       findOne(user, {
           email:email,
           retrieveKey:key
