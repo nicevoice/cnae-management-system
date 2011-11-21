@@ -5,6 +5,7 @@ EventProxy = require('EventProxy.js').EventProxy,
 model = require('../models/index'),
 findOne = model.findOne,
 remove = model.remove,
+update = model.update,
 insert = model.insert,
 collectionNames = config.dbInfo.collections,
 user = collectionNames.user,
@@ -80,7 +81,7 @@ exports.checkRegist = function(req, res){
             code:code,
             nick:userNickName
             },
-            warn:{con:"昵称不能包含特殊字符"}});
+            warn:{con:"两次密码输入不一致"}});
 	var regPassword = config.regPass;
 	if(!regPassword.exec(userPassword))
         return res.render("regist", {
@@ -122,15 +123,24 @@ exports.checkRegist = function(req, res){
             },
             warn:{code:"邀请码不正确"}});
 		else{
+		    var codes = [];
+		    for(var i=0,len=config.maxCode; i!=len; ++i){
+		        codes.push(randomStringNum(11));
+		    }
 			insert(user, {email:userEmail, nickName:userNickName, password:md5(userPassword+config.md5_secret), 
-			dbUserName:randomStringNum(12), dbPassword:randomStringNum(10)}, function(err){
+			dbUserName:randomStringNum(12), dbPassword:randomStringNum(10), inviteCode:codes}, function(err){
 				if(err){
 					log.error(err.toString());
 					return res.render("error", {message:"数据库发生错误，请稍后再试"});
 				}
 				else{
 				//删除改邀请码
-        remove(inviteCode, {code:code}, function(err){
+        //remove(inviteCode, {code:code}, function(err){
+        update(user, {
+            inviteCode:code
+        }, {$pull:{
+            inviteCode:code
+        }},function(err){
           if(err){
             log.error(err.toString());
           }
@@ -177,7 +187,7 @@ exports.checkRegist = function(req, res){
 	if(isAdmin){
 		checkEventProxy.trigger("checkCode", true);
 	}else{
-	findOne(inviteCode, {code:code}, function(err, item){
+	findOne(user, {inviteCode: code}, function(err, item){
 		if(err){
 			log.error(err.toString());
 			checkEventProxy.trigger("checkCode", false);

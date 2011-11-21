@@ -1,7 +1,5 @@
 var inviteHref = $("#inviteHref").html();
 $(function(){
-	$("#sendInviteByEmail").hide();
-	$("#generateInviteCode").click(generate);
 	$("#sendInviteCode").click(sendInvite);
 	loadInviteCode();
 })
@@ -44,41 +42,54 @@ var tplInviteCodes = '<table padding="40px">'+
                     '</ul></div>',
     tplPage = '<li><a href=$url$/inviteCode?page=$i$>$i$</a></li>';
     tplEllipses = '<li class="disabled"><a href="javascript:void(0)">…</a></li>';
+var tplGenerate = '<input type="button" class = "r3px button_orange submit" id="generateInviteCode"  value="生成">';
 function renderInviteCode(content){
     var codes = content.codes,
         pages = content.pages,
         page = content.page,
-        codeContent = '', pageContent = '';
+        admin = content.admin,
+        codeContent = '', pageContent = '', firstCode='您的邀请名额已经用完';
     for(var i=0, len=codes.length; i!=len; ++i){
         var code = codes[i];
         codeContent += tplReplace(tplCode, {
             '$inviteHref$':inviteHref,
-            '$code$':code.code,
+            '$code$':code,
         });
+        if(i===0){
+            firstCode = inviteHref + code;
+        }
     }
-    var tooManyLeft = false, tooManyRight = false;
-    for(var i=1; i<=pages; ++i){
-        var url = location.href;
-        url = url.slice(0, url.lastIndexOf('/'));
-        if(i<=1||i>=pages||Math.abs(page-i)<=1){
-            pageContent += tplReplace(tplPage, {
-                '$url$':url,
-                '$i$':i
-            });           
-        }else{
-            if(i<page && !tooManyLeft){
-                tooManyLeft = true;
-                pageContent+=tplEllipses;
+    var html = tplReplace(tplInviteCodes, {'$codes$':codeContent});
+    if(pages>1){
+        var tooManyLeft = false, tooManyRight = false;
+        for(var i=1; i<=pages; ++i){
+            var url = location.href;
+            url = url.slice(0, url.lastIndexOf('/'));
+            if(i<=1||i>=pages||Math.abs(page-i)<=1){
+                pageContent += tplReplace(tplPage, {
+                    '$url$':url,
+                    '$i$':i
+                });           
             }else{
-                if(i>page && !tooManyRight){
-                    tooManyRight = true;
-                    pageContent += tplEllipses;
+                if(i<page && !tooManyLeft){
+                    tooManyLeft = true;
+                    pageContent+=tplEllipses;
+                }else{
+                    if(i>page && !tooManyRight){
+                        tooManyRight = true;
+                        pageContent += tplEllipses;
+                    }
                 }
             }
         }
+        html += tplReplace(tplPagination, {'$pages$':pageContent});
     }
-    $("#codes").html(tplReplace(tplInviteCodes, {'$codes$':codeContent})+
-                     tplReplace(tplPagination, {'$pages$':pageContent}));  
+    $("#inviteCode").html(firstCode);
+    $("#codes").html(html);
+    if(admin){
+        $('#generate').html(tplGenerate);
+        $("#generateInviteCode").click(generate);
+    }  
 }
 function pagination(){
 	var url = window.location.href;
@@ -124,11 +135,10 @@ function generate(){
 		sAlert("警告","ajax错误，请稍后再试");
 	},
 	success:function(data){
-		if(data.done===false){
-			sAlert("警告","生成错误，请稍后再试");
+		if(data.status==='error'){
+			sAlert("警告",data.msg);
 		}else{
 		$("#inviteCode").html(inviteHref+data.code);
-		$("#sendInviteByEmail").show();
 		}
 	}
 	});
@@ -137,8 +147,8 @@ function generate(){
 function sendInvite(){
 	var code = $("#inviteCode").html(),
 		email  =$("#email").val()||'';
-	if(code==="请点击生成按钮"){
-		sAlert("警告","请先生成邀请码！");
+	if(code.indexOf("http://cnodejs.net")!==0){
+		sAlert("警告","请先选择邀请码！");
 		return false; 
 	}
 	var regEmail = /^[a-zA-Z0-9_\.\-\+]+@(\w+)\.[\w\.]{2,8}$/;
@@ -159,7 +169,6 @@ function sendInvite(){
       if(data.done===false)
       sAlert("警告",data.warn);
       else{
-		$("#sendInviteByEmail").hide();    	
       	sAlert("","邀请码已发送");
       }
    	}
