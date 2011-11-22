@@ -9,15 +9,15 @@ var db = exports.db = mongo.db(config.db_url),
      records = exports.records = db.collection(collectionNames.app_record),
      inviteCode = exports.inviteCode = db.collection(collectionNames.inviteCode);
     collections = {};
+    
     for(var name in collectionNames){
         collections[collectionNames[name]] = db.collection(collectionNames[name]);
     }
-exports.ensureIndexes = function(){
   collections[collectionNames.user].ensureIndex({email:1, nickName:1}, {unique:true}, function(){console.log(arguments);});
   collections[collectionNames.app_member].ensureIndex({appDomain:1, email:1}, {unique:true}, function(){console.log(arguments);});
   collections[collectionNames.app_basic].ensureIndex({appDomain:1}, {unique:true}, function(){console.log(arguments);});
   collections[collectionNames.app_record].ensureIndex({appDomain:1}, {unique:true}, function(){console.log(arguments);});
-};
+
 exports.addCollection = function(collectionName){
     if(collections[collectionName])
       return;  
