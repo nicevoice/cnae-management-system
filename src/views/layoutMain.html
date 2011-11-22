@@ -32,13 +32,9 @@
       			<li><a href="http://blog.cnodejs.net/post/4e686bb00716ac9910000003" target="_blank">反馈信息</a></li>
       	<%}%>
         		<li><a href="http://blog.cnodejs.net/post/4e686c290716ac9910000009" target="_blank">文档中心</a></li>
-      			<%var isAdmin = false;
-      			for(var i=0, len=config.admins.length; i<len; ++i){
-      				if(email == config.admins[i]){
-      					isAdmin = true;
-      				}
-      			}%>
+      <% if(!config.labs){ %>
       			<li><a href="/inviteCode">发出邀请</a></li>
+      			<%}%>
       			</ul>
      		</div>
         <% if(!config.labs){ %>      
