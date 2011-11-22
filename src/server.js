@@ -20,7 +20,7 @@ var app = connect();
 app.use(form({ uploadDir: config.tempDir, keepExtensions: true }));
 app.use(function(req, res, next) {
         if(req.form) {
-            req.form.compl;ete(function(err, fields, files){
+            req.form.complete(function(err, fields, files){
                 req.body = {};
                 if(!err) {
                     req.form.fields = fields;
