@@ -89,10 +89,10 @@ exports.doChangeInfo = function(req, res){
 	if(!regName.exec(newNickName)){
 		return res.sendJson({done:false, message:"请输入正确的昵称"});
 	}
-	if(!regUrl.exec(newMainPage)){
+	if(newMainPage&&!regUrl.exec(newMainPage)){
     return res.sendJson({done:false, message:"请输入正确的个人主页"});
 	}
-	if(!regMobile.exec(newTelNumber)){
+	if(newTelNumber&&!regMobile.exec(newTelNumber)){
 	  return res.sendJson({done:false, message:"请输入正确的手机号码"});
 	}
 	findOne(user, {nickName:newNickName.toString()}, function(err, data){
