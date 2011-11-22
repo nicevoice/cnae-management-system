@@ -135,7 +135,6 @@ exports.checkRegist = function(req, res){
 				}
 				else{
 				//删除改邀请码
-        //remove(inviteCode, {code:code}, function(err){
         update(user, {
             inviteCode:code
         }, {$pull:{

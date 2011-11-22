@@ -6,18 +6,17 @@ var fs = require("fs"),
     downloadTime = 5*60*1000,
     delInterval = 1000*10*60;
 
-exports.startDel = function(){
+(function(){
   exec("rm -rf "+ tempDir + "/*", function(err){
     if(err){
       log.error(err.toString());
     }
   })
   setInterval(delZip, delInterval);
-}
+})();
 
 function delZip(){
   //读取目录
-  console.log("delete zips");
   fs.readdir(delPath, function(err, files){
     if(err){
       log.error(err.toString());

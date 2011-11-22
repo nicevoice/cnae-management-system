@@ -1,23 +1,26 @@
-var config = require('./config');
+var config = require('./config'),
+    connect = require('connect'),
+    render = require('./lib/render'),
+    ejs = require('ejs'),
+    fs = require('fs'),
+    form = require('connect-form'),
+    basename = require('path').basename,
+    RedisStore = require('connect-redis')(connect);
 if(!config.debug) {
     // patch net module for connect to proxy
     require('./lib/net_patch');
 }
+require('./patch');
 
-var express = require('express'),
-	ejs = require('ejs'),
-	fs = require('fs'),
-    model = require('./models/index'),
-    startDel = require('./lib/deleteDownload').startDel,
-	form = require('connect-form'),
-	RedisStore = require('connect-redis')(express);
-	
-//创建httpServer
-var app = express.createServer(
-	form({ uploadDir: config.tempDir, keepExtensions: true })
-  , function(req, res, next) {
+
+//创建httpServer 
+var app = connect();
+
+//multi-data form
+app.use(form({ uploadDir: config.tempDir, keepExtensions: true }));
+app.use(function(req, res, next) {
         if(req.form) {
-            req.form.complete(function(err, fields, files){
+            req.form.compl;ete(function(err, fields, files){
                 req.body = {};
                 if(!err) {
                     req.form.fields = fields;
@@ -30,50 +33,55 @@ var app = express.createServer(
             return next();
         }
     });
-//静态解析public文件夹的文件
-app.use(express.static(__dirname+'/public',{maxAge:3600000*24*30}));
+
+//static
+app.use(connect.static(__dirname+'/public'));
 //app.use(gzippo.staticGzip(__dirname+'/public',{maxAge:3600000*24*30}));
+
 //session和cookie
-app.use(express.cookieParser());
-app.use(express.session({
-	secret: config.session_secret,
-	store : new RedisStore()
+app.use(connect.cookieParser());
+app.use(connect.session({
+    secret: config.session_secret,
+    store : new RedisStore()
 }));
 
 //post
-app.use(express.bodyParser());
+app.use(connect.bodyParser());
 
-//app.use(express.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
+if(config.switchs.debug){
+    //log
+    app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
+}
 
-app.helpers({
-config:config
-});
+//render power by ejs
+app.use(render({
+    root:__dirname + '/views',
+    cache:false,
+    helpers:{
+        config:config
+    }
+}));
 
-//views setting
-app.set("view engine", "html");
-app.set("views", __dirname + '/views');
-app.register("html", ejs);
-
-app.get("/favicon.ico", function(req, res){
-	res.writeHead(404, "Not Found");
-	res.end();
-})
 //routing
-require('./routes/logAndRegist')(app);
-require('./routes/application')(app);
-require('./routes/user')(app);
-require('./routes/square')(app);
-require('./routes/invitation')(app);
-require('./routes/editor')(app);
-require('./routes/appManager')(app);
-require('./routes/interface')(app);
-app.get("*", function(req, res){
-  res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
-});
+app.use(connect.router(function(methods){
+    methods.get("/favicon.ico", function(req, res){
+    res.writeHead(404, "Not Found");
+    res.end();
+    })
+}));
+
+fs.readdirSync(__dirname + '/routes').forEach(function(filename){
+  if (!/\.js$/.test(filename)||filename==='middleware.js') return;
+  var name = basename(filename, '.js');
+  app.use(connect.router(require('./routes/'+name)));
+})  
+app.use(connect.router(function(methods){
+    methods.get("*", function(req, res){
+      res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
+    });
+}));
 app.listen(config.port);
 
-startDel();
-model.ensureIndexes();
 
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
