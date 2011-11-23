@@ -20,8 +20,8 @@ var config = require('../config')
   , uploadDir = config.uploadDir
   , randomStringNum = require('../lib/randomString').getRandomStringNum;
   
-exports.show = function(req, rse){
-    res.render('admin', {
+exports.show = function(req, res){
+    res.render('monitor', {
         layout:'layoutMain',
         nickName:req.session.nickName,
         email:req.session.email
