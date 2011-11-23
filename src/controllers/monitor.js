@@ -190,12 +190,18 @@ exports.query = function(req, res) {
                 status : "error",
                 msg : "查询数据库失败"
             });
-        } else {
+        }else {
+            var place = stdout.indexOf("1\n");
+            if(place === -1) {
+              stdout = "权限验证错误";
+            } else {
+              stdout = stdout.slice(place + 2, stdout.length - 4) + "\ndone";
+            }
             return res.sendJson({
-                status : "ok",
-                output : stdout
+              status : "ok",
+              output : stdout
             });
-        }
+          }
     })
 }
 

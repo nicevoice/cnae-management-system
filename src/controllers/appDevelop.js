@@ -589,7 +589,6 @@ exports.queryMongo = function(req, res) {
             } else {
               stdout = stdout.slice(place + 2, stdout.length - 4) + "\ndone";
             }
-
             return res.sendJson({
               status : "ok",
               output : stdout
@@ -597,7 +596,7 @@ exports.queryMongo = function(req, res) {
           }
         })
       });
-    }
+    }           
   })
 }
 
