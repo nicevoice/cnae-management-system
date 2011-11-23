@@ -17,11 +17,13 @@ exports.show = function(req, res){
 }
 
 exports.load = function(req ,res){
-    var loadEvent = new EventProxy();
+    var loadEvent = new EventProxy(),
+        errors = [];
     loadEvent.assign('users', 'apps', 'appInfo', function(users, apps, appInfo){
         if(users===false||apps===false||appInfo===false){
             return res.sendJson({
-                status:'error'
+                status:'error',
+                msg:errors.join(',')
             })
         }
         res.sendJson({
@@ -35,6 +37,10 @@ exports.load = function(req ,res){
         if(count){
             loadEvent.fire('users', count);
         }else{
+            if(err){
+                log.error(err.toString());
+                errors.push(err.toString());
+            }
             loadEvent.fire('users', false);
         }
     });
@@ -42,6 +48,10 @@ exports.load = function(req ,res){
         if(count){
             loadEvent.fire('apps', count);
         }else{
+            if(err){
+                log.error(err.toString());
+                errors.push(err.toString());
+            }
             loadEvent.fire('apps', false);
         }
     });
@@ -49,6 +59,10 @@ exports.load = function(req ,res){
         if(stdout){
             loadEvent.fire('appInfo', stdout);
         }else{
+            if(err){
+                log.error(err.toString());
+                errors.push(err.toString());
+            }
             loadEvent.fire('appInfo', false);
         }
     })
