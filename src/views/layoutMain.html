@@ -34,7 +34,17 @@
         		<li><a href="http://blog.cnodejs.net/post/4e686c290716ac9910000009" target="_blank">文档中心</a></li>
       <% if(!config.labs){ %>
       			<li><a href="/inviteCode">发出邀请</a></li>
-      			<%}%>
+           <%var isAdmin = flase;
+             admins = config.admins;
+             for(var i=0, len=admins.length; ++i){
+                 if(email = admins[i]){
+                     isAdmin = true; break;
+                 }
+             }
+             if(isAdmin){
+           %>
+                <li><a href="/monitor">系统监控</a></li>
+      <%}}%>
       			</ul>
      		</div>
         <% if(!config.labs){ %>      
