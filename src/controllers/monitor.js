@@ -1,27 +1,15 @@
 var config = require('../config')
-  , fs = require('fs')
-  , path = require('path')
-  , util = require('util')
   , exec  = require('child_process').exec
-  , randomString = require('../lib/randomString')
   , model = require('../models/index')
   , log = config.logWithFile
   , collectionNames = require('../config').dbInfo.collections
   , user = collectionNames.user
-  , app_mem = collectionNames.app_member
   , app_basic = collectionNames.app_basic
-  , app_record = collectionNames.app_record
-  , find = model.find
-  , findOne = model.findOne
-  , update = model.update
-  , insert = model.insert
-  , EventProxy = require('EventProxy.js').EventProxy
-  , exec  = require('child_process').exec  
-  , uploadDir = config.uploadDir
-  , randomStringNum = require('../lib/randomString').getRandomStringNum;
+  , count = model.count
+  , EventProxy = require('EventProxy.js').EventProxy;
   
-exports.show = function(req, rse){
-    res.render('admin', {
+exports.show = function(req, res){
+    res.render('monitor', {
         layout:'layoutMain',
         nickName:req.session.nickName,
         email:req.session.email
