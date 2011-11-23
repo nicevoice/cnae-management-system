@@ -2,7 +2,9 @@ var middleware = require('./middleware'),
     hasLogin = middleware.hasLogin,
     checkAuth = middleware.checkAuth,
     checkChangeAuth = middleware.checkChangeAuth,
-    labs = require('../config').labs,
+    switchs = require('../config').switchs,
+    labs = switchs.labs,
+    nonGit = switchs.nonGit,
     ctrAppInfo = require('../controllers/appInfo'),
     ctrAppDevelop = require('../controllers/appDevelop'),
     ctrAppManager = require('../controllers/appManager'),
@@ -43,12 +45,16 @@ module.exports = function(app){
   app.get("/application/manage/:id/load_mongo", hasLogin, checkAuth, ctrAppDevelop.loadMongoContent);
   app.get("/application/manage/:id/todo", hasLogin, checkAuth, ctrAppDevelop.showTodo);
   app.get("/application/manage/:id/load_todo", hasLogin, checkAuth, ctrAppDevelop.loadTodoContent);  
-  app.post("/application/manage/:id/clone", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitClone);  //git clone代码
-  app.post("/application/manage/:id/pull", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitPull);  //git pull代码
+  if(nonGit){
+    app.post("/application/manage/:id/clone", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitClone);  //git clone代码
+    app.post("/application/manage/:id/pull", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitPull);  //git pull代码
+  }
   app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUpload);  //上传代码
   app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), ctrAppDevelop.doDownload);  //代码打包下载
   app.get("/application/download/:id.zip", hasLogin, ctrAppDevelop.downloading);
-  app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
+  if(nonGit){
+    app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
+  }
   app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUploadImg);  //上传接口
   app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), ctrAppDevelop.createMongo);  //给应用分配mongoDB
   app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), ctrAppDevelop.queryMongo);  //应用DB查询
