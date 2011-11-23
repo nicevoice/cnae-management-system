@@ -68,9 +68,11 @@ exports.checkLogin = function(req, res){
  * @param {} res
  */
 exports.logout = function(req, res){
-	req.session.email = '';
-	req.session.nickName = '';
-	res.redirect('/');
+	req.session.destroy(function(err){
+        if(err)
+            log.error(err.toString());
+    });
+    res.redirect('/');
 }
 
 
