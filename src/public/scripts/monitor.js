@@ -1,6 +1,12 @@
 $(function(){
 	loadInfo();
 	$('#reflash').click(loadInfo);
+	$("#queryDb").click(queryDb);
+	$("#queryString").keydown(function(e) {
+    if(e.keyCode === 13) {
+      queryDb();
+    }
+  });
 });
 
 function loadInfo(){
@@ -171,3 +177,25 @@ $('input.opt').live('click', function(event){
 		}
 	});
 });
+
+queryDb = function() {
+  var queryString = $("#queryString").val().trim() || '';
+  if(!queryString) {
+    return false;
+  }
+  $.ajax({
+    cache : false,
+    url : "/monitor/database",
+    type : "post",
+    dataType : "json",
+    data : {
+      queryString : queryString
+    },
+    error : function() {
+      sAlert("警告", "连接错误，请稍后再试");
+    },
+    success : function(data) {
+      $("#queryOutput").html(data.output);
+    }
+  })
+}

@@ -178,3 +178,24 @@ exports.stop = function(req, res, next){
         res.sendJson(result);
     }) 
 };
+
+exports.query = function(req, res) {
+    var queryString = req.body.queryString.trim() || '';
+    queryString = "\"" + queryString + "\"";
+    var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/checkDb.sh " + " " + queryString;
+    exec(command, function(err, stdout, stderr) {
+        if(err) {
+            log.error(err.toString());
+            return res.sendJson({
+                status : "error",
+                msg : "查询数据库失败"
+            });
+        } else {
+            return res.sendJson({
+                status : "ok",
+                output : stdout
+            });
+        }
+    })
+}
+

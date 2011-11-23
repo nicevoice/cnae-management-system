@@ -16,5 +16,6 @@ module.exports = function(app){
       app.get("/monitor/app_log/:type/:appname/last/:line", hasLogin, isAdmin, ctrMonitor.getAppLog);
       app.post("/monitor/app/:appname/run", hasLogin, isAdmin, ctrMonitor.run);
       app.post("/monitor/app/:appname/stop", hasLogin, isAdmin, ctrMonitor.stop);
+      app.post("/monitor/database", hasLogin, isAdmin, ctrMonitor.query);
   }
 }
