@@ -27,10 +27,12 @@ exports.load = function(req ,res){
             })
         }
         res.sendJson({
-            status:'ok',
-            userNum:arguments[0],
-            appNum:arguments[1],
-            appInfo:arguments[2]
+            status:"ok",
+            content:{
+            	userNum:arguments[0],
+            	appNum:arguments[1],
+            	appInfo:arguments[2]
+			}
         })
     })
     count(user, {}, function(err, count){
@@ -55,7 +57,8 @@ exports.load = function(req ,res){
             loadEvent.fire('apps', false);
         }
     });
-    exec('../shells/appInfo.sh cnode-app-engine', function(err, stdout, stderr){
+    var command = __dirname.slice(0, __dirname.lastIndexOf('/')+1) + "shells/appInfo.sh cnode-app-engine";
+    exec(command, function(err, stdout, stderr){
         if(stdout){
             loadEvent.fire('appInfo', stdout);
         }else{
