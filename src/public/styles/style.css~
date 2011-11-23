@@ -5,8 +5,6 @@
 @import url(manage.css?v=1.0.2);
 @import url(todo.css?v=1.0.1);
 @import url(userCenter.css?v=1.0.1);
-@import url(demo_page.css?v=1.0.1);
-@import url(demo_table.css?v=1.0.1);
 .clearfix:after {
 	content: ".";
 	display: block;

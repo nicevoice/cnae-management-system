@@ -17,5 +17,4 @@ app name: <input type="input" id="app_name" />
     <span class="redText">tips: use mongo shell</span>
 <pre id="queryOutput"></pre>
 </div>
-  <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
   <script type="text/javascript" src="scripts/monitor.js?v=1.0.1"></script>

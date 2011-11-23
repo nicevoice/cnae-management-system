@@ -6,7 +6,9 @@ var config = require('../config')
   , user = collectionNames.user
   , app_basic = collectionNames.app_basic
   , count = model.count
-  , EventProxy = require('EventProxy.js').EventProxy;
+  , EventProxy = require('EventProxy.js').EventProxy
+  , httpReq = require('../lib/httpReq').httpRwq
+  , httpOptions = config.monitor;
   
 exports.show = function(req, res){
     res.render('monitor', {
@@ -41,7 +43,13 @@ exports.load = function(req ,res){
         }else{
             if(err){
                 log.error(err.toString());
-                errors.push(err.toString());
+        function clone(obj){
+    var newObj = {};
+    Object.keys(obj).forEach(function(key){
+        newObj[key] = obj[key]
+    });
+    return newObj;
+}        errors.push(err.toString());
             }
             loadEvent.fire('users', false);
         }
@@ -70,3 +78,103 @@ exports.load = function(req ,res){
         }
     })
 }
+
+/**
+ * clone a object
+ */
+function clone(obj){
+    var newObj = {};
+    Object.keys(obj).forEach(function(key){
+        newObj[key] = obj[key]
+    });
+    return newObj;
+}
+
+exports.getStatus = function(req, res, next){
+    var options = clone(httpOptions);
+    options.path = '/status';
+    options.method = 'GET';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })
+};
+exports.getList = function(req, res, next){
+    var options = clone(httpOptions);
+    options.path = '/apps';
+    options.method = 'GET';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })
+};
+exports.getDetailList = function(req, res, next){
+    var options = clone(httpOptions);
+    options.path = '/apps_detail';
+    options.method = 'GET';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })
+};
+exports.getAppStatus = function(req, res, next){
+    var appname = null;
+    if(req.params){
+        appname = req.params.appname;
+    }
+    if(!appname){
+        return res.sendJson({"status": "failure", "message": "url is invalid"}})
+    }
+    var options = clone(httpOptions);
+    options.path = '/app/'+appname;
+    options.method = 'GET';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })
+};
+
+exports.getAppLog = function(req, res, next){
+    var appname = null, type = null, line = null;
+    if(req.params){
+        appname = req.params.appname;
+        type = req.params.type;
+        line = req.params.line;
+    }
+    if(!appname || !type || !line){
+        res.writeHead(400, {'Content-Type': 'application/json'});
+        return res.end('{"status": "failure", "message": "url is invalid"}\n');
+    }
+    var options = clone(httpOptions);
+    options.path = '/app_log/'+type+'/'+appname+'/last/'+line;
+    options.method = 'GET';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })    
+};
+var run = function(req, res, next){
+    var appname = null;
+    if(req.params){
+        appname = req.params.appname;
+    }
+    if(!appname){
+        return res.sendJson({"status": "failure", "message": "url is invalid"}})    
+    }
+    var options = clone(httpOptions);
+    options.path = '/app/'+appname+'/run';
+    options.method = 'POST';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    })    
+};
+var stop = function(req, res, next){
+    var appname = null;
+    if(req.params){
+        appname = req.params.appname;
+    }
+    if(!appname){
+        return res.sendJson({"status": "failure", "message": "url is invalid"}})    
+    }
+    var options = clone(httpOptions);
+    options.path = '/app/'+appname+'/stop';
+    options.method = 'POST';
+    httpReq(options, function(result){
+        res.sendJson(result);
+    }) 
+};
