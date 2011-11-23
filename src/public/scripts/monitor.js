@@ -8,7 +8,6 @@ function loadInfo(){
     cache : false,
     type : "get",
     url : "/load_monitor",
-    dataType : "json",
     error : function() {
       sAlert("警告", "服务器连接错误");
     },
