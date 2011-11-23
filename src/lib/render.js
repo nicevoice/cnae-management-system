@@ -56,6 +56,8 @@ module.exports = function(options) {
 
 function render(view, options) {
     options = options || {};
+    options.layout = (!options&&options.layout!==false)?settings.layout:options.layout;
+    
     if(settings.helpers) {
         for(var k in settings.helpers) {
             options[k] = settings.helpers[k];
