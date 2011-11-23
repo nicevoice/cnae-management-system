@@ -31,11 +31,6 @@ exports.load = function(req ,res){
             appInfo:arguments[2]
         })
     })
-    countUser(proxy);
-    countApp(proxy);
-    checkSys(proxy);
-}
-function countUser(proxy){
     count(user, {}, function(err, count){
         if(count){
             proxy.fire('users', count);
@@ -43,8 +38,6 @@ function countUser(proxy){
             proxy.fire('users', false);
         }
     });
-}
-function countApp(proxy){
     count(app_basic, {}, function(err, count){
         if(count){
             proxy.fire('apps', count);
@@ -52,8 +45,6 @@ function countApp(proxy){
             proxy.fire('apps', false);
         }
     });
-}
-function checkApp(proxy){
     exec('../shells/appInfo.sh cnode-app-engine', function(err, stdout, stderr){
         if(stdout){
             proxy.fire('appInfo', stdout);
