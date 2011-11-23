@@ -43,7 +43,17 @@
               </li>
       <% if(!config.labs){ %>
                 <li><a href="/inviteCode">发出邀请</a></li>
-      <%}%>
+           <%var isAdmin = false;
+             admins = config.admins;
+             for(var i=0, len=admins.length; i!=len; ++i){
+                 if(email === admins[i]){
+                     isAdmin = true; break;
+                 }
+             }
+             if(isAdmin){
+           %>
+                <li><a href="/monitor">系统监控</a></li>
+      <%}}%>
             </ul>
           </div>
           <% if(!config.labs){ %>
