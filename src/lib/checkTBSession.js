@@ -22,15 +22,18 @@ var getFromCookie = function(str, name, sign) {
     }
     return value;
 };
-
+function clone(obj){
+    var newObj = {};
+    Object.keys(obj).forEach(function(key){
+        newObj[key] = obj[key]
+    });
+    return newObj;
+}
 module.exports = function(req, cb){
 	 var sessionId = getFromCookie(req.headers.cookie, "cookie2") || '';
     //检查用户是否是开发者
     var secret = unescape(labsConf.secret);
-    var checkUserOption = {};
-    checkUserOption.host = labsConf.checkUserOption.host;
-    checkUserOption.port = labsConf.checkUserOption.port;
-    checkUserOption.path = labsConf.checkUserOption.path;
+    var checkUserOption = clone(labsConf.checkUserOption);
     checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+md5(secret + sessionId + secret).toUpperCase();
 	httpReq(checkUserOption, function(checkRes){
 		  cb(checkRes);

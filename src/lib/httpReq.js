@@ -10,7 +10,7 @@ exports.httpReq = function(options, callback){
     req.abort();
     console.log('Request Timeout.');
 	}, 5000);
-	req = http.get(options, function(res) {
+	req = http.request(options, function(res) {
     clearTimeout(request_timer);
 
     // 等待响应60秒超时
