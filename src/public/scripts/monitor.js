@@ -20,6 +20,7 @@ function loadInfo(){
       }
     }
   });
+  showGrid();
 }
 var tplDbInfo = '<table id="info-table">'+
 			  '<tr><td>注册用户数:$userNum$</td></tr>'+
@@ -51,6 +52,7 @@ $('#start_app').click(function(){
 	var url = '/monitor/app/' + app + '/run';
 	$.ajax({
 		type: 'post',
+        dataType:'json',
 		url: url,
 		success: function(data){
 			alert(data.status)
@@ -99,11 +101,11 @@ function showGrid(){
 							var value = obj.aData[obj.iDataColumn];
 							var title = value ? 'stop app' : 'start app';
 							var opt = value ? 0 : 1;
-							var res = '<input type="button"  class= "button_orange r3px monitor-button" value="' + title
+							var res = '<input type="button"  class= "button_orange r3px monitor-button opt" value="' + title
 										+ '" app="' + obj.aData[0]
 										+ '" opt="' + opt
 										+ '" class="opt" />'
-										+ ' <input type="button" value="std info" class="button_orange r3px monitor-button"'
+										+ ' <input type="button" value="std info" class="button_orange r3px std monitor-button"'
 										+ ' app="' + obj.aData[0]
 										+ '" />';
 							return res;
@@ -114,7 +116,6 @@ function showGrid(){
 		}
 	});
 }
-showGrid();
 //window.setInterval(showGrid, 10000);
 
 function showStd(app){
@@ -162,7 +163,8 @@ $('input.opt').live('click', function(event){
 	url += (opt == 1) ? '/run' : '/stop';
 	$.ajax({
 		type: 'post',
-		url: url,
+		dataType:'json',
+        url: url,
 		success: function(data){
 			alert(data.status)
 			window.location.reload();
