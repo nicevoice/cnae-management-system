@@ -18,7 +18,7 @@ exports.show = function(req, res){
 
 exports.load = function(req ,res){
     var loadEvent = new EventProxy();
-    loadEvent.once('users', 'apps', 'appInfo', function(users, apps, appInfo){
+    loadEvent.assign('users', 'apps', 'appInfo', function(users, apps, appInfo){
         if(users===false||apps===false||appInfo===false){
             return res.sendJson({
                 status:'error'
