@@ -7,7 +7,7 @@ var config = require('../config')
   , app_basic = collectionNames.app_basic
   , count = model.count
   , EventProxy = require('EventProxy.js').EventProxy
-  , httpReq = require('../lib/httpReq').httpRwq
+  , httpReq = require('../lib/httpReq').httpReq
   , httpOptions = config.monitor;
   
 exports.show = function(req, res){
@@ -120,7 +120,7 @@ exports.getAppStatus = function(req, res, next){
         appname = req.params.appname;
     }
     if(!appname){
-        return res.sendJson({"status": "failure", "message": "url is invalid"}})
+        return res.sendJson({"status": "failure", "message": "url is invalid"})
     }
     var options = clone(httpOptions);
     options.path = '/app/'+appname;
@@ -148,13 +148,13 @@ exports.getAppLog = function(req, res, next){
         res.sendJson(result);
     })    
 };
-var run = function(req, res, next){
+exports.run = function(req, res, next){
     var appname = null;
     if(req.params){
         appname = req.params.appname;
     }
     if(!appname){
-        return res.sendJson({"status": "failure", "message": "url is invalid"}})    
+        return res.sendJson({"status": "failure", "message": "url is invalid"})    
     }
     var options = clone(httpOptions);
     options.path = '/app/'+appname+'/run';
@@ -163,13 +163,13 @@ var run = function(req, res, next){
         res.sendJson(result);
     })    
 };
-var stop = function(req, res, next){
+exports.stop = function(req, res, next){
     var appname = null;
     if(req.params){
         appname = req.params.appname;
     }
     if(!appname){
-        return res.sendJson({"status": "failure", "message": "url is invalid"}})    
+        return res.sendJson({"status": "failure", "message": "url is invalid"})    
     }
     var options = clone(httpOptions);
     options.path = '/app/'+appname+'/stop';

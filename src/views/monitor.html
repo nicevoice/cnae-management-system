@@ -4,18 +4,27 @@ STDOUT:
 STDERR:
 <pre id="stderr"></pre>
 </div>
+<div id="monitor">
+<h3>概览</h3>
+<div id='db-info'></div>
+<input type="button"  class="button_orange r3px" style="margin-left:700px" id="reflash" value="刷新">
+<hr />
+<br />
+<h3>应用详细信息</h3>
 <div style="float:right;height:40px">
 app name: <input type="input" id="app_name" />
 <input type="button" id="start_app" value="start" />
 </div>
 <div id="contents" style="clear:both;"></div>
-<div id='db-info'></div>
-<div id='app-info'></div>
-<input type="button"  class="button_orange r3px" id="reflash" value="执行">
+<br /><br />
+<hr />
+<br />
+<h3>数据库信息查询</h3>
 <div class='divCenter'>
     <input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="执行">
     <span class="redText">tips: use mongo shell</span>
 <pre id="queryOutput"></pre>
 </div>
-  <script type="text/javascript" src="/static/js/jquery.dataTables.js"></script>
+</div>
+  <script type="text/javascript" src="/scripts/jquery.dataTables.js"></script>
   <script type="text/javascript" src="scripts/monitor.js?v=1.0.1"></script>

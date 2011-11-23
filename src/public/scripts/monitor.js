@@ -7,7 +7,7 @@ function loadInfo(){
   $.ajax({
     cache : false,
     type : "get",
-    url : "/load_monitor",
+    url : "/monitor/load",
     dataType:'json',
     error : function() {
       sAlert("警告", "服务器连接错误");
@@ -22,17 +22,15 @@ function loadInfo(){
   });
 }
 var tplDbInfo = '<table id="info-table">'+
-			  '<tr><td>注册用户数:$userNum$</td>'+
-			  '<td>创建应用数:$appNum$</td></tr></table>',
-    tplAppInfo = '<pre>$appInfo$</pre>';
+			  '<tr><td>注册用户数:$userNum$</td></tr>'+
+			  '<tr><td>创建应用数:$appNum$</td></tr>'+
+              '<tr><td>应用系统信息</td><td>$appInfo$</td></tr></table>';
 function renderAdminInfo(content){
 	$("#db-info").html(tplReplace(tplDbInfo, {
         '$userNum$':content.userNum,
-        '$appNum$':content.appNum  
+        '$appNum$':content.appNum,
+        '$appInfo$':content.appInfo  
         }));
-    $("#app-info").html(tplReplace(tplAppInfo, {
-        '$appInfo$':content.appInfo
-    }));
 }
 
 function dateFormat(ts) {
@@ -50,7 +48,7 @@ $('#start_app').click(function(){
 		alert('must input app name');
 		return;
 	}
-	var url = '/app/' + app + '/run';
+	var url = '/monitor/app/' + app + '/run';
 	$.ajax({
 		type: 'post',
 		url: url,
@@ -63,7 +61,8 @@ $('#start_app').click(function(){
 function showGrid(){
 	$.ajax({
 		type: 'get',
-		url: '/apps_detail',
+		url: '/monitor/apps_detail',
+        dataType:'json',
 		success: function(data){
 			var table = [];
 			for(var app in data){
@@ -100,11 +99,11 @@ function showGrid(){
 							var value = obj.aData[obj.iDataColumn];
 							var title = value ? 'stop app' : 'start app';
 							var opt = value ? 0 : 1;
-							var res = '<input type="button" value="' + title
+							var res = '<input type="button"  class= "button_orange r3px monitor-button" value="' + title
 										+ '" app="' + obj.aData[0]
 										+ '" opt="' + opt
 										+ '" class="opt" />'
-										+ ' <input type="button" value="std info" class="std"'
+										+ ' <input type="button" value="std info" class="button_orange r3px monitor-button"'
 										+ ' app="' + obj.aData[0]
 										+ '" />';
 							return res;
@@ -121,7 +120,7 @@ showGrid();
 function showStd(app){
 	$.ajax({
 		type:'get',
-		url : '/app_log/out/' + app + '/last/1000',
+		url : '/monitor/app_log/out/' + app + '/last/1000',
 		success : function(data) {
 			$('.std_msg').show();
 			$('#stdout').html(data);
@@ -129,7 +128,7 @@ function showStd(app){
 	})
 	$.ajax({
 		type:'get',
-		url : '/app_log/err/' + app + '/last/1000',
+		url : '/monitor/app_log/err/' + app + '/last/1000',
 		success : function(data) {
 			$('.std_msg').show();
 			$('#stderr').html(data);
@@ -159,7 +158,7 @@ $('input.std').live('click', function(e){
 $('input.opt').live('click', function(event){
 	var app = $(event.target).attr('app');
 	var opt = $(event.target).attr('opt');
-	var url = '/app/' + app;
+	var url = 'monitor/app/' + app;
 	url += (opt == 1) ? '/run' : '/stop';
 	$.ajax({
 		type: 'post',

@@ -247,3 +247,12 @@ padding:40px;
 #head-N, #head-E{
     color:''
 }
+#monitor{
+  width:800px;
+  margin-left:60px;
+  margin-top:50px;
+  margin-bottom:50px;
+}
+.monitor-button{
+  width:70px;
+}

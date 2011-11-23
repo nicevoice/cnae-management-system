@@ -8,7 +8,7 @@ module.exports = function(app){
   //邀请码模块
   if (!labs) {
       app.get("/monitor", hasLogin, isAdmin, ctrMonitor.show);
-      app.get("/monitor/load_monitor", hasLogin, isAdmin, ctrMonitor.load);
+      app.get("/monitor/load", hasLogin, isAdmin, ctrMonitor.load);
       app.get("/monitor/apps", hasLogin, isAdmin, ctrMonitor.getList);
       app.get("/monitor/status", hasLogin, isAdmin, ctrMonitor.getStatus);
       app.get("/monitor/apps_detail", hasLogin, isAdmin, ctrMonitor.getDetailList);
