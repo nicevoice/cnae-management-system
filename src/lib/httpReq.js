@@ -44,4 +44,8 @@ exports.httpReq = function(options, callback){
     console.log("Got error: " + e.message);
     callback(e.message);
 });
+if(options.method.toUpperCase()==='POST' && options.data){
+    
+}
+req.end();
 }
