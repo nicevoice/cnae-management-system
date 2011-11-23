@@ -7,8 +7,9 @@ var nodemailer = exports.nodemailer = require('nodemailer');
 nodemailer.SMTP = config.smtp;
 
 var mails = exports.mails = [];
-
+var timer;
 mailEvent.on("getMail", function() {
+    console.log(mails.length);
     if(mails.length === 0) {
         return;
     } else {
@@ -21,7 +22,6 @@ mailEvent.on("getMail", function() {
             len--;
             var mail;
             try {
-                console.log(message);
                 mail = nodemailer.send_mail(message, function(error, success) {
                     if(error) {
                         log.error(error.toString());
@@ -43,7 +43,8 @@ mailEvent.on("getMail", function() {
             }
         }
         if(failed) {
-            setTimeout(fire, 60000);
+            clearTimeout(timer);
+		    timer = setTimeout(fire, 60000);
         }
     }
 });
