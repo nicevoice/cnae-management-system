@@ -31,9 +31,9 @@ exports.load = function(req ,res){
             appInfo:arguments[2]
         })
     })
-    countUser();
-    countApp();
-    checkSys();
+    countUser(proxy);
+    countApp(proxy);
+    checkSys(proxy);
 }
 function countUser(proxy){
     count(user, {}, function(err, count){
