@@ -17,8 +17,8 @@ exports.show = function(req, res){
 }
 
 exports.load = function(req ,res){
-    var proxy = new EventProxy();
-    proxy.once('users', 'apps', 'appInfo', function(users, apps, appInfo){
+    var loadEvent = new EventProxy();
+    loadEvent.once('users', 'apps', 'appInfo', function(users, apps, appInfo){
         if(users===false||apps===false||appInfo===false){
             return res.sendJson({
                 status:'error'
@@ -33,23 +33,23 @@ exports.load = function(req ,res){
     })
     count(user, {}, function(err, count){
         if(count){
-            proxy.fire('users', count);
+            loadEvent.fire('users', count);
         }else{
-            proxy.fire('users', false);
+            loadEvent.fire('users', false);
         }
     });
     count(app_basic, {}, function(err, count){
         if(count){
-            proxy.fire('apps', count);
+            loadEvent.fire('apps', count);
         }else{
-            proxy.fire('apps', false);
+            loadEvent.fire('apps', false);
         }
     });
     exec('../shells/appInfo.sh cnode-app-engine', function(err, stdout, stderr){
         if(stdout){
-            proxy.fire('appInfo', stdout);
+            loadEvent.fire('appInfo', stdout);
         }else{
-            proxy.fire('appInfo', false);
+            loadEvent.fire('appInfo', false);
         }
     })
 }
