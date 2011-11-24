@@ -1,6 +1,8 @@
 var url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
+//保存查询记录
+var querys = [], index=0;
 $(function() {
   loadAppDbInfo();
 });
@@ -92,6 +94,13 @@ function bindButtions() {
   $("#queryString").keydown(function(e) {
     if(e.keyCode === 13) {
       queryDb();
+    }else if(e.keyCode === 38){
+        $("#queryString").val(querys.length>0?querys[index--] :"");
+        if(index<0) index = 0;
+    }else if(e.keyCode === 40){
+        if(index+1 === querys.length)
+            return;
+        $("#queryString").val(querys.length>0?querys[++index] :"");     
     }
   });
 }
@@ -112,8 +121,12 @@ queryDb = function() {
   if(!queryString) {
     return false;
   }
+  index = querys.push(queryString)-1;
   if(!checkQueryString(queryString)) {
-    $("#queryOutput").html("该操作不被允许");
+      $("#queryOutput").html($("#queryOutput").html()+'\n'+"该操作不被允许:"+queryString);
+      var opt = document.getElementById("queryOutput");
+      opt.scrollTop = opt.scrollHeight;
+      $("#queryString").val("");
     return false;
   }
   $.ajax({
@@ -128,7 +141,10 @@ queryDb = function() {
       sAlert("警告", "连接错误，请稍后再试");
     },
     success : function(data) {
-      $("#queryOutput").html(data.output);
+      $("#queryOutput").html($("#queryOutput").html()+'\n'+data.output);
+      var opt = document.getElementById("queryOutput");
+      opt.scrollTop = opt.scrollHeight;
+      $("#queryString").val("");
     }
   })
 }
