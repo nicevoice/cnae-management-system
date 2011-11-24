@@ -45,7 +45,8 @@ var tplRecords = '<div id="records">'+
     tplEllipses = '<li class="disabled"><a href="javascript:void(0)">…</a></li>';
 function renderRecord(content){
     var records = content.records,
-        pages = content.pages;
+        pages = content.pages,
+        page = content.page;
     var recordContent = "", pageContent="";
     for(var i=0, len=records.length; i!=len; ++i){
         record = records[i];
