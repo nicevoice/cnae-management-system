@@ -145,7 +145,7 @@ exports.getAppLog = function(req, res, next){
     options.path = '/app_log/'+type+'/'+appname+'/last/'+line;
     options.method = 'GET';
     httpReq(options, function(result){
-        res.sendJson(result);
+        res.end(result);
     })    
 };
 exports.run = function(req, res, next){
