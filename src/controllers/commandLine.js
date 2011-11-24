@@ -11,7 +11,7 @@ var config = require('../config'),
     findOne = model.findOne,
     update = model.update,    
     user = config.dbInfo.collections.user,
-    app_mem = collectonNames.app_member; 
+    app_mem = config.dbInfo.collections.app_member; 
 
 var sendResult = function(res, status, code, msg){
     return res.sendJson({
@@ -83,7 +83,7 @@ exports.checkAuth = function(req, res){
                 if(!user){
                 return sendResult(res, "error", 6, "check token error");                    
                 }else{
-                    findOne(app_mem, {email:email, active:1, role:{$lt:3}}, function(err, mem){
+                    findOne(app_mem, {email:email, appDomain:appDomain, active:1, role:{$lt:3}}, function(err, mem){
                         if(err){
                             return sendResult(res, "error", 5, "system error:database error");
                             log.error(err.toString());                            
