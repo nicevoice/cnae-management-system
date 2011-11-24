@@ -1,5 +1,7 @@
 var config = require('../config')
+  , urlMoudle = require('url')
   , log = config.logWithFile
+  //models
   , model = require('../models/index')
   , find = model.find
   , findOne = model.findOne
@@ -9,13 +11,15 @@ var config = require('../config')
   , count = model.count
   , inviteCode = config.dbInfo.collections.inviteCode
   , user = config.dbInfo.collections.user
+  //send emails
   , sendMail = require('../lib/sendMail')
   , mails = sendMail.mails
   , mailEvent =sendMail.mailEvent
-  , randomString = require('../lib/randomString').getRandomString
-  , urlMoudle = require('url')
-  , randomStringNum = require('../lib/randomString').getRandomStringNum
-  , nodemailer = config.nodemailer;
+  , nodemailer = config.nodemailer
+  //utils
+  , utils = require('../lib/utils')
+  , randomString = utils.getRandomString
+  , randomStringNum = utils.getRandomStringNum;
 
 /***
  * 显示生成邀请码页面

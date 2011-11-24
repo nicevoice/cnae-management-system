@@ -1,12 +1,13 @@
-var model = require('../models/index'),
-    findOne = model.findOne,
-    update = model.update,
-    config = require('../config'),
+var config = require('../config'),
     log = config.logWithFile,
-    user = config.dbInfo.collections.user,
-    md5 = require('../lib/md5').hex_md5,
-    getRandomString = require('../lib/randomString').getRandomString,
-    urlMoudle = require('url');
+    urlMoudle = require('url'),    
+    md5 = require('../lib/utils').hex_md5,
+    getRandomString = require('../lib/utils').getRandomString,
+    //model
+    model = require('../models/index'),
+    findOne = model.findOne,
+    update = model.update,    
+    user = config.dbInfo.collections.user;
 
 var sendResult = function(res, status, code, msg){
     return res.sendJson({

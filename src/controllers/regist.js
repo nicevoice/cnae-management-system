@@ -1,17 +1,20 @@
 var config = require('../config'),
-log = config.logWithFile,
-md5 = require('../lib/md5').hex_md5,
-EventProxy = require('EventProxy.js').EventProxy,
-model = require('../models/index'),
-findOne = model.findOne,
-remove = model.remove,
-update = model.update,
-insert = model.insert,
-collectionNames = config.dbInfo.collections,
-user = collectionNames.user,
-inviteCode = collectionNames.inviteCode,
-urlMoudle = require('url'),
-randomStringNum = require('../lib/randomString').getRandomStringNum;
+    urlMoudle = require('url'),
+    log = config.logWithFile,
+    EventProxy = require('EventProxy.js').EventProxy,
+    //models
+    model = require('../models/index'),
+    findOne = model.findOne,
+    remove = model.remove,
+    update = model.update,
+    insert = model.insert,
+    collectionNames = config.dbInfo.collections,
+    user = collectionNames.user,
+    inviteCode = collectionNames.inviteCode,
+    //utils
+    utils = require('../lib/utils'),
+    md5 = utils.hex_md5,
+    randomStringNum = utils.getRandomStringNum;
 
 /***
  * 显示注册页面

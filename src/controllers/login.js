@@ -1,10 +1,11 @@
 var config = require('../config'),
-log = config.logWithFile,
-md5 = require('../lib/md5').hex_md5,
-model = require('../models/index'),
-findOne = model.findOne,
-urlMoudle = require('url'),
-user = config.dbInfo.collections.user;
+    log = config.logWithFile,
+    md5 = require('../lib/utils').hex_md5,
+    //models
+    model = require('../models/index'),
+    findOne = model.findOne,
+    urlMoudle = require('url'),
+    user = config.dbInfo.collections.user;
 /***
  * 显示登录页面
  * @param {} req

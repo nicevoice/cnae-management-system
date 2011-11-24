@@ -2,7 +2,7 @@
 position: relative;
 left:29%;
 top:20%;
-padding:2% 2% 5% 10%;
+padding:5% 0% 5% 2%;
 border-bottom-left-radius: 5px;
 border-bottom-right-radius: 5px;
 -moz-border-radius-bottomright: 5px;
@@ -11,7 +11,7 @@ border-radius-left: 5px;
 border-radius-right: 5px;
 -o-border-radius-left: 5px;
 -o-border-radius-right: 5px;
-width:30%;
+width:40%;
 height:auto !important;
 height:200px; /*假定最低高度是200px*/
 min-height:200px; 
@@ -25,13 +25,13 @@ line-height:20px;
 color:#0060BF;
 font-size:16px;
 }
-#newAppSubmit,#newAppCancer{
+#newAppSubmit{
 position:relative;
-left:30%;
+left:75%;
 margin:50px 30px 0px 0px;
 }
 .newLongInput{
-width:65%;
+width:60%;
 }
 #newAppWarn{
   position:relative;

@@ -1,7 +1,8 @@
 var config = require('../config'), 
-    sendMail = require('../lib/sendMail'), 
-    model = require('../models/index'), 
     log = config.logWithFile, 
+    EventProxy = require('EventProxy.js').EventProxy,
+    //models    
+    model = require('../models/index'), 
     collectonNames = config.dbInfo.collections, 
     app_mem = collectonNames.app_member, 
     app_basic = collectonNames.app_basic, 
@@ -11,8 +12,10 @@ var config = require('../config'),
     insert = model.insert, 
     update = model.update, 
     remove = model.remove, 
-    count = model.count, 
-    EventProxy = require('EventProxy.js').EventProxy, 
+    count = model.count,
+     
+    //send emails 
+    sendMail = require('../lib/sendMail'), 
     nodemailer = config.nodemailer, 
     mailContent = config.mailContent, 
     mailTitle = config.mailTitle, 

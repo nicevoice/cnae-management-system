@@ -1,4 +1,4 @@
-var onOff = require('../lib/socket').onOff
+var onOff = require('../lib/utils').onOff
   , model = require('../models/index')
   , config = require('../config')
   , log = config.logWithFile

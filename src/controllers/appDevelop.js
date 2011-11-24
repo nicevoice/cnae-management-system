@@ -3,9 +3,9 @@ var config = require('../config')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
-  , randomString = require('../lib/randomString')
+  , EventProxy = require('EventProxy.js').EventProxy  
+  //models
   , model = require('../models/index')
-  , log = config.logWithFile
   , collectionNames = require('../config').dbInfo.collections
   , user = collectionNames.user
   , app_mem = collectionNames.app_member
@@ -15,9 +15,10 @@ var config = require('../config')
   , findOne = model.findOne
   , update = model.update
   , insert = model.insert
-  , EventProxy = require('EventProxy.js').EventProxy  
+  
+  , log = config.logWithFile
   , uploadDir = config.uploadDir
-  , randomStringNum = require('../lib/randomString').getRandomStringNum;
+  , randomStringNum = require('../lib/utils').getRandomStringNum;
   
   
   

@@ -1,6 +1,6 @@
 
 #appSquare{
-  margin:20px;
+  margin:50px 20px 20px 20px;
   position:relative;
   left:100px;
   width:800px;
@@ -82,7 +82,7 @@ border: 1px solid #054388;
 }
 .app-info-left{
   float:left;
-  width:540px;
+  width:400px;
   margin:0px;
   padding:0px;
 }
@@ -91,9 +91,15 @@ border: 1px solid #054388;
   width:100px;
   margin:0px;
   padding:0px;
-  display:none;
 }
-
+.app-info-image{
+    float:right;
+    width:120px;
+    border:1px #000;
+}
+.app-info-right-apply{
+    display:none;
+}
 #back-top{
   position:fixed;
   bottom:100px;

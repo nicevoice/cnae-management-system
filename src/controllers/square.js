@@ -1,12 +1,14 @@
 var config = require('../config')
+  , urlMoudle = require('url')
   , fs = require('fs')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
-  , randomString = require('../lib/randomString')
-  , model = require('../models/index')
-  , md5 = require('../lib/md5').hex_md5
   , log = config.logWithFile
+  , EventProxy = require('EventProxy.js').EventProxy  
+  , uploadDir = config.uploadDir
+  //models  
+  , model = require('../models/index')
   , collectionNames = config.dbInfo.collections
   , user = collectionNames.user
   , app_mem = collectionNames.app_member
@@ -15,14 +17,15 @@ var config = require('../config')
   , findOne = model.findOne
   , update = model.update
   , insert = model.insert
-  , EventProxy = require('EventProxy.js').EventProxy  
-  , uploadDir = config.uploadDir
-  , urlMoudle = require('url')
+  //send emails
   ,sendMail = require('../lib/sendMail')
   ,mails = sendMail.mails
   ,mailEvent =sendMail.mailEvent
   ,nodemailer = config.nodemailer
-  , randomStringNum = require('../lib/randomString').getRandomStringNum;
+  //utils
+  , utils = require('../lib/utils')
+  , randomStringNum = utils.getRandomStringNum 
+  , md5 = utils.hex_md5;
   
 exports.showSquare = function(req, res){
   return res.render("appSquare", {layout:"layoutMain",

@@ -36,6 +36,7 @@ function renderSelector(apps){
         var app = apps[i], selected="";
         if(app.appDomain === domain){
             selected="selected";
+            $("#app-name").html(app.appName);
         }
         optionContent += tplReplace(tplOption, {
             '$appDomain$':app.appDomain,

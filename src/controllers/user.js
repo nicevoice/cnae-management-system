@@ -1,13 +1,17 @@
 var config = require('../config'),
 log = config.logWithFile,
 EventProxy = require('EventProxy.js').EventProxy,
-randomStringNum = require("../lib/randomString").getRandomStringNum,
-md5 = require('../lib/md5').hex_md5,
+//models
 model = require('../models/index'),
 findOne = model.findOne,
 find = model.find,
 update = model.update,
-user = config.dbInfo.collections.user;
+user = config.dbInfo.collections.user,
+//utils
+utils = require('../lib/utils'),
+randomStringNum = utils.getRandomStringNum,
+md5 = utils.hex_md5;
+
 /***
  * 跳转到显示用户信息页面
  * @param {} req

@@ -1,14 +1,15 @@
 var config = require('../config')
-  , exec  = require('child_process').exec
-  , model = require('../models/index')
   , log = config.logWithFile
+  , exec  = require('child_process').exec
+  , EventProxy = require('EventProxy.js').EventProxy
+  , httpReq = require('../lib/utils').httpReq
+  , httpOptions = config.monitor
+  //models
+  , model = require('../models/index')
   , collectionNames = require('../config').dbInfo.collections
   , user = collectionNames.user
   , app_basic = collectionNames.app_basic
-  , count = model.count
-  , EventProxy = require('EventProxy.js').EventProxy
-  , httpReq = require('../lib/httpReq').httpReq
-  , httpOptions = config.monitor;
+  , count = model.count;
   
 exports.show = function(req, res){
     res.render('monitor', {

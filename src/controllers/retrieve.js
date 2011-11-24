@@ -1,20 +1,23 @@
 var config = require('../config'),
-log = config.logWithFile,
-md5 = require('../lib/md5').hex_md5,
-EventProxy = require('EventProxy.js').EventProxy,
-model = require('../models/index'),
-find = model.find,
-findAndModify = model.findAndModify,
-update = model.update,
-findOne = model.findOne,
-user = config.dbInfo.collections.user,
-urlMoudle = require('url'),
-sendMail = require('../lib/sendMail'),
-mails = sendMail.mails,
-mailEvent =sendMail.mailEvent,
-nodemailer = config.nodemailer,
-randomStringNum = require('../lib/randomString').getRandomStringNum;
-
+    log = config.logWithFile,
+    urlMoudle = require('url'),
+    EventProxy = require('EventProxy.js').EventProxy,
+    //models
+    model = require('../models/index'),
+    find = model.find,
+    findAndModify = model.findAndModify,
+    update = model.update,
+    findOne = model.findOne,
+    user = config.dbInfo.collections.user,
+    //send emails
+    sendMail = require('../lib/sendMail'),
+    mails = sendMail.mails,
+    mailEvent =sendMail.mailEvent,
+    nodemailer = config.nodemailer,
+    //utils
+    utils = require('../lib/utils'),
+    randomStringNum = utils.getRandomStringNum,
+    md5 = utils.hex_md5;
 
 exports.showRetrieve = function(req, res){
   res.render("retrieve");

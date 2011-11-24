@@ -1,13 +1,15 @@
+var validator = new Validator();
 $(function(){
 	$("#appDomain").blur(domainBlur).focus(domainFocus);
 	$("#appName").blur(nameBlur).focus(nameFocus);
+    $("#github").blur(githubBlur).focus(githubFocus);
+    $("#appImage").blur(imgBlur).focus(imgFocus);
 });
 domainBlur = function(){
 	var domain = $("#appDomain").val()||'';
 	$("#appName").val(domain);
-	var regDomain = /^[a-z][a-z0-9_]{3,19}$/;
-  	if(!regDomain.exec(domain))
-		return $("#domainWarn").html("域名格式不正确");
+  	if(!validator.verify('domain', domain))
+		return $("#domainWarn").addClass("warnColor").html(" 域名格式不正确");
 	$.ajax({
     cache:false,
     type:"POST",
@@ -19,20 +21,33 @@ domainBlur = function(){
      $("#domainWarn").html(data.warn); 
     }
 	});		
-}
-	
+}	
 domainFocus = function(){
-	$("#domainWarn").html("");
-	$("#newWarn").html("");
+	$("#domainWarn").removeClass("warnColor").html($("#topDomain").html());
 }
-
 nameBlur = function(){
 	var name = $("#appName").val()||'';
   	if(name.length>20)
-		return $("#appNameWarn").html("应用名不能超过20个字");
-}
-	
+		return $("#appNameWarn").html("必须小于20个字符");
+}	
 nameFocus = function(){
 	$("#appNameWarn").html("");
-    $("#newWarn").html("");
+}
+githubFocus = function(){
+    $("#githubWarn").html("");
+}
+githubBlur = function(){
+    var github = $("#github").val()||'';
+    if(github&&!validator.verify('githubPage', github)){
+        $("#githubWarn").html("github地址不正确");    
+    }
+}
+imgFocus = function(){
+    $("#imgWarn").html("");
+}
+imgBlur = function(){
+    var img = $("#appImage").val()||'';
+    if(img&&!validator.verify('imgSource', img)){
+        $("#imgWarn").html("图片地址不正确");    
+    }
 }

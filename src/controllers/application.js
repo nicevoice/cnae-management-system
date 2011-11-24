@@ -15,7 +15,7 @@ var config = require('../config')
   , EventProxy = require('EventProxy.js').EventProxy
   , fs = require('fs')
   , uploadDir = config.uploadDir
-  , onOff = require('../lib/socket').onOff
+  , onOff = require('../lib/utils').onOff
   , exec  = require('child_process').exec;
   
       /***
@@ -85,7 +85,7 @@ var config = require('../config')
   if(!newAppName){
  	return res.render("newApp", {
  	    layout:"layoutMain",
- 	    warn:"必须有应用名称",
+ 	    warn:{nameWarn:"必须有应用名称"},
  	    email:req.session.email,
  	    nickName:req.session.nickName});
  }
@@ -99,7 +99,7 @@ var config = require('../config')
   if(!regDomain.exec(newAppDomain))
         return res.render("newApp", {
             layout:"layoutMain",
-            warn:"子域名格式错误",
+            warn:{domainWarn:"子域名格式错误"},
             email:req.session.email,
             nickName:req.session.nickName});
 		//检查域名是否重复，用户创建的应用数目是否达到上限
@@ -107,13 +107,13 @@ var config = require('../config')
  		if(goodDomain===1)
             return res.render("newApp", {
                 layout:"layoutMain",
-                warn:"此域名已被占用",
+                warn:{domainWarn:"此域名已被占用"},
                 email:req.session.email,
                 nickName:req.session.nickName});
  		if(checkNumbers===1)
             return res.render("newApp", {
                 layout:"layoutMain",
-                warn:"创建的应用数量达到上限",
+                warn:{domainWarn:"创建的应用数量达到上限"},
                 email:req.session.email,
                 nickName:req.session.nickName});
  		if(goodDomain===2 || checkNumbers===2){

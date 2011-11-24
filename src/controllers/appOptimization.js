@@ -1,7 +1,8 @@
-var find = require('../models/index').find
-  , log = require('../config').logWithFile
-  , app_mem = require('../config').dbInfo.collections.app_member
-  , getLog = require('../lib/socket').getLog;
+var log = require('../config').logWithFile
+  , getLog = require('../lib/utils').getLog
+    //model
+  , find = require('../models/index').find
+  , app_mem = require('../config').dbInfo.collections.app_member;
   
 exports.applog = function(req, res) {
   var url = req.url;

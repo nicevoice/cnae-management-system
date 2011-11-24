@@ -16,10 +16,10 @@ $(function(){
 function bindDiv(){
     $("div .app-info").each(function(index){
 		$(this).mouseenter(function() {
-			$('.app-info-right:eq(' + index + ')').css("display", "block");
+			$('.app-info-right-apply:eq(' + index + ')').css("display", "block");
 			});
 			$(this).mouseleave(function() {
-			$('.app-info-right:eq(' + index + ')').css("display", "none");
+			$('.app-info-right-apply:eq(' + index + ')').css("display", "none");
 			});
   });
 }
@@ -61,8 +61,10 @@ var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' 
                    '<p class="app-mem"><a href="/square/$creatorNickName$">$photo$$creatorNickName$</a>'+
                    '创建于$appCreateDate$ • 有$memberNums$个参与者  </p></div>'+
                    '<div class="app-info-right">'+
-                   '<a class="blockA likeBlue" href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a>'+
-                   '</div></div>';
+                   '<a class="blockA likeBlue app-info-right-apply" href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a>'+
+                   '</div><div class="app-info-image">$img$</div>'+
+                   '</div>',
+    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" width="120px" height="120px" alt="$appName$"></img></a>';
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
      !app.creatorEmail || !app.creatorNickName ||
@@ -77,6 +79,13 @@ function renderApp(app){
   if(app.photoUrl){
     photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
   }
+  var imgSource = "";
+  if(app.appImage){
+      imgSource = tplReplace(tplAppImg, {
+          '$imgSourece$':app.appImage,
+          '$appName$':app.appName
+      });
+  }
   return tplReplace(tplSquareApp, {
       '$appName$':app.appName,
       '$appDomain$':app.appDomain,
@@ -86,7 +95,8 @@ function renderApp(app){
       '$photo$':photo,
       '$appDes$':app.appDes,
       '$appCreateDate$':app.appCreateDate,
-      '$port$':port
+      '$port$':port,
+      '$img$':imgSource
   });
 } 
 
