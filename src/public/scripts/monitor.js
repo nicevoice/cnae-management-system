@@ -1,3 +1,5 @@
+//保存查询记录
+var querys = [], index=0;
 $(function(){
 	loadInfo();
 	$('#reflash').click(loadInfo);
@@ -5,6 +7,13 @@ $(function(){
 	$("#queryString").keydown(function(e) {
     if(e.keyCode === 13) {
       queryDb();
+    }else if(e.keyCode === 38){
+        $("#queryString").val(querys.length>0?querys[index--], :"");
+        if(index<0) index = 0;
+    }else if(e.keyCode === 40){
+        if(index+1 === querys.length)
+            return;
+        $("#queryString").val(querys.length>0?querys[index++], :"");     
     }
   });
 });
@@ -183,6 +192,7 @@ queryDb = function() {
   if(!queryString) {
     return false;
   }
+  index = querys.push(queryString)-1;
   $.ajax({
     cache : false,
     url : "/monitor/database",
