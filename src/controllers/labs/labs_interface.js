@@ -1,5 +1,13 @@
 var config = require('../../config'),
     log = config.logWithFile,
+    urlMoudle = require('url'),
+    EventProxy = require('EventProxy.js').EventProxy,
+    fs = require('fs'),
+    exec  = require('child_process').exec,
+    labsConf = config.labsConf,
+    uploadDir = config.uploadDir,
+    
+    //models
     model = require('../../models/index'),
     collectionNames = config.dbInfo.collections,
     app_mem = collectionNames.app_member,
@@ -9,14 +17,10 @@ var config = require('../../config'),
     findOne = model.findOne,
     insert = model.insert,
     remove = model.remove,
-    urlMoudle = require('url'),
-    EventProxy = require('EventProxy.js').EventProxy,
-    fs = require('fs'),
-    md5 = require('../../lib/md5').hex_md5,
-    labsConf = config.labsConf,
-    uploadDir = config.uploadDir,
-    onOff = require('../../lib/socket').onOff,
-    exec  = require('child_process').exec;
+    //utils
+    utils = require('../../lib/utils'),
+    md5 = utils.hex_md5,
+    onOff = utils.onOff;
     
 exports.appAdd = function(req, res){
   var queryString  = urlMoudle.parse(req.url, true).query,

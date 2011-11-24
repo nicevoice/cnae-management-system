@@ -2,8 +2,11 @@ var validator = new Validator();
 $(function(){
 	$("#appDomain").blur(domainBlur).focus(domainFocus);
 	$("#appName").blur(nameBlur).focus(nameFocus);
-    $("#github").blur(githubBlur).focus(githubFocus);
-    $("#appImage").blur(imgBlur).focus(imgFocus);
+  $("#github").blur(githubBlur).focus(githubFocus);
+  $("#appImage").blur(imgBlur).focus(imgFocus);
+  if($("#domainWarn").html().indexOf("域名")!==-1){
+    $("#domainWarn").addClass('warnColor');
+  }
 });
 domainBlur = function(){
 	var domain = $("#appDomain").val()||'';
