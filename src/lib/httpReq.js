@@ -5,7 +5,6 @@ var request_timer = null, req = null;
 // 请求5秒超时
 
 exports.httpReq = function(options, callback){
-	console.log(options);
 	request_timer = setTimeout(function() {
     req.abort();
     console.log('Request Timeout.');
@@ -19,7 +18,6 @@ exports.httpReq = function(options, callback){
         callback({done:false, warn:"响应超时"});
     }, 60000);
 
-    console.log("Got response: " + res.statusCode);
     var chunks = [];
     res.on('data', function(chunk) {
         chunks.push(chunk);
@@ -32,11 +30,11 @@ exports.httpReq = function(options, callback){
 			data += chunks[i];
         }
         try{
-        data = JSON.parse(data);
+        var jsonData = JSON.parse(data);
         }catch(e){
-          return callback("http returns not json");
+          return callback(data);
         }
-        callback(data);
+        callback(jsonData);
     });
 }).on('error', function(e) {
     // 响应头有错误

@@ -167,9 +167,9 @@ $('input.std').live('click', function(e){
 	std_stop = false;
 	var app = $(e.target).attr('app');
 	showStd(app);
-	std_tm = window.setInterval(function(){
-		showStd(app)
-	}, 3000);
+    std_tm = window.setInterval(function(){
+      showStd(app);
+    }, 3000);
 })
 $('input.opt').live('click', function(event){
 	var app = $(event.target).attr('app');
