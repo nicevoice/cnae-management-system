@@ -29,7 +29,7 @@ Date.prototype.format = function(format){
 }
 
 String.prototype.trim = function() {
-return this.replace(/^\s+|\s+$/g, "");
+    return this.replace(/^\s+|\s+$/g, "");
 }
 var res = require('http').ServerResponse;
 res.prototype.sendJson = function(data){
@@ -41,15 +41,4 @@ res.prototype.json = function(data){
   body = new Buffer(JSON.stringify(data));
     this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
     this.end(body);
-}
-res.prototype.redirect = function(url){
-    //defualt to 302
-    var statusCode = 302;
-    if(arguments.length===2){
-        var statusCode = url;
-        url = arguments[1];
-    }
-    console.log(url);
-    this.writeHead(statusCode, {"Location":url});
-    this.end('fuck');
 }

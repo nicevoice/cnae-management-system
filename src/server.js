@@ -10,7 +10,7 @@ if(!config.debug) {
     // patch net module for connect to proxy
     require('./lib/net_patch');
 }
-require('./patch');
+require('./lib/patch');
 
 
 //创建httpServer 
