@@ -1,13 +1,17 @@
 var config = require('../config'),
     log = config.logWithFile,
-    urlMoudle = require('url'),    
-    md5 = require('../lib/utils').hex_md5,
-    getRandomString = require('../lib/utils').getRandomString,
+    urlMoudle = require('url'), 
+    //utils
+    utils = require('../lib/utils'),   
+    md5 = utils.hex_md5,
+    getRandomString = utils.getRandomString,
+    verify = utils.verify,
     //model
     model = require('../models/index'),
     findOne = model.findOne,
     update = model.update,    
-    user = config.dbInfo.collections.user;
+    user = config.dbInfo.collections.user,
+    app_mem = collectonNames.app_member; 
 
 var sendResult = function(res, status, code, msg){
     return res.sendJson({
@@ -29,7 +33,7 @@ exports.getToken = function(req, res){
     }    
     email = decodeURIComponent(email);
     password = decodeURIComponent(password);
-    if(!email.match(config.regEmail)){
+    if(!verify('email', email)){
        return sendResult(res, 'error', 4, 'param error : email format error');
     }
     findOne(user, {email:email, password:md5(password+config.md5_secret)}, function(err, result){
@@ -55,3 +59,44 @@ exports.getToken = function(req, res){
         }
     })
 }
+
+
+exports.checkAuth = function(req, res){
+    var queryString = urlMoudle.parse(req.url, true).query;
+    var email = queryString.email||'',
+        appDomain = queryString.app||'',
+        token = queryString.token||'';
+    if(!email){
+      return sendResult(res, "error", 1, "missing params: email");
+    }else if(!appDomain){
+        return sendResult(res, "error", 2, "missing params: app");
+    }else if(!token){
+        return sendResult(res, "error", 3, "missing params: token");
+    }else if(!verify('email', email)){
+        return sendResult(res, "error", 4, "email format error");
+    }else{
+        findOne(user, {email:email, token:token}, function(err, user){
+            if(err){
+                return sendResult(res, "error", 5, "system error:database error");
+                log.error(err.toString());
+            }else{
+                if(!user){
+                return sendResult(res, "error", 6, "check token error");                    
+                }else{
+                    findOne(app_mem, {email:email, active:1, role:{$lt:3}}, function(err, mem){
+                        if(err){
+                            return sendResult(res, "error", 5, "system error:database error");
+                            log.error(err.toString());                            
+                        }else{
+                            if(!mem){
+                                return sendResult(res, "error", 7, "you don't have the app's permission");
+                            }else{
+                                return res.sendJson({status:"ok"});
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    }
+ }

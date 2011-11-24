@@ -8,4 +8,5 @@ module.exports = function(app){
         app.get('/labs/appdel', ctrLabsInterface.appDel);
     }
     app.get('/commandline/token', ctrCommandLine.getToken);
+    app.get('/commandline/permission', ctrCommandLine.checkAuth);
 }
