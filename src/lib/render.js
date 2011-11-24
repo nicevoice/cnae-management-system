@@ -50,6 +50,7 @@ module.exports = function(options) {
         res.req = req;
         res.render = render;
         res._render = _render;
+        res.redirect = redirect;
         next();
     };
 };
@@ -124,4 +125,13 @@ function _render(view, options, callback) {
     });
 };
 
-
+function redirect(url){
+    //defualt to 302
+    var statusCode = 302;
+    if(arguments.length===2){
+        var statusCode = url;
+        url = arguments[1];
+    }
+    this.writeHead(statusCode, {"Location":url});
+    this.end('redirect');
+}
