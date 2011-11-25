@@ -216,10 +216,10 @@ req.end();
 */
 exports.doGitClone = function(gitUrl, targetDir, cb){
 	      if(typeof targetDir!== 'string'){
-	      	  return {
+	      	  return cb({
 	      	  	  status:"error",
 	      	  	  msg:"错误的目标文件夹"
-	      	  	}
+	      	  	});
 	      	}
   var tempDirLast = exports.getRandomStringNum(15),
       gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, 
@@ -230,26 +230,26 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
       log.error(err.toString());
       exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
       });
-      return {
+      return cb({
         status : "error",
         msg : "请使用Git Read-Only方式获取代码"
-      };
+      });
     } else {
       fs.mkdir(savePath, '777', function(err) {
         exec(move, function(err) {
           if(err && err.toString().indexOf("no matches found") === -1) {
             log.error(err.toString());
-            return {
+            return cb({
               status : "error",
               msg : err.toString()
-            };
+            });
           } else {
             exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
             });
-            return {
+            return cb({
               status : "ok",
               msg : "成功获取"
-            };
+            });
           }
         })
       })
