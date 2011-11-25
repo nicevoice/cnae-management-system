@@ -220,6 +220,8 @@ var config = require('../config')
         insert(app_basic, {
           appDomain : newAppDomain.toString(),
           appName : newAppName.toString(),
+          github: newGithub.toString(),
+          imgSource:newAppImage.toString(),
           appDes : newAppDes.toString(),
           appState : 0,
           appCreateDate : now

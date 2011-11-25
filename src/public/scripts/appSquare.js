@@ -56,15 +56,15 @@ function render(data){
   bindDiv();
 }
 var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' + 
-                   '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://$appDomain$.cnodejs.net$port$" target="_blank">$appName$</a></p>'+
+                   '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://$appDomain$.cnodejs.net$port$" target="_blank">$appName$</a>$github$</p>'+
                    '<p class="app-des">描述：$appDes$</p>'+
                    '<p class="app-mem"><a href="/square/$creatorNickName$">$photo$$creatorNickName$</a>'+
-                   '创建于$appCreateDate$ • 有$memberNums$个参与者  </p></div>'+
+                   '创建于$appCreateDate$ • 有$memberNums$个参与者 <a href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a></p></div>'+
                    '<div class="app-info-right">'+
-                   '<a class="blockA likeBlue app-info-right-apply" href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a>'+
                    '</div><div class="app-info-image">$img$</div>'+
                    '</div>',
-    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" width="120px" height="120px" alt="$appName$"></img></a>';
+    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" width="120px" height="120px" alt="$appName$"></img></a>',
+    tplGithub = '&nbsp;&nbsp;<a href="$github$" title="Fork me on Github" target="_blank" width=><img width="40px" src="/images/github.jpg" alt="Github"></img></a>';
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
      !app.creatorEmail || !app.creatorNickName ||
@@ -80,11 +80,17 @@ function renderApp(app){
     photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
   }
   var imgSource = "";
-  if(app.appImage){
+  var github = "";
+  if(app.imgSource){
       imgSource = tplReplace(tplAppImg, {
-          '$imgSourece$':app.appImage,
+          '$imgSource$':app.imgSource,
           '$appName$':app.appName
       });
+  }
+  if(app.github){
+    	github = tplReplace(tplGithub, {
+    		'$github$':app.github
+    	});
   }
   return tplReplace(tplSquareApp, {
       '$appName$':app.appName,
@@ -96,7 +102,8 @@ function renderApp(app){
       '$appDes$':app.appDes,
       '$appCreateDate$':app.appCreateDate,
       '$port$':port,
-      '$img$':imgSource
+      '$img$':imgSource,
+      '$github$':github
   });
 } 
 
