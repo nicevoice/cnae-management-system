@@ -200,7 +200,7 @@ exports.gitClone = function(req, res) {
           msg:'请输入正确的git-url'
       })
   }
-  doGitClone(gitUrl, targetDir, function(resul){
+  doGitClone(gitUrl, targetDir, function(result){
     return res.sendJson(result); 
   })
 }
