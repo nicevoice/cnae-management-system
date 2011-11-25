@@ -15,7 +15,8 @@ var config = require('../config')
   , findOne = model.findOne
   , update = model.update
   , insert = model.insert
-  
+  //utils
+  , doGitClone = require('../lib/utils').doGitClone
   , log = config.logWithFile
   , uploadDir = config.uploadDir
   , randomStringNum = require('../lib/utils').getRandomStringNum;
@@ -127,8 +128,8 @@ exports.doUpload = function(req, res) {
                         move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
                       }
                       exec(move, function(err) {
-                      	if(err){
-                      		log.error(err.toString());
+                        if(err){
+                          log.error(err.toString());
                         }
                         
                           exec("rm -rf " + path, function(err) {
@@ -189,8 +190,9 @@ exports.doUpload = function(req, res) {
 }
 
 exports.gitClone = function(req, res) {
-  var gitUrl = req.body.gitUrl||'';
-  var matchs = gitUrl.match(config.regGit);
+  var gitUrl = req.body.gitUrl||'',
+      targetDir = req.params.id||'',
+      matchs = gitUrl.match(config.regGit);
   gitUrl = matchs?matchs[0]:null;
   if(!gitUrl){
       return res.sendJson({
@@ -198,46 +200,8 @@ exports.gitClone = function(req, res) {
           msg:'请输入正确的git-url'
       })
   }
-  var tempDirLast = randomStringNum(15), tempDir = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "temp", gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, domain = req.params.id || '', savePath = uploadDir + '/' + domain + '/', move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
-  exec(gitClone, function(err, gitStdout, gitStderr) {
-    if(err) {
-      log.error(err.toString());
-      exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
-      });
-      return res.sendJson({
-        status : "error",
-        msg : "请使用Git Read-Only方式获取代码"
-      });
-    } else {
-      fs.mkdir(savePath, '777', function(err) {
-        if(err && err.errno !== 17) {
-          log.error(err.toString());
-          exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
-          });
-          return res.sendJson({
-            status : "error",
-            msg : "执行错误，请稍后再试"
-          });
-        } else {
-          exec(move, function(err) {
-            if(err && err.toString().indexOf("no matches found") === -1) {
-              log.error(err.toString());
-              return res.sendJson({
-                status : "error",
-                msg : err.toString()
-              });
-            } else {
-              exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
-              });
-              return res.sendJson({
-                status : "ok",
-                msg : "成功获取"
-              });
-            }
-          })
-        }
-      })
-    }
+  doGitClone(gitUrl, targetDir, function(resul){
+    return res.sendJson(result); 
   })
 }
 
@@ -489,11 +453,11 @@ exports.createMongo = function(req, res) {
           message : "已经创建数据库"
         });
       } else {
-      	var proxy = new EventProxy();
-      	proxy.once('dbUser', function(dbUser){
-      	if(dbUser===false){
-      		return res.render("error", {message:"数据库查询错误，请稍后再试"});
-      	}
+        var proxy = new EventProxy();
+        proxy.once('dbUser', function(dbUser){
+        if(dbUser===false){
+          return res.render("error", {message:"数据库查询错误，请稍后再试"});
+        }
         var dbName = randomStringNum(12);
         var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
         exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
@@ -524,12 +488,12 @@ exports.createMongo = function(req, res) {
         })
         });
         findOne(user, {email:req.session.email}, {dbUserName:1, dbPassword:1}, function(err, data){
-        	if(err){
-        		log.error(err.toString());
-        		proxy.fire('dbUser',false);
-        	}else{
-        		proxy.fire('dbUser', data);
-        	}
+          if(err){
+            log.error(err.toString());
+            proxy.fire('dbUser',false);
+          }else{
+            proxy.fire('dbUser', data);
+          }
         })
       }
     }

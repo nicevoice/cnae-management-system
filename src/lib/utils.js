@@ -2,9 +2,11 @@
 var crypto = require('crypto'),
     http = require('http'),    
     net = require('net'),
+    exec = require('child_process').exec,
     config = require('../config'),
     log = config.logWithFile,
     labsConf = config.labsConf,
+    tempDir = config.tempDir,
     port = config.socketPort;
 /**
  * 验证
@@ -206,4 +208,59 @@ if(options.data){
     req.write(options.data.toString());
 }
 req.end();
+}
+/**
+* git clone read-only
+*/
+exports.doGitClone = function(gitUrl, targetDir, cb){
+	      if(typeof targetDir!== 'string'){
+	      	  return {
+	      	  	  status:"error",
+	      	  	  msg:"错误的目标文件夹"
+	      	  	}
+	      	}
+  var tempDirLast = randomStringNum(15),
+      gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, 
+      savePath = uploadDir + '/' + targetDir||'' + '/',
+      move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
+  exec(gitClone, function(err, gitStdout, gitStderr) {
+    if(err) {
+      log.error(err.toString());
+      exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
+      });
+      return {
+        status : "error",
+        msg : "请使用Git Read-Only方式获取代码"
+      };
+    } else {
+      fs.mkdir(savePath, '777', function(err) {
+        if(err && err.errno !== 17) {
+          log.error(err.toString());
+          exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
+          });
+          return {
+            status : "error",
+            msg : "执行错误，请稍后再试"
+          };
+        } else {
+          exec(move, function(err) {
+            if(err && err.toString().indexOf("no matches found") === -1) {
+              log.error(err.toString());
+              return {
+                status : "error",
+                msg : err.toString()
+              };
+            } else {
+              exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
+              });
+              return {
+                status : "ok",
+                msg : "成功获取"
+              };
+            }
+          })
+        }
+      })
+    }
+  })
 }
