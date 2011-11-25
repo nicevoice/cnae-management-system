@@ -23,7 +23,8 @@ var crypto = require('crypto'),
       githubCode : /^(git:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
       npm : /^[\w\d.-]+/,
       githubPage : /^(https:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
-      imgSource : /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?(\.jpg|\.png|\.bmp|\.jpeg|\.gif)$/
+      imgSource : /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?(\.jpg|\.png|\.bmp|\.jpeg|\.gif)$/,
+      files : /^[\w\u4E00-\u9FA5\ \=\+\#\/\^\%\,\~\-\_\.\*\?\[\]]+$/
   };
 exports.verify = function(type, str){
     return regs[type].test(str);

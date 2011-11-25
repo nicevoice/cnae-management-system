@@ -91,11 +91,13 @@ display:none;
 
 #submitUpload{
     position:relative;
-    left:60%;
+    left:365px;
 }
-#download{  
-    position:relative;
-    left:63%;
+#download{
+  margin-left:20px;
+}
+#downloadReg{
+	width:350px;
 }
 #status{
 position:relative;

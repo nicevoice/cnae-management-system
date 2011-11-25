@@ -1,10 +1,16 @@
-var hasGitInfo = false, hasNpmInfo = false, gitTips = "git clone操作请在此输入Git Read-Only url", npmTips = "在此输入需要安装的模块名";
-var url = location.href;
+var hasGitInfo = false,
+    hasNpmInfo = false, 
+    gitTips = "git clone操作请在此输入Git Read-Only url", 
+    npmTips = "在此输入需要安装的模块名",
+    regTips = "输入要下载的文件名（支持通配符），不输入为全部下载",
+    validator = new Validator(),
+    url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
 $(function() {
   $("#gitUrl").blur(addgitTips).focus(removegitTips).val(gitTips);
   $("#npmName").blur(addnpmTips).focus(removenpmTips).val(npmTips);
+  $("#downloadReg").blur(addregTips).focus(removeregTips).val(regTips);
   $.ajax({
     cache : false,
     url : "/getOwnAuthInfo",
@@ -30,6 +36,11 @@ $(function() {
           install();
         }
       })
+      $("#downloadReg").keydown(function(e) {
+        if(e.keyCode === 13) {
+          download();
+        }
+      })
     },
     success : function(data) {
       if(data.active === 0 || data.role > 2) {//如果是观察者
@@ -53,6 +64,16 @@ $(function() {
             sAlert("警告", "没有权限进行此操作");
           }
         })
+        $("#gitUrl").keydown(function(e) {
+          if(e.keyCode === 13) {
+            sAlert("警告", "没有权限进行此操作");
+          }
+        })
+	      $("#downloadReg").keydown(function(e) {
+	        if(e.keyCode === 13) {
+            sAlert("警告", "没有权限进行此操作");
+	        }
+	      })
       } else {
         $("#submitUpload").click(upload);
         $("#download").click(download);
@@ -70,12 +91,17 @@ $(function() {
             install();
           }
         })
+	      $("#downloadReg").keydown(function(e) {
+	        if(e.keyCode === 13) {
+	          download();
+	        }
+	      })        
       }
     }
   });
 });
 function addgitTips() {
-  var url = $("#gitUrl"), urlContent = url.val() || '';
+  var url = $("#gitUrl"), urlContent = url.val().trim() || '';
   if(urlContent === '') {
     url.val(gitTips);
   }
@@ -88,7 +114,7 @@ function removegitTips() {
 }
 
 function addnpmTips() {
-  var name = $("#npmName"), nameContent = name.val() || '';
+  var name = $("#npmName"), nameContent = name.val().trim() || '';
   if(nameContent === '') {
     name.val(npmTips);
   }
@@ -97,6 +123,19 @@ function addnpmTips() {
 function removenpmTips() {
   var name = $("#npmName");
   if(name.val() === npmTips)
+    name.val("");
+}
+
+function addregTips() {
+  var name = $("#downloadReg"), nameContent = name.val().trim() || '';
+  if(nameContent === '') {
+    name.val(regTips);
+  }
+}
+
+function removeregTips() {
+  var name = $("#downloadReg");
+  if(name.val() === regTips)
     name.val("");
 }
 
@@ -118,24 +157,29 @@ function upload() {
 }
 
 function download() {
+	var reg = $("#downloadReg").val().trim()||'';
+	if(reg === regTips) reg = "";
+	if(reg&&!validator.verify('files', reg)){
+		sAlert("警告", "错误的文件名或通配符");
+		return false;
+	}
   $.ajax({
     cache : false,
     type : "post",
     url : "/application/manage/" + domain + "/download",
     dataType : "json",
-    data : {},
+    data : {files:reg},
     error : function(err) {
       sAlert("警告", "连接错误，请稍后再试");
     },
     success : function(data) {
-
       if(data.status === "ok") {
         var a = $("<a href='" + data.url + "' target='_blank'>download</a>").get(0);
         var e = document.createEvent('MouseEvents');
         e.initEvent('click', true, true);
         a.dispatchEvent(e);
       } else {
-        sAlert("警告", "发生错误，请稍后再试");
+        sAlert("警告", data.msg);
       }
     }
   })

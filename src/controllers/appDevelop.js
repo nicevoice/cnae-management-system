@@ -19,7 +19,8 @@ var config = require('../config')
   , doGitClone = require('../lib/utils').doGitClone
   , log = config.logWithFile
   , uploadDir = config.uploadDir
-  , randomStringNum = require('../lib/utils').getRandomStringNum;
+  , randomStringNum = require('../lib/utils').getRandomStringNum
+  , verify = require('../lib/utils').verify;
   
   
   
@@ -242,13 +243,33 @@ exports.gitPull = function(req, res) {
  * @param {} res
  */
 exports.doDownload = function(req, res) {
-  var domain = req.params.id || '';
-  var cwd = process.cwd();
+  var domain = req.params.id || '',
+      files = req.body.files.trim().replace(/\.\./g, '')||'',
+      zipDir = uploadDir;
+  //如果没有输入files，则压缩整个文件夹
+  if(!files){
+  	files = domain;
+  }else if(!verify('files', files)){
+    	res.sendJson({
+    	  status:'error',
+    	  msg:'错误的文件名或通配符'	
+    	})
+  }
+  var arr = files.split(" ");//split
+  for(var i=0, len=arr.length; i!=len; ++i){
+ 	  arr[i] = domain + '/' + arr[i];
+	}
+  if(arr.length>0){
+   files = arr.join(' ');
+  }
+  //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
-  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;
+  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;	
+  
+  var cwd = process.cwd();
   try {
-    process.chdir(uploadDir);
+    process.chdir(zipDir);
   } catch(err) {
     log.error(err.toString());
     return res.sendJson({
@@ -256,7 +277,7 @@ exports.doDownload = function(req, res) {
       msg : "修改工作目录失败"
     });
   }
-  var compress = "zip -r " + saveName + " " + domain;
+  var compress = "zip -r " + saveName + " " + files;
   exec(compress, function(err, stdout, stderr) {
     try {
       process.chdir(cwd);
@@ -264,10 +285,16 @@ exports.doDownload = function(req, res) {
       log.error(err.toString());
     }
     if(err) {
+    	if(err.code===12){
+    	  return res.sendJson({
+    	    status:"error",
+    	    msg:"没有找到匹配的文件"	
+    	  })	
+    	}
       log.error(err.toString());
       return res.sendJson({
         status : "error",
-        msg : "压缩失败"
+        msg : err.toString()
       });
     } else {
       return res.sendJson({

@@ -9,6 +9,7 @@ Validator =function(){
       githubCode : /^(git:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
       npm : /^[\w\d.-]+/,
       githubPage : /^(https:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
+      files : /^[\w\u4E00-\u9FA5\ \/\=\+\#\^\%\,\~\-\_\.\*\?\[\]]+$/,
       imgSource : /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?(\.jpg|\.png|\.bmp|\.jpeg|\.gif)$/
   };
   this.verify = function(type, str){
