@@ -2,6 +2,7 @@
 var crypto = require('crypto'),
     http = require('http'),    
     net = require('net'),
+    fs = require('fs'),
     exec = require('child_process').exec,
     config = require('../config'),
     log = config.logWithFile,
