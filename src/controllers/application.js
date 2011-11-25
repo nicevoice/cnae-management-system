@@ -170,7 +170,11 @@ var fs = require('fs')
     if(result!==true){
       return res.render('newApp', result);
     }
-    var newAppDomain = req.body.appDomain || '', newAppName = req.body.appName || '', newAppDes = req.body.appDes || '', newGithub = req.body.github || '', newAppImage = req.body.appImage || '';
+    var newAppDomain = req.body.appDomain.trim() || '',
+        newAppName = req.body.appName.trim() || '', 
+        newAppDes = req.body.appDes.trim() || '',
+        newGithub = req.body.github.trim() || '',
+        newAppImage = req.body.appImage.trim() || '';
     var checkRepetition = new EventProxy();
     //检查域名是否重复，用户创建的应用数目是否达到上限
     checkRepetition.assign("checkDomain", "checkNumbers", function(goodDomain, checkNumbers) {
