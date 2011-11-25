@@ -9,7 +9,7 @@ $(function(){
   }
 });
 domainBlur = function(){
-	var domain = $("#appDomain").val()||'';
+	var domain = $("#appDomain").val().trim()||'';
 	$("#appName").val(domain);
   	if(!validator.verify('domain', domain))
 		return $("#domainWarn").addClass("warnColor").html(" 域名格式不正确");
@@ -29,7 +29,7 @@ domainFocus = function(){
 	$("#domainWarn").removeClass("warnColor").html($("#topDomain").html());
 }
 nameBlur = function(){
-	var name = $("#appName").val()||'';
+	var name = $("#appName").val().trim()||'';
   	if(name.length>20)
 		return $("#appNameWarn").html("必须小于20个字符");
 }	
@@ -40,7 +40,7 @@ githubFocus = function(){
     $("#githubWarn").html("");
 }
 githubBlur = function(){
-    var github = $("#github").val()||'';
+    var github = $("#github").val().trim()||'';
     if(github&&!validator.verify('githubPage', github)){
         $("#githubWarn").html("github地址不正确");    
     }
@@ -49,7 +49,7 @@ imgFocus = function(){
     $("#imgWarn").html("");
 }
 imgBlur = function(){
-    var img = $("#appImage").val()||'';
+    var img = $("#appImage").val().trim()||'';
     if(img&&!validator.verify('imgSource', img)){
         $("#imgWarn").html("图片地址不正确");    
     }

@@ -1,4 +1,6 @@
-var config = require('../config')
+var fs = require('fs')
+  , config = require('../config')
+  , exec  = require('child_process').exec
   , log = config.logWithFile
   //models
   , model = require('../models/index')
@@ -14,11 +16,13 @@ var config = require('../config')
   , count = model.count
   , urlMoudle = require('url')
   , EventProxy = require('EventProxy.js').EventProxy
-  , fs = require('fs')
+
   , uploadDir = config.uploadDir
-  , onOff = require('../lib/utils').onOff
-  , verify = require('../lib/utils').verify
-  , exec  = require('child_process').exec;
+  //utils
+  , utils = require('../lib/utils')
+  , onOff = utils.onOff
+  , verify = utils.verify
+  , doGitClone = utils.doGitClone;
 
 
   /***
@@ -120,7 +124,11 @@ var config = require('../config')
    * @return {}
    */
   var checkNewInfo = function(req){
-    var newAppDomain = req.body.appDomain || '', newAppName = req.body.appName || '', newAppDes = req.body.appDes || '', newGithub = req.body.github || '', newAppImage = req.body.appImage || '';
+    var newAppDomain = req.body.appDomain.trim() || '',
+        newAppName = req.body.appName.trim() || '', 
+        newAppDes = req.body.appDes.trim() || '',
+        newGithub = req.body.github.trim() || '',
+        newAppImage = req.body.appImage.trim() || '';
     var options = {
       layout:"layoutMain",
       warn:{},
@@ -199,18 +207,28 @@ var config = require('../config')
           var saveDir = uploadDir + "/" + newAppDomain;
           var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
           fs.mkdir(saveDir, '777', function(err) {
-            console.log("mkdir");
             if(err) {
               log.error(err.toString());
             } else {
-              var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
-              console.log(initFile);
-              console.log(saveDir);
-              exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
-                if(err) {
-                  log.error(err.toString());
+              if(!newGithub){	//如果没有输入github地址，就放例子
+                var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
+                console.log(initFile);
+                console.log(saveDir);
+                exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
+                  if(err) {
+                    log.error(err.toString());
+                  }
+                });
+              }else{//否则去github上取代码
+              	if(newGithub[newGithub.length-1]==='/'){
+              	  project = newGithub.slice(18, -1);	
+                }else{
+                  project = newGithub.slice(18);	
                 }
-              });
+              	var gitUrl = 'git://github.com/'+ project + '.git';
+              	console.log(gitUrl);
+                doGitClone(gitUrl, newAppDomain, function(){});
+              }
             }
           });
           res.redirect("/application");
@@ -315,7 +333,9 @@ var config = require('../config')
       warn : {}
     });
   }
-
+  /**
+  *  删除应用
+  */
   exports.deleteApp = function(req, res) {
     var delDomain = req.body.domain || '';
     var body;
