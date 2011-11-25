@@ -249,19 +249,21 @@ exports.doDownload = function(req, res) {
   //如果没有输入files，则压缩整个文件夹
   if(!files){
   	files = domain;
-  }else if(!verify('files', files)){
+  }else{
+  	 if(!verify('files', files)){
     	res.sendJson({
     	  status:'error',
     	  msg:'错误的文件名或通配符'	
     	})
-  }
-  var arr = files.split(" ");//split
-  for(var i=0, len=arr.length; i!=len; ++i){
- 	  arr[i] = domain + '/' + arr[i];
+  	 }
+		 var arr = files.split(" ");//split
+     for(var i=0, len=arr.length; i!=len; ++i){
+		  arr[i] = domain + '/' + arr[i];
+		 }
+		 if(arr.length>0){
+		   files = arr.join(' ');
+		 }
 	}
-  if(arr.length>0){
-   files = arr.join(' ');
-  }
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
