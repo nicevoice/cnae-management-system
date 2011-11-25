@@ -219,7 +219,7 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
 	      	  	  msg:"错误的目标文件夹"
 	      	  	}
 	      	}
-  var tempDirLast = exports.randomStringNum(15),
+  var tempDirLast = exports.getRandomStringNum(15),
       gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, 
       savePath = uploadDir + '/' + targetDir||'' + '/',
       move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
