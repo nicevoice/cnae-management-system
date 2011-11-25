@@ -236,32 +236,22 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
       };
     } else {
       fs.mkdir(savePath, '777', function(err) {
-        if(err && err.errno !== 17) {
-          log.error(err.toString());
-          exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
-          });
-          return {
-            status : "error",
-            msg : "执行错误，请稍后再试"
-          };
-        } else {
-          exec(move, function(err) {
-            if(err && err.toString().indexOf("no matches found") === -1) {
-              log.error(err.toString());
-              return {
-                status : "error",
-                msg : err.toString()
-              };
-            } else {
-              exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
-              });
-              return {
-                status : "ok",
-                msg : "成功获取"
-              };
-            }
-          })
-        }
+        exec(move, function(err) {
+          if(err && err.toString().indexOf("no matches found") === -1) {
+            log.error(err.toString());
+            return {
+              status : "error",
+              msg : err.toString()
+            };
+          } else {
+            exec("rm -rf " + tempDir + "/" + tempDirLast, function() {
+            });
+            return {
+              status : "ok",
+              msg : "成功获取"
+            };
+          }
+        })
       })
     }
   })
