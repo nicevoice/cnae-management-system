@@ -7,6 +7,7 @@ var crypto = require('crypto'),
     log = config.logWithFile,
     labsConf = config.labsConf,
     tempDir = config.tempDir,
+    uploadDir = config.uploadDir,
     port = config.socketPort;
 /**
  * 验证
