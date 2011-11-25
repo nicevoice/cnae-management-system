@@ -225,9 +225,9 @@ var fs = require('fs')
                 });
               }else{//否则去github上取代码
               	if(newGithub[newGithub.length-1]==='/'){
-              	  project = newGithub.slice(18, -1);	
+              	  project = newGithub.slice(19, -1);	
                 }else{
-                  project = newGithub.slice(18);	
+                  project = newGithub.slice(19);	
                 }
               	var gitUrl = 'git://github.com/'+ project + '.git';
               	console.log(gitUrl);
