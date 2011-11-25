@@ -82,13 +82,7 @@ border: 1px solid #054388;
 }
 .app-info-left{
   float:left;
-  width:400px;
-  margin:0px;
-  padding:0px;
-}
-.app-info-right{
-  float:right;
-  width:100px;
+  width:550px;
   margin:0px;
   padding:0px;
 }
@@ -96,6 +90,7 @@ border: 1px solid #054388;
     float:right;
     width:120px;
     border:1px #000;
+    margin-right:50px;
 }
 .app-info-right-apply{
     display:none;
