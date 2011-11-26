@@ -37,11 +37,10 @@ var tplNonDb = '<form method="post" action="$url$/createMongo">'+
                '<pre id="queryOutput"></pre>'+
                '<div class="r3px subContent littleBlue">'+
                '<table id="dbInfo">'+
-               '<tr><td>数据库帐号：</td><td>$dbUserName$</td><td>数据库名称</td>$dbName$</td></tr>'+
-               '<tr><td>数据库密码：</td><td>$dbPassword$</td><td>数据库端口：</td><td>$dbPort$</td></tr>'+
+               '<tr><td>数据库帐号：</td><td>$dbUserName$</td><td>数据库密码:</td><td>$dbPassword$</td></tr>'+
+               '<tr><td>数据库名称：</td><td>$dbName$</td><td>数据库端口：</td><td>$dbPort$</td></tr>'+
                '</table>'+
-               '<p>mongoSkin连接url：</p>'+
-               '<p><input type="text" id="mongoskinUrl" readonly="readonly" value="$dbUserName$:$dbPassword$@$dbHost$:$dbPort$/$dbName$</p>'+
+               '<p>mongoSkin连接url:<input type="text" id="mongoskinUrl" readonly="readonly" value="$dbUserName$:$dbPassword$@$dbHost$:$dbPort$/$dbName$"></p>'+
                '</div>';
             
 function renderAppDbInfo(dbInfo) {
@@ -57,10 +56,10 @@ function renderAppDbInfo(dbInfo) {
   } else {
       html += tplReplace(tplMongo, {
           '$dbUserName$':dbInfo.dbUserName,
-          '$dbPassword$':dbInfo.dbUserName,
-          '$dbName$':dbInfo.dbUserName,
+          '$dbPassword$':dbInfo.dbPassword,
+          '$dbName$':dbInfo.dbName,
           '$dbPort$':dbInfo.appDb.port,
-          '$dbHost':dbInfo.appDb.host
+          '$dbHost$':dbInfo.appDb.host
       })
   }
   $("#mongoDb-Info").html(html);
