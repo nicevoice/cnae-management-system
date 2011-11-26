@@ -51,23 +51,3 @@ function renderPersonSqual(data, owner){
   }
   bindDiv();
 }
-
-function apply(domain, name, email, nickName){
-  $.ajax({
-    cache:false,
-    type:"post",
-    url:"/appSquare/apply",
-    dataType:"json",
-    data:{domain:domain, name:name, email:email, nickName:nickName},
-    error:function(){
-      sAlert("警告","申请失败，请稍后再试");
-    },
-    success:function(data){
-      if(data.status==="ok"){
-        sAlert("", "申请已发出，请等候对方回应");
-      }else{
-        sAlert("警告", data.msg);
-      }
-    }
-  })
-}
