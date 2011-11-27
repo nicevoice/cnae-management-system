@@ -43,7 +43,7 @@ exports.doControlApp = function(req, res){
 		if(action!=="start"&&action!=="stop"&&action!=="restart"){
 		  return res.sendJson({status:"error", msg:"命令错误"});
 		}
-  console.log(req.session.email + " " + domain + " " + action);
+  log.info(req.session.email + " " + domain + " " + action);
 	onOff(action, domain, function(data){
 		res.sendJson( data);
 	})
@@ -65,7 +65,7 @@ exports.getStatus = function(req, res){
       if(savePort&&ports&&ports[0]){
       update(app_basic, {appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
         if(err){
-          console.log(err.toString());
+          log.error(err.toString());
         }
       });
       }

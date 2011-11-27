@@ -104,22 +104,7 @@ exports.doUpload = function(req, res) {
               } else {
                 fs.mkdir(savePath, '777', function(err) {
                   var move = "";
-                  if(err && err.errno !== 17) {
-                    log.error(err.toString());
-                    exec("rm -rf " + path, function(err) {
-                      if(err) {
-                        log.error(err.toString());
-                      }
-                    });
-                    exec("rm -rf " + tempDir + '/' + domain, function(err) {
-                      if(err) {
-                        log.error(err.toString());
-                      }
-                    });
-                    return res.render("error", {
-                      message : "上传失败,请稍后再试"
-                    });
-                  } else {
+                  {
                     var moveEvent = new EventProxy();
                     moveEvent.on("getStat", function(isDir) {
                       if(isDir) {
