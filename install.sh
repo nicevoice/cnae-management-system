@@ -14,7 +14,8 @@ fi
 if [ -d $install_path ] ;then
 		echo "$install_path already exists, continue will delete these folder . \ncontinue ? [yes|no ,default no]";
 		read confirm
-		if [ $confirm != 'yes' ] ;then
+		if [ "$confirm" != "yes" ] ;then
+			echo "exist install !"
 			exit
 		fi 
 		rm -r $install_path
@@ -28,7 +29,6 @@ cd $install_path
 wget http://cnodejs.net/download/$nae
 
 # extract file
-ls -al $nae
 tar zfx $nae
 cp -r nae-client/* ./
 rm -rf nae-client
@@ -38,10 +38,10 @@ chmod -R 755 ./*
 cd $bin_path
 if [ -f nae ] ;then
 	echo "command nae already exist!";
-	echo `ls -al nae | awk '{print $7}'`
+	echo `ls -al nae | awk '{print $10}'`
 	echo "continue install ? [yes | no ,default no]"
 	read confirm
-	if [ $confirm = "yes" ] ;then
+	if [ "$confirm" = "yes" ] ;then
 		rm nae 
 		ln -s $install_path/nae nae
 		chmod 755 nae
