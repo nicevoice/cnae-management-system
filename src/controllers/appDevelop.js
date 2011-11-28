@@ -399,22 +399,9 @@ exports.npmInstall = function(req, res) {
           msg:'请输入正确的模块名'
       })
   } 
-  var domain = req.params.id || '', install = "npm install " + npmName, cwd = process.cwd();
-  try {
-    process.chdir(uploadDir + '/' + domain);
-  } catch(err) {
-    log.error(err.toString());
-    return res.sendJson({
-      status : "error",
-      msg : "安装模块失败，请稍后再试"
-    });
-  }
+  var domain = req.params.id || '', install = "npm install " + npmName;
+  install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
   exec(install, function(err, npmStdout, npmStderr) {
-    try {
-      process.chdir(cwd);
-    } catch(err) {
-      log.error(err.toString());
-    }
     if(err) {
       log.error(err.toString());
       return res.sendJson({

@@ -207,9 +207,9 @@ function git() {
     },
     success : function(data) {
       if(data.status === "ok") {
-        showGitInfo(data.msg + "\n");
+        showGitInfo(data.msg + "\nDone\n");
       } else {
-        showGitInfo(data.msg + "\n");
+        showGitInfo(data.msg + "\nDone\n");
       }
     }
   })
