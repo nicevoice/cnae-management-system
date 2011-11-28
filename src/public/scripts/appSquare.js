@@ -63,7 +63,7 @@ var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' 
                    '<div class="app-info-right">'+
                    '</div><div class="app-info-image">$img$</div>'+
                    '</div>',
-    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" height="120px" alt="$appName$"></img></a>',
+    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" width="150px" alt="$appName$"></img></a>',
     tplGithub = '&nbsp;&nbsp;<a href="$github$" title="Fork me on Github" target="_blank" width=><img width="40px" src="/images/github.jpg" alt="Github"></img></a>';
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
