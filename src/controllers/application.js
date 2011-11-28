@@ -216,8 +216,6 @@ var fs = require('fs')
             } else {
               if(!newGithub){	//如果没有输入github地址，就放例子
                 var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
-                console.log(initFile);
-                console.log(saveDir);
                 exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
                   if(err) {
                     log.error(err.toString());
@@ -230,7 +228,6 @@ var fs = require('fs')
                   project = newGithub.slice(19);	
                 }
               	var gitUrl = 'git://github.com/'+ project + '.git';
-              	console.log(gitUrl);
                 doGitClone(gitUrl, newAppDomain, function(){});
               }
             }
@@ -408,7 +405,6 @@ var fs = require('fs')
             } else {
               var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoDeletor.sh " + data.appDbName;
               exec(command, function(err) {
-                console.log(command);
                 if(err) {
                   log.error(err.toString());
                   deleteEvent.fire("deleteDb", false);

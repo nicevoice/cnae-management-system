@@ -33,7 +33,6 @@ exports.showSquare = function(req, res){
 }
 
 exports.post = function(req, res){
-  console.log(req.session.email + ":square post");
   var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
   find(app_basic, {}, { //找出最新的limit个应用
     sort: [['github', -1],['appCreateDate', -1]],
@@ -131,7 +130,6 @@ exports.post = function(req, res){
                       data[i].creatorNickName = "";
                     }
                   }
-                  console.log("find " + data.length);
                   return res.sendJson({
                     status: "ok",
                     apps: data
@@ -244,7 +242,6 @@ exports.apply = function(req, res){
 }
 exports.showPersonalSquare = function(req, res){
   var nickName = req.url.slice(req.url.lastIndexOf("/")+1)||'';
-  console.log(req.session.email + " viewing " + nickName + "'s apps");
   return res.render("personalSquare.html", {layout:"layoutMain", email:req.session.email, 
   nickName:req.session.nickName, ownerNickName:nickName});
 }
@@ -376,7 +373,6 @@ exports.personalSquare = function(req, res){
                                   data[i].creatorNickName = "";
                                 }
                               }
-                              console.log("find " + data.length);
                               return res.sendJson({
                                 status: "ok",
                                 apps: data,
