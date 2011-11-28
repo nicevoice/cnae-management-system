@@ -32,6 +32,11 @@ var pubkey = content.pubKey||'';
 	  $("#githubEmail").val(oldEmail);
 	}
   $("#submit").click(submitEmail);
+  $("#githubEmail").keydown(function(e) {
+	  if(e.keyCode === 13) {
+	    submitEmail();
+	  }
+	})   
 }
 function submitEmail(){
 	var email = $("#githubEmail").val()||'';
@@ -55,10 +60,10 @@ function submitEmail(){
     success:function(data){
     	if(data.status==="ok"){
     		sAlert("","修改成功");
+    		loadGithub();
     	}else{
     		sAlert("警告",data.msg);
     	}
-    	location.reload();
     }
 	});
 	return false;
