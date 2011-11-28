@@ -320,21 +320,8 @@ function doGitClone(command, targetDir, cb){
 function gitOtherAction(command, targetDir, cb){	
   var cwd = process.cwd(),
   		savePath = uploadDir + '/' + targetDir + '/';
-  try {
-    process.chdir(savePath);
-  } catch(err) {
-    log.error(err.toString());
-    return cb({
-      status : "error",
-      msg : err.toString
-    });
-  }
+  command = 'cd '+ savePath + '&&' + command;
   exec(command, function(err, gitStdout, gitStderr) {
-    try {
-      process.chdir(cwd);
-    } catch(err) {
-      log.error(err.toString());
-    }
     if(err) {
       log.error(err.toString());
       return cb({
