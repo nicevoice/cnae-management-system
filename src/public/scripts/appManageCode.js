@@ -193,7 +193,7 @@ function git() {
   }
   index = querys.push(gitCommand)-1;
   $("#gitCommand").val("");
-  showGitInfo(gitCommand + '...ing\n');
+  showGitInfo(gitCommand + '...\n');
   $.ajax({
     cache : false,
     type : "post",
@@ -207,9 +207,9 @@ function git() {
     },
     success : function(data) {
       if(data.status === "ok") {
-        showGitInfo(data.msg + "\nDone\n");
+        showGitInfo(data.msg + "Done\n");
       } else {
-        showGitInfo(data.msg + "\nDone\n");
+        showGitInfo(data.msg + "Done\n");
       }
     }
   })
