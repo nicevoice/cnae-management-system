@@ -308,7 +308,7 @@ function doGitClone(command, targetDir, cb){
             });
             return cb({
               status : "ok",
-              msg : stdout
+              msg : gitStdout
             });
           }
         })
