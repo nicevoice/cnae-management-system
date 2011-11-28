@@ -57,13 +57,13 @@ function render(data){
 }
 var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' + 
                    '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://$appDomain$.cnodejs.net$port$" target="_blank">$appName$</a>$github$</p>'+
-                   '<p class="app-des">描述：$appDes$</p>'+
                    '<p class="app-mem"><a href="/square/$creatorNickName$">$photo$$creatorNickName$</a>'+
-                   '创建于$appCreateDate$ • 有$memberNums$个参与者 <a href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a></p></div>'+
+                   '创建于$appCreateDate$ • 有$memberNums$个参与者 <a href="javascript:void(0)" onclick="apply(\'$appDomain$\',\'$appName$\',\'$creatorEmail$\',\'$creatorNickName$\')">申请参加</a></p>'+
+                   '<p class="app-des">$appDes$</p></div>'+
                    '<div class="app-info-right">'+
                    '</div><div class="app-info-image">$img$</div>'+
                    '</div>',
-    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" height="120px" alt="$appName$"></img></a>',
+    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" class="app-image" alt="$appName$"></img></a>',
     tplGithub = '&nbsp;&nbsp;<a href="$github$" title="Fork me on Github" target="_blank" width=><img width="40px" src="/images/github.jpg" alt="Github"></img></a>';
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
@@ -99,7 +99,7 @@ function renderApp(app){
       '$creatorNickName$':app.creatorNickName,
       '$memberNums$':app.memberNums,
       '$photo$':photo,
-      '$appDes$':app.appDes,
+      '$appDes$':app.appDes||'<br \>',
       '$appCreateDate$':app.appCreateDate,
       '$port$':port,
       '$img$':imgSource,
