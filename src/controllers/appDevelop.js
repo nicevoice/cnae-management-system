@@ -3,7 +3,9 @@ var config = require('../config')
   , path = require('path')
   , util = require('util')
   , exec  = require('child_process').exec
-  , EventProxy = require('EventProxy.js').EventProxy  
+  , EventProxy = require('EventProxy.js').EventProxy 
+  , log = config.logWithFile
+  , uploadDir = config.uploadDir 
   //models
   , model = require('../models/index')
   , collectionNames = require('../config').dbInfo.collections
@@ -16,11 +18,11 @@ var config = require('../config')
   , update = model.update
   , insert = model.insert
   //utils
-  , doGitClone = require('../lib/utils').doGitClone
-  , log = config.logWithFile
-  , uploadDir = config.uploadDir
-  , randomStringNum = require('../lib/utils').getRandomStringNum
-  , verify = require('../lib/utils').verify;
+  , utils = require('../lib/utils')
+  , doGitClone = utils.doGitClone
+  , randomStringNum = utils.getRandomStringNum
+  , doGit = utils.doGit
+  , verify = utils.verify;
   
   
   
@@ -174,9 +176,9 @@ exports.doUpload = function(req, res) {
     });
   }
 }
-
+/*
 exports.gitClone = function(req, res) {
-  var gitUrl = req.body.gitUrl||'',
+  var gitUrl = req.body.gitUrl.trim()||'',
       targetDir = req.params.id||'',
       matchs = gitUrl.match(config.regGit);
   gitUrl = matchs?matchs[0]:null;
@@ -221,6 +223,31 @@ exports.gitPull = function(req, res) {
       });
     }
   })
+}*/
+
+exports.gitAction = function(req, res){
+  var command = req.body.gitCommand||'',
+      domain = req.params.id||'';
+  if(!verify('gitAction', command)){
+	  return res.sendJson({status:"error", msg:"不是有效的git操作"});
+	}
+	cb = function(data){
+	  return res.sendJson(data);
+	}
+	if(verify('gitClone', command)){
+		findOne(user, {email:req.session.email}, function(err, data){
+			if(err){
+				log.error(err.toString());
+			  return res.sendJson({status:"error", msg:"数据库查询错误"});
+			}
+			if(data.github&&data.github.token){
+	  		command = command.replace('@', '@'+data.github.token+'.');	//如果是clone需要权限的，就加上token
+	  	}
+	  	doGit(command, domain, cb, true);
+	  })
+	}else{
+	  doGit(command, domain, cb);
+	}
 }
 /***
  *

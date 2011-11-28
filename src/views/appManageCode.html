@@ -35,15 +35,11 @@
     <p>
       <strong style="font-size:18px">Git</strong>
     </p>
-    <p>
-      <input type="button" class="button_orange r3px" id="gitClone" value="Clone">
-      <input type="text" id="gitUrl" class="longInput">
-    </p>
-    <p id="pull-p">
-      <input type="button" class="button_orange r3px" id="gitPull" value=" Pull  ">
+    <p id="gitAction-p">
+    	<input type="text" id="gitCommand" class="longInput">
+      <input type="button" class="button_orange r3px" id="gitAction" value="执行">
     </p>
     <p>
-      <span style="color:red">tips:通过github第三方git获取代码，无法进行push操作，可以从github上同步代码，本地修改可能会导致冲突！</span>
   </div>
   <br />
   <hr />
@@ -52,8 +48,8 @@
     <strong style="font-size:18px">npm</strong>
   </p>
   <p>
+  	<input type="text" id="npmName" class="longInput">
     <input type="button" class="button_orange r3px" id="npmInstall" value="install">
-    <input type="text" id="npmName" class="longInput">
   </p>
   <%}%>
 </div>

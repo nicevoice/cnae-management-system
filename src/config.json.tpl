@@ -79,5 +79,11 @@
 	  "secret":"$tbSecret$" ,
 	  "loginPath":"https://login.taobao.com/member/login.jhtml?from=labs-nae&redirect_url=http://nae.taobao.com:2012/checkLogin",
 	  "loginPathDaily":"https://login.daily.taobao.net/member/login.jhtml?f=top&redirect_url=http://nae.labs.daily.taobao.net:2012/checkLogin"
-  } 
+  },
+  "github":{
+    "keyDir":"/home/heyiyu.pt/.ssh/nae/id_rsa_",
+    "config":"/home/heyiyu.pt/.ssh/config",
+    "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",
+    "tplConfig":"#$email$\nHost $token$.github.com\n Hostname Github.com\n User git\n IdentityFile $file$\n"
+  }
 }

@@ -46,8 +46,7 @@ module.exports = function(app){
   app.get("/application/manage/:id/todo", hasLogin, checkAuth, ctrAppDevelop.showTodo);
   app.get("/application/manage/:id/load_todo", hasLogin, checkAuth, ctrAppDevelop.loadTodoContent);  
   if(!nonGit){
-    app.post("/application/manage/:id/clone", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitClone);  //git clone代码
-    app.post("/application/manage/:id/pull", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitPull);  //git pull代码
+    app.post("/application/manage/:id/git", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitAction);  //git clone代码
   }
   app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUpload);  //上传代码
   app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), ctrAppDevelop.doDownload);  //代码打包下载

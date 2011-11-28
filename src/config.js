@@ -115,3 +115,6 @@ if(exports.switchs.labs){
 exports.labsConf = configInfo.labsConf;
 //管理员帐号表
 exports.admins = configInfo.admins;
+
+//github配置信息
+exports.github = configInfo.github;
