@@ -4,6 +4,7 @@ var crypto = require('crypto'),
     net = require('net'),
     fs = require('fs'),
     exec = require('child_process').exec,
+    EventProxy = require('EventProxy.js').EventProxy,
     config = require('../config'),
     log = config.logWithFile,
     labsConf = config.labsConf,
@@ -24,7 +25,9 @@ var crypto = require('crypto'),
       npm : /^[\w\d.-]+/,
       githubPage : /^(https:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
       imgSource : /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?(\.jpg|\.png|\.bmp|\.jpeg|\.gif)$/,
-      files : /^[\w\u4E00-\u9FA5\ \=\+\#\/\^\%\,\~\-\_\.\*\?\[\]]+$/
+      files : /^[\w\u4E00-\u9FA5\ \=\+\#\/\^\%\,\~\-\_\.\*\?\[\]]+$/,
+      gitAction : /^git[^|&]+$/,
+      gitClone : /^git +clone/
   };
 exports.verify = function(type, str){
     return regs[type].test(str);
@@ -212,10 +215,66 @@ if(options.data){
 }
 req.end();
 }
+
 /**
-* git clone read-only
+* 生成github公私钥，更新配置文件
 */
-exports.doGitClone = function(gitUrl, targetDir, cb){
+function tplReplace(tpl, params){
+    return tpl.replace(/\$.*?\$/g, function(data){
+        return params[data];
+    });
+}
+var arrConfig = [];
+var githubProxy = new EventProxy(), working=false;
+(function(){
+	var configFile = config.github.config;
+githubProxy.on('addGithub', function(data){
+	arrConfig.push(data);
+	if(working) return;
+	working = true;
+  var configFd;
+  while(arrConfig.length>0){
+    var config = arrConfig.shift(),
+        buffer = new Buffer(config, 'utf8');
+    configFd = fs.openSync(configFile, 'a', '644');
+    fs.write(configFd, buffer, 0, buffer.length, 0, function(err){
+    	if(err){
+    	  log.error(err.toString());
+    	  arrConfig.push(config);
+    	}
+    	fs.closeSync(configFd);
+    })
+  };
+  working = false;
+})
+})()
+exports.addGithub = function(email, githubEmail, cb){
+  var token = exports.getRandomStringNum(20),
+      github = config.github;
+  exec(github.genKey+" "+githubEmail + " "+token, function(err, stdout, stderr){
+    if(err){
+      return cb(err);
+    }	
+    var configInfo = tplReplace(github.tplConfig, {
+    	'$email$':email,
+    	'$token$':token,
+    	'$file$':github.keyDir+token
+    	});
+    githubProxy.fire('addGithub', configInfo);
+    cb(null, {
+    	status:"ok",
+    	content:{
+    	  email:githubEmail,
+    	  token:token,
+    	  pubKey:fs.readFileSync(github.keyDir+token+'.pub', 'utf8')
+    	  }
+    	});
+  });
+}
+/**
+* git clone
+*/
+function doGitClone(command, targetDir, cb){
 	      if(typeof targetDir!== 'string'){
 	      	  return cb({
 	      	  	  status:"error",
@@ -223,7 +282,7 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
 	      	  	});
 	      	}
   var tempDirLast = exports.getRandomStringNum(15),
-      gitClone = "git clone " + gitUrl + " " + tempDir + "/" + tempDirLast, 
+      gitClone =command + " " + tempDir + "/" + tempDirLast, 
       savePath = uploadDir + '/' + targetDir||'' + '/',
       move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + tempDirLast + " " + savePath;
   exec(gitClone, function(err, gitStdout, gitStderr) {
@@ -233,7 +292,7 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
       });
       return cb({
         status : "error",
-        msg : "请使用Git Read-Only方式获取代码"
+        msg : err.toString()
       });
     } else {
       fs.mkdir(savePath, '777', function(err) {
@@ -249,11 +308,54 @@ exports.doGitClone = function(gitUrl, targetDir, cb){
             });
             return cb({
               status : "ok",
-              msg : "成功获取"
+              msg : stdout
             });
           }
         })
       })
     }
   })
+}
+
+function gitOtherAction(command, targetDir, cb){	
+  var cwd = process.cwd(),
+  		savePath = uploadDir + '/' + targetDir + '/';
+  try {
+    process.chdir(savePath);
+  } catch(err) {
+    log.error(err.toString());
+    return cb({
+      status : "error",
+      msg : err.toString
+    });
+  }
+  exec(command, function(err, gitStdout, gitStderr) {
+    try {
+      process.chdir(cwd);
+    } catch(err) {
+      log.error(err.toString());
+    }
+    if(err) {
+      log.error(err.toString());
+      return cb({
+        status : "error",
+        msg : err.toString()
+      });
+    } else {
+      return cb({
+        status : "ok",
+        msg : gitStdout
+      });
+    }
+  })
+}
+/**
+* do git
+*/
+exports.doGit = function(command, targetDir, cb, isClone){
+	if(isClone){
+	  doGitClone(command, targetDir, cb);  
+	}else{
+		gitOtherAction(command, targetDir, cb);
+	}
 }
