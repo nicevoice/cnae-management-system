@@ -6,6 +6,10 @@ var hasGitInfo = false,
     url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
+
+//保存查询记录
+var querys = [], index=0;
+
 $(function() {
   $("#npmName").blur(addnpmTips).focus(removenpmTips).val(npmTips);
   $("#downloadReg").blur(addregTips).focus(removeregTips).val(regTips);
@@ -20,13 +24,19 @@ $(function() {
     error : function() {
       $("#submitUpload").click(upload);
       $("#download").click(download);
-      $("#gitPull").click(pull);
       $("#gitAction").click(git);
       $("#npmInstall").click(install);
-      $("#gitAction").keydown(function(e) {
+      $("#gitCommand").keydown(function(e) {
         if(e.keyCode === 13) {
           git();
-        }
+        }else if(e.keyCode === 38){
+        $("#gitCommand").val(querys.length>0?querys[index--] :"");
+        if(index<0) index = 0;
+    		}else if(e.keyCode === 40){
+        if(index+1 === querys.length)
+            return;
+        $("#gitCommand").val(querys.length>0?querys[++index] :"");     
+    		}
       })
       $("#npmName").keydown(function(e) {
         if(e.keyCode === 13) {
@@ -65,7 +75,7 @@ $(function() {
         })
 	      $("#downloadReg").keydown(function(e) {
 	        if(e.keyCode === 13) {
-            sAlert("警告", "没有权限进行此操作");
+            sAlert("警告", "没有权限进行此操作")
 	        }
 	      })
       } else {
@@ -76,10 +86,17 @@ $(function() {
         $("#gitCommand").keydown(function(e) {
           if(e.keyCode === 13) {
             git();
-          }
+          }else if(e.keyCode === 38){
+        $("#gitCommand").val(querys.length>0?querys[index--] :"");
+        if(index<0) index = 0;
+    		}else if(e.keyCode === 40){
+        if(index+1 === querys.length)
+            return;
+        $("#gitCommand").val(querys.length>0?querys[++index] :"");     
+    		}
         })
         $("#npmName").keydown(function(e) {
-          if(e.keyCode === 13) {
+          if(e.keyCode === 13) {;
             install();
           }
         })
@@ -171,10 +188,12 @@ function git() {
     return false;
   }
   if(!validator.verify('gitAction', gitCommand)){
-    showGitInfo("git命令有误");
+    showGitInfo("git命令有误\n");
     return false;
   }
-  showGitInfo("正在获取中，请稍后...");
+  index = querys.push(gitCommand)-1;
+  $("#gitCommand").val("");
+  showGitInfo(gitCommand + '...ing\n');
   $.ajax({
     cache : false,
     type : "post",
@@ -184,13 +203,13 @@ function git() {
       gitCommand : gitCommand
     },
     error : function(err) {
-      showGitInfo("连接错误,请稍后再试。");
+      showGitInfo("连接错误,请稍后再试。\n");
     },
     success : function(data) {
       if(data.status === "ok") {
-        showGitInfo("代码获取成功。");
+        showGitInfo(data.msg + "\n");
       } else {
-        showGitInfo("发现错误\n" + data.msg);
+        showGitInfo(data.msg + "\n");
       }
     }
   })
@@ -223,13 +242,16 @@ function install() {
 showGitInfo = function(msg) {
   msg = htmlSpecial(msg);
   if(hasGitInfo) {
-    $("#gitInfo").html(msg);
+    $("#gitInfo").html($("#gitInfo").html()+msg);
   } else {
     hasGitInfo = true;
-    var info = $('<pre id="gitInfo" class="borderRadius5"></pre>');
-    info.html(msg);
+    var info = $('<pre id="gitInfo" class="borderRadius5" style="width:650px; height:400px;background-color:#000;"></pre>');
+    info.html(info.html()+msg);
     info.insertAfter($("#gitAction-p"));
   }
+  var opt = document.getElementById("gitInfo");
+  opt.scrollTop = opt.scrollHeight;
+  $("#queryString").val("");    
 }
 showNpmInfo = function(msg) {
   msg = htmlSpecial(msg);
@@ -237,7 +259,7 @@ showNpmInfo = function(msg) {
     $("#npmInfo").html(msg);
   } else {
     hasNpmInfo = true;
-    var info = $('<pre id="npmInfo" class="borderRadius5"></pre>');
+    var info = $('<pre id="npmInfo" class="borderRadius5" style="background-color:#000"></pre>');
     info.html(msg);
     info.insertAfter($("#npmName"));
   }
