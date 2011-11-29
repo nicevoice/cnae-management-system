@@ -175,7 +175,7 @@ exports.apply = function(req, res){
         '申请加入您的项目"' +
         appName +
         '"。</br>申请理由：'+reason;
-        var content = mail.applyMailTitle.replace('$domain$', domain);
+        var content = mail.applyMailContent.replace(/\$domain\$/g, domain);
         mails.push({
           sender: mail.sender,
           to: nickName + " <" + email + ">",
