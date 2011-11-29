@@ -261,6 +261,6 @@ showNpmInfo = function(msg) {
     hasNpmInfo = true;
     var info = $('<pre id="npmInfo" class="borderRadius5 std-style" style="background-color:#000"></pre>');
     info.html(msg);
-    info.insertAfter($("#npmName"));
+    info.insertAfter($("#npm-p"));
   }
 }
