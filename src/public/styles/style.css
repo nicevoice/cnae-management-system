@@ -259,3 +259,11 @@ padding:40px;
 .warnColor{
     color:#BD452F;
 }
+.std-style{
+  background-color:black;
+  color:#bbb;
+  width:600px;
+  height:400px;
+  font-size:15px;
+  overflow: auto;
+}

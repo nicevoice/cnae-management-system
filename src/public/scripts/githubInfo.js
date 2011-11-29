@@ -51,7 +51,7 @@ function submitEmail(){
 	$.ajax({
     cache:false,
     type:"POST",
-    url:"/userCenter/github/info",
+    url:"/userCenter/github/info_post",
     dataType:"json",
     data:{githubEmail:email},
     error:function(){
