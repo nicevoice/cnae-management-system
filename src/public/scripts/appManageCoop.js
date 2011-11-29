@@ -57,7 +57,7 @@ function renderCoopInfo(own, mems){
             }else if(own.role === 0){//管理员可以删除
                 memParams['$operate$'] = tplReplace(tplDelete, {
                     '$email$':mem.email,
-                    '$appDomain':mem.appDomain
+                    '$appDomain$':mem.appDomain
                 });
             }else{//其他人不可以删除
                 memParams['$operate$'] = '没有权限进行操作';
@@ -66,7 +66,7 @@ function renderCoopInfo(own, mems){
             if(own.role<=1){//创建者和管理者可以处理申请请求
                 memParams['$operate$'] = tplReplace(tplHandleApply, {
                     '$email$':mem.email,
-                    '$appDomain':mem.appDomain                       
+                    '$appDomain$':mem.appDomain                       
                 });
             }else{
                 memParams['$operate$'] = '没有权限进行操作';                    

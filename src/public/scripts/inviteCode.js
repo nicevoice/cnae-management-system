@@ -1,6 +1,11 @@
 var inviteHref = $("#inviteHref").html();
 $(function(){
 	$("#sendInviteCode").click(sendInvite);
+	$("#email").keydown(function(e) {
+	  if(e.keyCode === 13) {
+	    sendInvite();
+	  }
+  })
 	loadInviteCode();
 })
 function loadInviteCode(){
@@ -109,18 +114,20 @@ function pagination(){
 			});
 		}
 	var here = $("li.active");
-	var temps=here.children("a").attr("href").split("=");
-	var page = parseInt(temps[1]);
-	var head = temps[0];
-	if(page===1){
-		prev.addClass("disabled").click(function(){return false;});
-	}else{
-		prev.children("a").attr("href",temps[0]+"="+(page-1));	
-	}
-	next.children("a").attr("href",temps[0]+"="+(page+1));
-	var sLastClass = $("div .pagination li").eq("-2").attr("class");
-	if(sLastClass && sLastClass.indexOf("active")!=-1){
-		next.addClass("disabled").click(function(){return false;});
+	if(here){
+		var temps=here.children("a").attr("href").split("=");
+		var page = parseInt(temps[1]);
+		var head = temps[0];
+		if(page===1){
+			prev.addClass("disabled").click(function(){return false;});
+		}else{
+			prev.children("a").attr("href",temps[0]+"="+(page-1));	
+		}
+		next.children("a").attr("href",temps[0]+"="+(page+1));
+		var sLastClass = $("div .pagination li").eq("-2").attr("class");
+		if(sLastClass && sLastClass.indexOf("active")!=-1){
+			next.addClass("disabled").click(function(){return false;});
+		}
 	}
 }
 

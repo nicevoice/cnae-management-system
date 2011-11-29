@@ -13,11 +13,12 @@ var config = require('../config'),
     sendMail = require('../lib/sendMail'),
     mails = sendMail.mails,
     mailEvent =sendMail.mailEvent,
-    nodemailer = config.nodemailer,
+    mail = config.mail,
     //utils
     utils = require('../lib/utils'),
     randomStringNum = utils.getRandomStringNum,
-    md5 = utils.hex_md5;
+    md5 = utils.hex_md5,
+    verify = utils.verify;
 
 exports.showRetrieve = function(req, res){
   res.render("retrieve");
@@ -25,9 +26,7 @@ exports.showRetrieve = function(req, res){
 
 exports.postRetrieve = function(req, res){
   var email = req.body.userEmail||'';
-	var regEmail = config.regEmail;
-  console.log(email+":retrieve");
-	if(!regEmail.exec(email))
+	if(!verify('email', email))
 		return res.render("error", { message:"email格式不正确"});
   var retrieveKey = randomStringNum(15),
       retrieveTime = new Date().getTime();
@@ -52,10 +51,10 @@ exports.postRetrieve = function(req, res){
         var nickName = email.split('@')[0];
        	var codeHtml = "<a href="+link+">"+link+"</a>";
        	mails.push({
-          sender: 'NAE <heyiyu.deadhorse@gmail.com>',
+          sender: mail.sender,
           to : nickName + " <"+email + ">",
-          subject: config.retrieveMailTitle,
-          html: config.retrieveMailContent+codeHtml,
+          subject: mail.retrieveMailTitle,
+          html: mail.retrieveMailContent+codeHtml,
           debug: true
        	});
       	mailEvent.fire("getMail");
@@ -99,8 +98,7 @@ exports.resetPassword = function(req, res){
       key = req.body.key||'',
       password = req.body.changePassword||'',
       con = req.body.changeConfirmation||'';
-	var regPass = /^(\w){6,20}$/;
-  if(!regPass.exec(password)){
+  if(!verify('password', password)){
     return res.render("error", {
       message: "密码必须为6～20位字母、数字或下划线"
     });

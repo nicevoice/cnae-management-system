@@ -14,7 +14,8 @@ var EventProxy = require('EventProxy.js').EventProxy,
     utils = require('../lib/utils'),
     randomStringNum = utils.getRandomStringNum,
     addGithub = utils.addGithub,
-    md5 = utils.hex_md5;
+    md5 = utils.hex_md5,
+    verify = utils.verify;
 
 /***
  * 跳转到显示用户信息页面
@@ -91,16 +92,13 @@ exports.doChangeInfo = function(req, res){
   if(newRealName.length>25){
     newRealName = newRealName.slice(0, 25);
   }
-  var regName = config.regName,
-      regMobile = config.regMobile,
-      regUrl = config.regUrl;
-  if(!regName.exec(newNickName)){
+  if(!verify('name', newNickName)){
     return res.sendJson({done:false, message:"请输入正确的昵称"});
   }
-  if(newMainPage&&!regUrl.exec(newMainPage)){
+  if(newMainPage&&!verify('url', newMainPage)){
     return res.sendJson({done:false, message:"请输入正确的个人主页"});
   }
-  if(newTelNumber&&!regMobile.exec(newTelNumber)){
+  if(newTelNumber&&!verify('mobile', newTelNumber)){
     return res.sendJson({done:false, message:"请输入正确的手机号码"});
   }
   findOne(user, {nickName:newNickName.toString()}, function(err, data){
@@ -138,8 +136,7 @@ exports.doChangePassword = function(req, res){
   var oldPassword = req.body.oldPassword||'',
     newPassword = req.body.changePassword||'',
     confirmation = req.body.changeConfirmation||'';
-  var regPass = config.regPass;
-  if(!regPass.exec(newPassword)){
+  if(!verify('password', newPassword)){
       return res.sendJson({done:false, message:"密码不能少于6位"});
   }
   if(newPassword != confirmation){

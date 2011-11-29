@@ -20,7 +20,8 @@ var config = require('../../config'),
     //utils
     utils = require('../../lib/utils'),
     md5 = utils.hex_md5,
-    onOff = utils.onOff;
+    onOff = utils.onOff,
+    verify = utils.verify;
     
 exports.appAdd = function(req, res){
   var queryString  = urlMoudle.parse(req.url, true).query,
@@ -44,8 +45,7 @@ exports.appAdd = function(req, res){
       newAppName = appName,
       newAppDes = '',
       checkRepetition = new EventProxy();
-  var regDomain = /^[a-z][a-z0-9_]{3,19}/;
-  if(!regDomain.exec(newAppDomain)){
+  if(!verify("domain", newAppDomain)){
         return res.sendJson({"status":"false", "code":"6", "msg":"AppName format error"});
       }
   checkRepetition.once("checkDomain" , function(code){
@@ -150,8 +150,7 @@ exports.appDel = function(req, res){
   }
   
   var delDomain = appName;
-  var regDomain = /^[a-z][a-z0-9_]{3,19}/;
-  if(!regDomain.exec(delDomain)){
+  if(!verify('domain', delDomain)){
         return res.sendJson({"status":"false", "code":"6", "msg":"AppName format error"});
       }
   var ownCheckEvent = new EventProxy();

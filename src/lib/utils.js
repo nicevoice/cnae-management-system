@@ -32,7 +32,9 @@ var crypto = require('crypto'),
 exports.verify = function(type, str){
     return regs[type].test(str);
   }
-  
+exports.match = function(type, str){
+    return str.match(regs[type]);
+}
 /**
  * md5
  */

@@ -6,12 +6,11 @@
   		 <p id="nickNameWarn"></p>
  	</div>
  	<form method="post" action="/userCenter/changeInfo">
- 	 	<p>昵 称：<input type="text" id="changeNickName" name="changeNickName" value="<%=user.nickName||''%>"></p>
-		<p>姓 名：<input type="text" id="changeRealName" name="changeRealName" value="<%=user.realName||''%>"></p>
-	    <p>手 机：<input type="text" id="changeTelNumber" name="changeTelNumber" value="<%=user.telNumber||''%>"></p>
-	    <p>主 页：<input type="text" id="changeMainPage" name="changeMainPage" value="<%=user.mainPage||''%>"></p>
+ 	 	<p>昵 称：<input type="text" id="changeNickName" class="change-input" name="changeNickName" value="<%=user.nickName||''%>"></p>
+		<p>姓 名：<input type="text" id="changeRealName" class="change-input" name="changeRealName" value="<%=user.realName||''%>"></p>
+	    <p>手 机：<input type="text" id="changeTelNumber" class="change-input" name="changeTelNumber" value="<%=user.telNumber||''%>"></p>
+	    <p>主 页：<input type="text" id="changeMainPage" class="change-input" name="changeMainPage" value="<%=user.mainPage||''%>"></p>
 	    <p><input type="button" id="submitChangeInfo" class="button_orange r3px" value="修改">
-	    <input type="button" class="button_orange r3px" value="取消" onclick="javascript: history.back();">
 	</form>
 </div>
     <script type="text/javascript" src="/scripts/changeInfo.js?v=1.0.2"></script> 

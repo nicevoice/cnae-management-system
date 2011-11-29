@@ -1,7 +1,7 @@
 var config = require('../config'), 
     log = config.logWithFile, 
     EventProxy = require('EventProxy.js').EventProxy,
-    verify = require('../lib/utils').verify,
+    urlMoudle = require('url'),
     //models    
     model = require('../models/index'), 
     collectonNames = config.dbInfo.collections, 
@@ -13,17 +13,15 @@ var config = require('../config'),
     insert = model.insert, 
     update = model.update, 
     remove = model.remove, 
-    count = model.count,
-     
+    count = model.count, 
     //send emails 
     sendMail = require('../lib/sendMail'), 
-    nodemailer = config.nodemailer, 
-    mailContent = config.mailContent, 
-    mailTitle = config.mailTitle, 
+    mail = config.mail,
     mails = sendMail.mails, 
-    mailEvent = sendMail.mailEvent, 
-    urlMoudle = require('url');
-
+    mailEvent = sendMail.mailEvent,
+    //utils
+    verify = require('../lib/utils').verify;
+    
 exports.getAllApps = function(req, res){
   var domain = req.params.id;  
   find(app_mem, {
@@ -246,23 +244,6 @@ exports.loadCoopmng = function(req, res){
     }
   });  
 }
-/***
- * 发送邮件
- * @param {string} email 发送邮箱
- * @param {string} words 发送邀请语
- */
-function send(email, words) {
-  var inviteNickName = email.split('@')[0];
-
-  mails.push({
-    sender : 'NAE <heyiyu.deadhorse@gmail.com>',
-    to : inviteNickName + " <" + email + ">",
-    subject : mailTitle,
-    html : mailContent + words,
-    debug : true
-  });
-  mailEvent.fire("getMail");
-}
 
 /***
  * 处理添加合作者请求
@@ -286,7 +267,7 @@ exports.doCoopmng = function(req, res) {
     })
   } else
   //输入不合法
-  if(!regEmail.exec(email)) {
+  if(!verify('email', email)) {
     res.sendJson({
       status : "error",
       msg : "请输入正确的email地址"
@@ -341,8 +322,16 @@ exports.doCoopmng = function(req, res) {
                   msg : "数据库查询错误，请稍后再试"
                 });
               } else {
-                send(email, words);
-                res.sendJson({
+                  var inviteNickName = email.split('@')[0];
+								  mails.push({
+								    sender : mail.sender,
+								    to : inviteNickName + " <" + email + ">",
+								    subject : mail.coopMailTitle,
+								    html : mail.coopMailContent + words,
+								    debug : true
+								  });
+								  mailEvent.fire("getMail");
+                  res.sendJson({
               status : "ok",
                   domain : domain,
                   role : role
@@ -420,10 +409,10 @@ exports.agreeCoop = function(req, res) {
     } else {
       var nickName = email.split('@')[0], agreeInfo = req.session.nickName + '( ' + req.session.email + ' )同意了您对项目"' + domain + '"的参与申请。';
       mails.push({
-        sender : 'NAE <heyiyu.deadhorse@gmail.com>',
+        sender :mail.sender,
         to : nickName + " <" + email + ">",
-        subject : config.agreeMailTitle,
-        html : config.agreeMailContent + agreeInfo,
+        subject : mail.agreeMailTitle,
+        html : mail.agreeMailContent + agreeInfo,
         debug : true
       });
       mailEvent.fire("getMail");
@@ -455,12 +444,13 @@ exports.refuseCoop = function(req, res) {
     msg:'数据库更新失败，请稍后再试'
       });
     } else {
-      var nickName = email.split('@')[0], refuseReason = req.session.nickName + '( ' + req.session.email + ' )拒绝了您对项目"' + domain + '"的参与申请。<br />拒绝原因：' + reason;
+      var nickName = email.split('@')[0],
+      refuseReason = req.session.nickName + '( ' + req.session.email + ' )拒绝了您对项目"' + domain + '"的参与申请。<br />拒绝原因：' + reason;
       mails.push({
-        sender : 'NAE <heyiyu.deadhorse@gmail.com>',
+        sender : mail.sender,
         to : nickName + " <" + email + ">",
-        subject : config.refuseMailTitle,
-        html : config.refuseMailContent + refuseReason,
+        subject : mail.refuseMailTitle,
+        html : mail.refuseMailContent + refuseReason,
         debug : true
       });
       mailEvent.fire("getMail");

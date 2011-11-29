@@ -21,7 +21,7 @@ var config = require('../config')
   ,sendMail = require('../lib/sendMail')
   ,mails = sendMail.mails
   ,mailEvent =sendMail.mailEvent
-  ,nodemailer = config.nodemailer
+  ,mail = config.mail
   //utils
   , utils = require('../lib/utils')
   , randomStringNum = utils.getRandomStringNum 
@@ -174,12 +174,13 @@ exports.apply = function(req, res){
         var applyInfo = req.session.nickName + "( " + req.session.email + " )" +
         '申请加入您的项目"' +
         appName +
-        '"。</br>申请理由：'+reason +"。";
+        '"。</br>申请理由：'+reason;
+        var content = mail.applyMailTitle.replace('$domain$', domain);
         mails.push({
-          sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+          sender: mail.sender,
           to: nickName + " <" + email + ">",
-          subject: config.applyMailTitle,
-          html: config.applyMailContent + applyInfo,
+          subject: mail.applyMailTitle,
+          html: content + applyInfo,
           debug: true
         });
         mailEvent.fire("getMail");

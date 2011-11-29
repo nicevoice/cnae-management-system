@@ -4,7 +4,7 @@ var config = require("../config"),
     EventProxy = require('EventProxy.js').EventProxy;
 var mailEvent = exports.mailEvent = new EventProxy();
 var nodemailer = exports.nodemailer = require('nodemailer');
-nodemailer.SMTP = config.smtp;
+nodemailer.SMTP = config.mail.smtp;
 
 var mails = exports.mails = [];
 var timer;

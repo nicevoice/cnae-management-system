@@ -15,11 +15,12 @@ var config = require('../config')
   , sendMail = require('../lib/sendMail')
   , mails = sendMail.mails
   , mailEvent =sendMail.mailEvent
-  , nodemailer = config.nodemailer
+  , mail = config.mail
   //utils
   , utils = require('../lib/utils')
   , randomString = utils.getRandomString
-  , randomStringNum = utils.getRandomStringNum;
+  , randomStringNum = utils.getRandomStringNum
+  , verify = utils.verify;
 
 /***
  * 显示生成邀请码页面
@@ -93,19 +94,18 @@ exports.generateInviteCode = function(req, res){
  * @param {} res
  */
 exports.sendInviteCode = function(req, res){
-	var title = config.inviteMailTitle||'',
-		content = config.inviteMailContent||'',
+	var title = mail.inviteMailTitle||'',
+		content = mail.inviteMailContent||'',
 		email = req.body.email||'',
 		code = req.body.code||'';
-	var regEmail = config.regEmail;
-	if(!regEmail.exec(email)){
+	if(!verify('email', email)){
 		return res.sendJson( {done:false, warn:"请输入合法的email地址"}) 
 	}
 	var inviteNickName = email.split('@')[0];
 	code+="&email="+email;
 	var codeHtml = "<a href="+code+">"+code+"</a>";
 	mails.push({
-    sender: 'CNAE <heyiyu.deadhorse@gmail.com>',
+    sender: mail.sender,
     to : inviteNickName + " <"+email + ">",
     subject: title,
     html: content+codeHtml,
