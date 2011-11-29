@@ -32,7 +32,9 @@ var crypto = require('crypto'),
 exports.verify = function(type, str){
     return regs[type].test(str);
   }
-  
+exports.match = function(type, str){
+    return str.match(regs[type]);
+}
 /**
  * md5
  */
@@ -227,27 +229,31 @@ function tplReplace(tpl, params){
 var arrConfig = [];
 var githubProxy = new EventProxy(), working=false;
 (function(){
-	var configFile = config.github.config;
 githubProxy.on('addGithub', function(data){
 	arrConfig.push(data);
 	if(working) return;
 	working = true;
-  var configFd;
-  while(arrConfig.length>0){
-    var config = arrConfig.shift(),
-        buffer = new Buffer(config, 'utf8');
-    configFd = fs.openSync(configFile, 'a', '644');
-    fs.write(configFd, buffer, 0, buffer.length, 0, function(err){
-    	if(err){
-    	  log.error(err.toString());
-    	  arrConfig.push(config);
-    	}
-    	fs.closeSync(configFd);
-    })
-  };
-  working = false;
+	writeConf();
 })
 })()
+var i=0;
+var configFile = config.github.config;
+var writeConf = function(){
+  var config = arrConfig.shift();
+  if(!config){
+   return working = false;
+  }
+  configFd = fs.openSync(configFile, 'a', '644');
+  var buffer = new Buffer(config, 'utf8');
+  fs.write(configFd, buffer, 0, buffer.length, 0, function(err){
+    if(err){
+      log.error(err.toString());
+      arrConfig.push(config);
+    }
+    fs.closeSync(configFd);
+    writeConf();
+  })
+}
 exports.addGithub = function(email, githubEmail, cb){
   var token = exports.getRandomStringNum(20),
       github = config.github;
@@ -271,6 +277,7 @@ exports.addGithub = function(email, githubEmail, cb){
     	});
   });
 }
+
 /**
 * git clone
 */

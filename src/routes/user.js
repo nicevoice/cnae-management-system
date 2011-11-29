@@ -12,7 +12,7 @@ module.exports = function(app){
     app.get("/userCenter/changePassword", hasLogin, ctrUser.changePassword);
     app.get("/userCenter/github", hasLogin, ctrUser.github);
     app.get("/userCenter/github/info",hasLogin, ctrUser.githubInfo)
-    app.post("/userCenter/github/info",hasLogin, ctrUser.setGithubInfo)
+    app.post("/userCenter/github/info_post",hasLogin, ctrUser.setGithubInfo)
     app.post("/userCenter/changeInfo", hasLogin, ctrUser.doChangeInfo);
     app.post("/userCenter/changePassword", hasLogin, ctrUser.doChangePassword);
   }

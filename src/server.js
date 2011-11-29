@@ -33,10 +33,10 @@ app.use(function(req, res, next) {
             return next();
         }
     });
-
+//favicon
+app.use(connect.favicon());
 //static
 app.use(connect.static(__dirname+'/public'));
-//app.use(gzippo.staticGzip(__dirname+'/public',{maxAge:3600000*24*30}));
 
 //session和cookie
 app.use(connect.cookieParser());
@@ -63,13 +63,6 @@ app.use(render({
 }));
 
 //routing
-app.use(connect.router(function(methods){
-    methods.get("/favicon.ico", function(req, res){
-    res.writeHead(404, "Not Found");
-    res.end();
-    })
-}));
-
 fs.readdirSync(__dirname + '/routes').forEach(function(filename){
   if (!/\.js$/.test(filename)||filename==='middleware.js') return;
   var name = basename(filename, '.js');

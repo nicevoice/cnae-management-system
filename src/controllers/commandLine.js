@@ -75,6 +75,9 @@ exports.checkAuth = function(req, res){
     }else if(!verify('email', email)){
         return sendResult(res, "error", 4, "email format error");
     }else{
+    	  email = decodeURIComponent(email);
+    	  appDomain = decodeURIComponent(appDomain);
+    	  token = decodeURIComponent(token);
         findOne(user, {email:email, token:token}, function(err, user){
             if(err){
                 return sendResult(res, "error", 5, "system error:database error");

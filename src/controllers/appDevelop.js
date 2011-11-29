@@ -22,7 +22,8 @@ var config = require('../config')
   , doGitClone = utils.doGitClone
   , randomStringNum = utils.getRandomStringNum
   , doGit = utils.doGit
-  , verify = utils.verify;
+  , verify = utils.verify
+  , match = utils.match;
   
   
   
@@ -176,54 +177,6 @@ exports.doUpload = function(req, res) {
     });
   }
 }
-/*
-exports.gitClone = function(req, res) {
-  var gitUrl = req.body.gitUrl.trim()||'',
-      targetDir = req.params.id||'',
-      matchs = gitUrl.match(config.regGit);
-  gitUrl = matchs?matchs[0]:null;
-  if(!gitUrl){
-      return res.sendJson({
-          status:'error',
-          msg:'请输入正确的git-url'
-      })
-  }
-  doGitClone(gitUrl, targetDir, function(result){
-    return res.sendJson(result); 
-  })
-}
-
-exports.gitPull = function(req, res) {
-  var domain = req.params.id || '', pull = "git pull", cwd = process.cwd(), savePath = uploadDir + '/' + domain + '/';
-  try {
-    process.chdir(savePath);
-  } catch(err) {
-    log.error(err.toString());
-    return res.sendJson({
-      status : "error",
-      msg : "拉取代码失败，请稍后再试"
-    });
-  }
-  exec(pull, function(err, gitStdout, gitStderr) {
-    try {
-      process.chdir(cwd);
-    } catch(err) {
-      log.error(err.toString());
-    }
-    if(err) {
-      log.error(err.toString());
-      return res.sendJson({
-        status : "error",
-        msg : err.toString()
-      });
-    } else {
-      return res.sendJson({
-        status : "ok",
-        msg : gitStdout
-      });
-    }
-  })
-}*/
 
 exports.gitAction = function(req, res){
   var command = req.body.gitCommand||'',
@@ -332,7 +285,7 @@ exports.downloading = function(req, res) {
       });
     } else {
       if(data.role && data.active && data.role <= 2 && data.active === 1) {
-        return res.render("/download/" + name + ".zip");
+        return res.redirect("/download/" + name + ".zip");
       } else {
         return res.render("error", {
           msg : "没有权限下载这个应用"
@@ -391,7 +344,7 @@ exports.upload = function(req, res, callback){
  */
 exports.npmInstall = function(req, res) {
   var npmName = req.body.npmName||'';
-  var items = npmName.match(config.regNpm);
+  var items = match('npm', npmName);
   npmName = items ? items[0] : null;
   if(!npmName){
       return res.sendJson({

@@ -11,3 +11,18 @@ padding:8px;
   width:250px;
   height:30px;
 }
+
+.change-input{
+  width : 300px;
+}
+
+#submitChangeInfo{
+  position:relative;
+  left:350px;
+  margin-top:50px;
+}
+#submitChangePassword{
+  position:relative;
+  left:380px;
+  margin-top:50px;
+}

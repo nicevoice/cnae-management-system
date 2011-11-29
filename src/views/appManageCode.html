@@ -33,10 +33,10 @@
   <%if(!config.switchs.nonGit){%>
   <div>
     <p>
-      <strong style="font-size:18px">Git</strong>
+      <strong style="font-size:18px">Git</strong><span style="color:red;">&nbsp; tips:个人中心设置github帐号够可以进行push在内的github操作</span>
     </p>
     <p id="gitAction-p">
-    	<input type="text" id="gitCommand" class="longInput">
+    	<input type="text" id="gitCommand">
       <input type="button" class="button_orange r3px" id="gitAction" value="执行">
     </p>
     <p>
@@ -47,8 +47,8 @@
   <p>
     <strong style="font-size:18px">npm</strong>
   </p>
-  <p>
-  	<input type="text" id="npmName" class="longInput">
+  <p id="npm-p">
+  	<input type="text" id="npmName">
     <input type="button" class="button_orange r3px" id="npmInstall" value="install">
   </p>
   <%}%>

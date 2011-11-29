@@ -193,7 +193,7 @@ function git() {
   }
   index = querys.push(gitCommand)-1;
   $("#gitCommand").val("");
-  showGitInfo(gitCommand + '...ing\n');
+  showGitInfo(gitCommand + '...\n');
   $.ajax({
     cache : false,
     type : "post",
@@ -207,9 +207,9 @@ function git() {
     },
     success : function(data) {
       if(data.status === "ok") {
-        showGitInfo(data.msg + "\nDone\n");
+        showGitInfo(data.msg + "Done\n");
       } else {
-        showGitInfo(data.msg + "\nDone\n");
+        showGitInfo(data.msg + "Done\n");
       }
     }
   })
@@ -245,7 +245,7 @@ showGitInfo = function(msg) {
     $("#gitInfo").html($("#gitInfo").html()+msg);
   } else {
     hasGitInfo = true;
-    var info = $('<pre id="gitInfo" class="borderRadius5" style="width:650px; height:400px;background-color:#000;"></pre>');
+    var info = $('<pre id="gitInfo" class="borderRadius5 std-style"></pre>');
     info.html(info.html()+msg);
     info.insertAfter($("#gitAction-p"));
   }
@@ -259,8 +259,8 @@ showNpmInfo = function(msg) {
     $("#npmInfo").html(msg);
   } else {
     hasNpmInfo = true;
-    var info = $('<pre id="npmInfo" class="borderRadius5" style="background-color:#000"></pre>');
+    var info = $('<pre id="npmInfo" class="borderRadius5 std-style" style="background-color:#000"></pre>');
     info.html(msg);
-    info.insertAfter($("#npmName"));
+    info.insertAfter($("#npm-p"));
   }
 }

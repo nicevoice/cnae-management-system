@@ -14,7 +14,8 @@ var config = require('../config'),
     //utils
     utils = require('../lib/utils'),
     md5 = utils.hex_md5,
-    randomStringNum = utils.getRandomStringNum;
+    randomStringNum = utils.getRandomStringNum,
+    verify = utils.verify;
 
 /***
  * 显示注册页面
@@ -46,8 +47,7 @@ exports.checkRegist = function(req, res){
 	, code = req.body.inviteCode||'';
 	var checkEventProxy = new EventProxy();
 	//检查用户输入合法性
-	var regEmail = config.regEmail;
-	if(!regEmail.exec(userEmail)){
+	if(!verify('email', userEmail)){
 		return res.render("regist", {
 		    layout:false,
 		    regist:{
@@ -56,7 +56,6 @@ exports.checkRegist = function(req, res){
             nick:userNickName
             },warn:{email:"请输入合法的email地址"}});
 		}
-	var regName = config.regName;
 	if(!userNickName){
         return res.render("regist", {
             layout:false,
@@ -67,7 +66,7 @@ exports.checkRegist = function(req, res){
             },
             warn:{nick:"必须输入昵称"}});	    
 	}
-	if(!regName.exec(userNickName))
+	if(!verify('name', userNickName))
         return res.render("regist", {
             layout:false,
             regist:{
@@ -85,8 +84,7 @@ exports.checkRegist = function(req, res){
             nick:userNickName
             },
             warn:{con:"两次密码输入不一致"}});
-	var regPassword = config.regPass;
-	if(!regPassword.exec(userPassword))
+	if(!verify('password', userPassword))
         return res.render("regist", {
             layout:false,
             regist:{
@@ -212,8 +210,7 @@ exports.checkRegist = function(req, res){
  */
 exports.checkEmail = function(req, res){
 	var userEmail = req.body.email;
-	var regEmail = config.regEmail;
-	if(!regEmail.exec(userEmail))
+	if(!verify('email', userEmail))
 		return res.sendJson( {warn:"请输入合法的email地址"});
 	findOne(user, {email:userEmail}, function(err, data){
 		if(err){
@@ -236,8 +233,7 @@ exports.checkEmail = function(req, res){
  */
 exports.checkName = function(req, res){
 	var name = req.body.name;
-	var regName = config.regName;
-	if(!regName.exec(name))
+	if(!verify('name', name))
 		return res.sendJson( {warn:"昵称为2～20个字符或数字或._"});
 	if(req.session.nickName && req.session.nickName===name)
 		return res.sendJson( {warn:""});

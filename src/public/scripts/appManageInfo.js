@@ -30,7 +30,7 @@ var tplInfo = '<form method="post" action="$url$/appmng">'+
               '<p>github：&nbsp;&nbsp;&nbsp;&nbsp;<input class="newLongInput"type="text" id="newGithub" name="newGithub" value="$github$"></p>'+
               '<p>图片地址：<input type="text" class="newLongInput" id="newImgSource" name="newImgSource" value="$imgSource$"></p>'+
               '<p>应用描述：</p>'+
-              '<p style="margin-left:80px;"><textarea rows="3" class="newLongInput" name="newAppDes" id="newAppDes">$appDes$</textarea></p>'+
+              '<p style="margin-left:80px;"><textarea rows="6" class="newLongInput" name="newAppDes" id="newAppDes">$appDes$</textarea></p>'+
               '<p><input id="submitAppInfo" type="button" class="button button_orange r3px" value="修改">'+
               '</form>';
 function renderAppInfo(appInfo) {
