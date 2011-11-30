@@ -139,7 +139,18 @@ function getColor(res){
   res = res.replace(/\x1B\[0m/g, '</span>');
   return res;
 }
-
+function handleLog(res){
+  var lines = res.split("\n");
+  for(var i=0, len=lines.length; i<len; ++i){
+    var line = lines[i];
+    if(line.indexOf('cnode-app-engine/logs')!==-1){
+      lines[i] = "<p>------------------------------------------------</p>";
+    }else{
+      lines[i] = '<p>' + line + '</p>';
+    }
+  }
+  return lines.join('');
+}
 function tplReplace(tpl, params){
     return tpl.replace(/\$.*?\$/g, function(data){
         return params[data];
