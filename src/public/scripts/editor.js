@@ -516,7 +516,7 @@ function getOutput(action){
 			}
 			else{
 				errTimer = window.setTimeout(function(){
-					getOutput(action);
+					getOutput(action;
 				}, 30000);
 			}*/					
 		},
@@ -524,7 +524,7 @@ function getOutput(action){
 			var d = htmlspecialchars(data.output);
       		d = getColor(d);
       		if(action === "stderr") d = setGotoLineSpan(d);
-			$("#"+action).html(d);
+			$("#"+action).html(handleLog(d));
       var pOnDiv;
       if(action==="stdout"){
         pOnDiv = onStdOut;

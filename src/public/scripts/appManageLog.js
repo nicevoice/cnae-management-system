@@ -30,7 +30,7 @@ function getOutput(action){
     success: function(data){
       res = htmlSpecial(data.output);
       res = getColor(res);
-      $("#" + action).html(res);
+      $("#" + action).html(handleLog(res));
       window.setTimeout(function(){
         getOutput(action);
       }, 10000);
