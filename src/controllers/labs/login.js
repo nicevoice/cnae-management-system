@@ -1,9 +1,12 @@
 var config = require('../../config'),
   	log = config.logWithFile,
+  	//models
   	model = require('../../models/index'),
-	users = model.users,
-  	randomStringNum = require('../../lib/randomString').getRandomStringNum,
-  	checkTBSession = require('../../lib/checkTBSession'),
+	  users = model.users,
+	  //utils
+	  utils = require('../../lib/utils'),
+  	randomStringNum = utils.getRandomStringNum,
+  	checkTBSession = utils.checkTBSession,
     labsConf = config.labsConf;
 /***
  * 显示登录页面
