@@ -241,3 +241,23 @@ padding:40px;
     background-color:#c7dae5;
 }
 
+#monitor{
+  width:800px;
+  margin-left:60px;
+  margin-top:50px;
+  margin-bottom:50px;
+}
+.monitor-button{
+  width:70px;
+}
+.warnColor{
+    color:#BD452F;
+}
+.std-style{
+  background-color:black;
+  color:#bbb;
+  width:600px;
+  height:400px;
+  font-size:15px;
+  overflow: auto;
+}
