@@ -39,7 +39,6 @@ exports.regist = function(req, res){
  * @return {}
  */
 exports.checkRegist = function(req, res){
-
 	var userEmail = req.body.newEmail||''
 	, userNickName = req.body.newUserName||''
 	, userPassword = req.body.newPassword||''
@@ -93,10 +92,9 @@ exports.checkRegist = function(req, res){
             nick:userNickName
             },
             warn:{pass:"密码必须大于6位"}});
-		
 	//检查是否数据库中已经存在
 	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
-		if(!goodName)
+        if(!goodName)
         return res.render("regist", {
             layout:false,
             regist:{
@@ -125,7 +123,7 @@ exports.checkRegist = function(req, res){
             warn:{code:"邀请码不正确"}});
 		else{
 		    var codes = [];
-		    for(var i=0,len=config.maxCode; i!=len; ++i){
+		    for(var i=0,len=config.maxInviteCode; i!=len; ++i){
 		        codes.push(randomStringNum(11));
 		    }
 			insert(user, {email:userEmail, nickName:userNickName, password:md5(userPassword+config.md5_secret), 
@@ -145,6 +143,7 @@ exports.checkRegist = function(req, res){
             log.error(err.toString());
           }
         });
+					console.log(123);
 					req.session.email = userEmail;
 					req.session.nickName = userNickName;
 					res.redirect("/application");
