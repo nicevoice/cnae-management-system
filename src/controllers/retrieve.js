@@ -82,8 +82,6 @@ exports.showResetPassword = function(req, res){
       }else{
         var now = new Date().getTime(),
             oneDay = 1000*60*60*24;
-            console.log(data.retrieveTime);
-            console.log(now);
         if(!data.retrieveTime || now - data.retrieveTime >oneDay){
           return res.render("error", {message:"该链接已过期，请重新申请"});
         }else{

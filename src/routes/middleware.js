@@ -31,7 +31,6 @@ exports.hasLogin = function(req, res, next){
 
 exports.hasNotLogin = function(req, res, next){
 	//如果session存在
-    console.log(req.session.nickName);
 	if(!req.session.email || !req.session.nickName){
 		return next();
 	} else {

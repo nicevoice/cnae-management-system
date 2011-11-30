@@ -354,7 +354,6 @@ exports.npmInstall = function(req, res) {
   } 
   var domain = req.params.id || '', install = "npm install " + npmName;
   install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
-  console.log(install);
   exec(install, function(err, npmStdout, npmStderr) {
     if(err) {
       log.error(err.toString());
