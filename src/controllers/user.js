@@ -45,7 +45,6 @@ exports.show = function(req, res){
  */
 exports.userInfo = function(req, res){
   var email = req.session.email;
-  console.log(email);
   findOne(user, {email:email.toString()}, function(err, data){
     if(err){
       log.error(err.toString());
@@ -253,7 +252,6 @@ exports.setGithubInfo = function(req, res){
 		    	})
 		})
 		if(githubEmail){
-			  console.log(githubEmail);
 				addGithub(email, githubEmail, function(err, data){
 					  if(err){
 					    proxy.fire('genKey', {status:"error", msg:err.message});
