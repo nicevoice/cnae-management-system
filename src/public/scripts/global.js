@@ -144,7 +144,7 @@ function handleLog(res){
   for(var i=0, len=lines.length; i<len; ++i){
     var line = lines[i];
     if(line.indexOf('cnode-app-engine/logs')!==-1){
-      lines[i] = "<p>------------------------------------------------</p>";
+      lines[i] = "<br />";
     }else{
       lines[i] = '<p>' + line + '</p>';
     }
