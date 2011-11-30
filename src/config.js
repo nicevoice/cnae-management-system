@@ -46,11 +46,5 @@ if(configInfo.switchs.labs){
 }else{
   configInfo.toplevelDomain = configInfo.toplevelDomainNAE;
 }
-configInfo.labsConf = configInfo.labsConf;
-//管理员帐号表
-configInfo.admins = configInfo.admins;
-
-//github配置信息
-configInfo.github = configInfo.github;
 
 module.exports = configInfo;
