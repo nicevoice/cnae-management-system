@@ -21,38 +21,38 @@
   "timeOut":1296000000,
   "port":2012,
   "debug":true,
-  "site_name":"Node App Engine",
+  "site_name":"NAE: Node.Js应用托管引擎. power by: Cnode社区",
   "domain":"cnodejs.net",
-  "logPath":"../logs/system.log",
+  "logPath":"$dir$/logs/system.log",
   
   "toplevelDomainNAE":".cnodejs.net",
   "toplevelDomainLabs":".nae.labs.toabao.com",
   "toplevelDomainDaily":".nae.labs.daily.taobao.net",
 
-  "user":"$email$",
-  "pass":"$emailPassword$", 
-  "email":"$email$",
-  "mailTitle":"Node App Engine协作邀请函",
-  "mailContentPath":"./mailTemplate/coopInviteMail.html",
+  "mail":{
+  "coopMailTitle":"Node App Engine协作邀请函",
+  "coopMailContentPath":"/mailTemplate/coopInviteMail.html",
   "inviteMailTitle":"Node App Engine邀请码",
-  "inviteMailContentPath":"./mailTemplate/inviteCodeMail.html",
+  "inviteMailContentPath":"/mailTemplate/inviteCodeMail.html",
   "retrieveMailTitle":"Node App Engine密码找回邮件",
-  "retrieveMailContentPath":"./mailTemplate/retrieveMail.html",
-  "retrieveLink":"http://cnodejs.net:2012/resetPassword",
+  "retrieveMailContentPath":"/mailTemplate/retrieveMail.html",
+  "retrieveLink":"http://cnodejs.net/resetPassword",
   "applyMailTitle":"Node App Engine项目参与申请",
-  "applyMailContentPath":"./mailTemplate/applyMail.html",
+  "applyMailContentPath":"/mailTemplate/applyMail.html",
   "agreeMailTitle":"Node App Engine项目参与申请成功",
-  "agreeMailContentPath":"./mailTemplate/agreeInviteMail.html",
+  "agreeMailContentPath":"/mailTemplate/agreeInviteMail.html",
   "refuseMailTitle":"Node App Engine项目参与申请被拒绝",
-  "refuseMailContentPath":"./mailTemplate/refuseInviteMail.html",
-  "admin":"$admin$",
+  "refuseMailContentPath":"/mailTemplate/refuseInviteMail.html",
+  "admin":"heyiyu.deadhorse@gmail.com",
   "smtp":{
     "host":"smtp.gmail.com",
     "port": 587,
     "ssl": false,
     "use_authentication": true,
-    "user": "$email$",
-    "pass": ""$emailPassword$""
+    "user": "heyiyu.deadhorse@gmail.com",
+    "pass": "heyiyuaaqq12"
+  },
+  "sender":"NAE <admin@cnodejs.com>"
   },
   "maxInviteCode":5,
   "uploadDir":"$uploadDir$",
@@ -63,11 +63,11 @@
     "port":"1127"
   }, 
   "admins":["dead_horse@qq.com","fengmk2@gmail.com","kunfirst@gmail.com", "q3boy1@gmail.com"],
-  "labs":false,
   "switchs":{
     "labs":false,
     "debug":true,
-    "daily":true
+    "daily":true,
+    "noGit":false
   },
   "labsConf": {
 	  "agentMaxSockets" : 256 ,
