@@ -21,7 +21,7 @@ domainBlur = function(){
     data:{domain:domain},
     error:function(){},
     success:function(data){
-     $("#domainWarn").html(data.warn); 
+     $("#domainWarn").addClass("warnColor").html(data.warn); 
     }
 	});		
 }	
