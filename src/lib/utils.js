@@ -111,7 +111,7 @@ exports.checkTBSession = function(req, cb){
     //检查用户是否是开发者
     var secret = unescape(labsConf.secret);
     var checkUserOption = clone(labsConf.checkUserOption);
-    checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+md5(secret + sessionId + secret).toUpperCase();
+    checkUserOption.path += "?sessionId="+encodeURIComponent(sessionId)+"&sign="+exports.hex_md5(secret + sessionId + secret).toUpperCase();
     httpReq(checkUserOption, function(checkRes){
           cb(checkRes);
     });
@@ -127,20 +127,21 @@ exports.onOff = function(action, name, callback){
         socket.destroy();
         callback({msg:e.message});
     });
-    socket.write(action + " "+ name +"\n");
+    socket.write('{"cmd":"'+action + '", "app":"'+ name +'"}\n');
     socket.on('data', function(data){
     data = ""+data;
-    if(data.indexOf('}')===-1){
-        data === "{}";
-    }else{
-        data = JSON.parse(data);
+    try{
+      data = JSON.parse(data);
+    }catch(e){
+      log.error(e.toString());
+      data = {status:"error", msg:"response is not json"};
     }
     callback(data);
     socket.destroy();
     })
 };
 
-
+var NEWLINE = '\n';  //\n
 exports.getLog = function(action, name, num, callback){
     var socket = net.createConnection(port);
     socket.on('error',function(e){
@@ -148,22 +149,45 @@ exports.getLog = function(action, name, num, callback){
         socket.destroy();
         callback("");
     });
-    socket.write(action+" "+name+" "+num+"\n");
-    var res="", length=-1;
+    socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'"}\n');
+    var buf = new Buffer(0), length = -1, head;
     socket.on('data', function(data){
-            if(length===-1){
-                length = data.slice(0,10).readInt32BE(0);
-                res+=data.slice(10);
-            }else{
-                res += data;
-            }
-            if(res.length>=length){
-                socket.destroy();
-                callback(res);
-            }
+      buf += data;
+      if(length===-1){//still dons't find head
+        var l=0;
+        for(var len=buf.length; l!=len; ++l){
+          if(buf[l]===NEWLINE) break;
+        }
+        if(l===buf.length){//not found 
+          return;
+        }
+        try{//try to get length in head
+          head = JSON.parse(buf.slice(0, l));
+        }catch(e){
+          length = 0;
+        }
+        if(head){
+          length = head.length||0;;
+        }else{
+          length = 0;
+        }
+        buf = buf.slice(l+1);
+      }
+      if(length!==-1 && buf.length >= length){ //done
+        callback(buf.toString('utf8')||'');
+        socket.destroy();
+      }
     });
+    
     socket.on('end', function(){
-        callback(res||'');
+        console.log('end');
+        var data = "";
+        for (var i=0, len=chunk.length; i!=chunk; ++i){
+          data += chunk[i];
+        }
+        console.log(data);
+        data = data.slice(data.indexOf('\n')+1);    
+        callback(data||'');
         socket.destroy();
     })
 }

@@ -50,25 +50,27 @@ exports.doControlApp = function(req, res){
 }
 
 exports.getStatus = function(req, res){
-	var domain = req.params.id||'',
-      savePort = req.body.savePort||'',
-      appDomain = domain + config.toplevelDomain;
-	onOff("status", domain, function(socketRes){
-		if(!socketRes || socketRes.msg){
-			socketRes={rss:"", heap:"",uptime:"",
-			last:"",pid:"",autorun:"",running:"", ports:[]};
-		}else{
-			socketRes.last = new Date(socketRes.last).format("MM/dd  hh:mm:ss");
-		}
-		socketRes.appDomain = appDomain;
-      var ports = socketRes.ports;
-      if(savePort&&ports&&ports[0]){
+  var domain = req.params.id||'',
+  savePort = req.body.savePort||'',
+  appDomain = domain + config.toplevelDomain;
+  onOff("status", domain, function(socketRes){
+    var status = {};
+    if(socketRes.status!=="ok"){
+       status={rss:"", heap:"",uptime:"",
+       last:"",pid:"",autorun:"",running:"", ports:[]};
+    }else{
+       status = socketRes.msg;
+       status.last = new Date(status.last).format("MM/dd  hh:mm:ss");
+    }
+    status.appDomain = appDomain;
+    var ports = status.ports;
+    if(savePort&&ports&&ports[0]){
       update(app_basic, {appDomain:domain.toString()}, {$set:{port:ports[0]}},function(err){
         if(err){
-          log.error(err.toString());
+            log.error(err.toString());
         }
       });
-      }
-		return res.sendJson( socketRes);
-	})
-	}
+    }
+    return res.sendJson(status);
+  })
+}
