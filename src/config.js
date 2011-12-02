@@ -39,7 +39,6 @@ if(!debug) {
 
 //labs
 configInfo.labs= configInfo.switchs.labs;
-console.log(exports.labs);
 if(configInfo.switchs.labs){
   if(configInfo.switchs.daily){
     configInfo.toplevelDomain = configInfo.toplevelDomainDaily;
