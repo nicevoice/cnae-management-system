@@ -523,6 +523,7 @@ function getOutput(action){
 		success:function(data){
 			var d = htmlspecialchars(data.output);
       		d = getColor(d);
+            if(action === "stdout") d = handleLog(d);
       		if(action === "stderr") d = CLI.loader.setErrorstack(d);
 			$("#"+action).html(d);
       var pOnDiv;
