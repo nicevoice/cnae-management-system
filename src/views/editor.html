@@ -4,26 +4,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title><%=domain%> - NAE IDE</title>
 	<link href="/styles/editor.css?v=1.0.9" rel="stylesheet" type="text/css" />
+	<script>
+		var DOMAIN = "<%=domain%>";
+	</script>
 	<script src="/scripts/head.load.min.js"></script>
-	<script src="/scripts/ace/ace.js"></script>
 	<script src="/scripts/jquery-1.6.2.min.js"></script>
+	<script src="/scripts/ace/ace.js"></script>
 	<script src="/scripts/global.js?v=1.0.3"></script>
 	<script src="/scripts/editor.config.js"></script>
 	<script src="/scripts/editor.cookie.js?v=0.0.1"></script>
 	<script src="/scripts/editor.querytool.js?v=0.0.2"></script>
+	<script src="/scripts/editor.console.js?v=0.0.4"></script>
 	<script src="/scripts/editor.js?v=1.2.5"></script>
+	<script src="/scripts/jquery.form.js"></script>
 </head>
 
 <body>
-<div id="domain" style="display: none;"><%=domain%></div>
 <div id="sidebar">
     <div id="app-info">
-        <p class="item">
-            应用：<span id="appname"><a href="http://<%=domain%><%=config.toplevelDomain%>" target="_blank"><%=domain%></a></span>
-        </p>
-        <p class="item">
-        	当前路径：<div id="currentPath"></div>
-        </p>
+        <p class="item">应用：<span id="appname"><a href="http://<%=domain%>.cnodejs.net" target="_blank" title="点击访问"><%=domain%></a></span></p>
+        <p class="item">当前路径：<div id="currentPath"></div></p>
     </div>
     <div id="file-explorer">
         <div id="tool-bar">
@@ -50,7 +50,38 @@
             <ul>
                 <li id="nav-save" title="快捷键：Ctrl+S(PC), Command+S(Mac)">保存</li>
 				<li id="nav-restart" title="快捷键：Ctrl-Shift-1(PC), Command-Shift-1(Mac)">重启</li>
-				<li id="nav-console" title="快捷键：Ctrl+Shift+X(PC), Command+Shift+X(Mac)">隐藏控制台</li>
+				<li id="nav-prefer" class="nav-drop" title="">外观
+					<div class="drop-panel" id="prefer-panel">
+						<div class="field">
+							<label>显示控制台：</label>
+							<select id="console-display" name="console-display" disabled="disabled">
+								<option value="0">否</option><option value="1">是</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>控制台位置：</label>
+							<select id="console-location" name="console-location" disabled="disabled">
+								<option value="BOTTOM">底部</option><option value="RIGHT">右侧</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>配色方案：</label>
+							<select id="editor-theme" name="editor-theme" disabled="disabled">
+								<option value="dawn">Dawn</option>
+								<option value="cobalt">Cobalt</option>
+								<option value="eclipse">Eclipse</option>
+								<option value="idle_fingers">idleFingers</option>
+								<option value="kr_theme">krTheme</option>
+								<option value="monokai">Monokai</option>
+								<option value="solarized_dark">Solarized Dark</option>
+								<option value="solarized_light">Solarized Light</option>
+								<option value="textmate">Textmate</option>
+								<option value="tomorrow">Tomorrow</option>
+								<option value="twilight">Twilight</option>
+							</select>
+						</div>
+					</div>
+				</li>
 				<li id="nav-query" title="">QueryTool</li>
             </ul>
             <div id="logo"><img src="/images/logo-simp.png" title="CNodeJS社区项目" /></div>
@@ -62,22 +93,23 @@
         </div>
     </div>
 </div>
-<div id="console" class="clearfix">
-	<ul id="console-nav">
-		<li id="console-min" title="最小化">min</li>
-		<li id="console-close" title="关闭">close</li>
-	</ul>
-    <div id="stdout-panel">
-    	<div class="console-label">stdout</div>
-    	<div id="stdout"></div>
-    </div>
-    <div id="stderr-panel">
-    	<div class="console-label">stderr</div>
-    	<div id="stderr"></div>
-    </div>
+<div id="console">
+	<div id="console-event-handler"></div>
+	<div class="console-nav">
+		<ul>
+			<li id="console-min" title="最小化">min</li>
+			<li id="console-close" title="关闭">close</li>
+		</ul>
+	</div>
+	<div class="stdout-panel">
+		<div class="label">stdout</div>
+		<div id="stdout" class="console-content"></div>
+	</div>
+	<div class="stderr-panel">
+		<div class="label">stderr</div>
+		<div id="stderr" class="console-content"></div>
+	</div>
 </div>
 <div id="msg"></div>
 </body>
-<script src="/scripts/jquery-ui-1.8.16.custom.min.js"></script>
-<script src="/scripts/jquery.form.js"></script>
 </html>

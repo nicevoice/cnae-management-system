@@ -9,7 +9,6 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
-var CONSOLE_HEIGHT = 125;
 
 var setTabAction = function() {
 	$(".tab").live({
@@ -149,51 +148,44 @@ var activeTab = function(index) {
 /*
  * 动态设定编辑器尺寸
  */
-var setEditorSize = function(h, w, hideConsole) {
+var setEditorSize = function(h, w, hideConsole, loc) {
+	var cli = $("#console");
 	if(!h) {
 		h = document.documentElement.clientHeight - (80 + 5); // 减去header和statusBar的部分
-		if(!hideConsole) h -= CONSOLE_HEIGHT; // 如果显示console，则要减去console的部分
+		if(!hideConsole && loc === "BOTTOM") h -= cli.height() + 10; // 如果显示console，则要减去console的部分
 	}
 	if(!w) {
 		w = document.body.clientWidth - 260; // 减去sidebar的部分
+		if (!hideConsole && loc === "RIGHT") w -= cli.width() + 10;
 	}
+	$("#tabs").width(w - 50);
+	$("#statbar").width(w);
 	$("#editor").css("height", h).css("width", w);
+	if (editor) editor.resize();
 }
 
-/*
- * 动态设定控制台尺寸
- */
-var setConsoleSize = function(w) {
-	if(!w) w = (document.body.clientWidth - 25) / 2;
-	$('#stdout').css("width", w);
-	$('#stderr').css("width", w);
-}
-
-var setFileListSize = function() {
-	h = document.documentElement.clientHeight - (120 + 150);
-	$("#file-list").css("height", h).css("overflow", "auto");
+var setFileListSize = function(height, hideConsole, loc) {
+	height = height || document.documentElement.clientHeight - 145;
+	if (!hideConsole && loc === "BOTTOM") {
+		height -= 135;
+	}
+	$("#file-list").css({ "height": height, "overflow": "auto" });
 }
 
 var setElementsSize = function() {
-	// 检查console的cookis
-	var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
-	if(isHide != null && isHide === '1') {// 隐藏console
+	var display = CLI.cache.display,
+		location;
+	if (!display) {// 隐藏console
 		setEditorSize(null, null, true);
+		setFileListSize(null, true);
 	} else {
-		setEditorSize(null, null, false);
-		consoleHandler.show();
-		setConsoleSize();
-	}
-	setFileListSize();
-}
-
-var initLang = function() {
-	// 检查console的cookis
-	var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
-	if(isHide != null && isHide === '1') {// 隐藏console
-		$("#nav-console").html(NAEIDE_config.LANG.console.show);
-	} else {
-		$("#nav-console").html(NAEIDE_config.LANG.console.hide);
+		location = CLI.cache.location;
+		if (location === "BOTTOM" || location === "RIGHT") {
+			setEditorSize(null, null, false, location);
+		} else {
+			setEditorSize(null, null, false);
+		}
+		setFileListSize(null, false, location);
 	}
 }
 
@@ -212,12 +204,18 @@ var initEditor = function() {
 	Renderer = require("ace/virtual_renderer").VirtualRenderer;
 	
 	// 初始化编辑器配色方案
-	editor.setTheme("ace/theme/textmate");
+	var theme = cookieHandler.get(NAEIDE_config.COOKIE.editor_theme);
+	theme = theme || "textmate";
+	head.js("/scripts/ace/theme-" + theme + ".js", function() {
+		editor.setTheme("ace/theme/" + theme);
+		$("#editor-theme option[value='" + theme + "']").attr("selected", "selected");
+		$("#editor-theme").removeAttr("disabled");
+	});
 	editor.renderer.getShowPrintMargin(true);
 	editor.renderer.setHScrollBarAlwaysVisible(false);
 	
 	// 绑定编辑器快捷键
-	canon.addCommand({
+	editor.commands.addCommand({
 		name: 'Save',
 		bindKey: {
 			win: 'Ctrl-S',
@@ -231,7 +229,7 @@ var initEditor = function() {
 			actionLock = false;
 		}
 	});
-	canon.addCommand({
+	editor.commands.addCommand({
 		name: 'ConsoleDisplay',
 		bindKey: {
 			win: 'Ctrl-Shift-X',
@@ -239,17 +237,18 @@ var initEditor = function() {
 			sender: 'editor'
 		},
 		exec: function(env, args, request) {
-			consoleHandler.toggle();
+			CLI.loader.display(!CLI.cache.display);
 		}
 	});
 	editor.getSession().on('change', onChange); // 绑定编辑器事件
-}
+};
 
 var closeEditor = function() {
 	editor = null
    ,canon = null
    ,Renderer = null;
 	$("#editor").html("");
+	$("#editor-theme").attr("disabled", true);
 }
 
 $(window).resize(function(){
@@ -286,7 +285,7 @@ $(document).keydown(function(e) {
 		}
 		if(e.shiftKey) {
 			if(e.keyCode === hideConsole.charCodeAt(0)) {
-				consoleHandler.toggle();
+				CLI.loader.display(!CLI.cache.display);
 				return false;
 			}
 			if(e.keyCode === 49) {
@@ -301,14 +300,12 @@ $(document).keydown(function(e) {
 	}
 });
 
-window.onload = function() {
-	initLang(); // 初始化界面上的文字
+$(function() {
 	$('#editor') // 首先将editor的尺寸设置为最大
 		.css("height", document.documentElement.clientHeight - (80 + 5))
 		.css("width", document.body.clientWidth - 260);
 	setElementsSize(); // 初始化编辑器和控制台尺寸
 
-	DOMAIN = $("#domain").html(); // 初始化应用域名
 	url = {
 		listfile: "/editor/" + DOMAIN + "/filelist",
 		readfile: "/editor/" + DOMAIN + "/readfile",
@@ -322,7 +319,7 @@ window.onload = function() {
 	// 支持的文件类型
 	modes = Array();
 	modes["js"] = {
-		"scriptPath": "/scripts/ace/mode-javascript.js",
+		"scriptPath": "/scripts/ace/mode-javascript.js?v=1.0",
 		"requirePath": "ace/mode/javascript"};
 	modes["html"] = {
 		"scriptPath": "/scripts/ace/mode-html.js",
@@ -339,6 +336,9 @@ window.onload = function() {
 	modes["txt"] = {
 		"scriptPath": "/scripts/ace/mode-textile.js",
 		"requirePath": "ace/mode/text"};
+	modes["php"] = {
+			"scriptPath": "/scripts/ace/mode-php.js",
+			"requirePath": "ace/mode/php"};
 		
 	// 初始化当前路径
 	$("#currentPath").html(ROOT_PATH);
@@ -353,7 +353,7 @@ window.onload = function() {
 	setToolbarAction();
 	setTabAction();
 	setConsoleAction();
-	setConsoleResize();
+	prefer.action();
 	
 	var options = { 
 		beforeSubmit:	function() {
@@ -387,7 +387,7 @@ window.onload = function() {
 	// 加载样式
 	setSidebarUI();
 	mouseOnStdDiv();
-};
+});
 
 window.onbeforeunload = function() {
 	var index = hasFileChanged();
@@ -516,15 +516,15 @@ function getOutput(action){
 			}
 			else{
 				errTimer = window.setTimeout(function(){
-					getOutput(action;
+					getOutput(action);
 				}, 30000);
 			}*/					
 		},
 		success:function(data){
 			var d = htmlspecialchars(data.output);
       		d = getColor(d);
-      		if(action === "stderr") d = setGotoLineSpan(d);
-			$("#"+action).html(handleLog(d));
+      		if(action === "stderr") d = CLI.loader.setErrorstack(d);
+			$("#"+action).html(d);
       var pOnDiv;
       if(action==="stdout"){
         pOnDiv = onStdOut;
@@ -823,7 +823,7 @@ var getFileName = function(filePath) {
 var setEditorMode = function(ext) {
 	if(ext) {
 		var _mode;
-		ext = ext.toString();
+		ext = ext.toString().toLowerCase();
 		if(ext === ".js") {
 			_mode = modes["js"]; // JavaSctip
 		} else if (ext === ".css") {
@@ -834,6 +834,8 @@ var setEditorMode = function(ext) {
 			_mode = modes["json"]; // Json
 		} else if(ext === ".xml") {
 			_mode = modes["xml"]; // Xml
+		} else if (ext === ".php") {
+			_mode = modes["php"];
 		} else {
 			_mode = modes["txt"]; // 默认为文本
 		}
@@ -1218,9 +1220,6 @@ var setNavAction = function() {
 		actionLock = false;
 		if(editor) editor.focus(); // 重新将焦点置于editor之上
 	});
-	$("#nav-console").click(function() {
-		consoleHandler.toggle();
-	});
 	$("#nav-query").click(function() {
 		QUERYTOOL.open(DOMAIN);
 	});
@@ -1338,72 +1337,57 @@ var setConsoleAction = function() {
 		}
 		return false;
 	});
-	$("#console-min").click(function() {
-		setConsoleHeight(CONSOLE_HEIGHT);
-	});
-	$("#console-close").click(function() {
-		consoleHandler.toggle();
-	});
 };
 
-var setGotoLineSpan = function(str) {
-	var currDirFull = "/home/admin/cnae/git/cnode-app-engine/apps/" + DOMAIN
-	   ,filesInCurrDir = currDirFull + "[\\/\\.\\w]+"
-	   ,stackInf = filesInCurrDir + ":[\\d]+(:[\\d]+)?"
-	   ,reg = new RegExp(stackInf, "g");
- 	return str.replace(reg, function(s) {
- 		var inf = s.toString().split(DOMAIN)[1] || "";
- 		return '<span class="stderr_gotoline" name="' + inf + '">' + s + '</span>';
- 	});
-}
-
-var setConsoleResize = function() {
-	maxHeight = document.documentElement.clientHeight - 100;
-	$("#console").resizable({
-		handles: 'n',
-		minHeight: CONSOLE_HEIGHT,
-		maxHeight: maxHeight
-	});
-	$("#console").resize(function() {
-		var h = $(this).height() - 30;
-		$('#stdout').css("height", h);
-		$('#stderr').css("height", h);
-	});
-}
-
-var setConsoleHeight = function(height) {
-	if(typeof height === "undefined") {
-		height = Math.round(document.documentElement.clientHeight * 0.5);
-	}
-	$("#console").removeAttr("style").css("display", "block").css("height", height);
-	var h = height - 30;
-	$('#stdout').css("height", h);
-	$('#stderr').css("height", h);
-}
-
-var consoleHandler = {
-	// 控制台高度：CONSOLE_HEIGHT
-	show: function() { // 显示控制台
-		$("#nav-console").html(NAEIDE_config.LANG.console.hide);
-		$("#console").show();
-		var e = $("#editor");
-		setEditorSize(null, null, false);
-		setConsoleSize();
-		cookieHandler.set(NAEIDE_config.COOKIE.console_hide, '0');
+var prefer = {
+	mouseIn: false,
+	action: function() {
+		$("#nav-prefer").click(function() {
+			prefer.openPanel();
+		});
+		$("#nav-prefer").mouseover(function() {
+			prefer.mouseIn = true;
+		});
+		$("#nav-prefer").mouseout(function() {
+			prefer.mouseIn = false;
+		});
+		$(window).click(function() {
+			prefer.closePanel();
+		});
+		$(document).click(function() {
+			prefer.closePanel();
+		});
+		$("#console-display").change(function() {
+			if (this.value === "1") {
+				CLI.loader.display(true);
+			} else if (this.value === "0") {
+				CLI.loader.display(false);
+			}
+			return false;
+		});
+		$("#console-location").change(function() {
+			console.log(this.value);
+			CLI.loader.locate(this.value);
+			return false;
+		});
+		$("#editor-theme").change(function() {
+			if (!editor) return false;
+			var theme = this.value;
+			head.js("/scripts/ace/theme-" + theme + ".js", function() {
+				editor.setTheme("ace/theme/" + theme);
+				cookieHandler.set(NAEIDE_config.COOKIE.editor_theme, theme);
+			});
+			return false;
+		});
 	},
-	hide: function() { // 隐藏控制台
-		$("#nav-console").html(NAEIDE_config.LANG.console.show);
-		$("#console").hide();
-		var e = $("#editor");
-		setEditorSize(null, null, true);
-		cookieHandler.set(NAEIDE_config.COOKIE.console_hide, '1');
+	openPanel: function() {
+		$("#nav-prefer").addClass("active");
+		$("#prefer-panel").slideDown("fast");
 	},
-	toggle: function() {
-		var isHide = cookieHandler.get(NAEIDE_config.COOKIE.console_hide);
-		if(isHide === null || isHide === "0") {
-			consoleHandler.hide();
-		} else {
-			consoleHandler.show();
+	closePanel: function() {
+		if (!prefer.mouseIn) {
+			$("#nav-prefer").removeClass("active");
+			$("#prefer-panel").fadeOut("fast");
 		}
-	}
-};
+	},
+}

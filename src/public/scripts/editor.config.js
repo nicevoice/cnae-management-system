@@ -1,8 +1,12 @@
 var NAEIDE_config = {};
 
+NAEIDE_config.BASE = "/home/admin/cnae/git/cnode-app-engine/apps/";
+
 NAEIDE_config.COOKIE = {
-	console_hide: "NAEIDE_console_hide",
-	querytool_options: "querytool-options"
+	console_display: "NAE_c_display",
+	console_location: "NAE_c_location",
+	editor_theme: "NAE_e_theme",
+	querytool_options: "querytool-options",
 };
 
 NAEIDE_config.LANG = {};
@@ -23,10 +27,6 @@ NAEIDE_config.LANG.apps = {
 };
 NAEIDE_config.LANG.editor = {
 	noEditingFile: "没有正在编辑的文件",
-}
-NAEIDE_config.LANG.console = {
-	show: "显示控制台",
-	hide: "隐藏控制台",
 };
 NAEIDE_config.LANG.file = {
 	readFileFailed: "读文件失败",

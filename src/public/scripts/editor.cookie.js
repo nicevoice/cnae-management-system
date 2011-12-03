@@ -1,4 +1,4 @@
-window.cookieHandler = {
+var cookieHandler = {
 	set: function(name, value, expires, path, domain) {
 		if (typeof expires == "undefined") {
 			expires = new Date(new Date().getTime() + 365 * 24 * 3600 * 100);
