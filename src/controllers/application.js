@@ -213,28 +213,37 @@ var fs = require('fs')
           fs.mkdir(saveDir, '777', function(err) {
             if(err) {
               log.error(err.toString());
-            } else {
-                if(!newGithub){	//如果没有输入github地址，就放例子
-                var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
-                exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
-                  if(err) {
-                    log.error(err.toString());
-                  }
-                });
-              }else{//否则去github上取代码
+            }
+            if(!newGithub){	//如果没有输入github地址，就放例子
+              var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
+              exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
+                if(err) {
+                  log.error(err.toString());
+                }
+              });
+            }else{//否则去github上取代码
               	if(newGithub[newGithub.length-1]==='/'){
               	  project = newGithub.slice(19, -1);	
                 }else{
                   project = newGithub.slice(19);	
                 }
-              	var gitUrl = 'git@github.com:'+ project + '.git';
-              	console.log(gitUrl);
-                doGit(gitUrl, newAppDomain, function(){}, ture);
-              }
+		        findOne(user, {email:req.session.email}, function(err, data){
+			      if(err){
+                    log.error(err.toString());
+                    return res.sendJson({status:"error", msg:"数据库查询错误"});
+                  }
+                  var gitCommand = "";
+                  if(data.github&&data.github.token){
+                    gitCommand = 'git clone git@' + data.github.token + 'github.com:'+ project + '.git';
+                  }else{
+                    gitCommand = 'git clone git://github.com/' + project + '.git';
+                  }
+                  doGit(gitCommand, newAppDomain, function(){}, ture);
+              })
             }
-          });
-          res.redirect("/application");
+            res.redirect("/application");
         })
+      })
         //执行插入
         var now = new Date().getTime();
         insert(app_basic, {
