@@ -63,7 +63,7 @@ function renderCoopInfo(own, mems){
                 memParams['$operate$'] = '没有权限进行操作';
             }
         }else{//申请者的处理
-            if(own.role<=1){//创建者和管理者可以处理申请请求
+            if(own.role===0){//创建者和管理者可以处理申请请求
                 memParams['$operate$'] = tplReplace(tplHandleApply, {
                     '$email$':mem.email,
                     '$appDomain$':mem.appDomain                       
@@ -73,9 +73,9 @@ function renderCoopInfo(own, mems){
             }
         };
         if(own.role===0){
-            if(mem.role===0){
+            if(mem.role===0){ 
                 memParams['$role$'] = '创建者';
-            }else{
+            }else if(mem.active<2){
                 var roleParams = {
                     '$email$':mem.email,
                     '$s1$':'',
@@ -88,6 +88,8 @@ function renderCoopInfo(own, mems){
                     case 3: roleParams['$s3$']='selected';break;
                 }
                 memParams['$role$'] = tplReplace(tplSelectRole, roleParams);
+            }else{
+              memParams['$role$'] = '';
             }
         }else{
             switch(mem.role){
@@ -95,6 +97,7 @@ function renderCoopInfo(own, mems){
                 case 1:memParams['$role$'] = '管理者'; break;
                 case 2:memParams['$role$'] = '参与者'; break;
                 case 3:memParams['$role$'] = '观察者'; break;
+                default: memParams['$role$'] = '';
             }
         }
         memInfo += tplReplace(tplMem, memParams);      
