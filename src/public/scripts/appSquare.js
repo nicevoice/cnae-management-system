@@ -54,6 +54,8 @@ function render(data){
   }
   $("#all-apps").html($("#all-apps").html()+html);
   bindDiv();
+  $('.smallPic a').fancyZoom({scaleImg: true, closeOnClick: true});
+
 }
 var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' + 
                    '<p class="app-title"><img src="/images/arrow.gif"></img><a href="http://$appDomain$.cnodejs.net$port$" target="_blank">$appName$</a>$github$</p>'+
@@ -62,9 +64,11 @@ var tplSquareApp = '<div class="app-info clearfix"><div class="app-info-left">' 
                    '<p class="app-des">$appDes$</p></div>'+
                    '<div class="app-info-right">'+
                    '</div><div class="app-info-image">$img$</div>'+
-                   '</div>',
-    tplAppImg = '<a href="$imgSource$" target="_blank"><img src="$imgSource$" class="app-image" alt="$appName$"></img></a>',
+                   '</div>$realImg$',
+    tplSmallImg = '<div class="smallPic"><a href="#$imgNum$"><img src="$imgSource$" class="app-image" alt="$appName$"></img></a></div>',
+    tplRealImg = '<div id="$imgNum$" style="display:none;"><img src="$imgSource$" alt="$appName" /></div>',
     tplGithub = '&nbsp;&nbsp;<a href="$github$" title="Fork me on Github" target="_blank" width=><img width="40px" src="/images/github.jpg" alt="Github"></img></a>';
+var imgNum = 0;
 function renderApp(app){
   if(!app.appName || !app.appDomain ||
      !app.creatorEmail || !app.creatorNickName ||
@@ -79,12 +83,18 @@ function renderApp(app){
   if(app.photoUrl){
     photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
   }
-  var imgSource = "";
+  var imgSource = "", realImg = "";
   var github = "";
   if(app.imgSource){
-      imgSource = tplReplace(tplAppImg, {
+      imgSource = tplReplace(tplSmallImg, {
           '$imgSource$':app.imgSource,
-          '$appName$':app.appName
+          '$appName$':app.appName,
+          '$imgNum$':'imgNum_'+imgNum
+      });
+      realImg = tplReplace(tplRealImg, {
+          '$imgSource$':app.imgSource,
+          '$appName$':app.appName,
+          '$imgNum$':'imgNum_'+imgNum++
       });
   }
   if(app.github){
@@ -103,7 +113,8 @@ function renderApp(app){
       '$appCreateDate$':app.appCreateDate,
       '$port$':port,
       '$img$':imgSource,
-      '$github$':github
+      '$github$':github,
+      '$realImg$':realImg
   });
 } 
 
