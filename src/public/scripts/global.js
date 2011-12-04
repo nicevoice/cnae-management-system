@@ -144,7 +144,7 @@ function handleLog(res){
   for(var i=0, len=lines.length; i<len; ++i){
     var line = lines[i];
     if(line.indexOf('cnode-app-engine/logs')!==-1){
-      lines[i] = "";
+      lines[i] = 'app start at 'line.slice(0, line.indexOf('['));
     }else{
       lines[i] = '<p>' + line + '</p>';
     }

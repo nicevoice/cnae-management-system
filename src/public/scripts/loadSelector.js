@@ -26,7 +26,7 @@ function loadSelector() {
     }
   });
 }
-var tplSelecte = '<select id="select_app">'+
+var tplSelecte = '<select id="select_app" style="width:100px">'+
                   '$options$'+
                   '</select>',
     tplOption = '<option value="$appDomain$" $selected$>$appName$</option>';
