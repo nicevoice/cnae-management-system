@@ -229,7 +229,7 @@ var fs = require('fs')
                 }
               	var gitUrl = 'git@github.com:'+ project + '.git';
               	console.log(gitUrl);
-                doGitClone(gitUrl, newAppDomain, function(){});
+                doGit(gitUrl, newAppDomain, function(){});
               }
             }
           });
