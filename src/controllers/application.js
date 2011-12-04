@@ -214,12 +214,23 @@ var fs = require('fs')
             if(err) {
               log.error(err.toString());
             } else {
+                if(!newGithub){	//如果没有输入github地址，就放例子
                 var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
                 exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
                   if(err) {
                     log.error(err.toString());
                   }
                 });
+              }else{//否则去github上取代码
+              	if(newGithub[newGithub.length-1]==='/'){
+              	  project = newGithub.slice(19, -1);	
+                }else{
+                  project = newGithub.slice(19);	
+                }
+              	var gitUrl = 'git@github.com:'+ project + '.git';
+              	console.log(gitUrl);
+                doGitClone(gitUrl, newAppDomain, function(){});
+              }
             }
           });
           res.redirect("/application");
