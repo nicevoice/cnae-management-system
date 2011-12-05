@@ -1,6 +1,7 @@
 var config = require('./config'),
     connect = require('connect'),
     render = require('./lib/render'),
+    cookie = require('./lib/cookie'),
     ejs = require('ejs'),
     fs = require('fs'),
     form = require('connect-form'),
@@ -47,6 +48,9 @@ app.use(connect.session({
 
 //post
 app.use(connect.bodyParser());
+
+//set cookie
+app.use(cookie);
 
 if(config.switchs.debug){
     //log
