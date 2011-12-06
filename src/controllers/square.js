@@ -35,7 +35,7 @@ exports.showSquare = function(req, res){
 exports.post = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
   find(app_basic, {}, { //找出最新的limit个应用
-    sort: [['github', -1],['appCreateDate', -1]],
+    sort: [['appCreateDate', -1]],
     skip: skip,
     limit: limit
   }, function(err, data){
@@ -287,7 +287,7 @@ exports.personalSquare = function(req, res){
             find(app_basic, {
               appDomain:{$in:ownDomain}
             }, { //找出该用户的应用
-              sort: [['github', -1], ['appCreateDate', -1]]
+              sort: [['appCreateDate', -1]]
             }, function(err, data){
               if (err) {
                 log.error(err.toString());

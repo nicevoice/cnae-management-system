@@ -98,21 +98,21 @@
                 <a href="<%=url%>/todo">待办事项</a>
               </li>
               <hr />
+              <% if(!config.labs){ %>
               <li>
                 <h3>应用管理</h3>
               </li>
               <li class="littleRight">
                 <a href="<%=url%>/appmng">应用设置</a>
               </li>
-              <% if(!config.labs){ %>
               <li class="littleRight">
                 <a href="<%=url%>/coopmng">成员管理</a>
               </li>
               <li class="littleRight">
                 <a href="<%=url%>/mnglog">管理记录</a>
               </li>
-              <%}%>
               <hr />
+              <%}%>
               <li>
                 <h3>应用调优</h3>
               </li>
