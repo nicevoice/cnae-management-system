@@ -3,6 +3,7 @@ var connectUtils = require('connect').utils;
 module.exports = function(){
   return function(req, res, next){
     res.cookie = cookie;
+    res.clearCookie = cookie;
     next();
   }
 }
@@ -40,6 +41,12 @@ function cookie (name, value, options){
   if('undefined' === typeof options.path){ //if no path
     options.path = '/';
   }
-  var cookie = utils.serializeCookie(name, value, options);
+  var cookie = connectUtils.serializeCookie(name, value, options);
   this.setHeader('set-cookie', cookie);
+}
+
+function clearCookie(name ,options){
+  options = options||{};
+  options.expires = new Date(1);
+  return this.cookie(name, '', options);
 }
