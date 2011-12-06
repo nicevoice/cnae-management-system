@@ -91,7 +91,15 @@ var tplSum  =  '<table style="width:600px">'+
                '<tr><th>内存消耗</th><th>堆内存</th><th>运行时间</th><th>心跳时间</th><th>PID</th></tr>'+
                '<tr id="statusInfo"></tr>'+
                '</table>';
-
+var tplSumLabs  =  '<table style="width:600px">'+
+               '<tr><td>应用名称：</td><td>$appName$</td></tr>'+
+               '<tr><td>应用状态:</td><td id="appStateDes"></td></tr>'+
+               '<tr><td>数据库：</td><td id="appDbName">$db$</td><tr>'+
+               '</table>'+
+               '<h3>应用状态信息</h3><table id="status">'+
+               '<tr><th>内存消耗</th><th>堆内存</th><th>运行时间</th><th>心跳时间</th><th>PID</th></tr>'+
+               '<tr id="statusInfo"></tr>'+
+               '</table>';
 function renderAppInfos(app){
     var params = {};
     params['$appName$'] = app.appName;
@@ -103,7 +111,11 @@ function renderAppInfos(app){
         url = url.slice(0, url.lastIndexOf('/'));        
         params['$db$']=('<a href="' + url + '/mongo">点此启用mongoDB</a></td>');
     }
+    if($('#labs').html()==='true'){
+    $('#appInfos').html(tplReplace(tplSumLabs, params));
+    }else{
     $('#appInfos').html(tplReplace(tplSum, params));
+    }
 }
 
 //设置应用信息
@@ -190,7 +202,6 @@ function controlApp() {
       action : action
     },
     error : function() {
-      sAlert("警告", "操作失败");
     },
     success : function(data) {
       if(data.status === "ok") {
@@ -224,7 +235,6 @@ function restart() {
       action : action
     },
     error : function() {
-      sAlert("警告", "操作失败");
     },
     success : function(data) {
       if(data.status !== "ok") {

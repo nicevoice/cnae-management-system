@@ -10,7 +10,7 @@ function loadGithub(){
     type:"GET",
     url:"/userCenter/github/info",
     dataType:"json",
-    error:function(){alert("")},
+    error:function(){},
     success:function(data){
       if(data.status==="ok"){
         renderGithub(data.content);
@@ -55,7 +55,6 @@ function submitEmail(){
     dataType:"json",
     data:{githubEmail:email},
     error:function(){
-    	sAlert("警告","连接错误，请稍后再试");
     	},
     success:function(data){
     	if(data.status==="ok"){

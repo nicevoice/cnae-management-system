@@ -18,7 +18,6 @@ function loadContent(){
     url:"/application/load_apps",
     dataType:"json",
     error:function(){
-        sAlert("警告", "服务器连接错误");    
     },
     success:function(data){
       if (data.status === "ok") { 
@@ -30,7 +29,6 @@ function loadContent(){
      		bindMouseAbout();
       }
       else{
-        sAlert("警告", "服务器连接错误");    
       }
     }
   });
@@ -129,7 +127,6 @@ function delApp(domain){
     dataType:"json",
     data:{domain:domain},
     error:function(){
-      sAlert("警告","连接错误，请稍后再试");
     },
     success:function(data){
       if(data.status==="error")
@@ -188,7 +185,6 @@ $.ajax({
     dataType:"json",
     data:{domain:domain},
     error:function(){
-      sAlert("警告","连接错误，请稍后再试");
     },
     success:function(data){
       if(data.done===false)

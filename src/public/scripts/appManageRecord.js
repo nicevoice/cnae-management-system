@@ -20,7 +20,6 @@ function loadRecordContent() {
     url : "/application/manage/" + domain + "/load_mnglog?page="+page,
     dataType : "json",
     error : function() {
-      sAlert("警告", "服务器连接错误");
     },
     success : function(data) {
       if(data.status === "ok") {
