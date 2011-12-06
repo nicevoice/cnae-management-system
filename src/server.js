@@ -6,7 +6,7 @@ var config = require('./config'),
     form = require('connect-form'),
     basename = require('path').basename,
     RedisStore = require('connect-redis')(connect);
-if(!config.debug) {
+if(!config.switchs.debug) {
     // patch net module for connect to proxy
     require('./lib/net_patch');
 }
@@ -74,7 +74,7 @@ app.use(connect.router(function(methods){
     });
 }));
 app.listen(config.port);
-
+console.log("server start listen on "+ config.port);
 
 var pid_path = __dirname + '/server.pid';
 fs.writeFile(pid_path, '' + process.pid);
