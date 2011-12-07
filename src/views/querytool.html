@@ -21,7 +21,11 @@
 			<p>默认填充为最近一次请求的数据</p>
 			<div class="field">
 				<label>URL: </label>
-				<input type="text" name="qt-url" id="qt-url" class="form-text" value="http://<%=domain%>.cnodejs.net" />
+                                <%if(config.switchs.labs===true){%>
+				<input type="text" name="qt-url" id="qt-url" class="form-text" value="http://apiproxy.labs.taobao.com/proxy">
+                               <%}else{%>
+				<input type="text" name="qt-url" id="qt-url" class="form-text" value="<%=domain%>.cnodejs.net"/>
+                               <%}%>
 			</div>
 			<div class="field">
 				<label>method: </label>
@@ -34,7 +38,7 @@
 			</div>
 			<div class="field">
 				<label>params: (格式为：key1=value1&key2=value2)</label>
-				<textarea name="qt-params" id="qt-params" class="form-ta"></textarea>
+				<textarea name="qt-params" id="qt-params" class="form-ta"><%if(config.switchs.labs){%>taobao_nick=<%=email%>&method=nodejs&feature_id=<%=domain.slice(1)%><%}%></textarea>
 			</div>
 			<div class="field">
 				<button name="qt-submit" id="qt-submit" class="form-submit">提交</button>
