@@ -32,13 +32,17 @@ String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g, "");
 }
 var res = require('http').ServerResponse;
-res.prototype.sendJson = function(data){
-  body = new Buffer(JSON.stringify(data));
-    this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
-    this.end(body);
-}
-res.prototype.json = function(data){
-  body = new Buffer(JSON.stringify(data));
-    this.writeHead(200, {"Content/type":"text/json", "Content/length":body.length});
-    this.end(body);
-}
+res.prototype.json = function(obj){
+  // allow status / body
+  if (2 == arguments.length) {
+    this.statusCode = obj;
+    obj = arguments[1];
+  }else{
+    this.statusCode = 200;
+  }
+  var body = JSON.stringify(obj);
+  this.charset = this.charset || 'utf-8';
+  this.setHeader('Content-Type', 'application/json');
+  return this.end(body);
+};
+res.prototype.sendJson = res.prototype.json;
