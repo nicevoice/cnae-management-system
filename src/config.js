@@ -20,7 +20,7 @@ var dbInfo = configInfo.dbInfo;
 configInfo.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbInfo.name;
 
 //log
-configInfo.logWithFile = log.create(log.INFO, configInfo.logPath);
+configInfo.logWithFile = log.create(log.INFO, {file:configInfo.logPath+process.pid});
 
 //读取mail正文
 var mail = configInfo.mail;

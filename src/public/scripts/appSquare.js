@@ -27,7 +27,6 @@ function bindDiv(){
 function getMore(){
   $("#getMore").html("加载中...");
   $.ajax({
-    cache:false,
     type:"get",
     url:"/square/post",
     data:{skip:appNums, limit:onceNum},

@@ -1,2 +1,2 @@
 #! /bin/bash
-kill -9 `cat ./src/server.pid`
+curl localhost:2013/stop
