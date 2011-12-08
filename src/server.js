@@ -1,92 +1,86 @@
-var config = require('./config'),
-    connect = require('connect'),
-    render = require('./lib/render'),
-    cookie = require('./lib/cookie'),
-    uid = require('./lib/uid'),
-    ejs = require('ejs'),
-    fs = require('fs'),
-    form = require('connect-form'),
-    basename = require('path').basename,
-    RedisStore = require('connect-redis')(connect);
-if(!config.switchs.debug) {
-    // patch net module for connect to proxy
-    require('./lib/net_patch');
-}
-require('./lib/patch');
-
-
-//创建httpServer 
-var app = connect();
-
-//multi-data form
-app.use(form({ uploadDir: config.tempDir, keepExtensions: true }));
-app.use(function(req, res, next) {
-        if(req.form) {
-            req.form.complete(function(err, fields, files){
-                req.body = {};
-                if(!err) {
-                    req.form.fields = fields;
-                    req.form.files = files;
-                    req.body = fields;
-                }
-                next(err);
-            });
-        } else {
-            return next();
+var cluster = require('cluster');
+var fs = require('fs');
+var http = require('http');
+var app = require('./app');
+var config = require('./config');
+if(cluster.isMaster){
+  if(config.switchs.debug&&0){
+    app.listen(config.port);
+    console.log("server start listen on "+config.port+' by '+process.pid);        
+  }else{
+    var num = Math.ceil(require('os').cpus().length/2);//cpu的一半
+    var workers = {}, started_success = 0;
+    var start = false, stop = false;
+    for(var i=0; i!=num; ++i){
+      var worker = cluster.fork();
+      workers[worker.pid] = worker;
+      worker.on('message', function(msg){
+        if(msg.cmd==='started'){
+          if(start){
+            console.log('worker ' + msg.pid + ' restarted');
+          }else{
+            console.log('worker ' + msg.pid + 'started');
+            started_success ++;
+            if(started_success === num){
+              start = true;
+              console.log("server start on " + config.port);
+            }
+          }
         }
-    });
-//favicon
-app.use(connect.favicon());
-//static
-app.use(connect.staticCache());
-app.use(connect.static(__dirname+'/public', {maxAge: 3600000 * 24 * 365}));
-
-//session和cookie
-app.use(connect.cookieParser());
-app.use(connect.session({
-    secret: config.session_secret,
-    store : new RedisStore()
-}));
-
-//post
-app.use(connect.bodyParser());
-
-
-if(config.switchs.debug){
-    //log
-    app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
+      })
+    }
+  }
+  cluster.on('death', function(worker){
+    console.log('worker' + worker.pid + 'died');
+    delete workers[worker.pid];
+    workers[worker.pid] = cluster.fork();
+  })
+  var pid_path = __dirname + '/server.pid';
+  fs.writeFile(pid_path, '' + process.pid);
+  process.on('exit', function () {
+  //    console.log('Got SIGINT.  Press Control-D to exit.', arguments);
+      try {
+          fs.unlinkSync(pid_path);
+      } catch (e){
+      }
+      for(var k in workers){
+        workers[k].kill();
+      }
+      process.exit();
+  });
+    // process admin server
+  http.createServer(function(req, res) { //开启一个监听本地的服务，通过HTTP控制restart和stop
+    if (req.url === '/restart') {
+      for (var k in workers) {
+        workers[k].kill();
+      }
+    } else if (req.url === '/stop') {
+      for (var k in workers) {
+        workers[k].kill();
+      }
+      process.nextTick(function() {
+        process.kill();
+      });
+    } else if (req.url === '/status') {
+      for (var k in workers) {
+        res.write('worker ' + k + ' alive\n');
+      }
+    }
+    res.end(req.url + '\n');
+  }).listen(2013, '127.0.0.1');
+  console.log('admin server listen on 17231');
+}else{
+  console.log('worker');
+  app.listen(config.port, function(){
+    process.send({cmd:'started', pid:process.pid});
+  });
 }
 
-//render power by ejs
-app.use(render({
-    root:__dirname + '/views',
-    cache:false,
-    helpers:{
-        config:config
-    }
-}));
 
-//routing
-fs.readdirSync(__dirname + '/routes').forEach(function(filename){
-  if (!/\.js$/.test(filename)||filename==='middleware.js') return;
-  var name = basename(filename, '.js');
-  app.use(connect.router(require('./routes/'+name)));
-})  
-app.use(connect.router(function(methods){
-    methods.get("*", function(req, res){
-      res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
-    });
-}));
+/*
+
+
 app.listen(config.port);
 console.log("server start listen on "+ config.port);
 
-var pid_path = __dirname + '/server.pid';
-fs.writeFile(pid_path, '' + process.pid);
-process.on('SIGINT', function () {
-//    console.log('Got SIGINT.  Press Control-D to exit.', arguments);
-    try {
-        fs.unlinkSync(pid_path);
-    } catch (e){
-    }
-    process.exit();
-});
+*/
