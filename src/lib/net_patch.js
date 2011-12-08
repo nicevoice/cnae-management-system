@@ -147,7 +147,7 @@ Server.prototype.listen = function() {
     }
 };
 
-
+Server.prototype.__listen = __listen;  //保留http listen
 var __address = Server.prototype.address;
 Server.prototype.address = function() {
     if(this.fd === null) {
