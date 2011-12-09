@@ -1,7 +1,8 @@
-var admins = require('../config').admins,
-	labs = require('../config').labs,
-	checkTBSession = require('../lib/utils').checkTBSession,
-	findOne = require('../models/index').findOne,
+var connectUtils = require('connect').utils,
+    admins = require('../config').admins,
+	  labs = require('../config').labs,
+	  checkTBSession = require('../lib/utils').checkTBSession,
+	  findOne = require('../models/index').findOne,
     app_mem = require('../config').dbInfo.collections.app_member;
 
 //路由中间件
@@ -87,4 +88,77 @@ exports.isAdmin = function(req, res, next){
 		}
 	}
 	res.redirect("/");
+}
+
+var cache = {};
+
+var INTERVAL = 10000;
+function checkCache(){
+  for(var key in cache){
+    cache[key].t -= INTERVAL/1000;
+    if(cache[key].t<0){
+      delete cache[key];
+    }
+  }
+}
+setInterval(checkCache, INTERVAL);
+console.log('begin check cache');
+var filter = function(req, res){
+  var type = res.getHeader('Content-Type') || '';
+  return type && type.match(/json|text|javascript/);
+}
+exports.webcache = function(options){
+  options = options||{};
+  options.maxAge = (options.maxAge||60000)/1000;
+  options.filter = options.filter || filter;
+  options.version = options.version||'';
+  var nocacheFilter = options.nocacheFilter || null;
+  
+  return function(req ,res, next){
+    if(nocacheFilter && nocacheFilter.test(req.url)){
+      return next();
+    }
+    var key = req.url + options.version;
+    var hit = cache[key]&&cache[key].v;
+    var uacc = connectUtils.parseCacheControl(req.headers['cache-control'] || '');
+    if(!uacc['no-cache'] && typeof hit==="string"){
+      return res.end(hit);
+    }
+    
+    res.on('header', function(){
+      if(!options.filter(req, res)){
+        return;
+      }
+      //check if no-cache
+      var cc = connectUtils.parseCacheControl(res.getHeader('cache-control')||'');
+      if(cc['no-cache'] || res.statusCode !== 200){
+        return ;
+      }
+      //maxage
+      var maxAge = 'max-age' in cc ? cc['max-age'] : options.maxAge;
+      console.log(maxAge);
+      var chunks = '';
+      //pach for write
+      res.__write__ = res.write;
+      
+      res.write = function(chunk, encoding){
+        res.__write__(chunk, encoding);
+        if(Buffer.isBuffer(chunk)){
+          chunks += chunk.toString();
+        }else{
+          chunks += chunk || '';
+        }
+      }
+      var end =res.end;
+      res.end = function(chunk, encoding){
+        res.end = end;
+        if(chunk){
+          res.write(chunk, encoding);
+        }
+        res.end();
+        cache[key] = {v:chunks, t:maxAge};
+      }
+    })
+    next();
+  }
 }
