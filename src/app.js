@@ -52,10 +52,7 @@ app.use(connect.session({
 app.use(connect.bodyParser());
 
 
-if(config.switchs.debug){
-    //log
-    app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
-}
+app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',

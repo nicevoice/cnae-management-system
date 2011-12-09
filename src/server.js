@@ -3,15 +3,18 @@ var fs = require('fs');
 var http = require('http');
 var app = require('./app');
 var config = require('./config');
+var path = require('path');
 if(cluster.isMaster){
-  if(config.switchs.debug&&0){
+  fs.writeFileSync(path.dirname(config.logPath)+'/worker.num', '1');
+  if(config.switchs.debug){
     app.listen(config.port);
     console.log("server start listen on "+config.port+' by '+process.pid);        
   }else{
     var num = Math.ceil(require('os').cpus().length/2);//cpu的一半
     var workers = {}, started_success = 0;
     var start = false, stop = false;
-    for(var i=0; i!=num; ++i){
+    var i=0;
+    function initWorker(){
       var worker = cluster.fork();
       workers[worker.pid] = worker;
       worker.on('message', function(msg){
@@ -19,7 +22,7 @@ if(cluster.isMaster){
           if(start){
             console.log('worker ' + msg.pid + ' restarted');
           }else{
-            console.log('worker ' + msg.pid + 'started');
+            console.log('worker ' + msg.pid + ' started');
             started_success ++;
             if(started_success === num){
               start = true;
@@ -28,10 +31,15 @@ if(cluster.isMaster){
           }
         }
       })
-    }
+      ++i;
+      if(i<num){
+        setTimeout(initWorker, 200);   
+      }
+    };
+    setTimeout(initWorker, 200);
   }
   cluster.on('death', function(worker){
-    console.log('worker' + worker.pid + 'died');
+    console.log('worker ' + worker.pid + 'died');
     delete workers[worker.pid];
     workers[worker.pid] = cluster.fork();
   })
@@ -67,10 +75,9 @@ if(cluster.isMaster){
       }
     }
     res.end(req.url + '\n');
-  }).__listen(2013, '127.0.0.1');
-  console.log('admin server listen on 17231');
+  }).__listen(config.adminPort, '127.0.0.1');
+  console.log('admin server listen on 2014');
 }else{
-  console.log('worker');
   app.listen(config.port, function(){
     process.send({cmd:'started', pid:process.pid});
   });
