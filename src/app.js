@@ -56,7 +56,7 @@ app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :re
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',
-    cache:false,
+    cache:true,
     helpers:{
         config:config
     }
