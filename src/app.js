@@ -51,7 +51,6 @@ app.use(connect.session({
 //post
 app.use(connect.bodyParser());
 
-
 if(config.switchs.debug){
     //log
     app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
@@ -59,7 +58,7 @@ if(config.switchs.debug){
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',
-    cache:false,
+    cache:true,
     helpers:{
         config:config
     }

@@ -6,7 +6,7 @@ var config = require('./config');
 var path = require('path');
 if(cluster.isMaster){
   fs.writeFileSync(path.dirname(config.logPath)+'/worker.num', '1');
-  if(config.switchs.debug){
+  if(config.switchs.debug&&0){
     app.listen(config.port);
     console.log("server start listen on "+config.port+' by '+process.pid);        
   }else{
@@ -33,10 +33,10 @@ if(cluster.isMaster){
       })
       ++i;
       if(i<num){
-        setTimeout(initWorker, 100);   
+        setTimeout(initWorker, 200);   
       }
     };
-    setTimeout(initWorker, 100);
+    setTimeout(initWorker, 200);
   }
   cluster.on('death', function(worker){
     console.log('worker ' + worker.pid + 'died');
