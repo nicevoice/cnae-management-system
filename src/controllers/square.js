@@ -31,116 +31,185 @@ exports.showSquare = function(req, res){
   return res.render("appSquare", {layout:"layoutMain",
       nickName:req.session.nickName, email:req.session.email});
 }
-
-exports.post = function(req, res){
-  var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
-  find(app_basic, {}, { //找出最新的limit个应用
-    sort: [['appCreateDate', -1]],
-    skip: skip,
-    limit: limit
-  }, function(err, data){
-    if (err) {
-      log.error(err.toString());
-      return res.sendJson({
-        status: "error",
-        msg: "数据获取失败"
-      });
-    }
-    else {
-      if (!data || data.length <= 0) {
-        return res.sendJson({
-          status: "done",
-          msg: "所有数据获取完成"
-        });
-      }
-      var domainToMems = {}, domains = []; //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
-      for (var i = 0, len = data.length; i < len; ++i) {
-        domains[i] = data[i].appDomain;
-        domainToMems[domains[i]] = {};
-        domainToMems[domains[i]].memberNums = 0;
-      }
-      find(app_mem, { //查找这limit个应用的参与者
-        appDomain: {
-          $in: domains
+/**
+ * get square app infos
+ */
+exports.getSquareInfo = function(req, res) {
+  var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '', nickName=queryString.nickName || '';
+  //regist proxy
+  var proxy = new EventProxy();
+  var apps = [];//存放最终数据
+  var ownerEmail; //存放owner email 
+  //handle db error
+  var _errorHandle = function(err) {
+    proxy.removeAllListeners();
+    log.error(err.toString());
+    return res.sendJson({
+      status : "error",
+      msg : "数据获取失败"
+    });
+  }
+  //寻找某个用户的应用时，先把用户相关联的应用域名找出来。
+  //get email use nick 
+  var _getEmail = function(){
+    findOne(user, {
+      nickName: nickName
+      }, function(err, owner){
+        if(err){
+          _errorHandle(err);
+        }else{
+          if(!owner){
+            return rees.sendJson({
+            status:"error",
+            msg:"未找到该用户"
+          });
+          }
+          ownerEmail = owner.email;
+          proxy.fire('email_gotten', owner.email);          
         }
-      }, function(err, mems){
-        if (err) {
-          log.error(err.toString());
+    })
+  }
+  //get appdomains in app_mem use email
+  var _getAppDomain = function(email){
+    var ownDomain = [];
+    find(app_mem, {
+      email: email
+    }, function(err ,mems){
+      if(err){
+        _errorHandle(err);
+      }else{
+        for(var i=0, len=mems.length; i<len; ++i){
+          if (mems[i].active < 2) {
+            ownDomain.push(mems[i].appDomain);
+          }        
+        }
+        proxy.fire('appDomain_gotten', ownDomain);
+      }
+    })    
+  }
+  //get apps
+  var _getApps = function(ownDomain){
+    var selector = {}, options = {};
+    if(ownDomain){
+      selector = {
+        appDomain:{$in:ownDomain}
+      }
+      options = {
+        sort: [['appCreateDate', -1]]       
+      }
+    }else{
+      options = {//找出最新的limit个应用
+        sort : [['appCreateDate', -1]],
+        skip : skip,
+        limit : limit
+      }
+    }
+    find(app_basic, selector, options, function(err, data) {
+      if(err) {
+        _errHandle(err);
+      } else {
+        apps = data;
+        if(!apps || apps.length <= 0) {
+          proxy.removeAllListeners();
           return res.sendJson({
-            status: "error",
-            msg: "数据获取失败"
+            status : "done",
+            msg : "所有数据获取完成"
           });
         }
-        else {
-          var creatorEmails = [];
-          for (var i = 0, len = mems.length; i < len; ++i) {
-            if (mems[i].active === 1) {
-              domainToMems[mems[i].appDomain].memberNums++; 
-              if (mems[i].role === 0) {
-                domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
-                creatorEmails.push(mems[i].email);
-              }
+        proxy.fire('apps_gotten', apps);
+      }
+    })
+  }
+  //根据app获取到mems
+  var _getMems = function(apps) {
+    var domainToMems = {}, domains = [];
+    //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
+    for(var i = 0, len = apps.length; i < len; ++i) {
+      domains[i] = apps[i].appDomain;
+      domainToMems[domains[i]] = {};
+      domainToMems[domains[i]].memberNums = 0;
+    }
+    find(app_mem, {
+      appDomain : {
+        $in : domains
+      }
+    }, function(err, mems) {
+      if(err) {
+        _errorHandle(err);
+      } else {
+        //获取到creator，同时记录下mem数目
+        var creatorEmails = [];
+        for(var i = 0, len = mems.length; i < len; ++i) {
+          if(mems[i].active === 1) {
+            domainToMems[mems[i].appDomain].memberNums++;
+            if(mems[i].role === 0) {
+              domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
+              creatorEmails.push(mems[i].email);
             }
           }
-          for (var i = 0, len = data.length; i < len; ++i) {
-            if (!domainToMems[data[i].appDomain]) {
-              data[i].memberNums = "0";
-              data[i].creatorEmail = "";
-            }
-            else {
-              data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
-              data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
-            }
-          }          
-          find(user, {
-            email: {
-              $in: creatorEmails
-            }
-          }, {
-            email: 1,
-            nickName: 1
-          }, function(err, userInfos){
-            if (err) {
-              log.error(err.toString());
-              return res.sendJson({
-                status: "error",
-                msg: "数据获取失败"
-              });
-            }
-            else 
-              if (!userInfos || userInfos.length === 0) {
-                return res.sendJson({
-                  status: "error",
-                  msg: "数据获取失败"
-                });
-              }
-              else 
-                if (userInfos) {
-                  var emailToNick = {};
-                  for (var i = 0, len = userInfos.length; i < len; ++i) {
-                    emailToNick[userInfos[i].email] = userInfos[i].nickName;
-                  }
-                  for (var i = 0, len = data.length; i < len; i++) {
-                    if (emailToNick[data[i].creatorEmail]) {
-                      data[i].creatorNickName = emailToNick[data[i].creatorEmail];
-                      data[i].photoUrl = "http://www.gravatar.com/avatar/"+md5(data[i].creatorEmail||'');
-                      data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
-                    }
-                    else {
-                      data[i].creatorNickName = "";
-                    }
-                  }
-                  return res.sendJson({
-                    status: "ok",
-                    apps: data
-                  });
-                }
-          })
         }
-      });
-    }
-  })
-} 
+        //把数据记录到apps里面
+        for(var i = 0, len = apps.length; i < len; ++i) {
+          if(!domainToMems[apps[i].appDomain]) {
+            apps[i].memberNums = "0";
+            apps[i].creatorEmail = "";
+          } else {
+            apps[i].memberNums = domainToMems[apps[i].appDomain].memberNums || 0;
+            apps[i].creatorEmail = domainToMems[apps[i].appDomain].creatorEmail || "";
+          }
+        }
+        proxy.fire('creator_gotten', creatorEmails);
+      }
+    })
+  }
+  //获取creator信息
+  var _getCreatorInfo = function(creatorEmails) {
+    find(user, {
+      email : {
+        $in : creatorEmails
+      }
+    }, {
+      email : 1,
+      nickName : 1
+    }, function(err, userInfos) {
+      if(err) {
+        _errorHandle(err);
+      } else if(!userInfos || userInfos.length === 0) {
+        _errorHandle(new Error("no such user in creatorEmails"));
+      } else if(userInfos) {
+        var emailToNick = {};
+        for(var i = 0, len = userInfos.length; i < len; ++i) {
+          emailToNick[userInfos[i].email] = userInfos[i].nickName;
+        }
+        for(var i = 0, len = apps.length; i < len; i++) {
+          if(emailToNick[apps[i].creatorEmail]) {
+            apps[i].creatorNickName = emailToNick[apps[i].creatorEmail];
+            apps[i].photoUrl = "http://www.gravatar.com/avatar/" + md5(apps[i].creatorEmail || '');
+            apps[i].appCreateDate = new Date(parseInt(apps[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
+          } else {
+            apps[i].creatorNickName = "";
+          }
+        }
+        return res.sendJson({
+          status : "ok",
+          apps : apps,
+          owner : ownerEmail
+        });
+      }
+    })
+  }
+  //regist proxy
+  if(nickName){//must get email & appDomain first
+    _getEmail();
+    proxy.once('email_gotten', _getAppDomain);
+    proxy.once('appDomain_gotten', _getApps);
+  }else{
+    _getApps();
+  }
+  proxy.once('apps_gotten', _getMems);
+  proxy.once('creator_gotten', _getCreatorInfo);
+}
+
 
 exports.apply = function(req, res){
   var domain = req.body.domain || '', 
@@ -245,149 +314,4 @@ exports.showPersonalSquare = function(req, res){
   var nickName = req.url.slice(req.url.lastIndexOf("/")+1)||'';
   return res.render("personalSquare.html", {layout:"layoutMain", email:req.session.email, 
   nickName:req.session.nickName, ownerNickName:nickName});
-}
-exports.personalSquare = function(req, res){
-  var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '';
-  var nickName = queryString.nickName || '';
-  findOne(user, {
-    nickName: nickName
-  }, function(err, owner){
-    if (err) {
-      log.error(err.toString());
-      return res.sendJson({
-        status: error,
-        msg: "获取数据失败"
-      });
-    }
-    else {
-      if (!owner) {
-        return res.sendJson({
-          status: "error",
-          msg: "未找到该用户"
-        });
-      }
-      else {
-        var email = owner.email, ownDomain=[];
-        find(app_mem, {
-          email: email
-        }, function(err ,mems){
-          if (err) {
-            log.error(err.toString());
-            return res.sendJson({
-              status: "error",
-              msg: "获取数据失败"
-            });
-          }
-          else {
-            for(var i=0, len=mems.length; i<len; ++i){
-                if (mems[i].active < 2) {
-                  ownDomain.push(mems[i].appDomain);
-                }
-            }
-            find(app_basic, {
-              appDomain:{$in:ownDomain}
-            }, { //找出该用户的应用
-              sort: [['appCreateDate', -1]]
-            }, function(err, data){
-              if (err) {
-                log.error(err.toString());
-                return res.sendJson({
-                  status: "error",
-                  msg: "数据获取失败"
-                });
-              }
-              else {
-                var domainToMems = {}, domains = []; //domainToMems存放domain和mem的对应关系，用hash的形式， domains存放应用域名，便于app_mem查找
-                for (var i = 0, len = data.length; i < len; ++i) {
-                  domains[i] = data[i].appDomain;
-                  domainToMems[domains[i]] = {};
-                  domainToMems[domains[i]].memberNums = 0;
-                }
-                find(app_mem, { //查找这他的应用的参与者
-                  appDomain: {
-                    $in: domains
-                  }
-                }, function(err, mems){
-                  if (err) {
-                    log.error(err.toString());
-                    return res.sendJson({
-                      status: "error",
-                      msg: "数据获取失败"
-                    });
-                  }
-                  else {
-                    var creatorEmails = [];
-                      for (var i = 0, len = mems.length; i < len; ++i) {
-                        if (mems[i].active === 1) {
-                          domainToMems[mems[i].appDomain].memberNums++;
-                          if (mems[i].role === 0) {
-                            domainToMems[mems[i].appDomain].creatorEmail = mems[i].email;
-                            creatorEmails.push(mems[i].email);
-                          }
-                        }
-                      }
-                      for (var i = 0, len = data.length; i < len; ++i) {
-                        if (!domainToMems[data[i].appDomain]) {
-                          data[i].memberNums = "0";
-                          data[i].creatorEmail = "";
-                        }
-                        else {
-                          data[i].memberNums = domainToMems[data[i].appDomain].memberNums || 0;
-                          data[i].creatorEmail = domainToMems[data[i].appDomain].creatorEmail || "";
-                        }
-                      }           
-                      find(user, {
-                        email: {
-                          $in: creatorEmails
-                        }
-                      }, {
-                        email: 1,
-                        nickName: 1
-                      }, function(err, userInfos){
-                        if (err) {
-                          log.error(err.toString());
-                          return res.sendJson({
-                            status: "error",
-                            msg: "数据获取失败"
-                          });
-                        }
-                        else 
-                          if (!userInfos || userInfos.length === 0) {
-                            return res.sendJson({
-                              status: "error",
-                              msg: "数据获取失败"
-                            });
-                          }
-                          else 
-                            if (userInfos) {
-                              var emailToNick = {};
-                              for (var i = 0, len = userInfos.length; i < len; ++i) {
-                                emailToNick[userInfos[i].email] = userInfos[i].nickName;
-                              }
-                              for (var i = 0, len = data.length; i < len; i++) {
-                                if (emailToNick[data[i].creatorEmail]) {
-                                  data[i].creatorNickName = emailToNick[data[i].creatorEmail];
-                                  data[i].photoUrl = "http://www.gravatar.com/avatar/"+md5(data[i].creatorEmail||'');
-                                  data[i].appCreateDate = new Date(parseInt(data[i].appCreateDate)).format("YYYY-MM-dd hh:mm:ss");
-                                }
-                                else {
-                                  data[i].creatorNickName = "";
-                                }
-                              }
-                              return res.sendJson({
-                                status: "ok",
-                                apps: data,
-                                owner:email
-                              });
-                            }
-                      })
-                  }
-                })
-              }
-            })
-          }
-        })
-      }
-    }
-  })
 }

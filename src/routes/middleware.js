@@ -121,7 +121,6 @@ exports.webcache = function(options){
     var hit = cache[key]&&cache[key].v;
     var uacc = connectUtils.parseCacheControl(req.headers['cache-control'] || '');
     if(!uacc['no-cache'] && typeof hit==="string"){
-//      console.log('hit');
       return res.end(hit);
     }
     

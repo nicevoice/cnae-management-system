@@ -23,10 +23,23 @@ var config = require('../config')
   , randomStringNum = utils.getRandomStringNum
   , doGit = utils.doGit
   , verify = utils.verify
-  , match = utils.match;
+  , match = utils.match
+  //fs utils
+  , merge = require('../lib/merge')
+  , rmrf = require('../lib/rmrf')
+  //jscex
+  , Jscex = require('../lib/jscex/jscex-jit')
   
-  
-  
+require('../lib/jscex/jscex-async').init(Jscex);
+var jscexify = require('../lib/jscex/jscex-async-node').getJscexify(Jscex)
+  , standard = jscexify.fromStandard;
+
+var mkdirAsync = standard(fs.mkdir);
+var execAsync = standard(exec);
+
+/**
+ *  显示代码管理页面
+ */
 exports.vermng = function(req, res) {
   var url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
@@ -44,140 +57,97 @@ exports.vermng = function(req, res) {
  * @param {} res
  * @return {}
  */
-exports.doUpload = function(req, res) {
+exports.doUpload = function(req, res){
   var domain = req.params.id || '';
   var fields = req.form.fields, files = req.form.files;
   var filePath = files.upload ? files.upload.filename : null;
-  //解压文件
-  if(filePath) {
-    var type = files.upload.type, path = files.upload.path;
-    if(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream") {
-      if(type === "application/zip" || type === "application/octet-stream") {
-        type = "zip";
-      } else {
-        type = "gz";
-      }
-      var tempDir = config.tempDir, savePath = uploadDir + '/' + domain + '/';
-      fs.mkdir(tempDir + "/" + domain, '777', function(err) {
-        if(err && err.errno !== 17) {
-          log.error(err.toString());
-          return res.render("error", {
-            message : "创建文件夹失败。请稍后再试。"
-          });
-        }
-        var unCompress = "";
-        if(type === "gz") {
-          unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
-        } else {
-          unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
-        }
-        exec(unCompress, function(err, stdout, stderr) {
-          if(err) {
-            log.error(err.toString());
-            exec("rm -rf " + path, function(err) {
-              if(err) {
-                log.error(err.toString());
-              }
-            });
-            exec("rm -rf " + tempDir + '/' + domain, function(err) {
-                  if(err) {
-                    log.error(err.toString());
-                  }
-            });
-            return res.render("error", {
-              message : "上传失败,请稍后再试"
-            });
-          } else {
-            fs.readdir(tempDir + '/' + domain, function(err, files) {
-              if(err) {
-                log.error(err.toString());
-                exec("rm -rf " + path, function(err) {
-                  if(err) {
-                    log.error(err.toString());
-                  }
-                });
-                exec("rm -rf " + tempDir + '/' + domain, function(err) {
-                  if(err) {
-                    log.error(err.toString());
-                  }
-                });
-                return res.render("error", {
-                  message : "上传失败,请稍后再试"
-                });
-              } else {
-                fs.mkdir(savePath, '777', function(err) {
-                  var move = "";
-                  {
-                    var moveEvent = new EventProxy();
-                    moveEvent.on("getStat", function(isDir) {
-                      if(isDir) {
-                        move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + "/" + files[0] + " " + savePath;
-                      } else {
-                        //通过执行cpall脚本来进行全文件复制
-                        move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
-                      }
-                      exec(move, function(err) {
-                        if(err){
-                          log.error(err.toString());
-                        }
-                        
-                          exec("rm -rf " + path, function(err) {
-                            if(err) {
-                              log.error(err.toString());
-                            }
-                          });
-                          exec("rm -rf " + tempDir + '/' + domain, function(err) {
-                            if(err) {
-                              log.error(err.toString());
-                            }
-                          });
-                          var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
-                          sumManage += '/sum';
-                          return res.redirect(sumManage);
-                        
-                      });
-                    });
-                    if(files.length === 1) {
-                      fs.stat(tempDir + '/' + domain + "/" + files[0], function(err, stat) {//如果只有一个文件夹
-                        if(err) {
-                          log.error(err.toString());
-                          moveEvent.unbind();
-                          return res.render("error", {
-                            message : "上传失败，请稍后再试"
-                          });
-                        } else {
-                          moveEvent.fire("getStat", stat.isDirectory());
-                        }
-                      })
-                    } else {
-                      moveEvent.fire("getStat", false);
-                    }
-                  }
-                })
-              }
-            })
-          }
-        })
-        insert(app_record, {
-          appDomain : domain.toString(),
-          email : req.session.email.toString(),
-          action : "上传代码",
-          recordTime : new Date().format("YYYY-MM-dd hh:mm:ss")
-        }, function() {
-        });
-      });
-    } else {
-      return res.render("error", {
-        message : "请上传正确的格式"
-      });
-    }
-  } else {
+  //check file
+  if(!filePath){
     return res.render("error", {
       message : "请选择一个文件上传"
-    });
+    });    
   }
+  //check type
+  var type = files.upload.type, path = files.upload.path;
+  if(!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")){
+    return res.render("error", {
+      message : "请上传正确的格式"
+    });        
+  }
+  var tempDir = config.tempDir, savePath = uploadDir + '/' + domain + '/';  
+  //use jscex to do this
+  var upload = eval(Jscex.compile("async", function(){
+    try{
+      //mkdir
+      try{
+        $await(mkdirAsync(tempDir + "/" + domain, '777'));
+      }catch(err){
+        if(err.code!=='EEXIST')
+          throw err;
+      }
+      //uncompress
+      var unCompress;
+      if(type==="gz"){
+        unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;        
+      }else{
+        unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
+      }
+      $await(execAsync(unCompress));
+      //check if only has a dir
+      var files = $await(standard(fs.readdir)(tempDir+'/'+domain));
+      var move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
+      if(files.length===1){
+        var stat = $await(standard(fs.stat)(tempDir + '/' + domain + "/" + files[0]));
+        if(stat.isDirectory()){//if noly has a dir
+          move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + "/" + files[0] + " " + savePath;
+        }
+      }
+      //mkdir of target path
+      try{       
+        $await(mkdirAsync(savePath, '777'));
+      }catch(err){
+        if(err.code!=='EEXIST'){
+          throw err;
+        }
+      }
+      //move to the target dir
+      try{
+        $await(execAsync(move));
+      }catch(err){}
+      var  sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
+      sumManage += '/sum';
+      //start the two stuff at the same time & ignore the error
+      try{
+        var rmPath = execAsync("rm -rf " + path);
+        rmPath.start();
+      }catch(err){
+        log.warn(err.toString());
+      }
+      try{
+        $await(execAsync("rm -rf " + tempDir + '/' + domain));
+      }catch(err){
+        log.warn(err.toString());
+      }
+      $await(rmPath);
+      return res.redirect(sumManage);
+    }catch(err){
+      log.error(err.toString());
+      try{
+        var rmPath = execAsyncIgnore("rm -rf " + path);
+        rmPath.start();
+      }catch(err){
+        log.warn(err.toString());
+      }
+      try{
+        $await(execAsyncIgnore("rm -rf " + tempDir + '/' + domain));
+      }catch(err){
+        log.warn(err.toString());
+      }
+      $await(rmPath);      
+    }
+  }));
+  upload().start();
 }
-
 exports.gitAction = function(req, res){
   var command = req.body.gitCommand||'',
       domain = req.params.id||'';
@@ -559,7 +529,7 @@ exports.showTodo = function(req, res) {
 
 exports.loadTodoContent = function(req, res) {
   var domain = req.params.id || '';
-  findOne(app_basic, {
+  findOne(app_basic, {//find the app
     appDomain : domain
   }, function(err, data) {
     if(err) {
@@ -568,7 +538,7 @@ exports.loadTodoContent = function(req, res) {
         status : "error",
         msg : "查询数据库错误"
       });
-    } else if(!data || !data.todo) {
+    } else if(!data || !data.todo) {//todos not exists
       return res.sendJson({
         status : "ok",
         content : {
@@ -578,7 +548,7 @@ exports.loadTodoContent = function(req, res) {
     } else {
       var todos = data.todo;
       var userEmails = [], uhash = {};
-      for(var i = 0, len = todos.length; i < len; ++i) {
+      for(var i = 0, len = todos.length; i < len; ++i) {//find all the emails
         if(!uhash[todos[i].email]) {
           uhash[todos[i].email] = true;
           userEmails.push(todos[i].email);
@@ -605,7 +575,7 @@ exports.loadTodoContent = function(req, res) {
               todos : []
             }
           });
-        } else if(userInfos) {
+        } else if(userInfos) {  //get the nicks
           var emailToNick = {};
           for(var i = 0, len = userInfos.length; i < len; ++i) {
             emailToNick[userInfos[i].email] = userInfos[i].nickName;
@@ -733,4 +703,3 @@ exports.deleteTodo = function(req, res) {
     }
   })
 }
-
