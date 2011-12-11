@@ -16,7 +16,7 @@ function getPersonApps(){
   $.ajax({
     cache:false,
     type:"get",
-    url:"/square/post/personal",
+    url:"/square/apps",
     data:{nickName:nickName},
     dataType:"json",
     error:function(){
