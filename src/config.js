@@ -23,7 +23,7 @@ configInfo.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbIn
 //log
 var numPath = pathutil.dirname(configInfo.logPath)+'/worker.num';
 var token = fs.readFileSync(numPath, 'utf8');
-configInfo.logWithFile = log.create(log.INFO, {file:configInfo.logPath+'.worker'+token});
+configInfo.logWithFile = log.create(log.ERROR, {file:configInfo.logPath+'.worker'+token});
 fs.writeFileSync(numPath, parseInt(token)+1);
 //读取mail正文
 var mail = configInfo.mail;

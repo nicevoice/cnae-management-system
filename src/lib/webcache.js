@@ -72,7 +72,6 @@ module.exports = function webcache(options) {
   options.version = options.version || '';
   var nocacheFilter = options.nocacheFilter || null;
   var cache = options.cacheStore||new Cache();
-  
   return function(req, res, next) {
     if(nocacheFilter && nocacheFilter.test(req.url)) {
       return next();

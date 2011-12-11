@@ -75,7 +75,7 @@ if(cluster.isMaster){
       }
     }
     res.end(req.url + '\n');
-  }).listen(2014, '127.0.0.1');
+  }).__listen(config.adminPort, '127.0.0.1');
   console.log('admin server listen on 2014');
 }else{
   app.listen(config.port, function(){
