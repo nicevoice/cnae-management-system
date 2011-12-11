@@ -13,15 +13,48 @@ var config = require('../config');
 
 exports.filter = function(req, res) {
   var type = res.getHeader('Content-Type') || '';
-   console.log(type);
    return type && type.match(/json|text|javascript/);
 };
 
 /**
+ *  a simple cache in memory
+ */
+var Cache = function(flushTime){
+  this.flushTime = flushTime||10000;
+  this.cache = {};
+  this._check = setInterval(this._checkCache, this.flushTime);
+}
+Cache.prototype.setex = function(key, time, value){
+  this.cache[key] = {
+    v:value,
+    t:time
+  }
+}
+Cache.prototype.get = function(key, cb){
+  if(this.cache[key]&&this.cache[key].v){
+    cb(null, this.cache[key].v);
+  }else{
+    cb(null, null);
+  }
+}
+Cache.prototype.setFlushTime = function(flushTime){
+  this.flushTime = flushTime||10000;
+  clearInterval(this._check);
+}
+Cache.prototype._checkCache = function(){
+  for(var key in this.cache){
+    this.cache[key].t -= this.flushTime/1000;
+    if(this.cache[key].t < 0){
+      delete this.cache[key];
+    }
+  }
+  setTimeout(this._checkCache, this.flushTime);
+}
+/**
  * Web cache middleware
  * @param options
  *     maxAge: cache ms, default is 1 minutes.
- *     cache: {port, host}
+ *     cacheStore: where to store, default in simple cache
  *     filter:
  *     version:
  *     nocacheFilter: regex for nocache this path
@@ -38,8 +71,8 @@ module.exports = function webcache(options) {
   options.filter = options.filter || exports.filter;
   options.version = options.version || '';
   var nocacheFilter = options.nocacheFilter || null;
-  var cache = redis.createClient(config.cache.port, config.cache.host);
-
+  var cache = options.cacheStore||new Cache();
+  
   return function(req, res, next) {
     if(nocacheFilter && nocacheFilter.test(req.url)) {
       return next();

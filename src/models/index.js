@@ -9,35 +9,61 @@ var db = exports.db = mongo.db(config.db_url),
      records = exports.records = db.collection(collectionNames.app_record),
      inviteCode = exports.inviteCode = db.collection(collectionNames.inviteCode);
     collections = {};
-    
-    for(var name in collectionNames){
-        collections[collectionNames[name]] = db.collection(collectionNames[name]);
-    }
-  collections[collectionNames.user].ensureIndex({email:1, nickName:1}, {unique:true}, function(){});
-  collections[collectionNames.app_member].ensureIndex({appDomain:1, email:1}, {unique:true}, function(){});
-  collections[collectionNames.app_basic].ensureIndex({appDomain:1}, {unique:true}, function(){});
-  collections[collectionNames.app_record].ensureIndex({appDomain:1}, {unique:true}, function(){});
+//jscex
+var Jscex = require('../lib/jscex/jscex-jit');
+require('../lib/jscex/jscex-async').init(Jscex);
+var standard = require('../lib/jscex/jscex-async-node').getJscexify(Jscex).fromStandard;
 
-exports.addCollection = function(collectionName){
-    if(collections[collectionName])
-      return;  
-    collections[collectionName] = db.collection(collectionName);
+for(var name in collectionNames) {
+  collections[collectionNames[name]] = db.collection(collectionNames[name]);
+}
+collections[collectionNames.user].ensureIndex({
+  email : 1,
+  nickName : 1
+}, {
+  unique : true
+}, function() {
+});
+collections[collectionNames.app_member].ensureIndex({
+  appDomain : 1,
+  email : 1
+}, {
+  unique : true
+}, function() {
+});
+collections[collectionNames.app_basic].ensureIndex({
+  appDomain : 1
+}, {
+  unique : true
+}, function() {
+});
+collections[collectionNames.app_record].ensureIndex({
+  appDomain : 1
+}, {
+  unique : true
+}, function() {
+});
+
+exports.addCollection = function(collectionName) {
+  if(collections[collectionName])
+    return;
+  collections[collectionName] = db.collection(collectionName);
 }
 //执行操作
-var _exec = function(arguments, method){
-   var collection = collections[arguments[0]],
-       argv = arguments.length;
-    if(!collection){
-        log.error("wrong collection name");
-        return ;
-    }
-    //保存查询参数
-    var args = [];
-    for(var i=1; i<argv; ++i){
-        args.push(arguments[i]);
-    }
-    collection[method].apply(collection, args);
+var _exec = function(arguments, method) {
+  var collection = collections[arguments[0]], argv = arguments.length;
+  if(!collection) {
+    log.error("wrong collection name");
+    return;
+  }
+  //保存查询参数
+  var args = [];
+  for(var i = 1; i < argv; ++i) {
+    args.push(arguments[i]);
+  }
+  collection[method].apply(collection, args);
 }
+
 var _execAfterFind = function(arguments, method){
     var collection = collections[arguments[0]],
         argv = arguments.length,
@@ -81,4 +107,9 @@ exports.update = function(){
 }
 exports.findAndModify = function(){
     _exec(arguments, 'findAndModify');
+}
+//jscex methods
+var methods = ['insert', 'remove', 'update', 'find', 'findOne', 'findAndModify', 'count'];
+for(var i=0, len=methods.length; i!=len; ++i){
+  exports[methods[i]+'Jscex'] = standard(exports[methods[i]]);
 }

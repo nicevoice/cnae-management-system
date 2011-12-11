@@ -13,16 +13,6 @@ $(function(){
   getMore();
   $("#getMore").click(getMore);
 })
-function bindDiv(){
-    $("div .app-info").each(function(index){
-		$(this).mouseenter(function() {
-			$('.app-info-right-apply:eq(' + index + ')').css("display", "block");
-			});
-			$(this).mouseleave(function() {
-			$('.app-info-right-apply:eq(' + index + ')').css("display", "none");
-			});
-  });
-}
 
 function getMore(){
   $("#getMore").html("加载中...");
@@ -52,7 +42,6 @@ function render(data){
     html += renderApp(data[i]);
   }
   $("#all-apps").html($("#all-apps").html()+html);
-  bindDiv();
   $('.smallPic a').fancyZoom({scaleImg: true, closeOnClick: true});
 
 }
