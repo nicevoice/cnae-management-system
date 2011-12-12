@@ -25,6 +25,7 @@ function loadTodoContent() {
 }
 var tplTodos = '<div class="post subContent">'+
                '<form action="/application/manage/$domain$/todo/new" method="post" id="post_new">'+
+               '<input type="hidden" name="_csrf" value="'+ _csrf +'">'+
                '<p> <input type="text" id="titleContent" name="title" class="longInput" /></p>'+
                '</form></div>'+
                '<div class="todos"><ul>$todos$</ul></div>',
@@ -170,7 +171,8 @@ doFinish = function(which) {
     dataType : "json",
     data : {
       email : email,
-      title : title
+      title : title,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "执行错误，请稍后再试");
@@ -193,7 +195,8 @@ doRecover = function(which) {
     dataType : "json",
     data : {
       email : email,
-      title : title
+      title : title,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "执行错误，请稍后再试");
@@ -216,7 +219,8 @@ doDelete = function(which) {
     dataType : "json",
     data : {
       email : email,
-      title : title
+      title : title,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "执行错误，请稍后再试");

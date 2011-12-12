@@ -7,6 +7,7 @@
     <form class="retrieveContent" action="/retrieve" method="post">
         <p class="loginInput">
         <label for="userEmail">邮箱：</label>
+        <input type="hidden" name="_csrf" value="<%=_csrf%>">
         <input type="text" id="userEmail" class="inputText" name="userEmail">
         <input type="submit" id="commitRetrieve" class="r3px button_orange submit" value="提交">
         </p>

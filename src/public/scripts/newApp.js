@@ -15,7 +15,7 @@ domainBlur = function(){
 		return $("#domainWarn").addClass("warnColor").html(" 域名格式不正确");
 	$.ajax({
     cache:false,
-    type:"POST",
+    type:"get",
     url:"/checkAppDomain",
     dataType:"json",
     data:{domain:domain},

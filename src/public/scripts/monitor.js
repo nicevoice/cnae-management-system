@@ -69,6 +69,9 @@ $('#start_app').click(function(){
 		type: 'post',
         dataType:'json',
 		url: url,
+		data:{
+		  _csrf:_csrf
+		},
 		success: function(data){
 			alert(data.status)
 			window.location.reload();
@@ -180,6 +183,9 @@ $('input.opt').live('click', function(event){
 		type: 'post',
 		dataType:'json',
         url: url,
+        data:{
+          _csrf:_csrf
+        },
 		success: function(data){
 			alert(data.status)
 			window.location.reload();
@@ -199,7 +205,8 @@ queryDb = function() {
     type : "post",
     dataType : "json",
     data : {
-      queryString : queryString
+      queryString : queryString,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "连接错误，请稍后再试");

@@ -541,7 +541,7 @@ var fs = require('fs')
    * @param {} res
    */
   exports.checkAppDomain = function(req, res) {
-    var domain = req.body.domain || '';
+    var domain = urlMoudle.parse(req.url, true).query.domain || '';
     findOne(app_basic, {
       appDomain : domain
     }, function(err, data) {
@@ -562,7 +562,8 @@ var fs = require('fs')
    * @param {} res
    */
   exports.getOwnAuthInfo = function(req, res) {
-    var email = req.session.email || '', domain = req.body.domain || '';
+    var email = req.session.email || '',
+        domain = urlMoudle.parse(req.url, true).query.domain||'';
     //查找权限
     findOne(app_mem, {
       appDomain : domain,

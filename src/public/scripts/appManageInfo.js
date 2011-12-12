@@ -102,7 +102,8 @@ function submitNewAppInfo() {
       newAppName : newAppName,
       newAppDes : newAppDes,
       newGithub : newGithub,
-      newImgSource : newImgSource
+      newImgSource : newImgSource,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "提交请求错误，请稍后再试");

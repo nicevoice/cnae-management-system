@@ -125,7 +125,7 @@ function delApp(domain){
     type:"POST",
     url:"/delete",
     dataType:"json",
-    data:{domain:domain},
+    data:{domain:domain, _csrf:_csrf},
     error:function(){
     },
     success:function(data){
@@ -158,7 +158,7 @@ $.ajax({
     type:"POST",
     url:"/join",
     dataType:"json",
-    data:{domain:domain},
+    data:{domain:domain, _csrf:_csrf},
     error:function(){
       alert("ajax error");
     },
@@ -183,7 +183,7 @@ $.ajax({
     type:"POST",
     url:"/deleteCoop",
     dataType:"json",
-    data:{domain:domain},
+    data:{domain:domain, _csrf:_csrf},
     error:function(){
     },
     success:function(data){

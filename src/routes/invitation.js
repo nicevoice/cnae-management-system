@@ -9,8 +9,8 @@ module.exports = function(app){
   if (!labs) {
     app.get("/inviteCode", hasLogin, ctrInvitation.showInviteCode);
     app.get("/load_inviteCode", hasLogin, ctrInvitation.loadInviteCode)
-    app.post("/inviteCode", hasLogin, isAdmin, ctrInvitation.generateInviteCode);
-    app.post("/sendInviteCode", hasLogin, ctrInvitation.sendInviteCode);
-    app.post("/deleteInviteCode", hasLogin, ctrInvitation.deleteInviteCode);
+    app.post("/inviteCode/gen", hasLogin, isAdmin, ctrInvitation.generateInviteCode);
+    app.get("/inviteCode/send", hasLogin, ctrInvitation.sendInviteCode);
+    app.post("/inviteCode/del", hasLogin, ctrInvitation.deleteInviteCode);
   }
 }

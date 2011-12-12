@@ -20,6 +20,6 @@ module.exports = function(app){
     app.post("/delete", hasLogin, ctrApplication.deleteApp);
     app.post("/join", hasLogin, ctrApplication.joinApp);
     app.post("/deleteCoop", hasLogin, ctrApplication.deleteCoop)
-    app.post("/checkAppDomain", hasLogin, ctrApplication.checkAppDomain);
+    app.get("/checkAppDomain", hasLogin, ctrApplication.checkAppDomain);
   }
 }

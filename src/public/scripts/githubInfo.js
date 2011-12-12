@@ -53,7 +53,7 @@ function submitEmail(){
     type:"POST",
     url:"/userCenter/github/info_post",
     dataType:"json",
-    data:{githubEmail:email},
+    data:{githubEmail:email, _csrf:_csrf},
     error:function(){
     	},
     success:function(data){

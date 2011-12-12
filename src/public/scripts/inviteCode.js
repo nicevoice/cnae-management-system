@@ -135,9 +135,9 @@ function generate(){
 	$.ajax({
 	cache:false,
 	type:"post",
-	url:"/inviteCode",
+	url:"/inviteCode/gen",
     dataType:"json",
-    data:{},
+    data:{_csrf:_csrf},
 	error:function(){
 		sAlert("警告","ajax错误，请稍后再试");
 	},
@@ -165,8 +165,8 @@ function sendInvite(){
 	}
 	$.ajax({
     cache:false,
-    type:"POST",
-    url:"/sendInviteCode",
+    type:"get",
+    url:"/inviteCode/send",
     dataType:"json",
     data:{email:email,code:code},
     error:function(){
@@ -202,9 +202,9 @@ function deleteInvite(which){
 	$.ajax({
     cache:false,
     type:"POST",
-    url:"/deleteInviteCode",
+    url:"/inviteCode/del",
     dataType:"json",
-	data:{code:code},
+	data:{code:code, _csrf:_csrf},
 	err:function(){
 		sAlert("警告", "删除失败，请稍后再试");
 	},

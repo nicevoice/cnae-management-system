@@ -24,8 +24,8 @@ module.exports = function(app){
     //regist
     app.get("/regist", hasNotLogin, ctrRegist.regist);
     app.post("/checkRegist", hasNotLogin, ctrRegist.checkRegist);
-    app.post("/regist/checkEmail", hasNotLogin, ctrRegist.checkEmail);
-    app.post("/regist/checkName", ctrRegist.checkName);
+    app.get("/regist/checkEmail", hasNotLogin, ctrRegist.checkEmail);
+    app.get("/regist/checkName", ctrRegist.checkName);
     //retrieve
     app.get("/retrieve", hasNotLogin, ctrRetrieve.showRetrieve);
     app.post("/retrieve", hasNotLogin, ctrRetrieve.postRetrieve);

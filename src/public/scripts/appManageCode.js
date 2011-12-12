@@ -165,7 +165,9 @@ function download() {
     type : "post",
     url : "/application/manage/" + domain + "/download",
     dataType : "json",
-    data : {files:reg},
+    data : {
+      files:reg,
+      _csrf:_csrf},
     error : function(err) {
       sAlert("警告", "连接错误，请稍后再试");
     },
@@ -200,7 +202,8 @@ function git() {
     url : "/application/manage/" + domain + "/git",
     dataType : "json",
     data : {
-      gitCommand : gitCommand
+      gitCommand : gitCommand,
+      _csrf:_csrf
     },
     error : function(err) {
       showGitInfo("连接错误,请稍后再试。\n");
@@ -224,7 +227,8 @@ function install() {
     url : "/application/manage/" + domain + "/npminstall",
     dataType : "json",
     data : {
-      npmName : npmName
+      npmName : npmName,
+      _csrf:_csrf
     },
     error : function(err) {
       showNpmInfo("连接错误,请稍后再试。");

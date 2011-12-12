@@ -167,7 +167,8 @@ function submitInvite() {
     data : {
       inviteEmail : email,
       inviteWords : words,
-      role : role
+      role : role,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "没有权限进行此操作");
@@ -211,7 +212,8 @@ function deleteCoop() {
     url : "/application/mamage/" + infos[1] + "/deleteCoop",
     dataType : "json",
     data : {
-      email : infos[0]
+      email : infos[0],
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "连接错误，请稍后再试！");
@@ -239,7 +241,8 @@ function agreeCoop() {
     url : "/application/mamage/" + infos[1] + "/agreeCoop",
     dataType : "json",
     data : {
-      email : infos[0]
+      email : infos[0],
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "连接错误，请稍后再试！");
@@ -281,7 +284,8 @@ function refuseCoop() {
     dataType : "json",
     data : {
       email : infos[0],
-      reason : reason
+      reason : reason,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "连接错误，请稍后再试！");
@@ -306,7 +310,8 @@ function changeRole() {
     dataType : "json",
     data : {
       role : newRole,
-      email : email
+      email : email,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "修改权限失败，请稍后再试");

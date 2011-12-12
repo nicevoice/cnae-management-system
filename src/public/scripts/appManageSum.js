@@ -126,7 +126,8 @@ function setStatus() {
     url : "/application/manage/" + domain + "/getStatus",
     dataType : "json",
     data : {
-      savePort : savePort
+      savePort : savePort,
+      _csrf:_csrf
     },
     error : function() {
     },
@@ -178,7 +179,8 @@ function addRecord(domain, action) {
     url : "/application/manage/" + domain + "/addRecord",
     dataType : "json",
     data : {
-      action : action
+      action : action,
+      _csrf:_csrf
     },
     error : function() {
     },
@@ -200,7 +202,7 @@ function controlApp() {
     dataType : "json",
     data : {
       action : action,
-      _csrf : $("#csrf").html()
+      _csrf : _csrf
     },
     error : function() {
     },
@@ -234,7 +236,7 @@ function restart() {
     dataType : "json",
     data : {
       action : action,
-      _csrf : $("#csrf").html()
+      _csrf : _csrf
     },
     error : function() {
     },
@@ -248,7 +250,7 @@ function restart() {
             dataType : "json",
             data : {
               action : "start",
-              _csrf : $("#csrf").html()
+              _csrf : _csrf
             },
             error : function() {
               sAlert("警告", "操作失败");

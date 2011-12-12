@@ -29,7 +29,8 @@ submitChangePassword = function(){
     data:{
     oldPassword:oldPassword,
     changePassword:changePassword,
-    changeConfirmation:changeConfirmation
+    changeConfirmation:changeConfirmation,
+    _csrf:_csrf
     },
     error:function(){
     	sAlert("警告","连接错误，请稍后再试");

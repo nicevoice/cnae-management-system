@@ -117,7 +117,7 @@ function apply(domain, name, email, nickName){
     type:"post",
     url:"/appSquare/apply",
     dataType:"json",
-    data:{domain:domain, name:name, email:email, nickName:nickName, reason:reason},
+    data:{domain:domain, name:name, email:email, nickName:nickName, reason:reason, _csrf:_csrf},
     error:function(){
       sAlert("警告","申请失败，请稍后再试");
     },

@@ -25,6 +25,7 @@ function loadAppDbInfo() {
   });
 }
 var tplNonDb = '<form method="post" action="$url$/createMongo">'+
+                '<input type="hidden" name="_csrf" value="'+ _csrf +'">'+
                ' <p class="redText">数据库尚未创建</p>'+
                '<p class="redText">点击创建应用的数据库:<input type="submit" class="button_orange r3px" id="createDb" value="创建"></p>'+
                '</form>',
@@ -133,7 +134,8 @@ queryDb = function() {
     type : "post",
     dataType : "json",
     data : {
-      queryString : queryString
+      queryString : queryString,
+      _csrf:_csrf
     },
     error : function() {
       sAlert("警告", "连接错误，请稍后再试");

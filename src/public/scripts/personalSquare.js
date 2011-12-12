@@ -100,3 +100,26 @@ function renderApp(app){
       '$realImg$':realImg
   });
 } 
+function apply(domain, name, email, nickName){
+  var reason = "";
+  if(null===(reason=prompt("申请说明：",""))){
+    return false;
+  }
+  $.ajax({
+    cache:false,
+    type:"post",
+    url:"/appSquare/apply",
+    dataType:"json",
+    data:{domain:domain, name:name, email:email, nickName:nickName, reason:reason, _csrf:_csrf},
+    error:function(){
+      sAlert("警告","申请失败，请稍后再试");
+    },
+    success:function(data){
+      if(data.status==="ok"){
+        sAlert("", "申请已发出，请等候对方回应");
+      }else{
+        sAlert("警告", data.msg);
+      }
+    }
+  })
+}

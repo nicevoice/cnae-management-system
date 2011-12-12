@@ -11,7 +11,10 @@
 <%}%>
     <script type="text/javascript" src="/scripts/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/scripts/global.js?v=1.0.4"></script>
-    <script type="text/javascript" src="/scripts/loadSelector.js?v=1.0.1"></script>      
+    <script type="text/javascript" src="/scripts/loadSelector.js?v=1.0.1"></script>     
+    <script>
+      var _csrf = "<%=_csrf%>";
+    </script> 
   </head>
   <body>
     <script type="text/javascript" src="http://js.tongji.linezing.com/2717849/tongji.js"></script>
@@ -125,7 +128,6 @@
             </ul>
           </div>
           <div class="right borderRadius5">
-              <div id="csrf" style="display:none"><%=csrf%></div>
               <%-body%>
             </div>
           </div>

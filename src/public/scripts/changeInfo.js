@@ -9,17 +9,6 @@ nickBlur = function(){
 	if(!regName.exec(name)){
 		return $("#nickNameWarn").html("昵称不能包含特殊字符"); 
 	}
-	$.ajax({
-    cache:false,
-    type:"POST",
-    url:"/regist/checkName",
-    dataType:"json",
-    data:{name:name},
-    error:function(){},
-    success:function(data){
-     	$("#nickNameWarn").html(data.warn); 
-    }
-	})
 }
 
 nickFocus = function(){
@@ -45,7 +34,8 @@ submitChangeInfo = function(){
     data:{changeNickName:changeNickName,
     changeRealName:changeRealName,
     changeTelNumber:changeTelNumber,
-    changeMainPage:changeMainPage},
+    changeMainPage:changeMainPage,
+    _csrf:_csrf},
     error:function(){
     	sAlert("警告","连接错误，请稍后再试");
     	},

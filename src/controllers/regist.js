@@ -208,7 +208,8 @@ exports.checkRegist = function(req, res){
  * @return {}
  */
 exports.checkEmail = function(req, res){
-	var userEmail = req.body.email;
+  console.log('email');
+  var userEmail = urlMoudle.parse(req.url, true).userEmail||'';
 	if(!verify('email', userEmail))
 		return res.sendJson( {warn:"请输入合法的email地址"});
 	findOne(user, {email:userEmail}, function(err, data){
@@ -231,7 +232,7 @@ exports.checkEmail = function(req, res){
  * @return {}
  */
 exports.checkName = function(req, res){
-	var name = req.body.name;
+	var name = urlMoudle.parse(req.url, true).name||'';
 	if(!verify('name', name))
 		return res.sendJson( {warn:"昵称为2～20个字符或数字或._"});
 	if(req.session.nickName && req.session.nickName===name)

@@ -11,9 +11,10 @@ emailBlur = function(){
 		$("#emailWarn").html("请输入合法的email地址"); 
 		return false;
 	}
+	alert('1');
 	$.ajax({
     cache:false,
-    type:"POST",
+    type:"GET",
     url:"/regist/checkEmail",
     dataType:"json",
     data:{email:email},
@@ -40,7 +41,7 @@ nameBlur = function(){
 	}
 	$.ajax({
     cache:false,
-    type:"POST",
+    type:"GET",
     url:"/regist/checkName",
     dataType:"json",
     data:{name:name},

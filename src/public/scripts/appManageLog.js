@@ -19,7 +19,8 @@ function getOutput(action){
     url: "/application/manage/" + domain + "/getStdOutput",
     dataType: "json",
     data: {
-      action: action
+      action: action,
+      _csrf:_csrf
     },
     error: function(){
       $("#" + action).html(action + "获取失败");

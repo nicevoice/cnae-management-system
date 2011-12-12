@@ -10,6 +10,7 @@
   </p>
   </p>
   <form id="uploadForm" action="<%=url%>/upload" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="_csrf" value="<%=_csrf%>">
     <p>
       <input type="file" id="getFile" name="upload" multiple="multiple">
     </p>
@@ -53,5 +54,5 @@
   </p>
   <%}%>
 </div>
-<script type="text/javascript" src="/scripts/validator.js?v=1.0.1"></script>
-<script type="text/javascript" src="/scripts/appManageCode.js?v=1.0.3"></script>
+<script type="text/javascript" src="/scripts/validator.js?v=1.0.2"></script>
+<script type="text/javascript" src="/scripts/appManageCode.js?v=1.0.4"></script>

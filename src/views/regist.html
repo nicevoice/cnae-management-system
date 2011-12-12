@@ -48,6 +48,7 @@ body{ background: #FAFBFC; }
         	<div style="float:left;width:700px;">
             	<fieldset>
 	            	<legend style="color:#555;">填写注册信息</legend>
+	            	    <input type="hidden" value="<%=_csrf%>" name="_csrf">
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
                         <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" value="<%=regist.email||''%>" style="width:250px">
@@ -140,6 +141,6 @@ body{ background: #FAFBFC; }
         </div>
     </div>
 </div>
-<script src="scripts/regist.js?v=1.0.2" type="text/javascript"></script>
+<script src="scripts/regist.js?v=1.0.3" type="text/javascript"></script>
 </body>
 </html>
