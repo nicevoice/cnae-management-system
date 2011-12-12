@@ -38,6 +38,7 @@
         </div>
         <div id="upload-box">
         	<form id="upload-form" action="" method="" enctype="multipart/form-data">
+        	<input type="hidden" name="_csrf" value="<%=_csrf%>">
 				<div class="fields"><input type="file" id="upload-file" name="upload"></div>
 				<div class="fields"><input type="submit" id="upload-submit" value="上传"></div>
 			</form>

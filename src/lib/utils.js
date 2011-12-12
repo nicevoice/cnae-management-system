@@ -350,22 +350,36 @@ function doGitClone(command, targetDir, cb){
 
 function gitOtherAction(command, targetDir, cb){	
   var cwd = process.cwd(),
-  		savePath = uploadDir + '/' + targetDir + '/';
-  command = 'cd '+ savePath + '&&' + command;
-  exec(command, function(err, gitStdout, gitStderr) {
-    if(err) {
-      log.error(err.toString());
-      return cb({
-        status : "error",
-        msg : err.toString()
-      });
-    } else {
-      return cb({
-        status : "ok",
-        msg : gitStdout
-      });
+  		savePath = uploadDir + '/' + targetDir + '/',
+  		proxy = new EventProxy();
+  var git = function(hasGit){
+    if(!hasGit){
+      return cb({status:"error", msg:"没有关联github"})
     }
-  })
+    command = 'cd '+ savePath + '&&' + command;
+    exec(command, function(err, gitStdout, gitStderr) {
+      if(err) {
+        log.error(err.toString());
+        return cb({
+          status : "error",
+          msg : err.toString()
+        });
+      } else {
+        return cb({
+          status : "ok",
+          msg : gitStdout
+        });
+      }
+    })
+  }
+  proxy.once('git_gotten', git);
+  fs.stat(savePath+'/.git', function(err, stat){
+    if(!err&&stat.isDirectory()){
+      proxy.fire('git_gotten', true);
+    }else{
+      proxy.fire('git_gotten', false);
+    }
+  });
 }
 /**
 * do git
