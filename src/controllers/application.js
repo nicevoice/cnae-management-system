@@ -8,6 +8,7 @@ var fs = require('fs')
   , app_mem = collectionNames.app_member
   , app_basic = collectionNames.app_basic
   , app_record = collectionNames.app_record
+  , user = collectionNames.user
   , find = model.find
   , findOne = model.findOne
   , insert = model.insert
@@ -234,11 +235,11 @@ var fs = require('fs')
                   }
                   var gitCommand = "";
                   if(data.github&&data.github.token){
-                    gitCommand = 'git clone git@' + data.github.token + 'github.com:'+ project + '.git';
+                    gitCommand = 'git clone git@' + data.github.token + '.github.com:'+ project + '.git';
                   }else{
                     gitCommand = 'git clone git://github.com/' + project + '.git';
                   }
-                  doGit(gitCommand, newAppDomain, function(){}, ture);
+                  doGit(gitCommand, newAppDomain, function(){}, true);
               })
             }
             res.redirect("/application");

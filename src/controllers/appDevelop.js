@@ -24,9 +24,6 @@ var config = require('../config')
   , doGit = utils.doGit
   , verify = utils.verify
   , match = utils.match
-  //fs utils
-  , merge = require('../lib/merge')
-  , rmrf = require('../lib/rmrf')
   //jscex
   , Jscex = require('../lib/jscex/jscex-jit')
   

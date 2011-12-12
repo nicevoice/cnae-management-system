@@ -35,8 +35,7 @@ var res = require('http').ServerResponse;
 res.prototype.json = function(obj){
   // allow status / body
   if (2 == arguments.length) {
-    this.statusCode = obj;
-    obj = arguments[1];
+    this.statusCode = arguments[1];
   }else{
     this.statusCode = 200;
   }
