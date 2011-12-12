@@ -90,4 +90,4 @@ exports.isAdmin = function(req, res, next){
 	res.redirect("/");
 }
 
-exports.webCache = require('../lib/webcache')();
+exports.webCache = require('../lib/webcache')({maxAge:30000});

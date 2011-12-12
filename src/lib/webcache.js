@@ -22,13 +22,22 @@ exports.filter = function(req, res) {
 var Cache = function(flushTime){
   this.flushTime = flushTime||10000;
   this.cache = {};
-  this._check = setInterval(this._checkCache, this.flushTime);
+  var self = this;
+  this._check = setInterval(function(){
+    for(var key in self.cache){
+      self.cache[key].t -= self.flushTime/10000;
+      if(self.cache[key].t <= 0){
+        delete self.cache[key];
+      }
+    }
+  }, this.flushTime);
 }
 Cache.prototype.setex = function(key, time, value){
   this.cache[key] = {
     v:value,
     t:time
   }
+  console.log(time);
 }
 Cache.prototype.get = function(key, cb){
   if(this.cache[key]&&this.cache[key].v){
@@ -36,19 +45,6 @@ Cache.prototype.get = function(key, cb){
   }else{
     cb(null, null);
   }
-}
-Cache.prototype.setFlushTime = function(flushTime){
-  this.flushTime = flushTime||10000;
-  clearInterval(this._check);
-}
-Cache.prototype._checkCache = function(){
-  for(var key in this.cache){
-    this.cache[key].t -= this.flushTime/1000;
-    if(this.cache[key].t < 0){
-      delete this.cache[key];
-    }
-  }
-  setTimeout(this._checkCache, this.flushTime);
 }
 /**
  * Web cache middleware
