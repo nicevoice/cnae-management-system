@@ -50,14 +50,16 @@ app.use(connect.session({
 
 //post
 app.use(connect.bodyParser());
+app.use(connect.csrf());
 //log
 app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',
     cache:true,
+    csrf:true,
     helpers:{
-        config:config
+        config:config,
     }
 }));
 
