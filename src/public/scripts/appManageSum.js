@@ -199,7 +199,8 @@ function controlApp() {
     url : "/application/manage/" + domain + "/controlApp",
     dataType : "json",
     data : {
-      action : action
+      action : action,
+      _csrf : $("#csrf").html()
     },
     error : function() {
     },
@@ -232,7 +233,8 @@ function restart() {
     url : "/application/manage/" + domain + "/controlApp",
     dataType : "json",
     data : {
-      action : action
+      action : action,
+      _csrf : $("#csrf").html()
     },
     error : function() {
     },
@@ -245,7 +247,8 @@ function restart() {
             url : "/application/manage/" + domain + "/controlApp",
             dataType : "json",
             data : {
-              action : "start"
+              action : "start",
+              _csrf : $("#csrf").html()
             },
             error : function() {
               sAlert("警告", "操作失败");

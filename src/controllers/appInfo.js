@@ -16,7 +16,8 @@ var onOff = require('../lib/utils').onOff
     layout : "layoutApp",
     url : url,
     nickName : req.session.nickName,
-    email : req.session.email
+    email : req.session.email,
+    csrf: req.session._csrf
   });
   }
 
