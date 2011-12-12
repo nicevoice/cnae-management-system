@@ -1,4 +1,3 @@
-var DOMAIN; // 应用二级域名
 var ROOT_PATH = "/";
 var currDir = ROOT_PATH; // 当前路径
 var currNode; // 当前文件DOM
@@ -428,7 +427,7 @@ addRecord = function(domain, action){
 		type:"post",
 		url:"/application/manage/"+domain+"/addRecord",
 		dataType:"json",
-		data:{action:action},
+		data:{action:action,_csrf:_csrf},
 		error:function(){},
 		success:function(){}
 	});
@@ -441,7 +440,7 @@ function restart(){
 		type:"post",
 		url:"/application/manage/"+DOMAIN+"/controlApp",
 		dataType:"json",
-		data:{action:"restart"},
+		data:{action:"restart",_csrf:_csrf},
 		beforeSend: function() {
 			showMsg1(NAEIDE_config.LANG.apps.restarting);
 		},
@@ -456,7 +455,7 @@ function restart(){
 						type:"post",
 						url:"/application/manage/"+DOMAIN+"/controlApp",
 						dataType:"json",
-						data:{action:"start"},
+						data:{action:"start",_csrf:_csrf},
 						error:function(){
 							showMsg2(NAEIDE_config.LANG.apps.restartFailed);
 						},
@@ -504,7 +503,7 @@ function getOutput(action){
 		type:"post",
 		url:"/application/manage/"+DOMAIN+"/getStdOutput",
 		dataType:"json",
-		data:{action:action},
+		data:{action:action,_csrf:_csrf},
 		error:function(){
 			$("#"+action).html(action + NAEIDE_config.LANG.apps.getInfFailed);
 			/*window.clearTimeout(outTimer);
@@ -523,7 +522,6 @@ function getOutput(action){
 		success:function(data){
 			var d = htmlspecialchars(data.output);
       		d = getColor(d);
-            if(action === "stdout") d = handleLog(d);
       		if(action === "stderr") d = CLI.loader.setErrorstack(d);
 			$("#"+action).html(d);
       var pOnDiv;
@@ -624,7 +622,7 @@ var listFiles = function(dirPath) {
 	$.ajax({
 		type: "POST",
 		url: url.listfile,
-		data: {dirPath: dirPath},
+		data: {dirPath: dirPath,_csrf:_csrf},
 		dataType: "JSON",
 		beforeSend: function() {
 			// file_list.empty().html("<p>正在加载文件列表</p>");
@@ -664,7 +662,7 @@ var readFile = function(filePath, next) {
 		cache: false,
 		type: "POST",
 		url: url.readfile,
-		data: {filePath: filePath},
+		data: {filePath: filePath,_csrf:_csrf},
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
@@ -688,7 +686,7 @@ var writeFile = function(filePath, content, next) {
 		cache: false,
 		type: "POST",
 		url: url.writefile,
-		data: {filePath: filePath, content: content}, 
+		data: {filePath: filePath, content: content,_csrf:_csrf}, 
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
@@ -712,7 +710,7 @@ var delFile = function(filePath, next) {
 		cache: false,
 		type: "POST",
 		url: url.delfile,
-		data: {filePath: filePath}, 
+		data: {filePath: filePath,_csrf:_csrf}, 
 		dataType: "JSON",
 		beforeSend: function() {},
 		success: function(data) {
@@ -733,7 +731,7 @@ var mkDir = function(dirPath, next) {
 		cache: false,
 		type: "POST",
 		url: url.mkdir,
-		data: {dirPath: dirPath}, 
+		data: {dirPath: dirPath,_csrf:_csrf}, 
 		dataType: "JSON",
 		beforeSend: function(data) {},
 		success: function(data) {
@@ -757,7 +755,7 @@ var delDir = function(dirPath, next) {
 		cache: false,
 		type: "POST",
 		url: url.deldir,
-		data: {dirPath: dirPath},
+		data: {dirPath: dirPath,_csrf:_csrf},
 		dataType: "JSON",
 		beforeSend: function() {
 		},
@@ -782,7 +780,7 @@ var renameFile = function(oriPath, newPath, next) {
 		cache: false,
 		type: "POST",
 		url: url.renamefile,
-		data: {oriPath: oriPath, newPath: newPath},
+		data: {oriPath: oriPath, newPath: newPath,_csrf:_csrf},
 		dataType: "JSON",
 		success: function(data) {
 			if(data.status === "succeed") {
