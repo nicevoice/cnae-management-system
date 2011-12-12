@@ -36,6 +36,7 @@ var settings = {
     root: __dirname + '/views'
   , cache: true
   , layout: 'layout.html'
+  , csrf: false
 };
 
 var cache = {};
@@ -46,6 +47,9 @@ module.exports = function(options) {
         settings[k] = options[k];
     }
     return function(req, res, next) {
+        if(settings.csrf===true){
+          res._csrf = req.session._csrf;
+        }
         req.next = next;
         res.req = req;
         res.render = render;
@@ -62,6 +66,9 @@ function render(view, options) {
         for(var k in settings.helpers) {
             options[k] = settings.helpers[k];
         }
+    }
+    if(this._csrf){
+      options._csrf = this._csrf
     }
     var layout = options.layout;
     if(layout){
@@ -124,7 +131,6 @@ function _render(view, options, callback) {
         _render_tpl(fn, options, callback);
     });
 };
-
 function redirect(url){
     //defualt to 302
     var statusCode = 302;

@@ -9,7 +9,7 @@ var connectUtils = require('connect').utils,
 exports.hasLogin = function(req, res, next){
 	//如果session不存在，
 	if(!req.session.email || !req.session.nickName){
-        var urlEncode = encodeURIComponent(req.url);
+        var urlEncode = encodeURIComponent('http://'+req.headers.host+req.url);
 		if(labs){
 			//检查session
 			checkTBSession(req, function(httpRes){

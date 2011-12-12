@@ -3,7 +3,6 @@ var middleware = require('./middleware'),
     checkAuth = middleware.checkAuth,
     checkChangeAuth = middleware.checkChangeAuth,
     switchs = require('../config').switchs,
-    csrf = require('connect').csrf(),	
     labs = switchs.labs,
     nonGit = switchs.nonGit,
     ctrAppInfo = require('../controllers/appInfo'),
@@ -20,7 +19,7 @@ module.exports = function(app){
   //应用信息
   app.get("/application/manage/:id/sum", hasLogin, checkAuth, ctrAppInfo.sum);
   app.get("/application/manage/:id/load_sum", hasLogin, checkAuth, ctrAppInfo.loadSumContent);
-  app.post("/application/manage/:id/controlApp", hasLogin, checkChangeAuth(2), csrf, ctrAppInfo.doControlApp);  //控制APP上下线
+  app.post("/application/manage/:id/controlApp", hasLogin, checkChangeAuth(2), ctrAppInfo.doControlApp);  //控制APP上下线
   app.post("/application/manage/:id/getStatus", hasLogin, checkAuth, ctrAppInfo.getStatus);  //获取应用状态信息
   //应用管理
   app.get("/application/manage/:id/appmng", hasLogin, checkAuth, ctrAppManager.appmng);

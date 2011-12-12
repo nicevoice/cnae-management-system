@@ -74,7 +74,7 @@ function prepare() {
   $.ajax({
     cache : false,
     url : "/getOwnAuthInfo",
-    type : "post",
+    type : "get",
     dataType : "json",
     data : {
       domain : domain

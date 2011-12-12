@@ -57,7 +57,11 @@ exports.checkLogin = function(req, res){
         else {
           req.session.cookie.expires = false;
         }
-        redirectUrl = redirectUrl?redirectUrl:'/application';
+        console.log(redirectUrl);
+        if(!redirectUrl || redirectUrl.indexOf('http://'+req.headers.host)!==0){
+          redirectUrl = '/application';
+        }
+        console.log(redirectUrl);
         res.redirect(redirectUrl);
       }
 		}

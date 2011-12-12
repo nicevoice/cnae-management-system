@@ -13,7 +13,7 @@ module.exports = function(app){
   }
   app.get("/application", hasLogin, ctrApplication.show);
   app.get("/application/load_apps", hasLogin, ctrApplication.loadMainContent);
-  app.post("/getOwnAuthInfo", hasLogin, ctrApplication.getOwnAuthInfo);
+  app.get("/getOwnAuthInfo", hasLogin, ctrApplication.getOwnAuthInfo);
   if (!labs) {
     app.get("/application/newApp", hasLogin, ctrApplication.showNewApp);
     app.post("/createApp", hasLogin, ctrApplication.createApp);
