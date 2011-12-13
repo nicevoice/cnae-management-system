@@ -29,7 +29,7 @@ var tplTodos = '<div class="post subContent">'+
                '<p> <input type="text" id="titleContent" name="title" class="longInput" /></p>'+
                '</form></div>'+
                '<div class="todos"><ul>$todos$</ul></div>',
-     tplFinished = '<li class="finished">'+
+     tplFinished = '<span style="width:400px"><li class="finished">'+
                '<img src="/images/ok.gif"></img> $nickName$ : <del>$title$</del><span class="todoAction">'+
                '<a href="javascript:void(0)" id="$email$#$title$" class="doRecover">恢复</a>'+
                ' , <a href="javascript:void(0)" class="doDelete">删除</a></span></li>';
