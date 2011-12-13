@@ -152,7 +152,7 @@ function handleLog(res){
     }
   }
   if(newOut>0){
-    lines[0] = '<span style="color:#222">' + lines[0];
+    lines[0] = '<span style="color:#555">' + lines[0];
     lines[newOut] = '</span>' + lines[newOut];
   }
   return lines.join('');
