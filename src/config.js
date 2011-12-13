@@ -35,9 +35,11 @@ mail.agreeMailContent = fs.readFileSync(__dirname+mail.agreeMailContentPath, "ut
 mail.refuseMailContent = fs.readFileSync(__dirname+mail.refuseMailContentPath, "utf-8");//拒绝
 
 configInfo.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
+configInfo.retrieveLink = "http://" + configInfo.domain + ':'+port + "/resetpassword";
 if(!debug) {
     configInfo.port = 80;
     configInfo.inviteHref = "http://cnodejs.net/regist?code=";
+    configInfo.retrieveLink = "http://" + configInfo.domain + "/resetpassword";
 }
 
 //labs
