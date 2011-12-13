@@ -141,13 +141,19 @@ function getColor(res){
 }
 function handleLog(res){
   var lines = res.split("\n");
+  var newOut = -1;
   for(var i=0, len=lines.length; i<len; ++i){
     var line = lines[i];
     if(line.indexOf('cnode-app-engine/logs')!==-1){
       lines[i] = '<p>app start at ' + line.slice(0, line.indexOf('[')) + '</p>';
+      newOut = i;
     }else{
       lines[i] = '<p>' + line + '</p>';
     }
+  }
+  if(newOut>0){
+    lines[0] = '<span style="color:#222">' + lines[0];
+    lines[newOut] = '</span>' + lines[newOut];
   }
   return lines.join('');
 }
