@@ -41,7 +41,7 @@ function renderTodoContent(todos){
     var todoContent = "";
     for(var i=0, len=todos.length; i!=len; ++i){
         var todo = todos[i];
-        todo = htmlSpecial(todo);
+        todo.title = htmlSpecial(todo.title);
         if(todo.finished===0){
             todoContent += tplReplace(tplNotFinished, {
                 '$nickName$':todo.nickName,
