@@ -53,5 +53,4 @@ if(configInfo.switchs.labs){
 }else{
   configInfo.toplevelDomain = configInfo.toplevelDomainNAE;
 }
-
 module.exports = configInfo;
