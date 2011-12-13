@@ -1,5 +1,6 @@
 var config = require('../../config'),
   	log = config.logWithFile,
+  	urlMoudle = require('url'),
   	//models
   	model = require('../../models/index'),
 	  users = model.users,
@@ -50,6 +51,10 @@ var checkLogin = exports.checkLogin = function(req, res) {
 				message : res.msg
 			});
 		}
+		var redirectUrl = urlMoudle.parse(req.url, true).query.redirectUrl||'';
+		if(!redirectUrl || redirectUrl.indexOf('http://'+req.headers.host)!==0){
+		  redirectUrl = '/application';
+		};
 		var nick = checkRes.taobao_nick;
 		users.findOne({
 			email : nick
@@ -69,12 +74,12 @@ var checkLogin = exports.checkLogin = function(req, res) {
 					}
 					req.session.email = nick;
 					req.session.nickName = nick;
-					return res.redirect('/application');
+					return res.redirect(redirectUrl);
 				});
 			} else {
 				req.session.email = nick;
 				req.session.nickName = nick;
-				return res.redirect('/application');
+				return res.redirect(redirectUrl);
 			}
 		});
 	});

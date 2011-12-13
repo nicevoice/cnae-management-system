@@ -25,7 +25,7 @@ var Cache = function(flushTime){
   var self = this;
   this._check = setInterval(function(){
     for(var key in self.cache){
-      self.cache[key].t -= self.flushTime/10000;
+      self.cache[key].t -= self.flushTime/1000;
       if(self.cache[key].t <= 0){
         delete self.cache[key];
       }

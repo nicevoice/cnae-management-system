@@ -102,8 +102,8 @@ var tplSumLabs  =  '<table style="width:600px">'+
                '</table>';
 function renderAppInfos(app){
     var params = {};
-    params['$appName$'] = app.appName;
-    params['$appDes$'] = app.appDes;
+    params['$appName$'] = htmlSpecial(app.appName);
+    params['$appDes$'] = htmlSpecial(app.appDes);
     if(app.dbType === 'mongo'){
         params['$db$'] = (app.dbName + '</td><td style="width:150px">端口号:'+ app.appDbPort +'</td>');
     }else{

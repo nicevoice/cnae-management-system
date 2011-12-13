@@ -354,7 +354,7 @@ function gitOtherAction(command, targetDir, cb){
   		proxy = new EventProxy();
   var git = function(hasGit){
     if(!hasGit){
-      return cb({status:"error", msg:"没有关联github"})
+      return cb({status:"error", msg:"没有关联github\n"})
     }
     command = 'cd '+ savePath + '&&' + command;
     exec(command, function(err, gitStdout, gitStderr) {
@@ -373,13 +373,17 @@ function gitOtherAction(command, targetDir, cb){
     })
   }
   proxy.once('git_gotten', git);
-  fs.stat(savePath+'/.git', function(err, stat){
-    if(!err&&stat.isDirectory()){
-      proxy.fire('git_gotten', true);
-    }else{
-      proxy.fire('git_gotten', false);
-    }
-  });
+  if(command.indexOf('git init')>=0){
+    proxy.fire('git_gotten', true);
+  }else{
+    fs.stat(savePath+'/.git', function(err, stat){
+      if(!err&&stat.isDirectory()){
+        proxy.fire('git_gotten', true);
+      }else{
+        proxy.fire('git_gotten', false);
+      }
+    });
+  }
 }
 /**
 * do git
