@@ -97,7 +97,7 @@ function renderApp(app){
       '$creatorNickName$':app.creatorNickName,
       '$memberNums$':app.memberNums,
       '$photo$':photo,
-      '$appDes$':app.appDes||'<br \>',
+      '$appDes$':htmlSpecial(app.appDes)||'<br \>',
       '$appCreateDate$':app.appCreateDate,
       '$port$':port,
       '$img$':imgSource,
