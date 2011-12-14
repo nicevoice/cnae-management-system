@@ -150,7 +150,7 @@ exports.getLog = function(action, name, num, callback){
         callback("");
     });
     socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'"}\n');
-    var buf = new Buffer(0), length = -1, head;
+    var buf = "", length = -1, head;
     socket.on('data', function(data){
       buf += data;
       if(length===-1){//still dons't find head
@@ -173,21 +173,14 @@ exports.getLog = function(action, name, num, callback){
         }
         buf = buf.slice(l+1);
       }
-      if(length!==-1 && buf.length >= length){ //done
-        callback(buf.toString('utf8')||'');
+      if(length!==-1 && Buffer.byteLength(buf, 'utf8') >= length){ //done
+        callback(buf||'');
         socket.destroy();
       }
     });
     
     socket.on('end', function(){
-        console.log('end');
-        var data = "";
-        for (var i=0, len=chunk.length; i!=chunk; ++i){
-          data += chunk[i];
-        }
-        console.log(data);
-        data = data.slice(data.indexOf('\n')+1);    
-        callback(data||'');
+        callback(buf||'');
         socket.destroy();
     })
 }
