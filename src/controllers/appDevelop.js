@@ -1,35 +1,49 @@
-var config = require('../config')
-  , fs = require('fs')
-  , path = require('path')
-  , util = require('util')
-  , exec  = require('child_process').exec
-  , EventProxy = require('EventProxy.js').EventProxy 
-  , log = config.logWithFile
-  , uploadDir = config.uploadDir 
-  //models
-  , model = require('../models/index')
-  , collectionNames = require('../config').dbInfo.collections
-  , user = collectionNames.user
-  , app_mem = collectionNames.app_member
-  , app_basic = collectionNames.app_basic
-  , app_record = collectionNames.app_record
-  , find = model.find
-  , findOne = model.findOne
-  , update = model.update
-  , insert = model.insert
-  //utils
-  , utils = require('../lib/utils')
-  , doGitClone = utils.doGitClone
-  , randomStringNum = utils.getRandomStringNum
-  , doGit = utils.doGit
-  , verify = utils.verify
-  , match = utils.match
-  //jscex
-  , Jscex = require('../lib/jscex/jscex-jit')
-  
-require('../lib/jscex/jscex-async').init(Jscex);
-var jscexify = require('../lib/jscex/jscex-async-node').getJscexify(Jscex)
-  , standard = jscexify.fromStandard;
+var config = require('../config'),
+    fs = require('fs'),
+    path = require('path'),
+    util = require('util'),
+    exec = require('child_process').exec,
+    EventProxy = require('EventProxy.js').EventProxy,
+    log = config.logWithFile,
+    uploadDir = config.uploadDir
+    
+    
+    
+    //models
+    ,
+    model = require('../models/index'),
+    collectionNames = require('../config').dbInfo.collections,
+    user = collectionNames.user,
+    app_mem = collectionNames.app_member,
+    app_basic = collectionNames.app_basic,
+    app_record = collectionNames.app_record,
+    find = model.find,
+    findOne = model.findOne,
+    update = model.update,
+    insert = model.insert
+    
+    
+    
+    //utils
+    ,
+    utils = require('../lib/utils'),
+    doGitClone = utils.doGitClone,
+    randomStringNum = utils.getRandomStringNum,
+    doGit = utils.doGit,
+    verify = utils.verify,
+    match = utils.match
+    
+    
+    
+    //jscex
+    ,
+    Jscex = require('../lib/jscex/jscex-jit')
+    
+    
+    
+     require('../lib/jscex/jscex-async').init(Jscex);
+var jscexify = require('../lib/jscex/jscex-async-node').getJscexify(Jscex),
+    standard = jscexify.fromStandard;
 
 var mkdirAsync = standard(fs.mkdir);
 var execAsync = standard(exec);
@@ -40,12 +54,12 @@ var execAsync = standard(exec);
 exports.vermng = function(req, res) {
   var url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
-    return res.render("appManageCode", {
-      layout : "layoutApp",
-      url : url,
-      nickName : req.session.nickName,
-      email : req.session.email
-    });
+  return res.render("appManageCode", {
+    layout: "layoutApp",
+    url: url,
+    nickName: req.session.nickName,
+    email: req.session.email
+  });
 };
 
 /***
@@ -54,120 +68,130 @@ exports.vermng = function(req, res) {
  * @param {} res
  * @return {}
  */
-exports.doUpload = function(req, res){
+exports.doUpload = function(req, res) {
   var domain = req.params.id || '';
-  var fields = req.form.fields, files = req.form.files;
+  var fields = req.form.fields,
+      files = req.form.files;
   var filePath = files.upload ? files.upload.filename : null;
   //check file
-  if(!filePath){
+  if (!filePath) {
     return res.render("error", {
-      message : "请选择一个文件上传"
-    });    
+      message: "请选择一个文件上传"
+    });
   }
   //check type
-  var type = files.upload.type, path = files.upload.path;
-  if(!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")){
+  var type = files.upload.type,
+      path = files.upload.path;
+  if (!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")) {
     return res.render("error", {
-      message : "请上传正确的格式"
-    });        
+      message: "请上传正确的格式"
+    });
   }
-  var tempDir = config.tempDir, savePath = uploadDir + '/' + domain + '/';  
+  var tempDir = config.tempDir,
+      savePath = uploadDir + '/' + domain + '/';
   //use jscex to do this
-  var upload = eval(Jscex.compile("async", function(){
-    try{
+  var upload = eval(Jscex.compile("async", function() {
+    try {
       //mkdir
-      try{
+      try {
         $await(mkdirAsync(tempDir + "/" + domain, '777'));
-      }catch(err){
-        if(err.code!=='EEXIST')
-          throw err;
+      } catch (err) {
+        if (err.code !== 'EEXIST') throw err;
       }
       //uncompress
       var unCompress;
-      if(type==="gz"){
-        unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;        
-      }else{
+      if (type === "gz") {
+        unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
+      } else {
         unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
       }
       $await(execAsync(unCompress));
       //check if only has a dir
-      var files = $await(standard(fs.readdir)(tempDir+'/'+domain));
+      var files = $await(standard(fs.readdir)(tempDir + '/' + domain));
       var move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
-      if(files.length===1){
+      if (files.length === 1) {
         var stat = $await(standard(fs.stat)(tempDir + '/' + domain + "/" + files[0]));
-        if(stat.isDirectory()){//if noly has a dir
+        if (stat.isDirectory()) { //if noly has a dir
           move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + "/" + files[0] + " " + savePath;
         }
       }
       //mkdir of target path
-      try{       
+      try {
         $await(mkdirAsync(savePath, '777'));
-      }catch(err){
-        if(err.code!=='EEXIST'){
+      } catch (err) {
+        if (err.code !== 'EEXIST') {
           throw err;
         }
       }
       //move to the target dir
-      try{
+      try {
         $await(execAsync(move));
-      }catch(err){}
-      var  sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
+      } catch (err) {}
+      var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
       sumManage += '/sum';
       //start the two stuff at the same time & ignore the error
-      try{
+      try {
         var rmPath = execAsync("rm -rf " + path);
         rmPath.start();
-      }catch(err){
+      } catch (err) {
         log.warn(err.toString());
       }
-      try{
+      try {
         $await(execAsync("rm -rf " + tempDir + '/' + domain));
-      }catch(err){
+      } catch (err) {
         log.warn(err.toString());
       }
       $await(rmPath);
       return res.redirect(sumManage);
-    }catch(err){
+    } catch (err) {
       log.error(err.toString());
-      try{
+      try {
         var rmPath = execAsyncIgnore("rm -rf " + path);
         rmPath.start();
-      }catch(err){
+      } catch (err) {
         log.warn(err.toString());
       }
-      try{
+      try {
         $await(execAsyncIgnore("rm -rf " + tempDir + '/' + domain));
-      }catch(err){
+      } catch (err) {
         log.warn(err.toString());
       }
-      $await(rmPath);      
+      $await(rmPath);
     }
   }));
   upload().start();
 }
-exports.gitAction = function(req, res){
-  var command = req.body.gitCommand||'',
-      domain = req.params.id||'';
-  if(!verify('gitAction', command)){
-	  return res.sendJson({status:"error", msg:"不是有效的git操作"});
-	}
-	cb = function(data){
-	  return res.sendJson(data);
-	}
-	if(verify('gitClone', command)){
-		findOne(user, {email:req.session.email}, function(err, data){
-			if(err){
-				log.error(err.toString());
-			  return res.sendJson({status:"error", msg:"数据库查询错误"});
-			}
-			if(data.github&&data.github.token){
-	  		command = command.replace('@', '@'+data.github.token+'.');	//如果是clone需要权限的，就加上token
-	  	}
-	  	doGit(command, domain, cb, true);
-	  })
-	}else{
-	  doGit(command, domain, cb);
-	}
+exports.gitAction = function(req, res) {
+  var command = req.body.gitCommand || '',
+      domain = req.params.id || '';
+  if (!verify('gitAction', command)) {
+    return res.sendJson({
+      status: "error",
+      msg: "不是有效的git操作"
+    });
+  }
+  cb = function(data) {
+    return res.sendJson(data);
+  }
+  if (verify('gitClone', command)) {
+    findOne(user, {
+      email: req.session.email
+    }, function(err, data) {
+      if (err) {
+        log.error(err.toString());
+        return res.sendJson({
+          status: "error",
+          msg: "数据库查询错误"
+        });
+      }
+      if (data.github && data.github.token) {
+        command = command.replace('@', '@' + data.github.token + '.'); //如果是clone需要权限的，就加上token
+      }
+      doGit(command, domain, cb, true);
+    })
+  } else {
+    doGit(command, domain, cb);
+  }
 }
 /***
  *
@@ -176,86 +200,87 @@ exports.gitAction = function(req, res){
  */
 exports.doDownload = function(req, res) {
   var domain = req.params.id || '',
-      files = req.body.files.trim().replace(/\.\./g, '')||'',
+      files = req.body.files.trim().replace(/\.\./g, '') || '',
       zipDir = uploadDir;
   //如果没有输入files，则压缩整个文件夹
-  if(!files){
-  	files = domain;
-  }else{
-  	 if(!verify('files', files)){
-    	res.sendJson({
-    	  status:'error',
-    	  msg:'错误的文件名或通配符'	
-    	})
-  	 }
-		 var arr = files.split(" ");//split
-     for(var i=0, len=arr.length; i!=len; ++i){
-		  arr[i] = domain + '/' + arr[i];
-		 }
-		 if(arr.length>0){
-		   files = arr.join(' ');
-		 }
-	}
+  if (!files) {
+    files = domain;
+  } else {
+    if (!verify('files', files)) {
+      res.sendJson({
+        status: 'error',
+        msg: '错误的文件名或通配符'
+      })
+    }
+    var arr = files.split(" "); //split
+    for (var i = 0, len = arr.length; i != len; ++i) {
+      arr[i] = domain + '/' + arr[i];
+    }
+    if (arr.length > 0) {
+      files = arr.join(' ');
+    }
+  }
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
-  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;	
-  
+  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;
+
   var cwd = process.cwd();
   try {
     process.chdir(zipDir);
-  } catch(err) {
+  } catch (err) {
     log.error(err.toString());
     return res.sendJson({
-      status : "error",
-      msg : "修改工作目录失败"
+      status: "error",
+      msg: "修改工作目录失败"
     });
   }
   var compress = "zip -r " + saveName + " " + files;
   exec(compress, function(err, stdout, stderr) {
     try {
       process.chdir(cwd);
-    } catch(err) {
+    } catch (err) {
       log.error(err.toString());
     }
-    if(err) {
-    	if(err.code===12){
-    	  return res.sendJson({
-    	    status:"error",
-    	    msg:"没有找到匹配的文件"	
-    	  })	
-    	}
+    if (err) {
+      if (err.code === 12) {
+        return res.sendJson({
+          status: "error",
+          msg: "没有找到匹配的文件"
+        })
+      }
       log.error(err.toString());
       return res.sendJson({
-        status : "error",
-        msg : err.toString()
+        status: "error",
+        msg: err.toString()
       });
     } else {
       return res.sendJson({
-        status : "ok",
-        url : "/download/" + name
+        status: "ok",
+        url: "/download/" + name
       });
     }
   })
 }
 
 exports.downloading = function(req, res) {
-  var name = req.params.id || '', domain = name.slice(0, name.lastIndexOf("_"));
+  var name = req.params.id || '',
+      domain = name.slice(0, name.lastIndexOf("_"));
   findOne(app_mem, {
-    email : req.session.email,
-    appDomain : domain
+    email: req.session.email,
+    appDomain: domain
   }, function(err, data) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.render("error", {
-        msg : "查询数据库出错，请稍后再试"
+        msg: "查询数据库出错，请稍后再试"
       });
     } else {
-      if(data.role && data.active && data.role <= 2 && data.active === 1) {
+      if (data.role && data.active && data.role <= 2 && data.active === 1) {
         return res.redirect("/download/" + name + ".zip");
       } else {
         return res.render("error", {
-          msg : "没有权限下载这个应用"
+          msg: "没有权限下载这个应用"
         });
       }
     }
@@ -268,70 +293,43 @@ exports.downloading = function(req, res) {
  * @param {} res
  */
 exports.doUploadImg = function(req, res) {
-  try {
-    var domain = req.params.id || "", fields = req.form.fields, files = req.form.files, filePath = files.upload ? files.upload.filename : null, dirPath = req.body.dirPath || "", savePath = require('path').join(uploadDir, domain, dirPath, files.upload.name);
-  } catch(err) {
-    log.error(err.toString());
-    return res.sendJson({
-      error : "true",
-      msg : "invalid param"
-    });
-  }
-
-  if(!filePath)
-    return res.sendJson({
-      error : "true",
-      msg : "invalid filePath"
-    });
-  fs.rename(files.upload.path, savePath, function(err) {
-    if(err) {
-      log.error(err.toString());
-      return res.sendJson({
-        error : "true",
-        msg : "rename file error"
-      });
-    }
-    return res.sendJson({
-      error : "false",
-      msg : "succeed"
-    });
+  var domain = req.params.id || "",
+      dirPath = req.body.dirPath || "",
+      savePath = require('path').join(uploadDir, domain, dirPath, req.form.files.upload.name);
+  utils.upload(req.form, savePath, function(result){
+    res.sendJson(result);
   });
 }
-exports.upload = function(req, res, callback){
-  try {
-    var domain = req.params.id || "", fields = req.form.fields, files = req.form.files, filePath = files.upload ? files.upload.filename : null, dirPath = req.body.dirPath || "", savePath = require('path').join(uploadDir, domain, dirPath, files.upload.name);
-  } catch(err) {
-    log.error(err.toString());
-  }  
-}
+
 /***
  * 进行npm install 操作
  * @param {Object} req
  * @param {Object} res
  */
 exports.npmInstall = function(req, res) {
-  var npmName = req.body.npmName||'';
+  var npmName = req.body.npmName || '';
   var items = match('npm', npmName);
   npmName = items ? items[0] : null;
-  if(!npmName){
-      return res.sendJson({
-          status:'error',
-          msg:'请输入正确的模块名'
-      })
-  } 
-  var domain = req.params.id || '', install = "npm install " + npmName;
-  install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
+  if (!npmName) {
+    return res.sendJson({
+      status: 'error',
+      msg: '请输入正确的模块名'
+    })
+  }
+  var domain = req.params.id || '',
+      install = "npm install " + npmName;
+  install = 'cd ' + uploadDir + '/' + domain + '&&' + install;
   exec(install, function(err, npmStdout, npmStderr) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error",
-        msg : err.toString()
+        status: "error",
+        msg: err.toString()
       });
     } else {
       return res.sendJson({
-        status : "ok",
-        msg : npmStdout
+        status: "ok",
+        msg: npmStdout
       });
     }
   });
@@ -339,44 +337,44 @@ exports.npmInstall = function(req, res) {
 exports.showMongo = function(req, res) {
   url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
-    return res.render("appManageMongo", {
-      layout : "layoutApp",
-      url : url,
-      nickName : req.session.nickName,
-      email : req.session.email
-    });
+  return res.render("appManageMongo", {
+    layout: "layoutApp",
+    url: url,
+    nickName: req.session.nickName,
+    email: req.session.email
+  });
 }
 
 exports.loadMongoContent = function(req, res) {
   var domain = req.params.id || '';
   findOne(app_basic, {
-    appDomain : domain
+    appDomain: domain
   }, function(err, data) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error",
-        msg : "数据库查询错误"
+        status: "error",
+        msg: "数据库查询错误"
       });
     } else {
       findOne(user, {
-        email : req.session.email
+        email: req.session.email
       }, function(err, user) {
-        if(err) {
+        if (err) {
           log.error(err.toString());
           return res.sendJson({
-            status : "error",
-            msg : "数据库查询错误"
+            status: "error",
+            msg: "数据库查询错误"
           });
         }
         return res.sendJson({
-          status : 'ok',
-          content : {
-            dbType : data.appDbType,
-            dbUserName : user.dbUserName,
-            dbPassword : user.dbPassword,
-            dbName : data.appDbName,
-            appDb : config.appDb
+          status: 'ok',
+          content: {
+            dbType: data.appDbType,
+            dbUserName: user.dbUserName,
+            dbPassword: user.dbPassword,
+            dbName: data.appDbName,
+            appDb: config.appDb
           }
         });
       });
@@ -384,62 +382,71 @@ exports.loadMongoContent = function(req, res) {
   })
 }
 exports.createMongo = function(req, res) {
-  var domain = req.params.id || '', url = req.url, email = req.session.email;
+  var domain = req.params.id || '',
+      url = req.url,
+      email = req.session.email;
   url = url.slice(0, url.lastIndexOf('/'));
   findOne(app_basic, {
-    appDomain : domain,
+    appDomain: domain,
   }, function(err, data) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.render("error", {
-        message : "数据库错误，请稍后再试"
+        message: "数据库错误，请稍后再试"
       });
     } else {
-      
-      if(data.appDbType) {//如果已经创建过数据库
+
+      if (data.appDbType) { //如果已经创建过数据库
         return res.render("error", {
-          message : "已经创建数据库"
+          message: "已经创建数据库"
         });
       } else {
         var proxy = new EventProxy();
-        proxy.once('dbUser', function(dbUser){
-        if(dbUser===false){
-          return res.render("error", {message:"数据库查询错误，请稍后再试"});
-        }
-        var dbName = randomStringNum(12);
-        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
-        exec(command, function(err, stdout, stderr) {//执行shell脚本，给用户授权对应数据库
-          if(err) {
-            log.error(err.toString());
+        proxy.once('dbUser', function(dbUser) {
+          if (dbUser === false) {
             return res.render("error", {
-              message : "执行错误，请稍后再试"
+              message: "数据库查询错误，请稍后再试"
             });
-          } else {
-            update(app_basic, {
-              appDomain : domain
-            }, {
-              $set : {
-                appDbType : "mongo",
-                appDbName : dbName
-              }
-            }, function(err) {//更新应用表
-              if(err) {
-                log.error(err.toString());
-                return res.render("error", {
-                  message : "执行错误，请稍后再试"
-                });
-              } else {
-                return res.redirect(url + "/mongo");
-              }
-            })
           }
-        })
+          var dbName = randomStringNum(12);
+          var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
+          exec(command, function(err, stdout, stderr) { //执行shell脚本，给用户授权对应数据库
+            if (err) {
+              log.error(err.toString());
+              return res.render("error", {
+                message: "执行错误，请稍后再试"
+              });
+            } else {
+              update(app_basic, {
+                appDomain: domain
+              }, {
+                $set: {
+                  appDbType: "mongo",
+                  appDbName: dbName
+                }
+              }, function(err) { //更新应用表
+                if (err) {
+                  log.error(err.toString());
+                  return res.render("error", {
+                    message: "执行错误，请稍后再试"
+                  });
+                } else {
+                  return res.redirect(url + "/mongo");
+                }
+              })
+            }
+          })
         });
-        findOne(user, {email:req.session.email}, {dbUserName:1, dbPassword:1}, function(err, data){
-          if(err){
+        findOne(user, {
+          email: req.session.email
+        }, {
+          dbUserName: 1,
+          dbPassword: 1
+        }, function(err, data) {
+          if (err) {
             log.error(err.toString());
-            proxy.fire('dbUser',false);
-          }else{
+            proxy.fire('dbUser', false);
+          } else {
             proxy.fire('dbUser', data);
           }
         })
@@ -448,10 +455,10 @@ exports.createMongo = function(req, res) {
   })
 }
 checkQueryString = function(queryString) {
-  if(queryString.indexOf("db.") !== 0 && queryString.indexOf("show") !== 0) {
+  if (queryString.indexOf("db.") !== 0 && queryString.indexOf("show") !== 0) {
     return false;
   } else {
-    if(queryString.indexOf("db.addUser") === 0 || queryString.indexOf("db.auth") === 0 || queryString.indexOf("db.removeUser") === 0 || queryString.indexOf("db.eval") === 0 || queryString.indexOf("db.dropDatabase") === 0 || queryString.indexOf("db.shoutdownServer") === 0 || queryString.indexOf("db.copyDatabase") === 0 || queryString.indexOf("db.cloneDatabse") === 0) {
+    if (queryString.indexOf("db.addUser") === 0 || queryString.indexOf("db.auth") === 0 || queryString.indexOf("db.removeUser") === 0 || queryString.indexOf("db.eval") === 0 || queryString.indexOf("db.dropDatabase") === 0 || queryString.indexOf("db.shoutdownServer") === 0 || queryString.indexOf("db.copyDatabase") === 0 || queryString.indexOf("db.cloneDatabse") === 0) {
       return false;
     } else {
       return true;
@@ -460,124 +467,126 @@ checkQueryString = function(queryString) {
 }
 
 exports.queryMongo = function(req, res) {
-  var domain = req.params.id || '', queryString = req.body.queryString.trim() || '';
-  if(!checkQueryString(queryString)) {
+  var domain = req.params.id || '',
+      queryString = req.body.queryString.trim() || '';
+  if (!checkQueryString(queryString)) {
     return res.sendJson({
-      status : "error",
-      msg : "该操作不被允许"
+      status: "error",
+      msg: "该操作不被允许"
     });
   }
   queryString = "\"" + queryString + "\"";
   findOne(user, {
-    email : req.session.email
-  }, function(err, data) {//查找db帐号密码
-    if(err) {
+    email: req.session.email
+  }, function(err, data) { //查找db帐号密码
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error",
-        msg : "数据库帐号密码查找失败"
+        status: "error",
+        msg: "数据库帐号密码查找失败"
       });
     } else {
       findOne(app_basic, {
-        appDomain : domain
+        appDomain: domain
       }, function(err, appInfos) {
-        if(appInfos.appDbType !== "mongo") {
+        if (appInfos.appDbType !== "mongo") {
           return res.sendJson({
-            status : "error",
-            msg : "数据库未申请或者数据库类型不是mongoDB"
+            status: "error",
+            msg: "数据库未申请或者数据库类型不是mongoDB"
           });
         }
         var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString;
         exec(command, function(err, stdout, stderr) {
-          if(err) {
+          if (err) {
             log.error(err.toString());
             return res.sendJson({
-              status : "error",
-              msg : "查询数据库失败"
+              status: "error",
+              msg: "查询数据库失败"
             });
           } else {
             var place = stdout.indexOf("1\n");
-            if(place === -1) {
+            if (place === -1) {
               stdout = "权限验证错误";
             } else {
               stdout = stdout.slice(place + 2, stdout.length - 4) + "\ndone";
             }
             return res.sendJson({
-              status : "ok",
-              output : stdout
+              status: "ok",
+              output: stdout
             });
           }
         })
       });
-    }           
+    }
   })
 }
 
 exports.showTodo = function(req, res) {
   var url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
-    return res.render("appManageTodo", {
-      layout : "layoutApp",
-      email : req.session.email,
-      nickName : req.session.nickName,
-      url : url
-    });
+  return res.render("appManageTodo", {
+    layout: "layoutApp",
+    email: req.session.email,
+    nickName: req.session.nickName,
+    url: url
+  });
 }
 
 exports.loadTodoContent = function(req, res) {
   var domain = req.params.id || '';
-  findOne(app_basic, {//find the app
-    appDomain : domain
+  findOne(app_basic, { //find the app
+    appDomain: domain
   }, function(err, data) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error",
-        msg : "查询数据库错误"
+        status: "error",
+        msg: "查询数据库错误"
       });
-    } else if(!data || !data.todo) {//todos not exists
+    } else if (!data || !data.todo) { //todos not exists
       return res.sendJson({
-        status : "ok",
-        content : {
-          todos : []
+        status: "ok",
+        content: {
+          todos: []
         }
       });
     } else {
       var todos = data.todo;
-      var userEmails = [], uhash = {};
-      for(var i = 0, len = todos.length; i < len; ++i) {//find all the emails
-        if(!uhash[todos[i].email]) {
+      var userEmails = [],
+          uhash = {};
+      for (var i = 0, len = todos.length; i < len; ++i) { //find all the emails
+        if (!uhash[todos[i].email]) {
           uhash[todos[i].email] = true;
           userEmails.push(todos[i].email);
         }
       }
       find(user, {
-        email : {
-          $in : userEmails
+        email: {
+          $in: userEmails
         }
       }, {
-        email : 1,
-        nickName : 1
+        email: 1,
+        nickName: 1
       }, function(err, userInfos) {
-        if(err) {
+        if (err) {
           log.error(err.toString());
           return res.sendJson({
-            status : "error",
-            msg : "查询数据库错误"
+            status: "error",
+            msg: "查询数据库错误"
           });
-        } else if(!userInfos || userInfos.length === 0) {
+        } else if (!userInfos || userInfos.length === 0) {
           return res.sendJson({
-            status : "ok",
-            content : {
-              todos : []
+            status: "ok",
+            content: {
+              todos: []
             }
           });
-        } else if(userInfos) {  //get the nicks
+        } else if (userInfos) { //get the nicks
           var emailToNick = {};
-          for(var i = 0, len = userInfos.length; i < len; ++i) {
+          for (var i = 0, len = userInfos.length; i < len; ++i) {
             emailToNick[userInfos[i].email] = userInfos[i].nickName;
           }
-          for(var i = 0, len = todos.length; i < len; i++) {
+          for (var i = 0, len = todos.length; i < len; i++) {
             todos[i].nickName = emailToNick[todos[i].email];
           }
           todos.reverse();
@@ -585,37 +594,37 @@ exports.loadTodoContent = function(req, res) {
             return a.finished - b.finished
           });
           return res.sendJson({
-            status : "ok",
-            content : {
-              todos : todos
+            status: "ok",
+            content: {
+              todos: todos
             }
           });
-        }
-        ;
+        };
       })
     }
   })
 }
 exports.newTodo = function(req, res) {
-  var domain = req.params.id || '', title = req.body.title || '';
-  if(title === '') {
+  var domain = req.params.id || '',
+      title = req.body.title || '';
+  if (title === '') {
     return res.redirect("/application/manage/" + domain + "/todo");
   }
   update(app_basic, {
-    appDomain : domain
+    appDomain: domain
   }, {
-    $addToSet : {
-      todo : {
-        title : title,
-        email : req.session.email,
-        finished : 0
+    $addToSet: {
+      todo: {
+        title: title,
+        email: req.session.email,
+        finished: 0
       }
     }
   }, function(err) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.render("error", {
-        message : "查询数据库错误，请稍后再试"
+        message: "查询数据库错误，请稍后再试"
       });
     } else {
       return res.redirect("/application/manage/" + domain + "/todo");
@@ -623,79 +632,85 @@ exports.newTodo = function(req, res) {
   })
 }
 exports.finishTodo = function(req, res) {
-  var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
+  var domain = req.params.id || '',
+      email = req.body.email || '',
+      title = req.body.title || '';
   update(app_basic, {
-    appDomain : domain,
-    todo : {
-      $elemMatch : {
-        "email" : email,
-        "title" : title
+    appDomain: domain,
+    todo: {
+      $elemMatch: {
+        "email": email,
+        "title": title
       }
     }
   }, {
-    $set : {
-      "todo.$.finished" : 1
+    $set: {
+      "todo.$.finished": 1
     }
   }, function(err) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error"
+        status: "error"
       });
     } else {
       return res.sendJson({
-        status : "ok"
+        status: "ok"
       });
     }
   })
 }
 exports.recoverTodo = function(req, res) {
-  var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
+  var domain = req.params.id || '',
+      email = req.body.email || '',
+      title = req.body.title || '';
   update(app_basic, {
-    appDomain : domain,
-    todo : {
-      $elemMatch : {
-        "email" : email,
-        "title" : title
+    appDomain: domain,
+    todo: {
+      $elemMatch: {
+        "email": email,
+        "title": title
       }
     }
   }, {
-    $set : {
-      "todo.$.finished" : 0
+    $set: {
+      "todo.$.finished": 0
     }
   }, function(err) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error"
+        status: "error"
       });
     } else {
       return res.sendJson({
-        status : "ok"
+        status: "ok"
       });
     }
   })
 }
 exports.deleteTodo = function(req, res) {
-  var domain = req.params.id || '', email = req.body.email || '', title = req.body.title || '';
+  var domain = req.params.id || '',
+      email = req.body.email || '',
+      title = req.body.title || '';
   update(app_basic, {
-    appDomain : domain,
+    appDomain: domain,
   }, {
-    $pull : {
-      todo : {
-        email : email,
-        title : title
+    $pull: {
+      todo: {
+        email: email,
+        title: title
       }
     }
   }, function(err) {
-    if(err) {
+    if (err) {
       log.error(err.toString());
       return res.sendJson({
-        status : "error"
+        status: "error"
       });
     } else {
       return res.sendJson({
-        status : "ok"
+        status: "ok"
       });
     }
   })
