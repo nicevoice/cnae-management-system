@@ -148,57 +148,48 @@ exports.onOff = function(action, name, callback) {
   })
 };
 
-var NEWLINE = '\n'; //\n
-exports.getLog = function(action, name, num, callback) {
-  var socket = net.createConnection(port);
-  socket.on('error', function(e) {
-    log.error(e.message);
-    socket.destroy();
-    callback("");
-  });
-  socket.write('{"cmd":"' + action + '", "app":"' + name + '", "size":"' + num + '"}\n');
-  var buf = new Buffer(0),
-      length = -1,
-      head;
-  socket.on('data', function(data) {
-    buf += data;
-    if (length === -1) { //still dons't find head
-      var l = 0;
-      for (var len = buf.length; l != len; ++l) {
-        if (buf[l] === NEWLINE) break;
+var NEWLINE = '\n';  //\n
+exports.getLog = function(action, name, num, callback){
+    var socket = net.createConnection(port);
+    socket.on('error',function(e){
+        log.error(e.message);
+        socket.destroy();
+        callback("");
+    });
+    socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'"}\n');
+    var buf = "", length = -1, head;
+    socket.on('data', function(data){
+      buf += data;
+      if(length===-1){//still dons't find head
+        var l=0;
+        for(var len=buf.length; l!=len; ++l){
+          if(buf[l]===NEWLINE) break;
+        }
+        if(l===buf.length){//not found 
+          return;
+        }
+        try{//try to get length in head
+          head = JSON.parse(buf.slice(0, l));
+        }catch(e){
+          length = 0;
+        }
+        if(head){
+          length = head.length||0;;
+        }else{
+          length = 0;
+        }
+        buf = buf.slice(l+1);
       }
-      if (l === buf.length) { //not found 
-        return;
+      if(length!==-1 && Buffer.byteLength(buf, 'utf8') >= length){ //done
+        callback(buf||'');
+        socket.destroy();
       }
-      try { //try to get length in head
-        head = JSON.parse(buf.slice(0, l));
-      } catch (e) {
-        length = 0;
-      }
-      if (head) {
-        length = head.length || 0;;
-      } else {
-        length = 0;
-      }
-      buf = buf.slice(l + 1);
-    }
-    if (length !== -1 && Buffer.byteLength(buf, 'utf8') >= length) { //done
-      callback(buf.toString('utf8') || '');
-      socket.destroy();
-    }
-  });
-
-  socket.on('end', function() {
-    console.log('end');
-    var data = "";
-    for (var i = 0, len = chunk.length; i != chunk; ++i) {
-      data += chunk[i];
-    }
-    console.log(data);
-    data = data.slice(data.indexOf('\n') + 1);
-    callback(data || '');
-    socket.destroy();
-  })
+    });
+    
+    socket.on('end', function(){
+        callback(buf||'');
+        socket.destroy();
+    })
 }
 
 /**

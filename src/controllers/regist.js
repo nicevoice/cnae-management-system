@@ -208,8 +208,7 @@ exports.checkRegist = function(req, res){
  * @return {}
  */
 exports.checkEmail = function(req, res){
-  console.log('email');
-  var userEmail = urlMoudle.parse(req.url, true).query.userEmail||'';
+  var userEmail = urlMoudle.parse(req.url, true).query.email||'';
 	if(!verify('email', userEmail))
 		return res.sendJson( {warn:"请输入合法的email地址"});
 	findOne(user, {email:userEmail}, function(err, data){
