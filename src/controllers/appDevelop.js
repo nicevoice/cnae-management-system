@@ -162,7 +162,6 @@ exports.doUpload = function(req, res) {
   }));
   upload().start();
 }
-<<<<<<< HEAD:src/controllers/appDevelop.js
 exports.gitAction = function(req, res){
   var command = req.body.gitCommand||'',
       domain = req.params.id||'';
@@ -188,39 +187,6 @@ exports.gitAction = function(req, res){
 	}else{
 	  doGit(command, domain, cb);
 	}
-=======
-exports.gitAction = function(req, res) {
-  var command = req.body.gitCommand || '',
-      domain = req.params.id || '';
-  if (!verify('gitAction', command)) {
-    return res.sendJson({
-      status: "error",
-      msg: "不是有效的git操作"
-    });
-  }
-  cb = function(data) {
-    return res.sendJson(data);
-  }
-  if (verify('gitClone', command)) {
-    findOne(user, {
-      email: req.session.email
-    }, function(err, data) {
-      if (err) {
-        log.error(err.toString());
-        return res.sendJson({
-          status: "error",
-          msg: "数据库查询错误"
-        });
-      }
-      if (data.github && data.github.token) {
-        command = command.replace('@', '@' + data.github.token + '.'); //如果是clone需要权限的，就加上token
-      }
-      doGit(command, domain, cb, true);
-    })
-  } else {
-    doGit(command, domain, cb);
-  }
->>>>>>> 3204175a67e36d6884758fb415704f71801e0424:src/controllers/appDevelop.js
 }
 /***
  *
@@ -232,7 +198,6 @@ exports.doDownload = function(req, res) {
       files = req.body.files.trim().replace(/\.\./g, '') || '',
       zipDir = uploadDir;
   //如果没有输入files，则压缩整个文件夹
-<<<<<<< HEAD:src/controllers/appDevelop.js
   log.info(req.session.email + ' download ' + domain);
   if(!files){
   	files = domain;
@@ -250,29 +215,12 @@ exports.doDownload = function(req, res) {
       arr[i] = domain + '/' + arr[i];
     }
     if(arr.length>0){
-=======
-  if (!files) {
-    files = domain;
-  } else {
-    if (!verify('files', files)) {
-      res.sendJson({
-        status: 'error',
-        msg: '错误的文件名或通配符'
-      })
-    }
-    var arr = files.split(" "); //split
-    for (var i = 0, len = arr.length; i != len; ++i) {
-      arr[i] = domain + '/' + arr[i];
-    }
-    if (arr.length > 0) {
->>>>>>> 3204175a67e36d6884758fb415704f71801e0424:src/controllers/appDevelop.js
       files = arr.join(' ');
     }
   }
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
-<<<<<<< HEAD:src/controllers/appDevelop.js
   var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;	
   
   var compress = "cd " + zipDir + "&&zip -r " + saveName + " " + files;
@@ -284,34 +232,6 @@ exports.doDownload = function(req, res) {
     	    msg:"没有找到匹配的文件"	
     	  })	
     	}
-=======
-  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;
-
-  var cwd = process.cwd();
-  try {
-    process.chdir(zipDir);
-  } catch (err) {
-    log.error(err.toString());
-    return res.sendJson({
-      status: "error",
-      msg: "修改工作目录失败"
-    });
-  }
-  var compress = "zip -r " + saveName + " " + files;
-  exec(compress, function(err, stdout, stderr) {
-    try {
-      process.chdir(cwd);
-    } catch (err) {
-      log.error(err.toString());
-    }
-    if (err) {
-      if (err.code === 12) {
-        return res.sendJson({
-          status: "error",
-          msg: "没有找到匹配的文件"
-        })
-      }
->>>>>>> 3204175a67e36d6884758fb415704f71801e0424:src/controllers/appDevelop.js
       log.error(err.toString());
       return res.sendJson({
         status: "error",
@@ -373,7 +293,6 @@ exports.npmInstall = function(req, res) {
   var npmName = req.body.npmName || '';
   var items = match('npm', npmName);
   npmName = items ? items[0] : null;
-<<<<<<< HEAD:src/controllers/appDevelop.js
   log.info(req.session.email + ' npm install ' + npmName);
   if(!verify('npm', npmName)){
       log.info(npmName + ' not pass npm check');
@@ -385,17 +304,6 @@ exports.npmInstall = function(req, res) {
   log.info(npmName + ' pass npm check') 
   var domain = req.params.id || '', install = "npm install " + npmName;
   install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
-=======
-  if (!npmName) {
-    return res.sendJson({
-      status: 'error',
-      msg: '请输入正确的模块名'
-    })
-  }
-  var domain = req.params.id || '',
-      install = "npm install " + npmName;
-  install = 'cd ' + uploadDir + '/' + domain + '&&' + install;
->>>>>>> 3204175a67e36d6884758fb415704f71801e0424:src/controllers/appDevelop.js
   exec(install, function(err, npmStdout, npmStderr) {
     if (err) {
       log.error(err.toString());
