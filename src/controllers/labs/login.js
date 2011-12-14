@@ -51,7 +51,7 @@ var checkLogin = exports.checkLogin = function(req, res) {
 				message : res.msg
 			});
 		}
-		var redirectUrl = decodeURIComponent(urlMoudle.parse(req.url, true).query.redirectUrl||'');
+		var redirectUrl = decodeURIComponent(urlMoudle.parse(req.url, true).query.redirect_url||'');
 		if(!redirectUrl || redirectUrl.indexOf('http://'+req.headers.host)!==0){
 		  redirectUrl = '/application';
 		};
