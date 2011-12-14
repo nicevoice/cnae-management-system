@@ -11,7 +11,6 @@ emailBlur = function(){
 		$("#emailWarn").html("请输入合法的email地址"); 
 		return false;
 	}
-	alert('1');
 	$.ajax({
     cache:false,
     type:"GET",
