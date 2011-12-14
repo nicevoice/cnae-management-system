@@ -64,6 +64,7 @@ exports.doUpload = function(req, res){
       message : "请选择一个文件上传"
     });    
   }
+  log.info(req.session.email + ' try upload to ' + domain);
   //check type
   var type = files.upload.type, path = files.upload.path;
   if(!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")){
@@ -148,9 +149,11 @@ exports.doUpload = function(req, res){
 exports.gitAction = function(req, res){
   var command = req.body.gitCommand||'',
       domain = req.params.id||'';
+  log.info(req.session.email + ' try to do git action ' + command + ' to ' + domain);
   if(!verify('gitAction', command)){
 	  return res.sendJson({status:"error", msg:"不是有效的git操作"});
 	}
+  log.info(command + ' ok');
 	cb = function(data){
 	  return res.sendJson(data);
 	}
@@ -179,45 +182,33 @@ exports.doDownload = function(req, res) {
       files = req.body.files.trim().replace(/\.\./g, '')||'',
       zipDir = uploadDir;
   //如果没有输入files，则压缩整个文件夹
+  log.info(req.session.email + ' download ' + domain);
   if(!files){
   	files = domain;
   }else{
-  	 if(!verify('files', files)){
+    if(!verify('files', files)){
+        log.info(files + 'not pass in download');
     	res.sendJson({
     	  status:'error',
     	  msg:'错误的文件名或通配符'	
     	})
   	 }
-		 var arr = files.split(" ");//split
-     for(var i=0, len=arr.length; i!=len; ++i){
-		  arr[i] = domain + '/' + arr[i];
-		 }
-		 if(arr.length>0){
-		   files = arr.join(' ');
-		 }
-	}
+    log.info(files + 'pass download')
+    var arr = files.split(" ");//split
+    for(var i=0, len=arr.length; i!=len; ++i){
+      arr[i] = domain + '/' + arr[i];
+    }
+    if(arr.length>0){
+      files = arr.join(' ');
+    }
+  }
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
   var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;	
   
-  var cwd = process.cwd();
-  try {
-    process.chdir(zipDir);
-  } catch(err) {
-    log.error(err.toString());
-    return res.sendJson({
-      status : "error",
-      msg : "修改工作目录失败"
-    });
-  }
-  var compress = "zip -r " + saveName + " " + files;
+  var compress = "cd " + zipDir + "&&zip -r " + saveName + " " + files;
   exec(compress, function(err, stdout, stderr) {
-    try {
-      process.chdir(cwd);
-    } catch(err) {
-      log.error(err.toString());
-    }
     if(err) {
     	if(err.code===12){
     	  return res.sendJson({
@@ -313,12 +304,15 @@ exports.npmInstall = function(req, res) {
   var npmName = req.body.npmName||'';
   var items = match('npm', npmName);
   npmName = items ? items[0] : null;
-  if(!npmName){
+  log.info(req.session.email + ' npm install ' + npmName);
+  if(!verify('npm', npmName)){
+      log.info(npmName + ' not pass npm check');
       return res.sendJson({
           status:'error',
           msg:'请输入正确的模块名'
       })
-  } 
+  }
+  log.info(npmName + ' pass npm check') 
   var domain = req.params.id || '', install = "npm install " + npmName;
   install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
   exec(install, function(err, npmStdout, npmStderr) {
