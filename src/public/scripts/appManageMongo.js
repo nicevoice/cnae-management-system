@@ -141,7 +141,8 @@ queryDb = function() {
       sAlert("警告", "连接错误，请稍后再试");
     },
     success : function(data) {
-      $("#queryOutput").html($("#queryOutput").html()+'\n'+data.output);
+      var output = htmlSpecial(data.output);
+      $("#queryOutput").html($("#queryOutput").html()+'\n'+output);
       var opt = document.getElementById("queryOutput");
       opt.scrollTop = opt.scrollHeight;
       $("#queryString").val("");
