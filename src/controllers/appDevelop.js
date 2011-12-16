@@ -99,16 +99,19 @@ exports.doUpload = function(req, res) {
       } catch (err) {
         if (err.code !== 'EEXIST') throw err;
       }
+	  //console.log('mkdir done')
       //uncompress
       var unCompress;
       if (type === "gz") {
         unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
       } else {
-        unCompress = 'unzip ' + path + ' -d ' + tempDir + '/' + domain;
+        unCompress = 'unzip -q' + path + ' -d ' + tempDir + '/' + domain;
       }
       $await(execAsync(unCompress));
+	  //console.log('unCompress done')
       //check if only has a dir
       var files = $await(standard(fs.readdir)(tempDir + '/' + domain));
+	  //console.log('get dir info done')
       var move = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/cpall.sh " + tempDir + '/' + domain + " " + savePath;
       if (files.length === 1) {
         var stat = $await(standard(fs.stat)(tempDir + '/' + domain + "/" + files[0]));
@@ -124,10 +127,12 @@ exports.doUpload = function(req, res) {
           throw err;
         }
       }
+	  //console.log('mkdir target done')
       //move to the target dir
       try {
         $await(execAsync(move));
       } catch (err) {}
+	  //console.log('move done')
       var sumManage = req.url.slice(0, req.url.lastIndexOf('/'));
       sumManage += '/sum';
       //start the two stuff at the same time & ignore the error
