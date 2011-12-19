@@ -45,7 +45,7 @@ app.use(connect.static(__dirname+'/public', {maxAge: 3600000 * 24 * 365}));
 app.use(connect.cookieParser());
 app.use(connect.session({
     secret: config.session_secret,
-    store : new RedisStore()
+    store : new RedisStore({pass:config.redisPassword})
 }));
 
 //post
