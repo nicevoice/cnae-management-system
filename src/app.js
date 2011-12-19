@@ -38,7 +38,7 @@ app.use(function(req, res, next) {
 //favicon
 app.use(connect.favicon());
 //static
-app.use(connect.staticCache());
+//app.use(connect.staticCache());
 app.use(connect.static(__dirname+'/public', {maxAge: 3600000 * 24 * 365}));
 
 //session和cookie
