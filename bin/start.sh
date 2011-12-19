@@ -9,7 +9,7 @@ test ! -e cnae-web-nohup.log && touch cnae-web-nohup.log
 test ! -e worker.num && touch worker.num
 cd ../src
 test ! -d client && mkdir -p client
-cd /public
+cd public
 test ! -d download && mkdir -p download
 cd ../../
 nohup node ./src/server >> ./logs/cnae-web-nohup.log 2>&1 &

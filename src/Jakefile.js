@@ -18,7 +18,9 @@ task('makeconf', function(){
       .replace(/\$\$app_member\$\$/ig, 'member')  
       .replace(/\$\$app_basic\$\$/ig, 'basic')  
       .replace(/\$\$app_record\$\$/ig, 'record')
-
+      
+      .replace(/\$\$redisPassword\$\$/ig, 'input your redis password')
+      
       .replace(/\$\$md5Secret\$\$/ig, 'input your login secret')//login secret
       .replace(/\$\$sessionSecret\$\$/ig, 'input your session secret')//session secret
 
