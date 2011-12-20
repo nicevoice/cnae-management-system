@@ -105,9 +105,9 @@ exports.doUpload = function(req, res) {
       if (type === "gz") {
         unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
       } else {
-        unCompress = 'unzip -q' + path + ' -d ' + tempDir + '/' + domain;
+        unCompress = 'unzip -oq ' + path + ' -d ' + tempDir + '/' + domain;
       }
-      $await(execAsync(unCompress));
+      var out = $await(execAsync(unCompress));
 	  //console.log('unCompress done')
       //check if only has a dir
       var files = $await(standard(fs.readdir)(tempDir + '/' + domain));
