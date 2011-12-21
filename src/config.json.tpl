@@ -2,28 +2,29 @@
   "dbInfo":{
   "host":"127.0.0.1",
   "port":"27017",
-  "name":"$dbName$",
-  "userName":"$dbUserName$",
-  "password":"$dbPassword$",
+  "name":"$$dbName$$",
+  "userName":"$$dbUserName$$",
+  "password":"$$dbPassword$$",
   "collections":{
-       "user":"$user$",
-       "app_member":"$member$",
-       "app_basic":"$basic$",
-       "app_record":"$record"
+       "user":"$$user$$",
+       "app_member":"$$app_member$$",
+       "app_basic":"$$app_basic$$",
+       "app_record":"$$app_record$$"
      } 
   },
+  "redisPassword":"$$redisPassword$$",
   "appDb":{
     "host":"127.0.0.1",
     "port":"20088"
   }, 
-  "md5_secret":"$md5Secret$", 
-  "session_secret":"$sessionSecret$",
+  "md5_secret":"$$md5Secret$$",     ##md5 secret for login
+  "session_secret":"$$sessionSecret$$", ##secret for session
   "timeOut":1296000000,
   "port":2012,
-  "debug":true,
+  "adminPort":2014,
   "site_name":"NAE: Node.Js应用托管引擎. power by: Cnode社区",
-  "domain":"cnodejs.net",
-  "logPath":"$dir$/logs/system.log",
+  "domain":"$$domain$$",
+  "logPath":"$$__dir$$/logs/system.log",
   
   "toplevelDomainNAE":".cnodejs.net",
   "toplevelDomainLabs":".nae.labs.toabao.com",
@@ -49,38 +50,38 @@
     "port": 587,
     "ssl": false,
     "use_authentication": true,
-    "user": "heyiyu.deadhorse@gmail.com",
-    "pass": "heyiyuaaqq12"
+    "user": "$$smtpuser$$",
+    "pass": "$$smtppass$$"
   },
   "sender":"NAE <admin@cnodejs.com>"
   },
   "maxInviteCode":5,
-  "uploadDir":"$uploadDir$",
-  "tempDir":"$tempDir$",
+  "uploadDir":"$$uploadDir$$",
+  "tempDir":"$$__dir$$/temp",
   "socketPort":1128,
   "monitor":{
     "host":"127.0.0.1",
     "port":"1127"
   }, 
-  "admins":["dead_horse@qq.com","fengmk2@gmail.com","kunfirst@gmail.com", "q3boy1@gmail.com"],
+  "admins":['dead_horse@qq.com'],
   "switchs":{
-    "labs":false,
-    "debug":true,
-    "daily":true,
-    "noGit":false
+    "labs": $$slabs$$,
+    "debug":$$sdebug$$,
+    "daily":$$sdaily$$,
+    "noGit":$$snoGit$$
   },
-  "labsConf": {
+  "labsConf": { ##labs的参数
 	  "agentMaxSockets" : 256 ,
 	  "checkUserOption" : {
-	  "host":"dev.labs.daily.taobao.net",
+	  "host":"$$labsHost$$",
 	  "port":80,
 	  "path":"/developers/checkUser.do"
 	  },
-	  "secret":"$tbSecret$" ,
+	  "secret":"$$tbSecret$$" ,
 	  "loginPath":"https://login.taobao.com/member/login.jhtml?from=labs-nae&redirect_url=http://nae.taobao.com:2012/checkLogin",
 	  "loginPathDaily":"https://login.daily.taobao.net/member/login.jhtml?f=top&redirect_url=http://nae.labs.daily.taobao.net:2012/checkLogin"
   },
-  "github":{
+  "github":{    ##设置个人github私钥的参数
     "keyDir":"/home/heyiyu.pt/.ssh/nae/id_rsa_",
     "config":"/home/heyiyu.pt/.ssh/config",
     "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",

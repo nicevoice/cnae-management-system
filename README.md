@@ -1,28 +1,29 @@
-# CNAE Management Web System base on [Nodejs](http://nodejs.org).
- * 基于connect的网站。结合于node app engine一起，提供一个Node.js的在线应用托管平台。网站地址[NAE](http://cnodejs.net)
- 
-## Requires:
- * node version>0.5, mongoDB version > 1.4.4 redis
- * connect 1.x(node_module已包含)
-   模块依赖： $ npm install connect-form connect-redis crypto ejs EventProxy.js mongoskin nodemailer redis rimraf 
+# CNAE Management Web System base on [Nodejs](http://nodejs.org).   
+ * 基于connect的网站。结合于node app engine一起，提供一个Node.js的在线应用托管平台。网站地址[NAE](http://cnodejs.net)   
+    
+## Requires:  
+ * node version>0.5, mongoDB version > 1.4.4 redis   
+ * connect 1.x(node_module已包含)   
+   模块依赖： $ npm install connect-form connect-redis crypto ejs EventProxy.js mongoskin nodemailer redis rimraf    
+   
+## config.json   
+  $ npm -g install jake  
+  $ cd src && jake makeconf   
+  $ 修改config.json的私钥和密码等信息   
+    
+## mongoDB && redis   
+   # mongodb   
+   $ wget http://fastdl.mongodb.org/linux/mongodb-linux-i686-2.0.2.tgz   
+   $ tar -xvf mongodb-linux-i686-2.0.2.tgz   
+   $ 修改db启动脚本和db初始化脚本并复制到mongodb文件夹，启动数据库，运行初始化脚本（only once）。  
 
-## config.json
-  $ npm -g install jake
-  $ cd src && jake makeconf
-  $ 修改config.json的私钥和密码等信息
-
-## mongoDB && redis
-   # mongodb
-   $ wget http://fastdl.mongodb.org/linux/mongodb-linux-i686-2.0.2.tgz
-   $ tar -xvf mongodb-linux-i686-2.0.2.tgz
-   $ 修改db启动脚本和db初始化脚本并复制到mongodb文件夹，启动数据库，运行初始化脚本（only once）。
-
-   # redis
-   $ wget http://redis.googlecode.com/files/redis-2.4.4.tar.gz
-   $ tar -xvf redis-2.4.4.tar.gz
-   $ cd redis-2.4.4
-   $ make 
-   $ nohup src/redis-server&
+   # redis   
+   $ wget http://redis.googlecode.com/files/redis-2.4.4.tar.gz   
+   $ tar -xvf redis-2.4.4.tar.gz   
+   $ cd redis-2.4.4   
+   $ make   
+   $ add auth in redis.conf (requirepass password)  
+   $ nohup src/redis-serveri redis.conf &   
    
 ## 功能介绍  
 * 每个用户可以创建10个项目，可以参与其他人的项目合作开发。
