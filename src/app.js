@@ -52,7 +52,18 @@ app.use(connect.session({
 app.use(connect.bodyParser());
 app.use(connect.csrf());
 //log
-app.use(connect.logger({ format: '\x1b[36m:method\x1b[0m \x1b[90m:url\x1b[0m :response-time' }));
+connect.logger.token('email', function(req ,res){return req.session.email;});
+connect.logger.token('body', 
+function(req, res){
+  var body = req.body, bodyStr="";
+  if(body){
+    for(var key in body){
+      bodyStr += key + ":" + body[key] + " ";
+    }
+  }
+  return bodyStr;
+});
+app.use(connect.logger({ format: ':email|:remote-addr|:date|:response-time|:method|:url|:body'}));
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',
