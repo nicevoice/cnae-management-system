@@ -18,7 +18,10 @@ exports.show = function(req, res){
         redirectUrl = queryString.redirect_url;
         warn = "请先登录后再访问此页面"
     }
-    res.render("login", {layout:false, warn:warn, redirectUrl:redirectUrl});
+    if(req.headers.referer&&req.headers.referer.indexOf('resetpassword')>=0){
+      warn = "密码重置成功";
+    }
+    res.render("login", {layout:'layoutLogin', warn:warn, redirectUrl:redirectUrl});
 };
 /***
  * 检测登录请求
@@ -40,7 +43,7 @@ exports.checkLogin = function(req, res){
 		else{
 			if (!item) {
         return res.render("login", {
-          layout:false,
+          layout:'layoutLogin',
           warn: "用户名或密码错误",
           redirectUrl:redirectUrl
         });

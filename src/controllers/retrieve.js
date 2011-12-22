@@ -1,6 +1,7 @@
 var config = require('../config'),
     log = config.logWithFile,
     urlMoudle = require('url'),
+    dns = require('dns'),
     EventProxy = require('EventProxy.js').EventProxy,
     //models
     model = require('../models/index'),
@@ -21,7 +22,7 @@ var config = require('../config'),
     verify = utils.verify;
 
 exports.showRetrieve = function(req, res){
-  res.render("retrieve");
+  res.render("retrieve", {layout:"layoutLogin", warn:{}});
 }
 
 exports.postRetrieve = function(req, res){
@@ -58,14 +59,22 @@ exports.postRetrieve = function(req, res){
           debug: true
        	});
       	mailEvent.fire("getMail");
-        return res.redirect("/retrieveTips");
+        var host = email.slice(email.indexOf('@')+1);
+        dns.resolve4('mail.' + host, function(err, data){
+          if(data){
+            return res.redirect('/retrieveTips?host=mail.'+host);
+          }else{
+            return res.redirect('/retrieveTips?host=www.'+host);
+          }
+        })
       }
     }
   })
 }
 
 exports.showRetrieveTips = function(req, res){
-  return res.render("retrieveTips");
+  var host = urlMoudle.parse(req.url, true).query.host||'';
+  return res.render("retrieveTips", {host:host,layout:"layoutLogin"});
 }
 
 exports.showResetPassword = function(req, res){
@@ -85,7 +94,7 @@ exports.showResetPassword = function(req, res){
         if(!data.retrieveTime || now - data.retrieveTime >oneDay){
           return res.render("error", {message:"该链接已过期，请重新申请"});
         }else{
-          return res.render("resetPassword",{email:email, key:key});
+          return res.render("resetPassword",{email:email, key:key, layout:"layoutLogin"});
         }
       }
     }
@@ -103,7 +112,7 @@ exports.resetPassword = function(req, res){
 	}else{
 		if (con && password !== con) {
       return res.render("error", {
-        message: "密码必须为6～20位字母、数字或下划线"
+        message: "两次密码必须一致"
       });
     }
     else {

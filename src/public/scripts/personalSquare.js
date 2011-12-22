@@ -5,7 +5,7 @@ function getPersonApps(){
   var nickName = $("#ownerNickName").html()||'';
   $.ajax({
     type:"get",
-    url:"/square/apps",
+    url:"/square/get/apps",
     data:{nickName:nickName},
     dataType:"json",
     error:function(){

@@ -26,7 +26,7 @@ exports.regist = function(req, res){
 	var queryString = urlMoudle.parse(req.url, true).query,
 		email = queryString.email||'',
 		code = queryString.code||'';
-	res.render("regist",{layout:false,regist:{
+	res.render("regist",{layout:'layoutLogin',regist:{
 	    email:email,
 	    code:code
 	}, warn:{}});
@@ -48,7 +48,7 @@ exports.checkRegist = function(req, res){
 	//检查用户输入合法性
 	if(!verify('email', userEmail)){
 		return res.render("regist", {
-		    layout:false,
+		    layout:'layoutLogin',
 		    regist:{
             email:userEmail,
             code:code,
@@ -57,7 +57,7 @@ exports.checkRegist = function(req, res){
 		}
 	if(!userNickName){
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -67,7 +67,7 @@ exports.checkRegist = function(req, res){
 	}
 	if(!verify('name', userNickName))
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -76,7 +76,7 @@ exports.checkRegist = function(req, res){
             warn:{nick:"昵称不能包含特殊字符"}});
 	if(userPassword != userPasswordCon)
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -85,7 +85,7 @@ exports.checkRegist = function(req, res){
             warn:{con:"两次密码输入不一致"}});
 	if(!verify('password', userPassword))
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -96,7 +96,7 @@ exports.checkRegist = function(req, res){
 	checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
         if(!goodName)
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -105,7 +105,7 @@ exports.checkRegist = function(req, res){
             warn:{nick:"该昵称已经被使用"}});
 		if(!goodEmail)
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
@@ -114,7 +114,7 @@ exports.checkRegist = function(req, res){
             warn:{email:"该邮箱已经被注册"}});
 		if(!goodCode)
         return res.render("regist", {
-            layout:false,
+            layout:'layoutLogin',
             regist:{
             email:userEmail,
             code:code,
