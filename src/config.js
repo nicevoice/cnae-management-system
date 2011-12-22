@@ -37,7 +37,7 @@ mail.refuseMailContent = fs.readFileSync(__dirname+mail.refuseMailContentPath, "
 configInfo.inviteHref = "http://cnodejs.net:"+port+"/regist?code=";
 configInfo.retrieveLink = "http://" + configInfo.domain + ':'+port + "/resetpassword";
 if(!debug) {
-    configInfo.port = 8080;
+    configInfo.port = 80;
     configInfo.inviteHref = "http://cnodejs.net/regist?code=";
     configInfo.retrieveLink = "http://" + configInfo.domain + "/resetpassword";
 }
