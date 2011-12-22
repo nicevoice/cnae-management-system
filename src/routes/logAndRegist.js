@@ -31,6 +31,6 @@ module.exports = function(app){
     app.post("/retrieve", hasNotLogin, ctrRetrieve.postRetrieve);
     app.get("/retrieveTips", hasNotLogin, ctrRetrieve.showRetrieveTips);
     app.get("/resetPassword", hasNotLogin, ctrRetrieve.showResetPassword);
-    app.post("/resetPassword", hasNotLogin, ctrRetrieve.resetPassword);
+    app.post("/reset/password", hasNotLogin, ctrRetrieve.resetPassword);
   }
 }

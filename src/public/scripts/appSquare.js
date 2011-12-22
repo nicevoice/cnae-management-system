@@ -18,7 +18,7 @@ function getMore(){
   $("#getMore").html("加载中...");
   $.ajax({
     type:"get",
-    url:"/square/apps",
+    url:"/square/get/apps",
     data:{skip:appNums, limit:onceNum},
     dataType:"json",
     error:function(){
