@@ -705,3 +705,14 @@ exports.deleteTodo = function(req, res) {
     }
   })
 }
+
+exports.showPackage = function(req, res){
+  var url = req.url;
+  url = url.slice(0, url.lastIndexOf('/'));
+  return res.render("appManagePackage", {
+    layout: "layoutApp",
+    email: req.session.email,
+    nickName: req.session.nickName,
+    url: url
+  });   
+}

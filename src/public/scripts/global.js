@@ -162,3 +162,21 @@ function tplReplace(tpl, params){
         return params[data];
     });
 }
+
+function getAuth(domain, cb){
+  $.ajax({
+    cache : false,
+    url : "/getOwnAuthInfo",
+    type : "get",
+    dataType : "json",
+    data : {
+      domain : domain
+    },
+    error : function(err) {
+      cb(err);
+    },
+    success : function(data) {
+      cb(null, data);
+    }
+  });
+}
