@@ -6,7 +6,7 @@ var config = require('../config'),
     EventProxy = require('EventProxy.js').EventProxy,
     log = config.logWithFile,
     uploadDir = config.uploadDir
-    
+
     
     
     //models
@@ -705,7 +705,9 @@ exports.deleteTodo = function(req, res) {
     }
   })
 }
-
+/***
+*  显示package.json页面
+*/
 exports.showPackage = function(req, res){
   var url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
@@ -715,4 +717,40 @@ exports.showPackage = function(req, res){
     nickName: req.session.nickName,
     url: url
   });   
+}
+/***
+*  读取app的pakage.json文件
+*/
+exports.loadPackage = function(req, res){
+  var domain = req.params.id||'';
+  var packagePath = path.join(uploadDir, domain, 'package.json');
+  var proxy = new EventProxy();
+  //check if exists
+  var checkPackage = function(){
+    path.exists(packagePath, function(exist){
+      if(!exist){
+        proxy.removeAllListeners();
+        return res.sendJson({status:"error", msg:"package.json not exists"})
+      }
+      proxy.fire('checked');
+    })
+  }
+  //try to parse the json
+  var parse = function(){
+    fs.readFile(packagePath, 'utf8', function(err, file){
+      if(err){
+        log.warn(err.toString());
+        return res.sendJson({status:"error", msg:"fail to read package.json"});
+      }      
+      var appPackage={};
+      try{
+        appPackage = JSON.parse(file);
+      }catch(err){
+        return res.sendJson({status:"error", msg:"parse package.json error: " + err.Tostring()});
+      }
+      return res.sendJson({status:"ok", appPackage : appPackage});
+    })
+  }
+  proxy.once('checked', parse);
+  checkPackage();
 }

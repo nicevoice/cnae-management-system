@@ -173,10 +173,29 @@ function getAuth(domain, cb){
       domain : domain
     },
     error : function(err) {
-      cb(err);
+      cb(err)
     },
     success : function(data) {
       cb(null, data);
     }
   });
+}
+
+function clone(obj){
+    var objClone;
+    if (obj.constructor == Object){
+        objClone = new obj.constructor();
+    }else{
+        objClone = [];
+    }
+    for(var key in obj){
+        if ( objClone[key] != obj[key] ){
+            if ( typeof(obj[key]) == 'object' ){
+                objClone[key] = clone(obj[key]);
+            }else{
+                objClone[key] = obj[key];
+            }
+        }
+    }
+    return objClone;
 }

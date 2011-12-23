@@ -37,8 +37,7 @@
       "vows"    :  "0.5.x", 
       "request" :  "2.1.x" 
     }, 
-    "bundleDependencies": [ 
-    ], 
+    "bundleDependencies": [], 
     "license": "MIT", 
     "engine": { 
       "node": ">=0.4" 
@@ -84,46 +83,84 @@ var hints = {   //提示
   
 };
 //pair template
-var tplPair = '<span class="pair" id="$key$">' +
+var tplPair = '<span class="pair $color$" id="$key$">' +
               '<span class="key">$key$</span> : ' + 
               '<span class="value" id="$key$-value">$value$</span>,<br /></span>';
 
+
 var appPackage = {};  //save already typed package item
+var showPackage = clone(exPackage); //package to display
+var valueHtmlLast = {}; //save last value of html
+var error = "";       //save error (package.json's error)
+
+var colors = {};  //save back-ground color & color for each row
 
 var url = location.href;
 url = url.slice(0, url.lastIndexOf('/'));
 var domain = url.slice(url.lastIndexOf('/') + 1);
 
 $(function(){
-  loadDefault();
-  bindMouse();
   getPackage();
+  $('#submit-package').click(submit);
 })
+/***
+* get package.json in apps
+*/
+function getPackage(){
+  $.ajax({
+    cache : false,
+    type : "get",
+    url : "/application/manage/" + domain + "/load_package",
+    dataType : "json",
+    error: function(err){
+    },
+    success: function(data){
+      if(data.status==='ok'){
+        appPackage = data.appPackage;
+      }else{
+        appPackage = {};
+        error = data.msg;
+      }
+      //merge appPackage and exPackage
+      for(var key in appPackage){
+        if(exPackage[key]){
+          showPackage[key] = appPackage[key];
+          colors[key] = {color:"exsits"};
+        }
+      }
+      loadDefault();
+    }
+  })
+}
 /***
 *  load default info in exPackage
 */
 function loadDefault(){
     var htmls = [];
-  for(var key in exPackage){
-   //  alert(key, exPackage[key])
+  for(var key in showPackage){
     htmls.push(tplReplace(tplPair, {
       '$key$' : key,
-      '$value$' : format(exPackage[key])
+      '$value$' : format(showPackage[key]),
+      '$color$' : colors[key]?colors[key].color||'' : ''
     }));
-    if(typeof exPackage[key] === 'object'){
-    }
   }
-  var htmlStr = htmls.join('').
-                replace(/[\n\r]/g, '').
-                replace(/[,\[\{]/g, function(data){
-                  return data + '<br />';
-                }).
-                replace(/[\]\}]/g, function(data){
-                  return '<br />' + data;
-                });
+  var htmlStr = showIt(htmls.join(''))
   $('pre').html('{<br />' + htmlStr + '}');
   $('#main .key').css('color', '#F30');
   $('#hint').html(hints['home']);
+    bindMouse();
+}
+/***
+* change the package value to display
+*/
+function showIt(value){
+  return value.replace(/[\n\r]/g, '').
+  replace(/[,\[\{]/g, function(data){
+    return data + '<br />';
+  }).
+  replace(/[\]\}]/g, function(data){
+    return '<br />' + data;
+  });  
 }
 /***
 *  bind mouse enter & click
@@ -135,29 +172,89 @@ function bindMouse(){
     $('#hint').html(hints[key]);
   });
     getAuth(domain, function(err, auth){
-    if(auth && auth<=2){
-      $('.npm .pair').click(function(e){
-        var el = this;
-        var key = $('.key', el).html().replace(/"/g, '');
-        $('#hint').html(hints[key]);
-      });      
+    if(auth.role<=2 && auth.active===1){
+      $('.npm .pair').bind('click', pairClick);
     }
   })
 }
 /***
-* get package.json in apps
+* bind event to click on pair 
 */
-function getPackage(){
-  $.ajax(
-    cache : false,
-    type : "get",
-    url : "/application/manage/" + domain + "/get/app_package",
-    dataType : "json",
-    error: function(err){
-    },
-    success: function(appPackage){
-      appPackage = appPackage;
-      
+function pairClick(){
+    var key = $(this).attr('id');
+    var showValue, addon='';
+    if(typeof  showPackage[key]==='string'){
+      showValue = showPackage[key];
+      addon='\"';
+    }else{
+      var showValue = format(showPackage[key]);
     }
-  )
+    valueHtmlLast[key] = $('#'+key+'-value').html();
+    if((showValue!==format(appPackage[key])&&showValue===format(exPackage[key]))){
+      showValue = '';
+    }else{
+      showValue = addon + showValue + addon;
+    }
+    var input = $('<input type=text id="'+key+'-input">');
+    input.attr('value', showValue);
+    $('#'+key+'-value').html('').append(input);
+
+    bindInput(key);
+    $(this).unbind('click');
+  } 
+/***
+* bind evnet to input
+*/
+function bindInput(key){
+  $('#'+key+'-input').focus().  //first focus
+        bind('blur', function(){ //bind when blur
+          var val = $(this).val().trim();
+          var spanValue = $('#'+key+'-value');
+          if(val===format(showPackage[key])&&val!==format(exPackage[key])){
+            spanValue.html(valueHtmlLast[key]);
+          }else{
+            if(val===''){
+              spanValue.html(showIt(format(exPackage[key])));
+            }else{
+              var jsonStr = '{"' + $('#'+ key + ' .key').html() + '":' + val + '}';
+              var wrong = false;
+              var json;
+              try{
+                json = JSON.parse(jsonStr);
+              }catch(err){
+                wrong = true;
+              }
+              if(wrong){
+                showPackage[key] = val;
+                $('#'+key).css('color', '#777');
+                $('#'+key).css('background-color', '#FCC');
+                spanValue.html(showIt(format(val)));
+              }else{
+                appPackage[key] = showPackage[key] = json[key];
+                $('#'+key).css('color', '#000');
+                $('#'+key).css('background-color', '#FFF');
+                spanValue.html(showIt(format(json[key])));
+              }
+            }
+          }
+          $('#'+key).bind('click', pairClick);
+        });
+}
+
+function submit(){
+  $.ajax({
+    cache : false,
+    url : "/application/manager/"+domain+"/submit/package",
+    type : "get",
+    dataType : "json",
+    data:appPackage,
+    error:function(){},
+    success:function(data){
+      if(data.status==='ok'){
+        sAlert('', '修改成功');
+      }else{
+        sAlert('警告', '修改失败:'+data.msg);
+      }
+    }
+  })
 }

@@ -9,7 +9,7 @@ var middleware = require('./middleware'),
     ctrAppDevelop = require('../controllers/appDevelop'),
     ctrAppManager = require('../controllers/appManager'),
     ctrAppOptimization = require('../controllers/appOptimization');
-    
+
 module.exports = function(app){
   //应用管理模块
   //显示
@@ -40,28 +40,30 @@ module.exports = function(app){
   }
   app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, ctrAppManager.addRecord);  //添加应用管理记录
   //应用开发
+  //code management
   app.get("/application/manage/:id/vermng", hasLogin, checkAuth, ctrAppDevelop.vermng);
-  app.get("/application/manage/:id/mongo", hasLogin, checkAuth, ctrAppDevelop.showMongo);
-  app.get("/application/manage/:id/load_mongo", hasLogin, checkAuth, ctrAppDevelop.loadMongoContent);
-  app.get("/application/manage/:id/todo", hasLogin, checkAuth, ctrAppDevelop.showTodo);
-  app.get("/application/manage/:id/load_todo", hasLogin, checkAuth, ctrAppDevelop.loadTodoContent);  
-  if(!nonGit){
-    app.post("/application/manage/:id/git", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitAction);  //git clone代码
-  }
+  app.post("/application/manage/:id/git", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitAction);  //git clone代码
   app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUpload);  //上传代码
   app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), ctrAppDevelop.doDownload);  //代码打包下载
   app.get("/application/download/:id.zip", hasLogin, ctrAppDevelop.downloading);
-  if(!nonGit){
-    app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
-  }
+  app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
   app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUploadImg);  //上传接口
+  //mongo
+  app.get("/application/manage/:id/mongo", hasLogin, checkAuth, ctrAppDevelop.showMongo);
+  app.get("/application/manage/:id/load_mongo", hasLogin, checkAuth, ctrAppDevelop.loadMongoContent);
   app.post("/application/manage/:id/createMongo", hasLogin, checkChangeAuth(2), ctrAppDevelop.createMongo);  //给应用分配mongoDB
   app.post("/application/manage/:id/queryMongo", hasLogin, checkChangeAuth(2), ctrAppDevelop.queryMongo);  //应用DB查询
+  //todo
+  app.get("/application/manage/:id/todo", hasLogin, checkAuth, ctrAppDevelop.showTodo);
+  app.get("/application/manage/:id/load_todo", hasLogin, checkAuth, ctrAppDevelop.loadTodoContent);  
   app.post("/application/manage/:id/todo/new", hasLogin, checkChangeAuth(2), ctrAppDevelop.newTodo);  //添加todo
   app.post("/application/manage/:id/todo/finish", hasLogin, checkChangeAuth(2), ctrAppDevelop.finishTodo);  //完成、恢复、删除
   app.post("/application/manage/:id/todo/recover", hasLogin, checkChangeAuth(2), ctrAppDevelop.recoverTodo);
   app.post("/application/manage/:id/todo/delete", hasLogin, checkChangeAuth(2), ctrAppDevelop.deleteTodo);
-  //应用调优
+   //package
+  app.get("/application/manage/:id/package", hasLogin, checkAuth, ctrAppDevelop.showPackage);  
+  app.get("/application/manage/:id/load_package", hasLogin, checkAuth, ctrAppDevelop.loadPackage);
+ //应用调优
   app.get("/application/manage/:id/applog", hasLogin, checkAuth, ctrAppOptimization.applog);
   app.post("/application/manage/:id/getStdOutput", hasLogin, checkAuth, ctrAppOptimization.getStdOutput);  //获取标准输出/错误
   //
