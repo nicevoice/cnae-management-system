@@ -754,3 +754,18 @@ exports.loadPackage = function(req, res){
   proxy.once('checked', parse);
   checkPackage();
 }
+
+/***
+ * 修改package.json
+ */
+exports.setPackage = function(req, res){
+  var domain = req.params.id||'';
+  var packagePath = path.join(uploadDir, domain, 'package.json');  
+  var packageStr = req.body.packageStr||"";
+  fs.writeFile(packagePath, packageStr, 'utf8', function(err){
+    if(err){
+      return res.sendJson({status:"error", msg:"write file error"})
+    }
+    return res.sendJson({status:"ok"})
+  })
+}

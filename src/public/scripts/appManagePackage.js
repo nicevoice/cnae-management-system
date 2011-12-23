@@ -101,7 +101,6 @@ var domain = url.slice(url.lastIndexOf('/') + 1);
 
 $(function(){
   getPackage();
-  $('#submit-package').click(submit);
 })
 /***
 * get package.json in apps
@@ -174,6 +173,11 @@ function bindMouse(){
     getAuth(domain, function(err, auth){
     if(auth.role<=2 && auth.active===1){
       $('.npm .pair').bind('click', pairClick);
+      $('#submit-package').click(submit);
+    }else{
+      $('#submit-package').click(function(){
+        sAlert('警告', '没有权限修改package.json');
+      })
     }
   })
 }
@@ -244,10 +248,13 @@ function bindInput(key){
 function submit(){
   $.ajax({
     cache : false,
-    url : "/application/manager/"+domain+"/submit/package",
-    type : "get",
+    url : "/application/manage/"+domain+"/submit/package",
+    type : "POST",
     dataType : "json",
-    data:appPackage,
+    data:{
+      packageStr:JSON.stringify(appPackage),
+      _csrf:_csrf
+      },
     error:function(){},
     success:function(data){
       if(data.status==='ok'){

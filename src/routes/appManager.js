@@ -63,6 +63,7 @@ module.exports = function(app){
    //package
   app.get("/application/manage/:id/package", hasLogin, checkAuth, ctrAppDevelop.showPackage);  
   app.get("/application/manage/:id/load_package", hasLogin, checkAuth, ctrAppDevelop.loadPackage);
+  app.post("/application/manage/:id/submit/package", hasLogin, checkChangeAuth(2), ctrAppDevelop.setPackage);
  //应用调优
   app.get("/application/manage/:id/applog", hasLogin, checkAuth, ctrAppOptimization.applog);
   app.post("/application/manage/:id/getStdOutput", hasLogin, checkAuth, ctrAppOptimization.getStdOutput);  //获取标准输出/错误
