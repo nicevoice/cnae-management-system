@@ -41,50 +41,34 @@
     "license": "MIT", 
     "engine": { 
       "node": ">=0.4" 
-    }             
+    },
+    "customHost":"cnodejs.net"             
   }
 
 var hints = {   //提示
-  "home": '这是编写package.json的交互式向导页面。<br/>单击可以编辑。<p style="color:#777">灰色为未输入项</p><p style="color:#F30">红色为必填项</p>',
-  "name": "The unique name of your package. <br/><br/> This will also indicate the name of the package in the <a href='http://search.npmjs.org'>NPM global repository</a> ( if you choose to publish it. ) <br/><br/> On <a href='http://nodejitsu.com'>Nodejitsu</a>, this property will represent the name of your application.",
-  "preferGlobal": "<a href='http://en.wikipedia.org/wiki/Flag_%28computing%29'>Flag</a> that indicates this package prefers to be installed globally. <br/><br/> This is usually reserved for packages that contain <a href='http://en.wikipedia.org/wiki/Command-line_interface'>command line interfaces</a> ( CLIs ). <br/> <br/> In most situations, you will <strong>NOT</strong> use this property.",
-  "version": "Version of the package as specified by <a href='http://semver.org'>Semantic Versioning</a>.<br/><br/> It's important to keep track of your package versions <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>in a smart way</a>. If you don't follow standard versioning techniques, it will be difficult for users to keep track of your packages. <br/><br/> Consider the following version updates: <br/><br/> 0.1.0 -> 0.1.1 should be <strong>non-breaking</strong>. <br/> 0.1.1 -> 0.2.0 could be <strong>breaking</strong>.",
-  "author": "The author of the project. <br/><br/>Hopefully one day soon, it will be your name!",
-  "description": "The description of the project. <br/><br/>Try to keep it short and concise.",
-  "contributors": "An array of objects representing contributors to the project. <br/><br/> Each object represents one contributor.",
-  "bin": "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of binary script names and node.js script paths. <br/> <br/> This is used to expose binary scripts from your package. It's useful for creating command line interfaces.",
-    "http-server" : "Installs a binary script called <strong>http-server</strong> which is linked to <strong>./bin/http-server</strong> in the local package. <br/><br/>If we have installed this package globally using <strong>npm install http-server -g</strong> we will be able to call this new command <strong>http-server</strong> from anywhere on our system.",
-  
-  "scripts": "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of <a href='http://blog.nodejitsu.com/npm-cheatsheet'>npm commands</a> and node.js script paths. <br/> <br/> This is used to map specific entry points into your package that npm can use <a href='http://blog.nodejitsu.com/npm-cheatsheet'>in all sorts</a> of cool ways.",
-    "start": "The start-up script for the package. <br/><br/>When running <strong>npm start</strong> this script will be called.",
-    "test": "The test script for the package. <br/><br/>When running <strong>npm test</strong> this script will be called.",
-    
-  "main": "The main entry point of the package. <br/><br/>When calling <strong>require('http-server')</strong> in node.js this is the file that will actually be required.<br/><br/>It's <strong>highly advised</strong> that requiring the <strong>main</strong> file <strong>NOT</strong> generate any side-effects. <br/><br/>For instance, requiring the main file should <strong>NOT</strong> start up an HTTP server or connect to database. Instead, you should create something like <strong>exports.init</strong> in your <strong>main</strong> script.",
-  
-  "repository": "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of source code repositories. <br/><br/> In our case, we will specify a <a href='http://git-scm.com/'>git</a> repository hosted on <a href='http://github.com/'>Github</a>",
-    "type": "Type of source code repository. <br/><br/> In our case, <a href='http://git-scm.com/'>git</a>.",
-    "url": "URL of source code repository. <br/><br/> In our case, <a href='http://github.com/'>Github</a>.",
-  "keywords": "An array of keywords which describe your package. <br/><br/>This is useful for users who search for packages on <a href='http://search.npmjs.org/'>search.npmjs.org</a>",
-  "dependencies": "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of npm packages and versions. <br/> <br/> This is used to specify the <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>dependencies for your packages</a>.",
-    "colors"   : "Require the <a href='http://github.com/marak/colors.js'>colors</a> module as a dependency with a wildcard version. <br/><br/> Using a <strong>wildcard</strong> version is usually <strong>NOT</strong> recommended. <br/><br/>Colors is unique, in that it's API is intended to always be backwards compatible. <br/><br/> Most packages will be too complex to ever work with a wildcard version.",
-    "optimist" :  "Require the <a href='http://github.com/substack/node-optimist'>optimist</a> module as a dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>0.2.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-    "flatiron" :  "Require the <a href='http://github.com/flatiron/flatiron'>flatiron</a> module as a dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>0.1.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-    "ecstatic" :  "Require the <a href='https://github.com/jesusabdullah/node-ecstatic'>ecstatic</a> module as a dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>0.1.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-    "union" :  "Require the <a href='http://github.com/flatiron/union'>union</a> module as a dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>0.1.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-  "noAnalyze": "<a href='http://en.wikipedia.org/wiki/Flag_%28computing%29'>Flag</a> that indicates if the package should not have it's source code analyzed in anyway.<br/><br/> Usually, you can simply <strong>ignore</strong> this field. <br/><br/> At <a href='http://nodejitsu.com'>Nodejitsu</a>, we will automatically attempt to scan packages for missing dependencies, bugs, and syntax errors. <br/><br/>If you are confident your package is correct you can set <strong>noAnalyze</strong> to <strong>true</strong>.",
-  
-  "devDependencies":  "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of npm packages and versions. <br/> <br/> This is used to specify <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>package dependencies</a> intended only for <strong>development</strong> purposes. <br/><br/> Usually, you will put <a href='http://en.wikipedia.org/wiki/Test_automation_framework'>testing framework dependencies</a> listed here. <br/><br/>Install these using: <strong>npm install --dev</strong>.",
-    "vows" : "Require the <a href='http://github.com/cloudhead/vows'>vows</a> module as a development dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>0.5.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-    "request": "Require the <a href='http://github.com/mikeal/request'>request</a> module as a dependency with a ranged version. <br/><br/>Using an <strong>x</strong> indicates that the package will attempt to use the highest value version for <strong>x</strong>. <br/><br/>In <strong>2.1.x</strong>, we have a wildcard <strong>ONLY</strong> for the <strong>patch</strong> version. <br/><br/>The hope here, is that the package author has followed <a href='http://blog.nodejitsu.com/package-dependencies-done-right'>best-practices</a> and <strong>patch</strong> versions of the package will <strong>NOT</strong> be breaking.",
-  "bundleDependencies": "An array containing a list of package names you have bundled in your package. <br/><br/>The convention here is to make sure your bundled dependencies exist in the <strong>node_modules/</strong> folder. <br/><br/>Packages listed in <strong>bundleDependencies</strong> will now remain locked into the version contained in the <strong>node_modules/</strong> folder.",
-  "license": "The license which you prefer to release your project under. <br/><br/> <a href='http://en.wikipedia.org/wiki/MIT_License'>MIT</a> is a good choice.",
-    "engine": "A <a href='http://stackoverflow.com/questions/2364289/what-exactly-is-a-hash-in-regards-to-json'>hash</a> containing key/pair mappings of <strong>engine</strong> versions. <br/> <br/> This is used to specify the versions of <a href='http://nodejs.org'>node.js</a> your package is <strong>known</strong> to work correctly with.",
-    "node": "The version of <a href='http://nodejs.org'>node.js</a> this package is <strong>known</strong> to work with. <br/><br/> Like dependencies, this uses <a href='http://semver.org'>Semantic Versioning</a>."
-  
+  "home": '这是编写package.json的交互式向导页面。<br/>单击可以编辑。<p style="color:#777">灰色为未输入项</p><p style="color:#F30">红色为必填项</p>'+
+          '<p class="exsits-package">黑色为已存在项</p><p class="warn-package exsits-package">黄色背景为类型不匹配项</p><p class="wrong-package">红色背景为输入有误</p>',
+  "name": "type:string<br/>在NAE上应用的名称。 <br/> 如果要发布到<a href='http://search.npmjs.org' target='_blank'>NPM</a>，这也将是模块在NPM的名称。 <br/>",
+  "preferGlobal": "type:boolean<br/>提示是否需要在安装的时候选择全局安装。<br/>在NAE上不需要填写。",
+  "version": "type:string<br/>标识应用的版本号，便于发布到NPM时追踪应用的版本。",
+  "author": "type:string<br/>作者。",
+  "description": "type:string<br/>应用的简短描述。",
+  "contributors": "type:array of objects<br/> 每一个对象代表一位贡献者。",
+  "bin": "type:key/value object<br />可执行脚本和node.js脚本路径。" ,  
+  "scripts": "type:key/value object<br />提供给NPM执行的脚本路径。",
+  "main": "type:string<br/>应用的执行入口，NAE必填选项，如果不填则会默认为./index.js。",
+  "keywords": "type:array of string <br/>描述关键词，发布到NPM时便于搜索。",
+  "dependencies": "type:key/value object<br/>应用依赖的模块和版本。",
+  "noAnalyze": "type:boolean<br/>标识应用（模块）的代码不需要任何的分析就可以使用。正常情况下可以忽略此选项。",
+  "devDependencies": "type:key/value object<br/>开发模式下的模块依赖和版本，通常在此写入测试框架依赖的模块。",
+  "bundleDependencies": "type:array of string<br/>已包含的模块，惯例是确认这些已包含模块在/node_modules文件夹中。<br/>同时这些模块的版本号将会固定为node_modules文件夹中模块的版本号。",
+  "license": "type:string<br />开源license",
+  "engine": "type:key/value object<br/>engine版本，通常会写入能够正常运行的node版本。",
+  "customHost": "type:String<br />NAE特有项。<br/>要绑定的自定义域名。"
 };
 //pair template
 var tplPair = '<span class="pair $color$" id="$key$">' +
-              '<span class="key">$key$</span> : ' + 
+              '<span class="key">$showKey$</span> : ' + 
               '<span class="value" id="$key$-value">$value$</span>,<br /></span>';
 
 
@@ -124,12 +108,18 @@ function getPackage(){
       for(var key in appPackage){
         if(exPackage[key]){
           showPackage[key] = appPackage[key];
-          colors[key] = {color:"exsits"};
+          colors[key] = {color:"exsits-package"};
         }
       }
       loadDefault();
     }
   })
+}
+/***
+ * format the value
+ */
+function fValue(value){
+  return (JSON.stringify ({a:value})).slice(5,-1);
 }
 /***
 *  load default info in exPackage
@@ -139,7 +129,8 @@ function loadDefault(){
   for(var key in showPackage){
     htmls.push(tplReplace(tplPair, {
       '$key$' : key,
-      '$value$' : format(showPackage[key]),
+      '$showKey$' : '"' + key + '"',
+      '$value$' : fValue(showPackage[key]),
       '$color$' : colors[key]?colors[key].color||'' : ''
     }));
   }
@@ -152,13 +143,14 @@ function loadDefault(){
 /***
 * change the package value to display
 */
-function showIt(value){
+function showIt(value, newline){
+  newline = newline || '<br />';
   return value.replace(/[\n\r]/g, '').
   replace(/[,\[\{]/g, function(data){
-    return data + '<br />';
+    return data + newline;
   }).
   replace(/[\]\}]/g, function(data){
-    return '<br />' + data;
+    return newline + data;
   });  
 }
 /***
@@ -186,20 +178,12 @@ function bindMouse(){
 */
 function pairClick(){
     var key = $(this).attr('id');
-    var showValue, addon='';
-    if(typeof  showPackage[key]==='string'){
-      showValue = showPackage[key];
-      addon='\"';
-    }else{
-      var showValue = format(showPackage[key]);
-    }
+    var showValue = fValue(showPackage[key]);
     valueHtmlLast[key] = $('#'+key+'-value').html();
-    if((showValue!==format(appPackage[key])&&showValue===format(exPackage[key]))){
+    if((showValue!==fValue(appPackage[key])&&showValue===fValue(exPackage[key]))){
       showValue = '';
-    }else{
-      showValue = addon + showValue + addon;
     }
-    var input = $('<input type=text id="'+key+'-input">');
+    var input = $('<input type=text id="'+key+'-input" style="width:300px">');
     input.attr('value', showValue);
     $('#'+key+'-value').html('').append(input);
 
@@ -211,40 +195,60 @@ function pairClick(){
 */
 function bindInput(key){
   $('#'+key+'-input').focus().  //first focus
-        bind('blur', function(){ //bind when blur
-          var val = $(this).val().trim();
-          var spanValue = $('#'+key+'-value');
-          if(val===format(showPackage[key])&&val!==format(exPackage[key])){
-            spanValue.html(valueHtmlLast[key]);
-          }else{
-            if(val===''){
-              spanValue.html(showIt(format(exPackage[key])));
-            }else{
-              var jsonStr = '{"' + $('#'+ key + ' .key').html() + '":' + val + '}';
-              var wrong = false;
-              var json;
-              try{
-                json = JSON.parse(jsonStr);
-              }catch(err){
-                wrong = true;
-              }
-              if(wrong){
-                showPackage[key] = val;
-                $('#'+key).css('color', '#777');
-                $('#'+key).css('background-color', '#FCC');
-                spanValue.html(showIt(format(val)));
-              }else{
-                appPackage[key] = showPackage[key] = json[key];
-                $('#'+key).css('color', '#000');
-                $('#'+key).css('background-color', '#FFF');
-                spanValue.html(showIt(format(json[key])));
-              }
-            }
-          }
-          $('#'+key).bind('click', pairClick);
+        bind('blur', {key:key}, checkPackage).
+        keydown(function(e){
+          if(e.keyCode===13){
+            checkPackage.call(this, {data:{key:key}});
+          } 
         });
 }
 
+function checkPackage(e) {//bind when blur
+  var val = $(this).val().trim();
+  var key = e.data.key;
+  var spanValue = $('#' + key + '-value');
+  if(val === format(showPackage[key]) && val !== format(exPackage[key])) {
+    spanValue.html(valueHtmlLast[key]);
+  } else {
+    if(val === '') {
+      spanValue.html(showIt(format(exPackage[key])));
+      $('#' + key).removeClass('exsits-package warn-package wrong-package');
+      delete appPackage[key];
+    } else {
+      var jsonStr = '{' + $('#' + key + ' .key').html() + ':' + val + '}';
+      var wrong = false;
+      var json;
+      try {
+        json = JSON.parse(jsonStr);
+      } catch(err) {
+        wrong = true;
+      }
+      if(wrong) {
+        showPackage[key] = val;
+        $('#'+key).addClass('wrong-package');
+        spanValue.html(showIt(format(val)));
+      } else {
+        appPackage[key] = showPackage[key] = json[key];
+        $('#' + key).removeClass('wrong-package warn-package').addClass('exsits-package');
+        spanValue.html(showIt(fValue(json[key])));
+        if(json[key].constructor !== exPackage[key].constructor){
+           $('#' + key).addClass('warn-package');
+        }
+      }
+    }
+  }
+  $('#' + key).bind('click', pairClick);
+}
+
+function tofile(obj){
+  newline = '\n\r';
+  var tmpStrs = ['{'+newline];
+  for(var key in obj){
+    tmpStrs.push('"'+key+'":');
+    tmpStrs.push(fValue(obj[key])+','+newline);
+  }
+  return tmpStrs.join('').slice(0, -3) + newline+'}';
+}
 function submit(){
   $.ajax({
     cache : false,
@@ -252,7 +256,7 @@ function submit(){
     type : "POST",
     dataType : "json",
     data:{
-      packageStr:JSON.stringify(appPackage),
+      packageStr:tofile(appPackage),
       _csrf:_csrf
       },
     error:function(){},

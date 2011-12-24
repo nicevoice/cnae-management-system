@@ -39,8 +39,14 @@ background-color:#CCC;
 padding:0px;
 margin:0px;
 }
-.exsits{
+.exsits-package{
 	color:#000;
+}
+.warn-package{
+  background-color: #FF6;
+}
+.wrong-package{
+  background-color:#FCC;
 }
 #submit-package{
   margin:30px 0px 30px 450px;

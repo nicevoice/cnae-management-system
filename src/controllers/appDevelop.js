@@ -746,7 +746,7 @@ exports.loadPackage = function(req, res){
       try{
         appPackage = JSON.parse(file);
       }catch(err){
-        return res.sendJson({status:"error", msg:"parse package.json error: " + err.Tostring()});
+        return res.sendJson({status:"error", msg:"parse package.json error: " + err.toString()});
       }
       return res.sendJson({status:"ok", appPackage : appPackage});
     })
