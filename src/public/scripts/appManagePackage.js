@@ -74,7 +74,6 @@ var tplPair = '<span class="pair $color$" id="$key$">' +
 
 var appPackage = {};  //save already typed package item
 var showPackage = clone(exPackage); //package to display
-var valueHtmlLast = {}; //save last value of html
 var error = "";       //save error (package.json's error)
 
 var colors = {};  //save back-ground color & color for each row
@@ -179,7 +178,6 @@ function bindMouse(){
 function pairClick(){
     var key = $(this).attr('id');
     var showValue = fValue(showPackage[key]);
-    valueHtmlLast[key] = $('#'+key+'-value').html();
     if((showValue!==fValue(appPackage[key])&&showValue===fValue(exPackage[key]))){
       showValue = '';
     }
@@ -207,12 +205,10 @@ function checkPackage(e) {//bind when blur
   var val = $(this).val().trim();
   var key = e.data.key;
   var spanValue = $('#' + key + '-value');
-  if(val === format(showPackage[key]) && val !== format(exPackage[key])) {
-    spanValue.html(valueHtmlLast[key]);
-  } else {
     if(val === '') {
-      spanValue.html(showIt(format(exPackage[key])));
+      spanValue.html(showIt(fValue(exPackage[key])));
       $('#' + key).removeClass('exsits-package warn-package wrong-package');
+      showPackage[key] = exPackage[key];
       delete appPackage[key];
     } else {
       var jsonStr = '{' + $('#' + key + ' .key').html() + ':' + val + '}';
@@ -236,7 +232,6 @@ function checkPackage(e) {//bind when blur
         }
       }
     }
-  }
   $('#' + key).bind('click', pairClick);
 }
 
