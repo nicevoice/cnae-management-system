@@ -23,19 +23,20 @@ var EventProxy = require('EventProxy.js').EventProxy,
  * @param {} res
  */
 exports.show = function(req, res){
-/*    find(user, {}, function(err, data){
-        for(var i=0, len=data.length; i!=len; ++i){
-            var codes = [];
-            for(var j=0; j!=config.maxCode; ++j){
-                codes.push(randomStringNum(11));
-            }
-            (function(codes, email){
-                console.log(email);
-                console.log(codes);
-                update(user, {email:email}, {$set:{inviteCode:codes}});
-            })(codes, data[i].email);
-        }
-    })*/
+    // find(user, {}, function(err, data){
+    //     for(var i=0, len=data.length; i!=len; ++i){
+    //         var codes = [];
+    //         for(var j=0; j!=config.maxCode; ++j){
+    //             codes.push(randomStringNum(11));
+    //         }
+    //         (function(codes, email){
+    //             console.log(email);
+    //             console.log(codes);
+    //             update(user, {email:email}, {$set:{inviteCode:codes}});
+    //         })(codes, data[i].email);
+    //     }
+    // })
+    update(user, {}, {$set:{status:0}});
     res.redirect('/userCenter/userInfo');
 };
 /***

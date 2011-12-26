@@ -21,7 +21,7 @@ exports.show = function(req, res){
     if(req.headers.referer&&req.headers.referer.indexOf('resetpassword')>=0){
       warn = "密码重置成功";
     }
-    res.render("login", {layout:'layoutLogin', warn:warn, redirectUrl:redirectUrl});
+    res.render("login", {layout:'layoutLogin', warn:warn, redirectUrl:redirectUrl, email:""});
 };
 /***
  * 检测登录请求
@@ -35,7 +35,7 @@ exports.checkLogin = function(req, res){
 		  redirectUrl = req.body.redirectUrl||'',
 		  autoLogin = req.body.remeber_me||'';
 	//数据库查找
-	findOne(user, {email:userEmail.toString(), password:md5(password.toString()+config.md5_secret)}, function(err, item){
+	findOne(user, {email:userEmail.toString()}, function(err, item){
 		if(err){
 			log.error(err.toString());
 			return res.render("error", {message:"数据库查询错误"});
@@ -44,9 +44,26 @@ exports.checkLogin = function(req, res){
 			if (!item) {
         return res.render("login", {
           layout:'layoutLogin',
-          warn: "用户名或密码错误",
-          redirectUrl:redirectUrl
+          warn: "邮箱输入错误",
+          redirectUrl:redirectUrl,
+          email:userEmail
         });
+      }
+      if(item.status===1){
+        return res.render("login", {
+          layout:'layoutLogin',
+          warn : '此帐号尚未激活',
+          redirectUrl:redirectUrl,
+          email:userEmail
+        })
+      }
+      if(item.password!==md5(password.toString()+config.md5_secret)){
+         return res.render("login", {
+          layout:'layoutLogin',
+          warn: "密码错误",
+          redirectUrl:redirectUrl,
+          email:userEmail
+        });       
       }
       else {
         log.info(userEmail + " login");

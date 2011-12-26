@@ -15,7 +15,7 @@
 	            	    <input type="hidden" name="_csrf" value=<%=_csrf%>>
                     <div class="field-group">
                         <label class="required title" for="email">Email:</label>
-                        <input type="text" name="email" id="email" tabindex="1" class="input1" value="" style="width:250px">
+                        <input type="text" name="email" id="email" tabindex="1" class="input1" value="<%= email%>" style="width:250px">
                         <span class="error" id="loginWarn"><%= warn %></span> 
                         <br />
                     </div>
@@ -46,3 +46,4 @@
     <div style="margin:30px;height:20px;"></div>
     <div class="clr"></div>
 </div>
+<script src="/scripts/login.js?v=1.0.1" type="text/javascript"></script>

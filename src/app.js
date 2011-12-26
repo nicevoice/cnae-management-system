@@ -52,7 +52,7 @@ app.use(connect.session({
 app.use(connect.bodyParser());
 app.use(connect.csrf());
 //log
-connect.logger.token('email', function(req ,res){return req.session.email;});
+connect.logger.token('email', function(req ,res){return req.session&&req.session.email;});
 connect.logger.token('body', 
 function(req, res){
   var body = req.body, bodyStr="";

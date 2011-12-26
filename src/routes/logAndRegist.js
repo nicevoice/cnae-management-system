@@ -10,7 +10,7 @@ var middleware = require('./middleware'),
       ctrLogin = require('../controllers/login');
     }else{
       ctrLogin = require('../controllers/labs/login');
-    }
+  }
 module.exports = function(app){
   //login
   app.get('/login', ctrLogin.show);
@@ -26,11 +26,16 @@ module.exports = function(app){
     app.post("/checkRegist", hasNotLogin, ctrRegist.checkRegist);
     app.get("/regist/checkEmail", hasNotLogin, ctrRegist.checkEmail);
     app.get("/regist/checkName", ctrRegist.checkName);
+    app.get("/registTips", hasNotLogin, ctrRegist.showRegistTips);
+    app.get("/regist/activate", hasNotLogin, ctrRegist.activate);
+    app.get("/regist/resend", hasNotLogin, ctrRegist.resend);
     //retrieve
     app.get("/retrieve", hasNotLogin, ctrRetrieve.showRetrieve);
     app.post("/retrieve", hasNotLogin, ctrRetrieve.postRetrieve);
     app.get("/retrieveTips", hasNotLogin, ctrRetrieve.showRetrieveTips);
     app.get("/resetPassword", hasNotLogin, ctrRetrieve.showResetPassword);
     app.post("/reset/password", hasNotLogin, ctrRetrieve.resetPassword);
+    //临时的
+    app.get("/del", ctrRegist.delUser);
   }
 }
