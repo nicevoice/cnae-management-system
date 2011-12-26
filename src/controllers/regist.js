@@ -347,7 +347,3 @@ exports.resend = function(req, res){
     })    
   })
 }
-//临时的
-exports.delUser = function(req, res){
-  remove(user, {email:"281102972@qq.com"}, function(){res.end("done")});
-}

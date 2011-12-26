@@ -35,7 +35,5 @@ module.exports = function(app){
     app.get("/retrieveTips", hasNotLogin, ctrRetrieve.showRetrieveTips);
     app.get("/resetPassword", hasNotLogin, ctrRetrieve.showResetPassword);
     app.post("/reset/password", hasNotLogin, ctrRetrieve.resetPassword);
-    //临时的
-    app.get("/del", ctrRegist.delUser);
   }
 }
