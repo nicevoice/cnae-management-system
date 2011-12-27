@@ -478,8 +478,6 @@ function restart(){
 			    getStd();
 				addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 			}
-			getOutput("stdout");
-			getOutput("stderr");
 		}
 	});	
 }
@@ -487,17 +485,15 @@ function restart(){
 *  get std
 */
 function getStd(){
-	alert(1);
-	socket = io.connect('http://'+location.host+'/logs');
+	socket = io.connect('http://'+location.host);
 	var stdout = $('#stdout'), stderr = $('#stderr');
-	socket.on('stdout', function(data){
-		fillStd(stdout, handleLog(getColor(htmlspecialchars(data.log))));
-	})
-	socket.on('stderr', function(data){
-		fillStd(stdout, CLI.loader.setErrorstack(
-			handleLog(
-				getColor(
-					htmlspecialchars(data.log)))));		
+	socket.on('message', function(data){
+		var type = data.slice(0, 3), log = data.slice(3);
+		if(type==='out'){
+            fillStd(stdout, handleLog(getColor(htmlspecialchars(log))));
+		}else{
+			fillStd(stderr,CLI.loader.setErrorstack(handleLog(getColor(htmlspecialchars(log))))); 
+		}
 	})
 }
 function fillStd(div, log){

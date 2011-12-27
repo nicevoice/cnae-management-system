@@ -25,6 +25,7 @@ Logs.prototype.initAuth = function(){
   console.log('initAuth');
   var _self = this;
   this.io.set('authorization', function(data, accept){
+     console.log('auth');
     var proxy = new ep();
     //get sessionId from cookie & get session from sessionStore
     var parse = function(){
@@ -65,6 +66,7 @@ Logs.prototype.initAuth = function(){
           if(info.active===0||info.role>2){
             return accept('permission denied', false);
           }
+console.log('accept');
           accept(null, true);
         })
     }
@@ -79,26 +81,29 @@ Logs.prototype.initAuth = function(){
 Logs.prototype.initConn = function(){
   console.log('initConn');
   var _self = this;
-  this.io.of('/logs').
-  on('connection', function(socket){  // some socket connect
+  this.io.sockets.on('connection', function(socket){  // some socket connect
     var hs = socket.handshake;
     console.log(hs.appDomain, 'connected');
-    if(!_self.io.sockets.in(hs.appDomain).sockets){
-      _self.appLogs.appDomain = _self.getLogs(appDomain);
+    if(!_self.appLogs[hs.appDomain]){
+      console.log('init room ', hs.appDomain );
+      _self.appLogs[hs.appDomain] = _self.getLogs(hs.appDomain);
     }
     socket.join(hs.appDomain);
     //some socket disconnect
     socket.on('disconnect', function(){
       console.log(hs.appDomain, 'a socket disconnected');
       if(!_self.io.sockets.in(hs.appDomain).sockets){
-         _self.appDomain.stdout.distroy();
-         _self.appDomain.stderr.distroy();
+         console.log('room distroy ', hs.appDomain);
+         _self.appLogs[hs.appDomain].stdout.distroy();
+         _self.appLogs[hs.appDomain].stderr.distroy();
+         delete _self.appLogs[hs.appDomain];
       }
     })
   });
 }
 
 Logs.prototype._getLog = function(action, appDomain){
+  var _self = this;
   var socket = net.createConnection(config.socketPort);
   socket.on('error',function(e){
         log.error(e.message);
@@ -124,10 +129,11 @@ Logs.prototype.initEp = function(){
   console.log('initEp');
   var _self = this;
   this.proxy.on('stdoutpipe', function(data){
-    _self.io.sockets.in(data.appDomain).emit('stdout', {log:data.data.toString('utf8')});
+    console.log(data.data.toString());
+    _self.io.sockets.in(data.appDomain).send("out"+data.data.toString());
   })
   this.proxy.on('stderrpipe', function(data){
-    _self.io.sockets.in(data.appDomain).emit('stderr', {log:data.data.toString('utf8')});
+    _self.io.sockets.in(data.appDomain).send("err"+data.data.toString());
   })
 }
 Logs.create = function(app, getSession){
