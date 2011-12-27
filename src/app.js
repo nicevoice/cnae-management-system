@@ -42,10 +42,11 @@ app.use(connect.favicon());
 app.use(connect.static(__dirname+'/public', {maxAge: 3600000 * 24 * 365}));
 
 //session和cookie
+var sessionStore = new RedisStore({pass:config.redisPassword});
 app.use(connect.cookieParser());
 app.use(connect.session({
     secret: config.session_secret,
-    store : new RedisStore({pass:config.redisPassword})
+    store : sessionStore
 }));
 
 //post
@@ -73,7 +74,21 @@ app.use(render({
         config:config,
     }
 }));
-
+/***
+* socket.io for logs 
+*/
+var i=0;
+var getSession = function(id, cb){
+  sessionStore.get(id, function(err, session){
+  //  console.log(++i, id, err, session);
+    if(err){
+      cb(err);
+    }else{
+      cb(null, session)
+    }
+  })
+}
+require('./controllers/logSocketIO')(app, getSession);
 //routing
 fs.readdirSync(__dirname + '/routes').forEach(function(filename){
   if (!/\.js$/.test(filename)||filename==='middleware.js') return;

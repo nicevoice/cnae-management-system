@@ -8,6 +8,7 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
+var socket;				//socket.io
 
 var setTabAction = function() {
 	$(".tab").live({
@@ -462,14 +463,7 @@ function restart(){
 						success:function(data) {
 							if(data.status === "ok") {
 							    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
-								window.clearInterval(outTimer);
-								window.clearInterval(errTimer);
-								outTimer = window.setInterval(function(){
-									getOutput("stdout");
-								}, interval);
-								errTimer = window.setInterval(function(){
-									getOutput("stderr");
-								}, interval);
+							    getStd();
 								addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 							} else {
 								showMsg2(NAEIDE_config.LANG.apps.restartFailed + ": " + data.msg);
@@ -481,14 +475,7 @@ function restart(){
 				}
 			} else {
 			    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
-				window.clearInterval(outTimer);
-				window.clearInterval(errTimer);
-				outTimer = window.setInterval(function(){
-					getOutput("stdout");
-				}, interval);
-				errTimer = window.setInterval(function(){
-					getOutput("stderr");
-				}, interval);
+			    getStd();
 				addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 			}
 			getOutput("stdout");
@@ -496,62 +483,36 @@ function restart(){
 		}
 	});	
 }
-//获取stdErr和stdOut
-function getOutput(action){
-	$.ajax({
-		cache:false,
-		type:"post",
-		url:"/application/manage/"+DOMAIN+"/getStdOutput",
-		dataType:"json",
-		data:{action:action,_csrf:_csrf},
-		error:function(){
-			$("#"+action).html(action + NAEIDE_config.LANG.apps.getInfFailed);
-			/*window.clearTimeout(outTimer);
-			window.clearTimeout(errTimer);
-			if(action == "stdout"){
-				outTimer = window.setTimeout(function(){
-					getOutput(action);
-				}, 30000);
-			}
-			else{
-				errTimer = window.setTimeout(function(){
-					getOutput(action);
-				}, 30000);
-			}*/					
-		},
-		success:function(data){
-			var d = htmlspecialchars(data.output);
-      		d = getColor(d);
-      		d = handleLog(d);
-      		if(action === "stderr") d = CLI.loader.setErrorstack(d);
-			$("#"+action).html(d);
-      var pOnDiv;
-      if(action==="stdout"){
-        pOnDiv = onStdOut;
-      }else{
-        pOnDiv = onStdErr;
-      }
-      if (!pOnDiv) {
-        if (!document.getElementById) 
-          return;
-        var outDiv = document.getElementById(action);
-        outDiv.scrollTop = outDiv.scrollHeight;
-      }
-      /*
-			window.clearTimeout(outTimer);
-			window.clearTimeout(errTimer);
-			if(action == "stdout"){
-				outTimer = window.setTimeout(function(){
-					getOutput(action);
-				}, 3000);
-			}
-			else{
-				errTimer = window.setTimeout(function(){
-					getOutput(action);
-				}, 3000);
-			}*/
-		}
-	});	
+/***
+*  get std
+*/
+function getStd(){
+	alert(1);
+	socket = io.connect('http://'+location.host+'/logs');
+	var stdout = $('#stdout'), stderr = $('#stderr');
+	socket.on('stdout', function(data){
+		fillStd(stdout, handleLog(getColor(htmlspecialchars(data.log))));
+	})
+	socket.on('stderr', function(data){
+		fillStd(stdout, CLI.loader.setErrorstack(
+			handleLog(
+				getColor(
+					htmlspecialchars(data.log)))));		
+	})
+}
+function fillStd(div, log){
+	div.html(div.html()+log);
+	var pOnDiv;
+	if(div.attr('id')==='stdout'){
+		pOnDiv = onStdOut;
+	}else{
+		pOnDiv = onStdErr;
+	}
+	if (!pOnDiv) {
+		if (!document.getElementById) 
+		  return;
+		div.scrollTop = outDiv.scrollHeight;
+	}
 }
 
 /*

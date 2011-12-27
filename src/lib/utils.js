@@ -191,7 +191,6 @@ exports.getLog = function(action, name, num, callback){
         socket.destroy();
     })
 }
-
 /**
  *  http request
  */
