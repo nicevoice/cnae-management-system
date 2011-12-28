@@ -8,7 +8,7 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
-var socket;				//socket.io
+var socket, on=false;				//socket.io
 
 var setTabAction = function() {
 	$(".tab").live({
@@ -436,6 +436,10 @@ addRecord = function(domain, action){
 
 //重启应用
 function restart(){
+    if(!on){
+	    getStd();
+        on = true;
+    }
 	$.ajax({
 		cache:false,
 		type:"post",
@@ -463,7 +467,6 @@ function restart(){
 						success:function(data) {
 							if(data.status === "ok") {
 							    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
-							    getStd();
 								addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 							} else {
 								showMsg2(NAEIDE_config.LANG.apps.restartFailed + ": " + data.msg);
@@ -475,7 +478,6 @@ function restart(){
 				}
 			} else {
 			    showMsg2(NAEIDE_config.LANG.apps.restartSucceed);
-			    getStd();
 				addRecord(DOMAIN, NAEIDE_config.LANG.apps.restart);
 			}
 		}
@@ -498,16 +500,18 @@ function getStd(){
 }
 function fillStd(div, log){
 	div.html(div.html()+log);
-	var pOnDiv;
-	if(div.attr('id')==='stdout'){
+	var pOnDiv, divId = div.attr('id');
+	if(divId === 'stdout'){
 		pOnDiv = onStdOut;
 	}else{
 		pOnDiv = onStdErr;
 	}
 	if (!pOnDiv) {
-		if (!document.getElementById) 
-		  return;
-		div.scrollTop = outDiv.scrollHeight;
+        if(!document.getElementById){
+          return false;
+        }
+        var outDiv = document.getElementById(divId);
+        outDiv.scrollTop = outDiv.scrollHeight;
 	}
 }
 

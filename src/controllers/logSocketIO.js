@@ -3,6 +3,7 @@ var sio = require('socket.io');
 var parseCookie = require('connect').utils.parseCookie;
 var ep = require('EventProxy.js').EventProxy;
 var config = require('../config');
+var log = config.logWithFile;
 //model
 var findOne = require('../models/index').findOne;
 var app_mem = config.dbInfo.collections.app_member;
@@ -12,6 +13,7 @@ var Logs = function(app, getSession){
   this.appLogs = {};  //stream of app's logs
   this.proxy = new ep();
   this.io = require('socket.io').listen(app);
+  this.io.set('log level', 1); 
   this.getSession = getSession;
   this.initEp();
   this.initAuth();
@@ -22,25 +24,19 @@ var Logs = function(app, getSession){
 *  init authorization for logs in socket.io
 */
 Logs.prototype.initAuth = function(){
-  console.log('initAuth');
   var _self = this;
   this.io.set('authorization', function(data, accept){
-     console.log('auth');
     var proxy = new ep();
     //get sessionId from cookie & get session from sessionStore
     var parse = function(){
       if(data.headers.cookie){
         data.cookie = parseCookie(data.headers.cookie);
         data.sessionId = data.cookie['connect.sid'];
-        // console.log(++i);
         _self.getSession(data.sessionId, function(err, session){
-          // console.log(++j, data.sessionId);
           if(err || !session){
-            // console.log('err');
             proxy.unbind();
             return accept(err.toString(), false);
           }else{
-            // console.log('fire');
             data.session = session;
             proxy.fire('session_got');
           }
@@ -66,7 +62,6 @@ Logs.prototype.initAuth = function(){
           if(info.active===0||info.role>2){
             return accept('permission denied', false);
           }
-console.log('accept');
           accept(null, true);
         })
     }
@@ -79,29 +74,44 @@ console.log('accept');
 *  init the connect event of socket
 */
 Logs.prototype.initConn = function(){
-  console.log('initConn');
   var _self = this;
   this.io.sockets.on('connection', function(socket){  // some socket connect
     var hs = socket.handshake;
-    console.log(hs.appDomain, 'connected');
+    //console.log(hs.appDomain, 'connected');
     if(!_self.appLogs[hs.appDomain]){
-      console.log('init room ', hs.appDomain );
-      _self.appLogs[hs.appDomain] = _self.getLogs(hs.appDomain);
+     // console.log('init room ', hs.appDomain );
+      _self.createLogSocket(hs.appDomain);
+      _self.appLogs[hs.appDomain].nums = 1;
+    }else{
+      ++_self.appLogs[hs.appDomain].nums;
+      //_self.createLogSocket(hs.appDomain);
     }
     socket.join(hs.appDomain);
-    //some socket disconnect
-    socket.on('disconnect', function(){
-      console.log(hs.appDomain, 'a socket disconnected');
-      if(!_self.io.sockets.in(hs.appDomain).sockets){
-         console.log('room distroy ', hs.appDomain);
-         _self.appLogs[hs.appDomain].stdout.distroy();
-         _self.appLogs[hs.appDomain].stderr.distroy();
-         delete _self.appLogs[hs.appDomain];
+var sstdout = _self.appLogs[hs.appDomain].stdout;
+    //console.log(hs.appDomain, sstdout);
+
+    socket.on('message', function(msg){
+      if(msg.indexOf('restart')===0){
+        _self.destroyLogSocket([msg.slice(7)]);
       }
     })
+    //some socket disconnect
+    socket.on('disconnect', function(){
+      //console.log(hs.appDomain, 'a socket disconnected');
+      --_self.appLogs[hs.appDomain].nums;
+      //console.log(_self.appLogs[hs.appDomain].nums);
+      if(_self.appLogs[hs.appDomain].nums<=0){
+        // console.log('room distroy ', hs.appDomain);
+         _self.destroyLogSocket(hs.appDomain);
+         delete _self.appLogs[hs.appDomain];
+      }
+    });
   });
 }
-
+Logs.prototype.destroyLogSocket = function(appDomain){
+  this.appLogs[appDomain].stdout.end();
+  this.appLogs[appDomain].stderr.end();
+}
 Logs.prototype._getLog = function(action, appDomain){
   var _self = this;
   var socket = net.createConnection(config.socketPort);
@@ -113,23 +123,29 @@ Logs.prototype._getLog = function(action, appDomain){
   socket.on('data', function(data){
     _self.proxy.fire(action, {appDomain:appDomain, data:data});
   })
+  socket.on('close', function(data){
+    //console.log('close');
+    if(_self.appLogs[appDomain]&&_self.appLogs[appDomain].nums>0){
+      _self.appLogs[appDomain][action.slice(0,6)] = _self._getLog(action, appDomain);
+    }
+  })
   return socket;
 }
-Logs.prototype.getLogs = function(appDomain){
-  return {
-    stdout : this._getLog('stdoutpipe', appDomain),
-    stderr : this._getLog('stderrpipe', appDomain)
-  }
+Logs.prototype.createLogSocket = function(appDomain){
+    if(!this.appLogs[appDomain]){
+      this.appLogs[appDomain] = {};
+    }
+    this.appLogs[appDomain].stdout = this._getLog('stdoutpipe', appDomain);
+    this.appLogs[appDomain].stderr = this._getLog('stderrpipe', appDomain);
 }
 
 /***
 * bind eventproxy's event&callback
 */
 Logs.prototype.initEp = function(){
-  console.log('initEp');
+  //console.log('initEp');
   var _self = this;
   this.proxy.on('stdoutpipe', function(data){
-    console.log(data.data.toString());
     _self.io.sockets.in(data.appDomain).send("out"+data.data.toString());
   })
   this.proxy.on('stderrpipe', function(data){
