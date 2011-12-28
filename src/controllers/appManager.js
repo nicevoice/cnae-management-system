@@ -4,10 +4,11 @@ var config = require('../config'),
     urlMoudle = require('url'),
     //models    
     model = require('../models/index'), 
-    collectonNames = config.dbInfo.collections, 
-    app_mem = collectonNames.app_member, 
-    app_basic = collectonNames.app_basic, 
-    app_record = collectonNames.app_record, 
+    collectionNames = config.dbInfo.collections, 
+    user = collectionNames.user,
+    app_mem = collectionNames.app_member, 
+    app_basic = collectionNames.app_basic, 
+    app_record = collectionNames.app_record, 
     find = model.find, 
     findOne = model.findOne, 
     insert = model.insert, 
@@ -350,6 +351,33 @@ exports.doCoopmng = function(req, res) {
       }
     });
   }
+}
+/***
+*  查询所有用户，输入提示时用
+*/
+exports.getEmails = function(req, res){
+  var qs = urlMoudle.parse(req.url, true).query,
+      emailMatch = decodeURIComponent(qs.emailMatch||''),
+      limit = parseInt(decodeURIComponent(qs.limit||''));
+      console.log(emailMatch, limit);
+  if(!emailMatch||emailMatch.length < 3){
+    return res.sendJson({status:"error", msg:"input too short"})
+  }
+  var options = {};
+  if(limit){
+    options.limit = limit;
+  }
+  find(user, {email:new RegExp(emailMatch)}, {email:1}, options, function(err, data){
+    if(err){
+      log.error(err.toString());
+      return res.sendJson({status:"error", msg:"db error"});
+    }
+    // var emails = [];
+    // for(var i=0, len=data.length; i!=len; ++i){
+    //   emails.push(data[i].email);
+    // }
+    res.sendJson({status:"ok", emails:data});
+  })
 }
 /***
  * 处理删除合作者请求

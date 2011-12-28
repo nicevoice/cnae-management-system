@@ -25,6 +25,7 @@ module.exports = function(app){
   app.get("/application/manage/:id/appmng", hasLogin, checkAuth, ctrAppManager.appmng);
   app.get("/application/manage/:id/load_appmng", hasLogin, checkAuth, ctrAppManager.loadAppmng);
   if (!labs) {
+    app.get("/get/emails", hasLogin, ctrAppManager.getEmails); //查询email
     app.get("/application/manage/:id/coopmng", hasLogin, checkAuth, ctrAppManager.coopmng);
     app.get("/application/manage/:id/load_coopmng", hasLogin, checkAuth, ctrAppManager.loadCoopmng);
     app.get("/application/manage/:id/mnglog", hasLogin, checkAuth, ctrAppManager.mnglog);

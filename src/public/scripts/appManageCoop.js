@@ -4,6 +4,10 @@ var domain = url.slice(url.lastIndexOf('/') + 1);
 $(function() {
   loadCoopInfo();
 });
+/***
+*  set autoComplete to email input
+*/
+
 function loadCoopInfo() {
   $.ajax({
     cache : false,
@@ -16,6 +20,7 @@ function loadCoopInfo() {
       if(data.status === "ok") {
         renderCoopInfo(data.content.own, data.content.mems);
         bindButtons();
+        autoComplete();
       } else {
         sAlert("警告", data.msg);
       }
@@ -106,6 +111,38 @@ function renderCoopInfo(own, mems){
     $("#invite-form").css("display", "block");
   }    
 }
+function autoComplete(){
+  $("#inviteEmail").autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/get/emails",
+          dataType: "json",
+          data: {
+            limit: 10,
+            emailMatch: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.emails, function( item ) {
+              return {
+                label: item.email,
+                value: item.email
+              }
+            }));
+          }
+        });
+      },
+      minLength: 3,
+      select: function( event, ui ) {
+        $("#inviteEmail").val(this.label);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+}
 
 function bindButtons() {
   $.ajax({
@@ -147,6 +184,7 @@ function bindCoop() {
     }
   });
 }
+
 
 //发出邀请
 function submitInvite() {
@@ -195,6 +233,10 @@ function submitInvite() {
     }
   });
   return false;
+}
+
+function getEmails(){
+  
 }
 
 //删除成员
@@ -266,6 +308,7 @@ function agreeCoop() {
     }
   });
 }
+
 
 function refuseCoop() {
   var reason = "";
