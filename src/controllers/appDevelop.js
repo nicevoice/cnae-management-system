@@ -448,6 +448,8 @@ exports.queryMongo = function(req, res) {
       msg: "该操作不被允许"
     });
   }
+  queryString.replace(/\$/g, '\\$').
+              replace(/"/g, '\\"');
   queryString = "\"" + queryString + "\"";
   findOne(user, {
     email: req.session.email
