@@ -87,19 +87,19 @@ function bindButtions() {
         });
       } else {
         $("#queryDb").click(queryDb);
+        $("#queryString").keydown(function(e) {
+          if(e.keyCode === 13) {
+            queryDb();
+          }else if(e.keyCode === 38){
+              $("#queryString").val(querys.length>0?querys[index--] :"");
+              if(index<0) index = 0;
+          }else if(e.keyCode === 40){
+              if(index+1 === querys.length)
+                  return;
+              $("#queryString").val(querys.length>0?querys[++index] :"");     
+          }
+        });
       }
-    }
-  });
-  $("#queryString").keydown(function(e) {
-    if(e.keyCode === 13) {
-      queryDb();
-    }else if(e.keyCode === 38){
-        $("#queryString").val(querys.length>0?querys[index--] :"");
-        if(index<0) index = 0;
-    }else if(e.keyCode === 40){
-        if(index+1 === querys.length)
-            return;
-        $("#queryString").val(querys.length>0?querys[++index] :"");     
     }
   });
 }
