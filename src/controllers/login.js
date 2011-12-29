@@ -29,7 +29,7 @@ exports.show = function(req, res){
  * @param {} res
  * @return {}
  */
-exports.checkLogin = function(req, res){
+exports.checkLogin = function(req, res, next){
 	var	userEmail = req.body.email||'',
 		  password = req.body.pwd||'',
 		  redirectUrl = req.body.redirectUrl||'',
@@ -38,7 +38,7 @@ exports.checkLogin = function(req, res){
 	findOne(user, {email:userEmail.toString()}, function(err, item){
 		if(err){
 			log.error(err.toString());
-			return res.render("error", {message:"数据库查询错误"});
+			return next(err);
 		}
 		else{
 			if (!item) {

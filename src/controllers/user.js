@@ -44,12 +44,12 @@ exports.show = function(req, res){
  * @param {} req
  * @param {} res
  */
-exports.userInfo = function(req, res){
+exports.userInfo = function(req, res, next){
   var email = req.session.email;
   findOne(user, {email:email.toString()}, function(err, data){
     if(err){
       log.error(err.toString());
-      return res.render("error", {message:"数据库查询错误，请稍后再试"});
+      return next(err);
     }else{
       res.render("userInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
     }   
@@ -60,12 +60,12 @@ exports.userInfo = function(req, res){
  * @param {} req
  * @param {} res
  */
-exports.changeInfo = function(req, res){
+exports.changeInfo = function(req, res, next){
   var email = req.session.email;
   findOne(user, {email:email.toString()}, function(err, data){
     if(err){
       log.error(err.toString());
-      return res.render("error", {message:"数据库查询错误，请稍后再试"});
+      return next(err);
     }else{
       res.render("changeInfo", {layout:"layoutUser", user:data, nickName:req.session.nickName, email:req.session.email});
     }   

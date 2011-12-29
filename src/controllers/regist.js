@@ -63,7 +63,8 @@ exports.regist = function(req, res){
  * @param {} res
  * @return {}
  */
-exports.checkRegist = function(req, res){
+exports.checkRegist = function(req, res, next){
+  return next(new Error('a'));
   var userEmail = req.body.newEmail||''
   , userNickName = req.body.newUserName||''
   , userPassword = req.body.newPassword||''
@@ -157,7 +158,7 @@ exports.checkRegist = function(req, res){
       registTime:new Date().getTime(), status:1, activateKey:activateKey}, function(err){
         if(err){
           log.error(err.toString());
-          return res.render("error", {message:"数据库发生错误，请稍后再试"});
+          return next(err);
         }
         else{
         //删除改邀请码
@@ -294,7 +295,7 @@ exports.showRegistTips = function(req, res){
 /***
 *  激活
 */
-exports.activate = function(req, res){
+exports.activate = function(req, res, next){
   var qs = urlMoudle.parse(req.url, true).query,
   key = decodeURIComponent(qs.k||'');
   email = decodeURIComponent(qs.e||'');
@@ -308,13 +309,13 @@ exports.activate = function(req, res){
       if(err.errmsg!=='No matching object found'){
         console.log(err);
         log.error(err.toString());
-        return res.render('error', {message:DBERROR});
+        return next(err);
       }else{
-        return res.render('error', {message:'错误的邀请链接'});
+        return next(new Error('无效的激活链接,请重新发送邮件'));
       }
     }
     if(!userInfo){
-      return res.render('error', {message:'错误的邀请链接'});
+      return next(new Error('无效的激活链接,请重新发送邮件'));
     }
     req.session.email = userInfo.email;
     req.session.nickName = userInfo.nickName;

@@ -68,25 +68,21 @@ exports.vermng = function(req, res) {
  * @param {} res
  * @return {}
  */
-exports.doUpload = function(req, res) {
+exports.doUpload = function(req, res, next) {
   var domain = req.params.id || '';
   var fields = req.form.fields,
       files = req.form.files;
   var filePath = files.upload ? files.upload.filename : null;
   //check file
   if (!filePath) {
-    return res.render("error", {
-      message: "请选择一个文件上传"
-    });
+    return next(new Error('请选择一个文件'));
   }
   log.info(req.session.email + ' try upload to ' + domain);
   //check type
   var type = files.upload.type,
       path = files.upload.path;
   if (!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")) {
-    return res.render("error", {
-      message: "请上传正确的格式"
-    });
+    return next(new Error("文件格式不正确"));
   }
   var tempDir = config.tempDir,
       savePath = uploadDir + '/' + domain + '/';
@@ -182,7 +178,7 @@ exports.gitAction = function(req, res){
 		findOne(user, {email:req.session.email}, function(err, data){
 			if(err){
 				log.error(err.toString());
-			  return res.sendJson({status:"error", msg:"数据库查询错误"});
+			  return res.sendJson({status:"error", msg:config.dbError});
 			}
 			if(data.github&&data.github.token){
 	  		command = command.replace('@', '@'+data.github.token+'.');	//如果是clone需要权限的，就加上token
@@ -251,7 +247,7 @@ exports.doDownload = function(req, res) {
   })
 }
 
-exports.downloading = function(req, res) {
+exports.downloading = function(req, res, next) {
   var name = req.params.id || '',
       domain = name.slice(0, name.lastIndexOf("_"));
   findOne(app_mem, {
@@ -260,16 +256,12 @@ exports.downloading = function(req, res) {
   }, function(err, data) {
     if (err) {
       log.error(err.toString());
-      return res.render("error", {
-        msg: "查询数据库出错，请稍后再试"
-      });
+      return next(err);
     } else {
       if (data.role && data.active && data.role <= 2 && data.active === 1) {
         return res.redirect("/download/" + name + ".zip");
       } else {
-        return res.render("error", {
-          msg: "没有权限下载这个应用"
-        });
+        return next(new Error('没有权限下载这个应用'));
       }
     }
   })
@@ -344,7 +336,7 @@ exports.loadMongoContent = function(req, res) {
       log.error(err.toString());
       return res.sendJson({
         status: "error",
-        msg: "数据库查询错误"
+        msg: config.dbError
       });
     } else {
       findOne(user, {
@@ -354,7 +346,7 @@ exports.loadMongoContent = function(req, res) {
           log.error(err.toString());
           return res.sendJson({
             status: "error",
-            msg: "数据库查询错误"
+            msg: config.dbError
           });
         }
         return res.sendJson({
@@ -371,7 +363,7 @@ exports.loadMongoContent = function(req, res) {
     }
   })
 }
-exports.createMongo = function(req, res) {
+exports.createMongo = function(req, res, next) {
   var domain = req.params.id || '',
       url = req.url,
       email = req.session.email;
@@ -381,31 +373,23 @@ exports.createMongo = function(req, res) {
   }, function(err, data) {
     if (err) {
       log.error(err.toString());
-      return res.render("error", {
-        message: "数据库错误，请稍后再试"
-      });
+      return next(err);
     } else {
 
       if (data.appDbType) { //如果已经创建过数据库
-        return res.render("error", {
-          message: "已经创建数据库"
-        });
+        return next(new Error("已创建数据库"))
       } else {
         var proxy = new EventProxy();
         proxy.once('dbUser', function(dbUser) {
-          if (dbUser === false) {
-            return res.render("error", {
-              message: "数据库查询错误，请稍后再试"
-            });
+          if (dbUser instanceof Error) {
+            return next(dbUser);
           }
           var dbName = randomStringNum(12);
           var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
           exec(command, function(err, stdout, stderr) { //执行shell脚本，给用户授权对应数据库
             if (err) {
               log.error(err.toString());
-              return res.render("error", {
-                message: "执行错误，请稍后再试"
-              });
+              return next(err);
             } else {
               update(app_basic, {
                 appDomain: domain
@@ -417,9 +401,7 @@ exports.createMongo = function(req, res) {
               }, function(err) { //更新应用表
                 if (err) {
                   log.error(err.toString());
-                  return res.render("error", {
-                    message: "执行错误，请稍后再试"
-                  });
+                  return next(err);
                 } else {
                   return res.redirect(url + "/mongo");
                 }
@@ -435,7 +417,7 @@ exports.createMongo = function(req, res) {
         }, function(err, data) {
           if (err) {
             log.error(err.toString());
-            proxy.fire('dbUser', false);
+            proxy.fire('dbUser', err);
           } else {
             proxy.fire('dbUser', data);
           }
@@ -594,7 +576,7 @@ exports.loadTodoContent = function(req, res) {
     }
   })
 }
-exports.newTodo = function(req, res) {
+exports.newTodo = function(req, res, next) {
   var domain = req.params.id || '',
       title = req.body.title || '';
   if (title === '') {
@@ -613,9 +595,7 @@ exports.newTodo = function(req, res) {
   }, function(err) {
     if (err) {
       log.error(err.toString());
-      return res.render("error", {
-        message: "查询数据库错误，请稍后再试"
-      });
+      return next(err);
     } else {
       return res.redirect("/application/manage/" + domain + "/todo");
     }
@@ -761,7 +741,7 @@ exports.loadPackage = function(req, res){
 exports.setPackage = function(req, res){
   var domain = req.params.id||'';
   var packagePath = path.join(uploadDir, domain, 'package.json');  
-  var packageStr = req.body.packageStr||"";
+  var packageStr = req.body.packageStr||'';
   fs.writeFile(packagePath, packageStr, 'utf8', function(err){
     if(err){
       return res.sendJson({status:"error", msg:"write file error"})

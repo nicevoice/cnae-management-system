@@ -25,10 +25,10 @@ exports.showRetrieve = function(req, res){
   res.render("retrieve", {layout:"layoutLogin", warn:{}});
 }
 
-exports.postRetrieve = function(req, res){
+exports.postRetrieve = function(req, res, next){
   var email = req.body.userEmail||'';
 	if(!verify('email', email))
-		return res.render("error", { message:"email格式不正确"});
+		return next(new Error('无效的email地址'));
   var retrieveKey = randomStringNum(15),
       retrieveTime = new Date().getTime();
   findAndModify(user, {email: email},[],
@@ -40,13 +40,13 @@ exports.postRetrieve = function(req, res){
     if(err){
       log.error(err.toString());
       if(err.toString().indexOf("No matching object found")===-1){
-		    return res.render("error", { message:"数据获取失败，请稍后再试"});
+		    return next(err);
       }else{
-		    return res.render("error", { message:"email未注册"});      
+		    return next(new Error('该email未注册'));      
       }      
     }else{
       if(!userInfo){
-		    return res.render("error", { message:"email未注册"});      
+		    return next(new Error('该email未注册'));       
       }else{
         var link = config.retrieveLink+"?p="+retrieveKey+"&e="+email;
         var nickName = email.split('@')[0];
@@ -77,22 +77,22 @@ exports.showRetrieveTips = function(req, res){
   return res.render("retrieveTips", {host:host,layout:"layoutLogin"});
 }
 
-exports.showResetPassword = function(req, res){
+exports.showResetPassword = function(req, res, next){
   var queryString = urlMoudle.parse(req.url, true).query,
       email = queryString.e||'',
       key = queryString.p||'';
   findOne(user, {email:email, retrieveKey:key}, function(err, data){
     if(err){
       log.error(err.toString());
-      return res.render("error", {message:"数据获取失败，请稍后再试"});
+      return next(err);
     }else{
       if(!data){
-        return res.render("error", {message:"错误的链接"});
+        return next(new Error('无效的链接'))
       }else{
         var now = new Date().getTime(),
             oneDay = 1000*60*60*24;
         if(!data.retrieveTime || now - data.retrieveTime >oneDay){
-          return res.render("error", {message:"该链接已过期，请重新申请"});
+          return next(new Error('该链接已过期，请重新申请'));
         }else{
           return res.render("resetPassword",{email:email, key:key, layout:"layoutLogin"});
         }
@@ -100,20 +100,16 @@ exports.showResetPassword = function(req, res){
     }
   })
 }
-exports.resetPassword = function(req, res){
+exports.resetPassword = function(req, res, next){
   var email = req.body.email||'',
       key = req.body.key||'',
       password = req.body.changePassword||'',
       con = req.body.changeConfirmation||'';
   if(!verify('password', password)){
-    return res.render("error", {
-      message: "密码必须为6～20位字母、数字或下划线"
-    });
+    return next(new Error('密码必须为6～20位'));
 	}else{
 		if (con && password !== con) {
-      return res.render("error", {
-        message: "两次密码必须一致"
-      });
+      return next(new Error('两次密码不一致'));
     }
     else {
       findOne(user, {
@@ -122,14 +118,10 @@ exports.resetPassword = function(req, res){
       }, function(err, data){
           if(err){
               log.error(err.toString());
-              return res.render('error', {
-                  message:"密码修改错误"
-              });
+              return next(err);
           }
           if(!data||data.length===0){
-              return res.render('error', {
-                  message:"错误的验证码"
-              });              
+              return next(new Error('错误的激活链接'));              
           }
           update(user, {email:email}, {$set:{
               password:md5(password+config.md5_secret),
@@ -138,9 +130,7 @@ exports.resetPassword = function(req, res){
           }}, function(err){
               if(err){
                   log.error(err.toString());
-                  return res.render('error', {
-                      message:"密码修改错误"
-                  });
+                  return next(err);
               }
               return res.redirect('/login');
           })

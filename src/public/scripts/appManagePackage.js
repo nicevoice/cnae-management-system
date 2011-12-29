@@ -46,7 +46,7 @@
   }
 
 var hints = {   //提示
-  "home": '这是编写package.json的交互式向导页面。<br/>单击可以编辑。<p style="color:#777">灰色为未输入项</p><p style="color:#F30">红色为必填项</p>'+
+  "home": '这是编写<a href="http://package.json.nodejitsu.com/" target="_blank">package.json</a>的交互式向导页面。<br/>单击可以编辑。<p style="color:#777">灰色为未输入项</p><p style="color:#F30">红色为必填项</p>'+
           '<p class="exsits-package">黑色为已存在项</p><p class="warn-package exsits-package">黄色背景为类型不匹配项</p><p class="wrong-package">红色背景为输入有误</p>',
   "name": "type:string<br/>在NAE上应用的名称。 <br/> 如果要发布到<a href='http://search.npmjs.org' target='_blank'>NPM</a>，这也将是模块在NPM的名称。 <br/>",
   "preferGlobal": "type:boolean<br/>提示是否需要在安装的时候选择全局安装。<br/>在NAE上不需要填写。",
@@ -235,25 +235,16 @@ function checkPackage(e) {//bind when blur
   $('#' + key).bind('click', pairClick);
 }
 
-function tofile(obj){
-  newline = '\n\r';
-  var tmpStrs = ['{'+newline];
-  for(var key in obj){
-    tmpStrs.push('"'+key+'":');
-    tmpStrs.push(fValue(obj[key])+','+newline);
-  }
-  return tmpStrs.join('').slice(0, -3) + newline+'}';
-}
 function submit(){
   $.ajax({
     cache : false,
     url : "/application/manage/"+domain+"/submit/package",
     type : "POST",
     dataType : "json",
-    data:{
-      packageStr:tofile(appPackage),
-      _csrf:_csrf
-      },
+    data: {
+      packageStr : JsonUtils.convertToString(appPackage),
+      _csrf : _csrf
+    },
     error:function(){},
     success:function(data){
       if(data.status==='ok'){

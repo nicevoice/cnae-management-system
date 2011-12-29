@@ -43,13 +43,11 @@ function addNewUser(res, name, cb){
  * @return {}
  */
 
-var checkLogin = exports.checkLogin = function(req, res) {
+var checkLogin = exports.checkLogin = function(req, res, next) {
 	checkTBSession(req, function(checkRes) {
 		if(checkRes.status === "false") {
 			console.log("err");
-			res.render(error, {
-				message : res.msg
-			});
+			return next(new Error(checkRes.msg));
 		}
 		var redirectUrl = decodeURIComponent(urlMoudle.parse(req.url, true).query.redirect_url||'');
 		if(!redirectUrl || redirectUrl.indexOf('http://'+req.headers.host)!==0){
@@ -61,16 +59,12 @@ var checkLogin = exports.checkLogin = function(req, res) {
 		}, function(err, item) {
 			if(err) {
 				log.error(err.toString());
-				return res.render("error", {
-					message : "获取用户数据失败，请稍后再试。"
-				});
+				return next(err);
 			}
 			if(!item) {
 				return addNewUser(res, nick, function(err) {
 					if(err) {
-						return res.render("error", {
-							message : err.toString
-						});
+						return next(err);
 					}
 					req.session.email = nick;
 					req.session.nickName = nick;

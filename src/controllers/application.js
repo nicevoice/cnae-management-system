@@ -166,7 +166,7 @@ var fs = require('fs')
       return true;
     }
   }
-  exports.createApp = function(req, res) {
+  exports.createApp = function(req, res, next) {
     var result = checkNewInfo(req);
     if(result!==true){
       return res.render('newApp', result);
@@ -197,17 +197,13 @@ var fs = require('fs')
           email : req.session.email,
           nickName : req.session.nickName
         });
-      if(goodDomain === 2 || checkNumbers === 2) {
-        return res.render("error", {
-          message : "数据库查询错误"
-        });
+      if(goodDomain instanceof Error || checkNumbers instanceof Error) {
+        return next((goodDomain instanceof Error)? goodDomain : checkNumbers);
       } else {
         var createAppEvent = new EventProxy();
         createAppEvent.assign("savedBasic", "savedMem", "saveRecord", function() {
-          if(!arguments[0] || !arguments[1] || !arguments[2]) {
-            return res.render("error", {
-              message : "创建应用错误，请稍后再试"
-            });
+          if(arguments[0] || arguments[1] || arguments[2]) {
+            return next(arguments[0]?arguments[0]:(arguments[1]?arguments[1]:arguments[2]));
           }
           var saveDir = uploadDir + "/" + newAppDomain;
           var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
@@ -215,7 +211,7 @@ var fs = require('fs')
             if(err) {
               log.error(err.toString());
             }
-            if(!newGithub){	//如果没有输入github地址，就放例子
+            if(!newGithub){ //如果没有输入github地址，就放例子
               var initFile = __dirname.slice(0, __dirname.lastIndexOf('/') + 1) + "init.tar.gz";
               exec('tar -xf ' + initFile + ' -C ' + saveDir, function(err) {
                 if(err) {
@@ -223,15 +219,15 @@ var fs = require('fs')
                 }
               });
             }else{//否则去github上取代码
-              	if(newGithub[newGithub.length-1]==='/'){
-              	  project = newGithub.slice(19, -1);	
+                if(newGithub[newGithub.length-1]==='/'){
+                  project = newGithub.slice(19, -1);    
                 }else{
-                  project = newGithub.slice(19);	
+                  project = newGithub.slice(19);    
                 }
-		        findOne(user, {email:req.session.email}, function(err, data){
-			      if(err){
+                findOne(user, {email:req.session.email}, function(err, data){
+                  if(err){
                     log.error(err.toString());
-                    return res.sendJson({status:"error", msg:"数据库查询错误"});
+                    return next(err);
                   }
                   var gitCommand = "";
                   if(data.github&&data.github.token){
@@ -258,9 +254,9 @@ var fs = require('fs')
         }, function(err) {
           if(err) {
             log.error(err.toString());
-            createAppEvent.fire("savedBasic", false);
+            createAppEvent.fire("savedBasic", err);
           } else {
-            createAppEvent.fire("savedBasic", true);
+            createAppEvent.fire("savedBasic");
           }
         });
         insert(app_mem, {
@@ -273,10 +269,9 @@ var fs = require('fs')
         }, function(err) {
           if(err) {
             log.error(err.toString());
-            createAppEvent.unbind();
-            createAppEvent.fire("savedMem", false);
+            createAppEvent.fire("savedMem", err);
           } else {
-            createAppEvent.fire("savedMem", true);
+            createAppEvent.fire("savedMem");
           }
         });
         insert(app_record, {
@@ -287,9 +282,9 @@ var fs = require('fs')
         }, function(err) {
           if(err) {
             log.error(err.toString());
-            createAppEvent.fire("saveRecord", false);
+            createAppEvent.fire("saveRecord", err);
           } else {
-            createAppEvent.fire("saveRecord", true);
+            createAppEvent.fire("saveRecord");
           }
         })
       }
@@ -299,12 +294,12 @@ var fs = require('fs')
     }, function(err, item) {
       if(err) {
         log.error(err.toString());
-        checkRepetition.fire("checkDomain", 2);
+        checkRepetition.fire("checkDomain", err);
       } else {
         if(item) {
           checkRepetition.fire("checkDomain", 1);
         }
-        checkRepetition.fire("checkDomain", 0);
+        checkRepetition.fire("checkDomain");
       }
     });
     var isAdmin = false;
@@ -315,7 +310,7 @@ var fs = require('fs')
       }
     }
     if(isAdmin) {
-      checkRepetition.fire("checkNumbers", true);
+      checkRepetition.fire("checkNumbers");
     } else {
       count(app_mem, {
         email : req.session.email,
@@ -323,11 +318,11 @@ var fs = require('fs')
       }, function(err, data) {
         if(err) {
           log.error(err.toString());
-          checkRepetition.fire("checkNumbers", 2);
+          checkRepetition.fire("checkNumbers", err);
         } else if(data >= 10)
           checkRepetition.fire("checkNumbers", 1);
         else
-          checkRepetition.fire("checkNumbers", 0);
+          checkRepetition.fire("checkNumbers");
       });
     }
   }

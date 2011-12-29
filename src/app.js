@@ -95,9 +95,12 @@ fs.readdirSync(__dirname + '/routes').forEach(function(filename){
   var name = basename(filename, '.js');
   app.use(connect.router(require('./routes/'+name)));
 })  
-app.use(connect.router(function(methods){
-    methods.get("*", function(req, res){
+
+app.use(function(err, req, res, next){
+  res.render("error", {message:err.toString()});
+});
+
+app.use(function(req, res){
       res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
     });
-}));
 module.exports = app;
