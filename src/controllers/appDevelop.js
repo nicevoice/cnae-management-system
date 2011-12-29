@@ -81,7 +81,8 @@ exports.doUpload = function(req, res, next) {
   //check type
   var type = files.upload.type,
       path = files.upload.path;
-  if (!(type === "application/zip" || type === "application/x-gzip" || type === "application/octet-stream")) {
+  if (!(type === "application/zip" || type==="application/gzip" || "application/x-zip-compressed"
+ || type === "application/x-gzip" || type === "application/octet-stream")) {
     return next(new Error("文件格式不正确"));
   }
   var tempDir = config.tempDir,
