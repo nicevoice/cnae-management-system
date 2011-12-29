@@ -64,7 +64,6 @@ exports.regist = function(req, res){
  * @return {}
  */
 exports.checkRegist = function(req, res, next){
-  return next(new Error('a'));
   var userEmail = req.body.newEmail||''
   , userNickName = req.body.newUserName||''
   , userPassword = req.body.newPassword||''
