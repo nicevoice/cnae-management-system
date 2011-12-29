@@ -69,7 +69,7 @@ function renderApp(app){
   }
   var photo="";
   if(app.photoUrl){
-    photo += '<img src="'+app.photoUrl+'" style="width: 25px; height: 25px;">';
+    photo += '<img src="'+app.photoUrl+'?s=25" style="width: 25px; height: 25px;">';
   }
   var imgSource = "", realImg = "";
   var github = "";
