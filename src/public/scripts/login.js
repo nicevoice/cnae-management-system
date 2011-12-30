@@ -26,7 +26,7 @@
     $.post('/checkLogin', {
       email : $('#email').val(),
       pwd : $('#pwd').val(),
-      remeber_me : $('#remeber_me').val(),
+      remeber_me : $('#remeber_me').attr('checked')?true:false,
       _csrf : $('#_csrf').val()
     }, fillWarn, 'json');
   }
