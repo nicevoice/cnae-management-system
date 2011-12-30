@@ -42,28 +42,13 @@ exports.checkLogin = function(req, res, next){
 		}
 		else{
 			if (!item) {
-        return res.render("login", {
-          layout:'layoutLogin',
-          warn: "邮箱输入错误",
-          redirectUrl:redirectUrl,
-          email:userEmail
-        });
+         return res.sendJson({status:'error', warn:'emailErr'});
       }
       if(item.status===1){
-        return res.render("login", {
-          layout:'layoutLogin',
-          warn : '此帐号尚未激活',
-          redirectUrl:redirectUrl,
-          email:userEmail
-        })
+         return res.sendJson({status:'error', warn:'notActive'});
       }
       if(item.password!==md5(password.toString()+config.md5_secret)){
-         return res.render("login", {
-          layout:'layoutLogin',
-          warn: "密码错误",
-          redirectUrl:redirectUrl,
-          email:userEmail
-        });       
+         return res.sendJson({status:'error', warn:'passErr'});   
       }
       else {
         log.info(userEmail + " login");
@@ -77,11 +62,7 @@ exports.checkLogin = function(req, res, next){
         else {
           req.session.cookie.expires = false;
         }
-        if(!redirectUrl || redirectUrl.indexOf('http://'+req.headers.host)!==0){
-          redirectUrl = '/application';
-        }
-        console.log(redirectUrl);
-        res.redirect(redirectUrl);
+        return res.sendJson({status:'ok'});
       }
 		}
 	});

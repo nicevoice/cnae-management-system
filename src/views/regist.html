@@ -11,30 +11,30 @@
         	<div style="float:left;width:700px;">
             	<fieldset>
 	            	<legend style="color:#555;">填写注册信息</legend>
-	            	    <input type="hidden" value="<%=_csrf%>" name="_csrf">
+	            	    <input type="hidden" value="<%=_csrf%>" id="_csrf">
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
-                        <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" value="<%=regist.email||''%>" style="width:250px">
-                        <span id="emailWarn" class="error"><%=warn.email||''%></span>
+                        <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" style="width:250px">
+                        <span id="emailWarn" class="error"></span>
                         <br />
                         <span class="tips">Email 将是您的登录帐号和唯一身份标识。</span>
                     </div>
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> 昵称:</label>
-                        <input type="text" name="newUserName" id="newUserName" tabindex="1" class="input1" value="<%=regist.nick||''%>" style="width:250px">
-                        <span id="nameWarn" class="error"><%=warn.nick||''%></span>
+                        <input type="text" name="newUserName" id="newUserName" tabindex="1" class="input1"  style="width:250px">
+                        <span id="nameWarn" class="error"></span>
                         <br />
                     </div>
                     <div class="field-group">
                         <label class="required title" for="newPassword"><span style="color:red;">*</span> 密码:</label>
                         <input type="password" name="newPassword" id="newPassword" tabindex="1" class="input1" value="" style="width:250px">
-                        <span id="passwordWarn" class="error"><%=warn.pass||''%></span>
+                        <span id="passwordWarn" class="error"></span>
                         <br />
                     </div>
                     <div class="field-group">
                         <label class="required title" for="passwordCon"><span style="color:red;">*</span> 重复密码:</label>
                         <input type="password" name="passwordCon" id="passwordCon" tabindex="1" class="input1" value="" style="width:250px">
-                        <span id="conWarn" class="error"><%=warn.con||''%></span>
+                        <span id="conWarn" class="error"></span>
                         <br />
                     </div>
                     <!--
@@ -59,9 +59,9 @@
                     <div class="spacer"></div>
                     <div class="field-group">
                         <label class="required title" for="inviteCode"><span style="color:red;">*</span> 邀请码:</label>
-                        <input type="text" name="inviteCode" id="inviteCode" tabindex="1" class="input1" value="<%=regist.code||''%>" style="width:150px" maxlength="11">
+                        <input type="text" name="inviteCode" id="inviteCode" tabindex="1" class="input1"  style="width:150px" maxlength="11">
                         	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://cnodejs.org/blog/?p=2521" target="_blank">如何获得？</a>
-                        <span id="codeWarn" class="error"><%=warn.code||''%></span>
+                        <span id="codeWarn" class="error"></span>
                         <br />
                     </div>
                     <!--
@@ -84,7 +84,7 @@
                     -->
                 </fieldset>
                 <div style="text-align:right;" id="div-submit">
-                    <span id="btn-submit"><input type="submit" class="btn1" value="注册"></span>
+                    <span id="btn-submit"><input type="button" class="btn1" id="submit" value="注册"></span>
                     <span id="loading-submit"><img src="/images/ajax_loader.gif"></span>
                 </div>
             </div>
@@ -95,4 +95,5 @@
     <div style="margin:30px;height:20px;"></div>
     <div class="clr"></div>
 </div>
-<script src="/scripts/regist.js?v=1.0.4" type="text/javascript"></script>
+<script src="/scripts/validator.js?v=1.0.1" type="text/javascript"></script>
+<script src="/scripts/regist.js?v=1.0.5" type="text/javascript"></script>

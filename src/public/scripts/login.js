@@ -1,13 +1,9 @@
-var email;
 (function(){
+  var email;
   var link = '<a id="resend" href="javascript:void(0);">发送激活邮件</a>'
   $(function(){
-    var warn = $('#loginWarn');
-    if(warn.html()==='此帐号尚未激活'){
-      warn.html(warn.html()+','+link);
-      $('#resend').bind('click', resend);
-      email = $('#email').val();
-    }
+    $('#login').click(login);
+    enterDown($('#pwd'), login);
   });
   resend = function(){
     $.ajax({
@@ -25,5 +21,26 @@ var email;
         }
       }
     })
+  }
+  function login(){
+    $.post('/checkLogin', {
+      email : $('#email').val(),
+      pwd : $('#pwd').val(),
+      remeber_me : $('#remeber_me').val(),
+      _csrf : $('#_csrf').val()
+    }, fillWarn, 'json');
+  }
+  function fillWarn(data){
+    if(data.status!=='ok'){
+      switch(data.warn){
+        case 'emailErr': $('#loginWarn').html('邮箱不正确'); break;
+        case 'passErr' : $('#loginWarn').html('密码不正确'); break;
+        case 'notActive' : $('#loginWarn').html('此帐号尚未激活<a id="resend" href="javascript:void(0);">发送激活邮件</a>'); 
+        email = $('#email').val();
+        $('#resend').bind('click', resend);break;
+      }
+    }else{
+      window.location.href = $('#redirectUrl').val()||'/application';
+    }
   }
 })();

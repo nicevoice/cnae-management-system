@@ -3,21 +3,21 @@
   <div id="newApp">
     <form method="post" action="/createApp">
       <div style="display:none;" id="topDomain"><%=config.toplevelDomain%></div>
-      <input type="hidden" name="_csrf" value="<%=_csrf%>">
+      <input type="hidden" name="_csrf" id="_csrf" value="<%=_csrf%>">
       <p>子域名<span id="domainTip">(4～20位,小写字母/数字/下划线,首位字母)</span></p>
       <p> <input type="text" id="appDomain"
-      name="appDomain"><span id="domainWarn"><%=warn.domainWarn||config.toplevelDomain%></span>
+      name="appDomain"><span id="domainWarn"></span>
       <p>应用名称</p>
-      <p><input type="text" class="newLongInput" id="appName" name="appName"><span id="appNameWarn" class="warnColor"><%=warn.nameWarn||''%></span></p>
+      <p><input type="text" class="newLongInput" id="appName" name="appName"><span id="appNameWarn" class="warnColor"></p>
       <p>github主页</p>
-      <p><input type="text" class="newLongInput" id="github" name="github"><span id="githubWarn" class="warnColor"><%=warn.githubWarn||''%></span></p>
+      <p><input type="text" class="newLongInput" id="github" name="github"><span id="githubWarn" class="warnColor"></span></p>
       <p>应用图片地址</p>
-      <p><input type="text" class="newLongInput" id="appImage" name="appImage"><span id="imgWarn" class="warnColor"><%=warn.imgWarn||''%></span></p>
+      <p><input type="text" class="newLongInput" id="appImage" name="appImage"><span id="imgWarn" class="warnColor"></span></p>
       <p>应用描述</p>
       <p><textarea rows="3" class="newLongInput" id="appDes" name="appDes"></textarea></p>
-      <p><input class = "r3px button_orange" id="newAppSubmit" type="submit" value="创建">
+      <p><input class = "r3px button_orange" id="newAppSubmit" type="button" value="创建">
     </form>
   </div>
   </div>
-  <script type="text/javascript" src="/scripts/validator.js?v=1.0.1"></script>
-  <script type="text/javascript" src="/scripts/newApp.js?v=1.0.1"></script>
+  <script type="text/javascript" src="/scripts/validator.js?v=1.0.2"></script>
+  <script type="text/javascript" src="/scripts/newApp.js?v=1.0.4"></script>

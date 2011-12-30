@@ -131,24 +131,19 @@ var fs = require('fs')
         newGithub = req.body.github.trim() || '',
         newAppImage = req.body.appImage.trim() || '';
     var options = {
-      layout:"layoutMain",
-      warn:{},
-      email:req.session.email,
-      nickName:req.session.nickName
-    },
-        warn = options.warn,
-        error = false;
+      status:'error'
+    };
     if(!newAppName) {
-      warn.nameWarn = "必须有应用名称";
-      error = true;
+      options.warn = 'noName';
+      return options;
     }
     if(newGithub&&!verify('githubPage', newGithub)) {
-      warn.githubWarn = "github地址格式不正确";
-      error = true;
+      options.warn = 'githubErr';
+      return options;
     }
     if(newAppImage&&!verify('imgSource', newAppImage)) {
-      warn.imgWarn = "图片地址格式不正确";
-      error = true;
+      options.warn = 'imgErr';
+      return options;
     }
     if(newAppName.length > 20) {
       req.body.newAppName = newAppName.slice(0, 20);
@@ -157,19 +152,15 @@ var fs = require('fs')
       req.body.newAppDes = newAppDes.slice(0, 100);
     }
     if(!verify('domain', newAppDomain)){
-      warn.domainWarn = "域名格式不正确";
-      error = true;
-    }
-    if(error){
+      options.warn = 'domainErr';
       return options;
-    }else{
-      return true;
     }
+    return null;
   }
   exports.createApp = function(req, res, next) {
     var result = checkNewInfo(req);
-    if(result!==true){
-      return res.render('newApp', result);
+    if(result){
+      return res.sendJson(result);
     }
     var newAppDomain = req.body.appDomain.trim() || '',
         newAppName = req.body.appName.trim() || '', 
@@ -180,23 +171,10 @@ var fs = require('fs')
     //检查域名是否重复，用户创建的应用数目是否达到上限
     checkRepetition.assign("checkDomain", "checkNumbers", function(goodDomain, checkNumbers) {
       if(goodDomain === 1)
-        return res.render("newApp", {
-          layout : "layoutMain",
-          warn : {
-            domainWarn : "此域名已被占用"
-          },
-          email : req.session.email,
-          nickName : req.session.nickName
-        });
+        return res.sendJson({status:'error', warn:'domainRep'});
       if(checkNumbers === 1)
-        return res.render("newApp", {
-          layout : "layoutMain",
-          warn : {
-            domainWarn : "创建的应用数量达到上限"
-          },
-          email : req.session.email,
-          nickName : req.session.nickName
-        });
+        return res.sendJson({status:'error', warn:'domainLimit'});
+
       if(goodDomain instanceof Error || checkNumbers instanceof Error) {
         return next((goodDomain instanceof Error)? goodDomain : checkNumbers);
       } else {
@@ -238,7 +216,7 @@ var fs = require('fs')
                   doGit(gitCommand, newAppDomain, function(){}, true);
               })
             }
-            res.redirect("/application");
+            return res.sendJson({status:'ok'});
         })
       })
         //执行插入
@@ -336,8 +314,7 @@ var fs = require('fs')
     res.render("newApp", {
       layout : "layoutMain",
       nickName : req.session.nickName,
-      email : req.session.email,
-      warn : {}
+      email : req.session.email
     });
   }
   /**
