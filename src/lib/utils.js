@@ -15,12 +15,12 @@ var crypto = require('crypto'),
  * 验证
  */
 var regs = {
-  email: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+  email: /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/,
   domain: /^([a-z])[a-z0-9_]{3,19}$/,
   password: /^(.){6,}$/,
   name: /^([a-zA-Z0-9._\-]){1,20}$/,
   mobile: /^((\(\d{2,3}\))|(\d{3}\-))?1(3|5|8)\d{9}$/,
-  url: /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?$/,
+  url: /^(?:(?:ht|f)tp(?:s?)\:\/\/|~\/|\/)?(?:\w+:\w+@)?((?:(?:[-\w\d{1-3}]+\.)+(?:com|org|net|gov|mil|biz|info|mobi|name|aero|jobs|edu|co\.uk|ac\.uk|it|fr|tv|museum|asia|local|travel|[a-z]{2}))|((\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)(\.(\b25[0-5]\b|\b[2][0-4][0-9]\b|\b[0-1]?[0-9]?[0-9]\b)){3}))(?::[\d]{1,5})?(?:(?:(?:\/(?:[-\w~!$+|.,=]|%[a-f\d]{2})+)+|\/)+|\?|#)?(?:(?:\?(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)(?:&(?:[-\w~!$+|.,*:]|%[a-f\d{2}])+=?(?:[-\w~!$+|.,*:=]|%[a-f\d]{2})*)*)*(?:#(?:[-\w~!$ |\/.,*:;=]|%[a-f\d]{2})*)?$/i,
   githubCode: /^(git:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
   npm: /^[\w\d.-]+/,
   githubPage: /^(https:\/\/github.com\/)[\w-.]+\/[\w-_.]+/,
@@ -110,6 +110,7 @@ var clone = exports.clone = function(obj) {
     
 exports.checkTBSession = function(req, cb) {
   var sessionId = getFromCookie(req.headers.cookie, "cookie2") || '';
+
   //检查用户是否是开发者
   var secret = unescape(labsConf.secret);
   var checkUserOption = clone(labsConf.checkUserOption);
@@ -154,7 +155,7 @@ exports.getLog = function(action, name, num, callback){
     socket.on('error',function(e){
         log.error(e.message);
         socket.destroy();
-        callback("");
+         callback("");
     });
     socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'"}\n');
     var buf = "", length = -1, head;
@@ -174,30 +175,32 @@ exports.getLog = function(action, name, num, callback){
           length = 0;
         }
         if(head){
-          length = head.length||0;;
+          length = head.length||0;
         }else{
           length = 0;
         }
         buf = buf.slice(l+1);
       }
+    //  console.log(Buffer.byteLength(buf, 'utf8'), length);
       if(length!==-1 && Buffer.byteLength(buf, 'utf8') >= length){ //done
-        callback(buf||'');
-        socket.destroy();
+        socket.end();
       }
     });
-    
     socket.on('end', function(){
+      console.log('it end');
         callback(buf||'');
-        socket.destroy();
+        socket.end();
     })
 }
 /**
  *  http request
+ *  type : json | string
  */
 var request_timer = null,
     req = null;
 // 请求5秒超时
-var httpReq = exports.httpReq = function(options, callback) {
+var httpReq = exports.httpReq = function(options, callback, type) {
+    type = type||'json';//默认返回为json
     request_timer = setTimeout(function() {
       req.abort();
       console.log('Request Timeout.');
@@ -225,12 +228,18 @@ var httpReq = exports.httpReq = function(options, callback) {
         for (var i = 0, size = chunks.length; i < size; i++) {
           data += chunks[i];
         }
-        try {
-          var jsonData = JSON.parse(data);
-        } catch (e) {
+        if(type==='json'){
+          try {
+            var jsonData = JSON.parse(data);
+          } catch (e) {
+            return callback({status:"error", msg:"response not json"});
+          }
+          return callback(jsonData);
+        }
+        if(type==='string'){
           return callback(data);
         }
-        callback(jsonData);
+        callback();
       });
     }).on('error', function(e) {
       // 响应头有错误
@@ -248,9 +257,6 @@ var httpReq = exports.httpReq = function(options, callback) {
     /**
      * 生成github公私钥，更新配置文件
      */
-    
-    
-    
 function tplReplace(tpl, params) {
   return tpl.replace(/\$.*?\$/g, function(data) {
     return params[data];
@@ -274,17 +280,23 @@ var writeConf = function() {
     if (!config) {
       return working = false;
     }
-    configFd = fs.openSync(configFile, 'a', '644');
-    var buffer = new Buffer(config, 'utf8');
-    fs.write(configFd, buffer, 0, buffer.length, 0, function(err) {
-      if (err) {
+    fs.open(configFile, 'a', '644', function(err, configFd){
+      if(err){
         log.error(err.toString());
         arrConfig.push(config);
+        return ;
       }
-      fs.closeSync(configFd);
-      writeConf();
-    })
-    }
+      var buffer = new Buffer(config, 'utf8');
+      fs.write(configFd, buffer, 0, buffer.length, 0, function(err) {
+        if (err) {
+          log.error(err.toString());
+          arrConfig.push(config);
+        }
+        fs.close(configFd, function(){});
+        writeConf();
+      })
+    });
+  }
     
 exports.addGithub = function(email, githubEmail, cb) {
   var token = exports.getRandomStringNum(20),
@@ -299,14 +311,20 @@ exports.addGithub = function(email, githubEmail, cb) {
       '$file$': github.keyDir + token
     });
     githubProxy.fire('addGithub', configInfo);
-    cb(null, {
-      status: "ok",
-      content: {
-        email: githubEmail,
-        token: token,
-        pubKey: fs.readFileSync(github.keyDir + token + '.pub', 'utf8')
+    fs.readFile(github.keyDir+token+'.pub', 'utf8', function(err, pubKey){
+      if(err){
+        log.error(err.toString());
+        return cb(err);
       }
-    });
+      cb(null, {
+        status: "ok",
+        content: {
+          email: githubEmail,
+          token: token,
+          pubKey: pubKey
+        }
+      });
+    })
   });
 }
 

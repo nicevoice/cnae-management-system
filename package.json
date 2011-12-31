@@ -1,0 +1,41 @@
+{
+	"name" : "cnae-management-system",
+	"main" : "./server.js",
+	"version" : "1.0.1",
+	"author" : "dead_horse <heyiyu.deadhorse@gmail.com>",
+	"description" : "A management system for NAE",
+	"scripts" : 
+	{
+		"test" : "make test"
+	},
+	"keywords" : 
+	[
+		"NAE"
+	],
+	"license" : "MIT",
+	"engine" : 
+	{
+		"node" : " >= 0.6"
+	},
+	"dependencies":{
+		"ejs": ">=0.6.1",
+		"EventProxy.js": ">=0.0.4",
+		"mongoskin":">=0.2.2",
+		"redis":">=0.7.1",
+		"rimraf":">=1.0.9",
+		"socket.io" : ">=0.8.7",
+		"jake" : ">=0.1.22"
+	},
+	"devDependencies" : {
+		"should" : ">=0.4.2",
+		"mocha" : ">=0.8.1"
+	},
+	"bundleDependencies" :[
+		"connect",
+		"connect-form",
+		"connect-redis",
+		"formidable",
+		"nodemailer",
+		"mimelib-noiconv"
+	]
+}

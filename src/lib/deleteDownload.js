@@ -7,7 +7,7 @@ var fs = require("fs"),
     delInterval = 1000*10*60;
 
 (function(){
-  exec("rm -rf "+ tempDir + "/*", function(err){
+  exec("rm -rf "+ tempDir + "/*.zip", function(err){
     if(err){
       log.error(err.toString());
     }

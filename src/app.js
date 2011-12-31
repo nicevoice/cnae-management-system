@@ -64,10 +64,16 @@ function(req, res){
   }
   return bodyStr;
 });
-app.use(connect.logger({ 
-  stream : fs.createWriteStream(config.token+'.'+config.reqLogPath),
-  format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
-}));
+if(process.env.NODE_ENV==='test'){
+  app.use(connect.logger({ 
+    format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
+  }));
+}else{
+  app.use(connect.logger({ 
+    stream : fs.createWriteStream(config.reqLogPath+'.worker'+config.token),
+    format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
+  }));
+}
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',

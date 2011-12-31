@@ -44,6 +44,8 @@
   "agreeMailContentPath":"/mailTemplate/agreeInviteMail.html",
   "refuseMailTitle":"Node App Engine项目参与申请被拒绝",
   "refuseMailContentPath":"/mailTemplate/refuseInviteMail.html",
+  "registMailTitle":"欢迎注册NAE",
+  "registMailContentPath":"/mailTemplate/registMail.html",
   "admin":"heyiyu.deadhorse@gmail.com",
   "smtp":{
     "host":"smtp.gmail.com",
@@ -63,7 +65,7 @@
     "host":"127.0.0.1",
     "port":"1127"
   }, 
-  "admins":['dead_horse@qq.com'],
+  "admins":["dead_horse@qq.com"],
   "switchs":{
     "labs": $$slabs$$,
     "debug":$$sdebug$$,
@@ -74,7 +76,7 @@
 	  "agentMaxSockets" : 256 ,
 	  "checkUserOption" : {
 	  "host":"$$labsHost$$",
-	  "port":80,
+	  "port":$$labsPort$$,
 	  "path":"/developers/checkUser.do"
 	  },
 	  "secret":"$$tbSecret$$" ,
@@ -82,8 +84,8 @@
 	  "loginPathDaily":"https://login.daily.taobao.net/member/login.jhtml?f=top&redirect_url=http://nae.labs.daily.taobao.net:2012/checkLogin"
   },
   "github":{    ##设置个人github私钥的参数
-    "keyDir":"/home/heyiyu.pt/.ssh/nae/id_rsa_",
-    "config":"/home/heyiyu.pt/.ssh/config",
+    "keyDir":"$$gitKey$$",
+    "config":"$$gitConfig$$",
     "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",
     "tplConfig":"#$email$\nHost $token$.github.com\n Hostname Github.com\n User git\n IdentityFile $file$\n"
   }

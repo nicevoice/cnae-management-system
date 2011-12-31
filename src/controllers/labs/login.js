@@ -45,7 +45,7 @@ function addNewUser(res, name, cb){
 
 var checkLogin = exports.checkLogin = function(req, res, next) {
 	checkTBSession(req, function(checkRes) {
-		if(checkRes.status === "false") {
+		if(checkRes.status !== "true") {
 			console.log("err");
 			return next(new Error(checkRes.msg));
 		}

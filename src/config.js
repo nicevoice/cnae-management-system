@@ -2,10 +2,12 @@ var pathutil = require('path');
 var mongo = require("mongoskin");
 var fs = require('fs');
 var log = require("./lib/log");
-var workerNum = require('./server').workerNum;
-
 var loadConf = function(){
-  var configInfo = JSON.parse(fs.readFileSync(__dirname+'/config.json').toString());  
+  if(process.env.NODE_ENV === 'test'){
+    var configInfo = JSON.parse(fs.readFileSync(__dirname+'/config.test.json').toString());  
+  }else{
+    var configInfo = JSON.parse(fs.readFileSync(__dirname+'/config.json').toString());  
+  }
   //是否debug模式
   var debug = configInfo.switchs.debug;
 
@@ -23,11 +25,15 @@ var loadConf = function(){
   configInfo.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbInfo.name;
 
   //log
-  var numPath = pathutil.dirname(configInfo.logPath)+'/worker.num';
-  var token = configInfo.token = fs.readFileSync(numPath, 'utf8');
-  configInfo.logWithFile = log.create(log.ERROR, {file:configInfo.logPath+'.worker'+token});
-  fs.writeFileSync(numPath, parseInt(token)+1);
-  configInfo.reqLogPath = pathutil.dirname(__dirname) + '/logs/requests.log';
+  if(process.env.NODE_ENV==='test'){
+    configInfo.logWithFile = log.create(log.INFO);
+  }else{
+    var numPath = pathutil.dirname(configInfo.logPath)+'/worker.num';
+    var token = configInfo.token = fs.readFileSync(numPath, 'utf8');
+    configInfo.logWithFile = log.create(log.ERROR, {file:configInfo.logPath+'.worker'+token});
+    fs.writeFileSync(numPath, parseInt(token)+1);
+    configInfo.reqLogPath = pathutil.dirname(__dirname) + '/logs/requests.log';
+  }
   //读取mail正文
   var mail = configInfo.mail;
   mail.coopMailContent = fs.readFileSync(__dirname+mail.coopMailContentPath, "utf8");//合作邀请
