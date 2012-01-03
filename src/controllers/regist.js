@@ -66,7 +66,6 @@ exports.checkRegist = function(req, res, next){
   , userPassword = req.body.newPassword||''
   , userPasswordCon = req.body.passwordCon||''
   , code = req.body.inviteCode||'';
-  console.log(req.body)
   var checkEventProxy = new EventProxy();
   //检查用户输入合法性
   if(!verify('email', userEmail)){
@@ -249,7 +248,6 @@ exports.activate = function(req, res, next){
     }}, function(err, userInfo){
     if(err){
       if(err.errmsg!=='No matching object found'){
-        console.log(err);
         log.error(err.toString());
         return next(err);
       }else{
@@ -266,7 +264,6 @@ exports.activate = function(req, res, next){
 }
 exports.resend = function(req, res){
   var email = urlMoudle.parse(req.url, true).query.e || '';
-  console.log('resend');
   findOne(user, {email:email}, function(err, userInfo){
     if(err){
       log.error(err.toString());
@@ -279,14 +276,12 @@ exports.resend = function(req, res){
       return res.sendJson({status:'error', msg:'该帐号已激活'});
     }
     activateEmail(email, userInfo.activateKey);
-    console.log('1');
     var host = email.slice(email.indexOf('@')+1);
     dns.resolve4('mail.' + host, function(err, data){      
       var h = 'www.' + host;
       if(data){
         h = 'mail.' + host;
       }
-      console.log(2);
       res.sendJson({status:'ok', host:h});
     })    
   })

@@ -248,7 +248,10 @@ var httpReq = exports.httpReq = function(options, callback, type) {
       callback(e.message);
     });
     if (options.data) {
-      req.write(options.data.toString());
+      try{
+        req.write(JSON.stringify(options.data));
+      }catch(err){
+      }
     }
     req.end();
     }

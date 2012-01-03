@@ -35,6 +35,7 @@ app.use(function(req, res, next) {
             return next();
         }
     });
+
 //favicon
 app.use(connect.favicon());
 //static
@@ -52,6 +53,15 @@ app.use(connect.session({
 //post
 app.use(connect.bodyParser());
 app.use(connect.csrf());
+//render power by ejs
+app.use(render({
+    root:__dirname + '/views',
+    cache:true,
+    csrf:true,
+    helpers:{
+        config:config,
+    }
+}));
 //log
 connect.logger.token('email', function(req ,res){return req.session&&req.session.email;});
 connect.logger.token('body', 
@@ -64,25 +74,13 @@ function(req, res){
   }
   return bodyStr;
 });
-if(process.env.NODE_ENV==='test'){
-  app.use(connect.logger({ 
-    format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
-  }));
-}else{
+if(process.env.NODE_ENV!=='test'){
   app.use(connect.logger({ 
     stream : fs.createWriteStream(config.reqLogPath+'.worker'+config.token),
     format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
   }));
 }
-//render power by ejs
-app.use(render({
-    root:__dirname + '/views',
-    cache:true,
-    csrf:true,
-    helpers:{
-        config:config,
-    }
-}));
+
 /***
 * socket.io for logs 
 */
