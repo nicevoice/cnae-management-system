@@ -3,7 +3,7 @@
   , path = require('path')
   , mails = sendMail.mails
   , mailEvent =sendMail.mailEvent
-  , mail = JSON.parse(fs.readFileSync(path.dirname(__dirname)+'/src/config.json').toString()).mail;
+  , mail = JSON.parse(fs.readFileSync(path.dirname(__dirname)+'/src/config.test.json').toString()).mail;
 
   var email = "dead_horse@qq.com";
   var nick = email.split('@')[0];

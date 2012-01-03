@@ -32,7 +32,7 @@ exports.hasLogin = function(req, res, next){
 
 exports.hasNotLogin = function(req, res, next){
 	//如果session存在
-	if(!req.session.email || !req.session.nickName){
+	if(!req.session.email && !req.session.nickName){	
 		return next();
 	} else {
 		return res.redirect("/application");
@@ -87,7 +87,7 @@ exports.isAdmin = function(req, res, next){
 			return next();
 		}
 	}
-	res.redirect("/");
+	res.redirect("/application");
 }
 
 exports.webCache = require('../lib/webcache')({maxAge:30000});

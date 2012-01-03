@@ -86,7 +86,7 @@
   "github":{    ##设置个人github私钥的参数
     "keyDir":"$$gitKey$$",
     "config":"$$gitConfig$$",
-    "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",
+    "genKey":"$$shells$$/genKey.sh",
     "tplConfig":"#$email$\nHost $token$.github.com\n Hostname Github.com\n User git\n IdentityFile $file$\n"
   }
 }

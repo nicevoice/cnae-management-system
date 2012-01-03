@@ -53,10 +53,12 @@ task('maketestconf', function(){
   var testDir = home + '/test';
   var temp = testDir + '/temp';
 //mkdir
+  try{
   fs.mkdirSync(temp, '777');
   fs.mkdirSync(temp + '/apps', '777');
   fs.mkdirSync(temp + '/key', '777');
   fs.mkdirSync(temp + '/temp', '777');
+  }catch(err){}
   fs.writeFileSync(
     'config.test.json',
     cont.toString()
@@ -94,6 +96,7 @@ task('maketestconf', function(){
 
       .replace(/\$\$gitKey\$\$/ig, temp+'/key/id_rsa_')
       .replace(/\$\$gitConfig\$\$/ig, temp+'/key/config')
+      .replace(/\$\$shells\$\$/, home+'/src/shells')
   );
 });
 task('cleanup', function(){
