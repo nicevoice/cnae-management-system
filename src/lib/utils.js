@@ -187,7 +187,6 @@ exports.getLog = function(action, name, num, callback){
       }
     });
     socket.on('end', function(){
-      console.log('it end');
         callback(buf||'');
         socket.end();
     })
@@ -301,7 +300,7 @@ var writeConf = function() {
 exports.addGithub = function(email, githubEmail, cb) {
   var token = exports.getRandomStringNum(20),
       github = config.github;
-  exec(github.genKey + " " + githubEmail + " " + token, function(err, stdout, stderr) {
+  exec(github.genKey + " " + githubEmail + " " + github.keyDir + token, function(err, stdout, stderr) {
     if (err) {
       return cb(err);
     }
@@ -426,8 +425,7 @@ exports.doGit = function(command, targetDir, cb, isClone) {
 }
 
 exports.upload = function(form, savePath, cb){
-  var fields = form.fields,
-      files = form.files,
+  var files = form.files,
       filePath = files.upload ? files.upload.filename : null;
   if(!filePath) {
     return cb({
@@ -435,6 +433,7 @@ exports.upload = function(form, savePath, cb){
       msg:"invalid filePath"
     })
   }
+
   fs.rename(files.upload.path, savePath, function(err){
     if(err){
       log.error(err.toString());
