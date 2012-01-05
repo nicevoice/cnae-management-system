@@ -70,8 +70,8 @@ exports.vermng = function(req, res) {
  */
 exports.doUpload = function(req, res, next) {
   var domain = req.params.id || '';
-  var fields = req.form.fields,
-      files = req.form.files;
+  var fields = req.body,
+      files = req.files;
   var filePath = files.upload ? files.upload.filename : null;
   //check file
   if (!filePath) {
@@ -276,8 +276,8 @@ exports.downloading = function(req, res, next) {
 exports.doUploadImg = function(req, res) {
   var domain = req.params.id || "",
       dirPath = req.body.dirPath || "",
-      savePath = require('path').join(uploadDir, domain, dirPath, req.form.files.upload.name);
-  utils.upload(req.form, savePath, function(result){
+      savePath = require('path').join(uploadDir, domain, dirPath, req.files.upload.name);
+  utils.upload(req.files, savePath, function(result){
     res.sendJson(result);
   });
 }

@@ -5,7 +5,6 @@ var config = require('./config'),
     uid = require('./lib/uid'),
     ejs = require('ejs'),
     fs = require('fs'),
-    form = require('connect-form'),
     basename = require('path').basename,
     RedisStore = require('connect-redis')(connect);
 if(!config.switchs.debug) {
@@ -17,24 +16,6 @@ require('./lib/patch');
 
 //创建httpServer 
 var app = connect();
-
-//multi-data form
-app.use(form({ uploadDir: config.tempDir, keepExtensions: true }));
-app.use(function(req, res, next) {
-        if(req.form) {
-            req.form.complete(function(err, fields, files){
-                req.body = {};
-                if(!err) {
-                    req.form.fields = fields;
-                    req.form.files = files;
-                    req.body = fields;
-                }
-                next(err);
-            });
-        } else {
-            return next();
-        }
-    });
 
 //favicon
 app.use(connect.favicon());

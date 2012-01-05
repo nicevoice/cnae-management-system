@@ -34,7 +34,7 @@ var tplNonDb = '<form method="post" action="$url$/createMongo">'+
                '<input type="text" class="longInput" id="queryString"><input type="button"  class="button_orange r3px" id="queryDb" value="执行">'
                +'<span class="redText">tips: use mongo shell</span>'+
                '</div>'+
-               '<pre id="queryOutput" style="width:700px;height:500px"></pre>'+
+               '<pre id="queryOutput" style="width:650px;height:500px"></pre>'+
                '<div class="r3px subContent littleBlue">'+
                '<table id="dbInfo">'+
                '<tr><td>数据库帐号：</td><td>$dbUserName$</td><td>数据库密码:</td><td>$dbPassword$</td></tr>'+
