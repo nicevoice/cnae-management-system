@@ -16,7 +16,7 @@ var crypto = require('crypto'),
  */
 var regs = {
   email: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-  domain: /^([a-z])[a-z0-9_]{3,19}/,
+  domain: /^([a-z])[a-z0-9_]{3,19}$/,
   password: /^(.){6,}$/,
   name: /^([a-zA-Z0-9._\-]){1,20}$/,
   mobile: /^((\(\d{2,3}\))|(\d{3}\-))?1(3|5|8)\d{9}$/,

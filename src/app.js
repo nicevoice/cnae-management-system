@@ -46,7 +46,10 @@ function(req, res){
   }
   return bodyStr;
 });
-app.use(connect.logger({ format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'}));
+app.use(connect.logger({ 
+  stream : fs.createWriteStream(config.token+'.'+config.reqLogPath),
+  format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
+}));
 //render power by ejs
 app.use(render({
     root:__dirname + '/views',

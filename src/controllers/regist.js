@@ -33,10 +33,7 @@ exports.regist = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query,
     email = queryString.email||'',
     code = queryString.code||'';
-  res.render("regist",{layout:'layoutLogin',regist:{
-      email:email,
-      code:code
-  }, warn:{}});
+  res.render("regist",{layout:'layoutLogin'});
 }
 
 /***
@@ -69,83 +66,29 @@ exports.checkRegist = function(req, res, next){
   , userPassword = req.body.newPassword||''
   , userPasswordCon = req.body.passwordCon||''
   , code = req.body.inviteCode||'';
+  console.log(req.body)
   var checkEventProxy = new EventProxy();
   //检查用户输入合法性
   if(!verify('email', userEmail)){
-    return res.render("regist", {
-        layout:'layoutLogin',
-        regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },warn:{email:"请输入合法的email地址"}});
+    return res.sendJson({status:'error', warn:'emailErr'});
     }
   if(!userNickName){
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{nick:"必须输入昵称"}});     
+    return res.sendJson({status:'error', warn:'noNick'});
   }
   if(!verify('name', userNickName))
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{nick:"昵称不能包含特殊字符"}});
+    return res.sendJson({status:'error', warn:'nickErr'});
   if(userPassword != userPasswordCon)
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{con:"两次密码输入不一致"}});
+    return res.sendJson({status:'error', warn:'diffPass'});
   if(!verify('password', userPassword))
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{pass:"密码必须大于6位"}});
+    return res.sendJson({status:'error', warn:'passErr'});
   //检查是否数据库中已经存在
   checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
-        if(!goodName)
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{nick:"该昵称已经被使用"}});
+    if(!goodName)
+          return res.sendJson({status:'error', warn:'nickUsed'});
     if(!goodEmail)
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{email:"该邮箱已经被注册"}});
+          return res.sendJson({status:'error', warn:'emailUsed'});
     if(!goodCode)
-        return res.render("regist", {
-            layout:'layoutLogin',
-            regist:{
-            email:userEmail,
-            code:code,
-            nick:userNickName
-            },
-            warn:{code:"邀请码不正确"}});
+          return res.sendJson({status:'error', warn:'codeErr'});
     else{
         var codes = [];
         for(var i=0,len=config.maxInviteCode; i!=len; ++i){
@@ -175,9 +118,9 @@ exports.checkRegist = function(req, res, next){
           var host = userEmail.slice(userEmail.indexOf('@')+1);
           dns.resolve4('mail.' + host, function(err, data){
             if(data){
-              return res.redirect('/registTips?host=mail.'+host);
+              return res.sendJson({status:'ok', target:'/registTips?host=mail.'+host});
             }else{
-              return res.redirect('/registTips?host=www.'+host);
+              return res.sendJson({status:'ok', target:'/registTips?host=www.'+host});
             }
           })
         }
@@ -323,6 +266,7 @@ exports.activate = function(req, res, next){
 }
 exports.resend = function(req, res){
   var email = urlMoudle.parse(req.url, true).query.e || '';
+  console.log('resend');
   findOne(user, {email:email}, function(err, userInfo){
     if(err){
       log.error(err.toString());

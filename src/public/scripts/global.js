@@ -201,3 +201,11 @@ function clone(obj){
     }
     return objClone;
 }
+
+function enterDown(input, fn){
+  input.keydown(function(e){
+    if(e.keyCode===13){
+      fn();
+    }
+  })
+}
