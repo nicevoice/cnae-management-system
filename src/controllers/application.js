@@ -24,21 +24,6 @@ var fs = require('fs')
   , onOff = utils.onOff
   , verify = utils.verify
   , doGit = utils.doGit;
-
-
-  /***
-   * 临时用来显示文档中心。（暂时不存在）
-   * @param {} req
-   * @param {} res
-   */
-  exports.showDoc = function(req, res) {
-    res.render("doc", {
-      layout : "layoutMain",
-      nickName : req.session.nickName,
-      email : req.session.email
-    });
-  }
-
   exports.showMainPage = function(req, res) {
     res.render('index', {
       layout : false
@@ -125,11 +110,11 @@ var fs = require('fs')
    * @return {}
    */
   var checkNewInfo = function(req){
-    var newAppDomain = req.body.appDomain.trim() || '',
-        newAppName = req.body.appName.trim() || '', 
-        newAppDes = req.body.appDes.trim() || '',
-        newGithub = req.body.github.trim() || '',
-        newAppImage = req.body.appImage.trim() || '';
+    var newAppDomain = (req.body.appDomain || '').trim(),
+        newAppName = (req.body.appName || '').trim(), 
+        newAppDes = (req.body.appDes || '').trim(),
+        newGithub = (req.body.github || '').trim(),
+        newAppImage = (req.body.appImage || '').trim();
     var options = {
       status:'error'
     };
@@ -162,11 +147,11 @@ var fs = require('fs')
     if(result){
       return res.sendJson(result);
     }
-    var newAppDomain = req.body.appDomain.trim() || '',
-        newAppName = req.body.appName.trim() || '', 
-        newAppDes = req.body.appDes.trim() || '',
-        newGithub = req.body.github.trim() || '',
-        newAppImage = req.body.appImage.trim() || '';
+    var newAppDomain = (req.body.appDomain || '').trim(),
+        newAppName = (req.body.appName || '').trim(), 
+        newAppDes = (req.body.appDes || '').trim(),
+        newGithub = (req.body.github || '').trim(),
+        newAppImage = (req.body.appImage || '').trim();
     var checkRepetition = new EventProxy();
     //检查域名是否重复，用户创建的应用数目是否达到上限
     checkRepetition.assign("checkDomain", "checkNumbers", function(goodDomain, checkNumbers) {
@@ -197,6 +182,7 @@ var fs = require('fs')
                 }
               });
             }else{//否则去github上取代码
+                var project;
                 if(newGithub[newGithub.length-1]==='/'){
                   project = newGithub.slice(19, -1);    
                 }else{

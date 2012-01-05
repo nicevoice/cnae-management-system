@@ -4,7 +4,7 @@ cp = require('child_process');
 desc('Cnode app engine builder');
 
 task('makeconf', function(){
-  var cont = fs.readFileSync('config.json.tpl');
+  var cont = fs.readFileSync(__dirname + '/config.json.tpl');
   var home = path.dirname(__dirname);
   fs.writeFileSync(
     'config.json',
@@ -48,7 +48,7 @@ task('makeconf', function(){
   );
 });
 task('maketestconf', function(){
-  var cont = fs.readFileSync('config.json.tpl');
+  var cont = fs.readFileSync(__dirname + '/config.json.tpl');
   var home = path.dirname(__dirname);
   var testDir = home + '/test';
   var temp = testDir + '/temp';

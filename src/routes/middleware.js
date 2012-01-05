@@ -1,9 +1,9 @@
 var connectUtils = require('connect').utils,
-    admins = require('../config').admins,
-	  labs = require('../config').labs,
+	  config = require('../config'),
+	  labs = config.labs,
 	  checkTBSession = require('../lib/utils').checkTBSession,
 	  findOne = require('../models/index').findOne,
-    app_mem = require('../config').dbInfo.collections.app_member;
+    app_mem = config.dbInfo.collections.app_member;
 
 //路由中间件
 exports.hasLogin = function(req, res, next){
@@ -81,8 +81,8 @@ exports.checkChangeAuth = function(role) {
 
 exports.isAdmin = function(req, res, next){
 	var email = req.session.email||'';
-	for(var i=0, len=admins.length; i!=len; ++i){
-		if(email === admins[i])
+	for(var i=0, len=config.admins.length; i!=len; ++i){
+		if(email === config.admins[i])
 		{
 			return next();
 		}

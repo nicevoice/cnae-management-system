@@ -315,6 +315,8 @@ exports.addGithub = function(email, githubEmail, cb) {
     githubProxy.fire('addGithub', configInfo);
     fs.readFile(github.keyDir+token+'.pub', 'utf8', function(err, pubKey){
       if(err){
+              console.log('done____________')
+
         log.error(err.toString());
         return cb(err);
       }

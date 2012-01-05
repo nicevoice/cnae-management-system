@@ -67,6 +67,7 @@ var loadConf = function(){
   }else{
     configInfo.toplevelDomain = configInfo.toplevelDomainNAE;
   }
+
   module.exports = configInfo;
 
 }

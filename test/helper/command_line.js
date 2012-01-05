@@ -28,6 +28,10 @@ function cmd(client){
 		}
 		client.write(JSON.stringify(res));
 	}
+	function onStatus(){
+		var res = {"cmd":"response","status":"ok","msg":{"rss":20299776,"heap":9350256,"uptime":13771.000717000104,"last":1325751420262,"pid":15393,"autorun":true,"running":true,"ports":[80]}};
+		client.write(JSON.stringify(res));
+	}
 	function onData(data){
 		try{
 			var command = JSON.parse(data);
@@ -46,11 +50,11 @@ function cmd(client){
 		switch(command.cmd){
 			//mock start
 			case 'start' : 
-				if(command.app==='app1'){
-					onOk('App \"app1\" start ok.');return;
+				if(command.app==='app1'||command.app==='test'){
+					onOk('App "'+ command.app +'" start ok.');return;
 				}
 				if(command.app==='app2'){
-					onError('App \"app2\" is running.', 101);return;
+					onError('App "app2" is running.', 101);return;
 				}
 				client.end('{"cmd":"response", "status":"error"');return;
 			case 'stdout' : 
@@ -60,10 +64,15 @@ function cmd(client){
 					client.write('{"cmd":"response", "length":100}\n');
 					client.write(data);
 				}return;
+			case 'stop':
+				onOk('App "'+ command.app +'" stop ok.'); return;
+			case 'restart':
+				onOk('App "'+ command.app +'" restart ok.'); return;
+			case 'status' :
+				onStatus();return;
 			}
 		}
 	client.on('data', onData);	
 }
 
 module.exports = net.createServer(cmd);
-module.exports.listen(config.cmdPort);

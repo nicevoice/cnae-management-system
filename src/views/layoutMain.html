@@ -40,7 +40,7 @@
       <% if(!config.labs){ %>
       			<li><a href="/inviteCode">发出邀请</a></li>
            <%var isAdmin = false;
-             admins = config.admins;
+             var admins = config.admins;
              for(var i=0, len=admins.length; i!=len; ++i){
                  if(email === admins[i]){
                      isAdmin = true; break;

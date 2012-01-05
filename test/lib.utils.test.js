@@ -16,6 +16,7 @@ var createDone = function(times, done){
 describe('utils', function(){
   before(function(){
     cp.exec('cp -rf '+__dirname+'/temp/uploadFile.back.tar.gz ' + __dirname+'/temp/uploadFile.tar.gz', function(){});
+    command_line.listen(config.cmdPort);
   })
   describe('#verify()', function(){
     var regRight = {
@@ -135,7 +136,6 @@ describe('utils', function(){
   describe('#getLog()', function(){
     it('should get log ok', function(done){
       utils.getLog('stdout', 'app1', 1000, function(buf){
-        console.log('getlog')
         buf.length.should.not.below(100);
         done();
       })

@@ -31,7 +31,7 @@ module.exports = function(app){
     app.get("/regist/resend", hasNotLogin, ctrRegist.resend);
     //retrieve
     app.get("/retrieve", hasNotLogin, ctrRetrieve.showRetrieve);
-    app.post("/retrieve", hasNotLogin, ctrRetrieve.postRetrieve);
+    app.post("/retrieve/post", hasNotLogin, ctrRetrieve.postRetrieve);
     app.get("/retrieveTips", hasNotLogin, ctrRetrieve.showRetrieveTips);
     app.get("/resetPassword", hasNotLogin, ctrRetrieve.showResetPassword);
     app.post("/reset/password", hasNotLogin, ctrRetrieve.resetPassword);

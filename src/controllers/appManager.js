@@ -252,31 +252,34 @@ exports.loadCoopmng = function(req, res){
  * @param {} res
  */
 exports.doCoopmng = function(req, res) {
-  var email = req.body.inviteEmail || '', words = req.body.inviteWords || '', role = req.body.role, domain = req.params.id, regEmail = config.regEmail;
+  var email = req.body.inviteEmail || '',
+      words = req.body.inviteWords || '',
+      role = req.body.role, 
+      domain = req.params.id;
   role = parseInt(role);
   if(role!==1&&role!==2&&role!==3&&role!==4){
-      res.sendJson({
+      return res.sendJson({
         status:"error",
         msg:"错误的角色信息"
       })
     }
   //未输入
   if(!email) {
-    res.sendJson({
+    return res.sendJson({
       status : "error",
       msg : "请输入邮箱"
     })
   } else
   //输入不合法
   if(!verify('email', email)) {
-    res.sendJson({
+    return res.sendJson({
       status : "error",
       msg : "请输入正确的email地址"
     })
   } else
   //输入自身
   if(email === req.session.email) {
-    res.sendJson({
+    return res.sendJson({
       status : "error",
       msg : "不能邀请自己"
     });
