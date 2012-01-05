@@ -47,7 +47,7 @@ function(req, res){
   return bodyStr;
 });
 app.use(connect.logger({ 
-  stream : fs.createWriteStream(config.token+'.'+config.reqLogPath),
+  stream : fs.createWriteStream(config.reqLogPath+'.worker'+config.token),
   format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
 }));
 //render power by ejs
