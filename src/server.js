@@ -1,3 +1,4 @@
+require('http_patch');
 var cluster = require('cluster');
 var fs = require('fs');
 var http = require('http');
