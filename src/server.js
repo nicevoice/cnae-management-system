@@ -11,6 +11,7 @@ if(cluster.isMaster){
     console.log("server start listen on "+config.port+' by '+process.pid);       
   }else{
     var num = Math.ceil(require('os').cpus().length/2);//cpu的一半
+    num = 1;
     var workers = {}, started_success = 0;
     var start = false, stop = false;
     var i=0;
