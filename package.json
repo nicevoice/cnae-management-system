@@ -32,10 +32,9 @@
 	},
 	"bundleDependencies" :[
 		"connect",
-		"connect-form",
 		"connect-redis",
-		"formidable",
 		"nodemailer",
-		"mimelib-noiconv"
+		"mongoskin",
+		"http_patch"
 	]
 }
