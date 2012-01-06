@@ -188,9 +188,9 @@ describe('utils', function(){
   }),
 
   describe('#upload', function(){
-    var form = {files:{upload:{filename:'uploadFile.tar.gz', path:__dirname+'/temp/uploadFile.tar.gz'}}};
+    var files = {upload:{filename:'uploadFile.tar.gz', path:__dirname+'/temp/uploadFile.tar.gz'}};
     it('should upload fine', function(done){
-      utils.upload(form, __dirname+'/temp/temp/uploadFile.tar.gz', function(data){
+      utils.upload(files, __dirname+'/temp/temp/uploadFile.tar.gz', function(data){
         data.msg.should.equal('succeed');
         done();
       })

@@ -142,6 +142,28 @@ describe('single user management test', function(){
         done();
       })        
     })
+    it('should response num limit', function(done){
+      var tplAdmins = clone(config.admins);
+      config.admins = [];
+      var DONE = function(i, res){
+        if(i===11){
+          config.admins = tplAdmins;
+          res.body.should.include('domainLimit');
+          done();
+        }else{
+          res.body.should.include('ok');
+          newApp(i+1);
+        }
+      }
+      var newApp = function(i){
+        opt.data.appDomain = 'test' + i;
+        opt.data.appName = 'test' + i;
+        Post(opt, function(res){
+          DONE(i, res);
+        })           
+      };
+      newApp(2);
+    })
   })
 
   describe('#checkAppDomain()', function(){
@@ -239,7 +261,7 @@ describe('single user management test', function(){
       opt.headers.cookie = COOKIE;
       opt.path = '/application/manage/test/load_allapp';
       Get(opt, function(res){
-        JSON.parse(res.body).content.apps.should.have.length(1);
+        JSON.parse(res.body).content.apps.should.have.length(10);
         done();
       })
     })
@@ -385,4 +407,134 @@ describe('single user management test', function(){
     })
   })
 
+  describe('#getEmails()', function(){
+    var opt = clone(tpl);
+    it('should return emails emailMatch tow short', function(done){
+      opt.path = '/get/emails?emailMatch=da';
+      opt.headers.cookie = COOKIE;
+      Get(opt, function(res){
+        res.body.should.include('input too short');
+        done();
+      })
+    })
+    it('should return limit emails', function(done){
+      opt.path = '/get/emails?emailMatch=qq.com&limit=1';
+      opt.headers.cookie = COOKIE;
+      Get(opt, function(res){
+        res.body.should.include('"status":"ok"');
+        JSON.parse(res.body).emails.should.have.length(1);
+        done();
+      })
+    })
+    it('should return all match emails', function(done){
+      opt.path = '/get/emails?emailMatch=qq.com';
+      opt.headers.cookie = COOKIE;
+      Get(opt, function(res){
+        res.body.should.include('"status":"ok"');
+        JSON.parse(res.body).emails.should.have.length(2);
+        done();
+      })      
+    })
+  })
+
+  describe('#doChangeRole', function(req, res){
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/changeRole';
+    it('should response wrong role', function(done){
+      opt.data = {
+        role : 5,
+        _csrf : CSRF
+      }
+      opt.headers.cookie = COOKIE;
+      Post(opt, function(res){
+        res.body.should.include('错误的角色信息');
+        done();
+      })
+    })
+    it('should response email err', function(done){
+      opt.data.role = '1';
+      opt.data.email = "test3@qq.com";
+      Post(opt, function(res){
+        res.body.should.include('该用户未参与此应用');
+        done();
+      })
+    })
+    it('should response ok', function(done){
+       opt.data.role = '2';
+      opt.data.email = "user@qq.com";
+      Post(opt, function(res){
+        res.body.should.include('ok');
+        done();
+      })     
+    })
+  })
+
+  describe('#mnglog(): show log mng page', function(){
+    it('should display the right page', function(done){
+      var opt = clone(tpl);
+      opt.headers.cookie = COOKIE;
+      opt.path = '/application/manage/test/mnglog';
+      Get(opt, function(res){
+        res.body.should.include('管理记录');
+        res.body.should.include('dead_horse');
+        done();
+      })
+    })
+  })
+  describe('#loadMnglog()', function(){
+    it('should load mnglog data', function(done){
+      var opt = clone(tpl);
+      opt.headers.cookie = COOKIE;
+      opt.path = '/application/manage/test/load_mnglog';
+      Get(opt, function(res){
+        res.body.should.include('"status":"ok"');
+        JSON.parse(res.body).content.records.should.have.length(4);
+        done();
+      })
+    })
+  })
+    /***
+  *  appOptimization test
+  */
+  describe('#applog()', function(){
+    it('should display the right page', function(done){
+      var opt = clone(tpl);
+      opt.headers.cookie = COOKIE;
+      opt.path = '/application/manage/test/applog';
+      Get(opt, function(res){
+        res.body.should.include('stdout');
+        res.body.should.include('dead_horse');
+        done();
+      })
+    })    
+  })
+
+  describe('#getStdOutput()', function(){
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/getStdOutput';
+    it('should return log', function(done){
+      opt.headers.cookie = COOKIE;
+      opt.data = {
+        _csrf : CSRF,
+        action : 'stdout'
+      }
+      Post(opt, function(res){
+        JSON.parse(res.body).output.should.include('!!!!!!!!');
+        JSON.parse(res.body).output.should.have.length(100);
+        done();
+      })
+    })
+    it('shoud return wrong action', function(done){
+      opt.data.action = 'start';
+      Post(opt, function(res){
+        JSON.parse(res.body).output.should.equal('wrong action.');
+        done();
+      })
+    })
+  })
+
+  after(function(){
+    app.close();
+    cml.close();
+  })
 })
