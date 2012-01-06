@@ -63,6 +63,11 @@ function cmd(client){
 					data.fill(45333);
 					client.write('{"cmd":"response", "length":100}\n');
 					client.write(data);
+				}else{
+					var data = new Buffer(100);
+					data.fill(33);
+					client.write('{"cmd":"response", "length":100}\n');
+					client.write(data);					
 				}return;
 			case 'stop':
 				onOk('App "'+ command.app +'" stop ok.'); return;
