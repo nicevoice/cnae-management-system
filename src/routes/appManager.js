@@ -70,5 +70,4 @@ module.exports = function(app){
   app.post("/application/manage/:id/getStdOutput", hasLogin, checkAuth, ctrAppOptimization.getStdOutput);  //获取标准输出/错误
   //
   app.get("/application/manage/:id/load_allapp", hasLogin, ctrAppManager.getAllApps);
-
 }
