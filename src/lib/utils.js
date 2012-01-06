@@ -430,7 +430,7 @@ exports.doGit = function(command, targetDir, cb, isClone) {
 }
 
 exports.upload = function(files, savePath, cb){
-      filePath = files.upload ? files.upload.filename : null;
+  var filePath = files.upload ? files.upload.filename : null;
   if(!filePath) {
     return cb({
       error:"true",
