@@ -18,6 +18,7 @@ require('./lib/patch');
 var app = connect();
 
 //favicon
+app.use(connect.limit('10mb'));
 app.use(connect.favicon());
 //static
 //app.use(connect.staticCache());
@@ -85,7 +86,12 @@ fs.readdirSync(__dirname + '/routes').forEach(function(filename){
 })  
 
 app.use(function(err, req, res, next){
-  res.render("error", {message:err.toString()});
+  if(res.render){
+    res.render("error", {message:err.toString()});
+  }else{
+    res.setHeader('Content-Type', 'text/html');
+    res.end(err.toString());
+  }
 });
 
 app.use(function(req, res){
