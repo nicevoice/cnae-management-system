@@ -15,13 +15,22 @@ exports.applog = function(req, res) {
     });
 };
 exports.getStdOutput = function(req, res) {
-  var domain = req.params.id || '', action = req.body.action;
+  var domain = req.params.id || '', action = req.body.action||'';
+  action = action.trim();
+  if(action!=='stdout'&&action!=='stderr'){
+    return res.sendJson({
+      output:'wrong action.'
+    })
+  }
   getLog(action, domain, 1000, function(data) {
     try {
       return res.sendJson({
         output : data
       });
     } catch(e) {
+      return res.sendJson({
+        output : e.toString()
+      })
     };
   });
 }
