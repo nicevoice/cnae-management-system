@@ -15,6 +15,7 @@ var config = require('../config'),
     update = model.update, 
     remove = model.remove, 
     count = model.count, 
+    findAndModify = model.findAndModify,
     //send emails 
     sendMail = require('../lib/sendMail'), 
     mail = config.mail,
@@ -362,7 +363,6 @@ exports.getEmails = function(req, res){
   var qs = urlMoudle.parse(req.url, true).query,
       emailMatch = decodeURIComponent(qs.emailMatch||''),
       limit = parseInt(decodeURIComponent(qs.limit||''));
-      console.log(emailMatch, limit);
   if(!emailMatch||emailMatch.length < 3){
     return res.sendJson({status:"error", msg:"input too short"})
   }
@@ -492,23 +492,31 @@ exports.refuseCoop = function(req, res) {
   })
 }
 exports.doChangeRole = function(req, res) {
-  var email = req.body.email || '', domain = req.params.id || '', role = req.body.role || '';
+  var email = req.body.email || '', 
+      domain = req.params.id || '', 
+      role = req.body.role || '';
   role = parseInt(role);
   if(role!==1&&role!==2&&role!==3&&role!==4){
-      res.sendJson({
+      return res.sendJson({
         status:"error",
         msg:"错误的角色信息"
       })
     }  
-  update(app_mem, {
+  findAndModify(app_mem, {
     email : email,
     appDomain : domain
-  }, {
+  }, [], {
     $set : {
       role : role
     }
   }, function(err) {
     if(err) {
+      if(err.errmsg==='No matching object found'){
+        return res.sendJson({
+          status:'error',
+          msg : '该用户未参与此应用'
+        })
+      }
       log.error(err.toString());
       res.sendJson({
       status:"error",
@@ -605,17 +613,14 @@ exports.loadMnglog = function(req, res) {
   })
 };
 
-
-
-
 exports.addRecord = function(req, res) {
-  var action = req.body.action || '', domain = req.params.id || '';
+  var action = req.body.action || '',
+   domain = req.params.id || '';
   insert(app_record, {
     appDomain : domain.toString(),
     email : req.session.email.toString(),
     action : action,
     recordTime : new Date().format("YYYY-MM-dd hh:mm:ss")
   }, function() {
-    res.sendJson({});
   });
 }
