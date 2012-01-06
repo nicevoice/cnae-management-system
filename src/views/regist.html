@@ -14,7 +14,7 @@
 	            	    <input type="hidden" value="<%=_csrf%>" id="_csrf">
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
-                        <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" style="width:250px">
+                        <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" style="width:250px" value="<%=email||''%>">
                         <span id="emailWarn" class="error"></span>
                         <br />
                         <span class="tips">Email 将是您的登录帐号和唯一身份标识。</span>
@@ -59,7 +59,7 @@
                     <div class="spacer"></div>
                     <div class="field-group">
                         <label class="required title" for="inviteCode"><span style="color:red;">*</span> 邀请码:</label>
-                        <input type="text" name="inviteCode" id="inviteCode" tabindex="1" class="input1"  style="width:150px" maxlength="11">
+                        <input type="text" name="inviteCode" id="inviteCode" tabindex="1" class="input1"  style="width:150px" maxlength="11" value="<%=code||''%>">
                         	&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://cnodejs.org/blog/?p=2521" target="_blank">如何获得？</a>
                         <span id="codeWarn" class="error"></span>
                         <br />

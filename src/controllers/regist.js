@@ -33,7 +33,7 @@ exports.regist = function(req, res){
   var queryString = urlMoudle.parse(req.url, true).query,
     email = queryString.email||'',
     code = queryString.code||'';
-  res.render("regist",{layout:'layoutLogin'});
+  res.render("regist",{layout:'layoutLogin', email:email, code : code});
 }
 
 /***
