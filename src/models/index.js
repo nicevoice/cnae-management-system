@@ -18,8 +18,7 @@ for(var name in collectionNames) {
   collections[collectionNames[name]] = db.collection(collectionNames[name]);
 }
 collections[collectionNames.user].ensureIndex({
-  email : 1,
-  nickName : 1
+  email : 1
 }, {
   unique : true
 }, function() {
@@ -39,8 +38,8 @@ collections[collectionNames.app_basic].ensureIndex({
 });
 collections[collectionNames.app_record].ensureIndex({
   appDomain : 1
-}, {
-  unique : true
+},{
+  unique : false
 }, function() {
 });
 
