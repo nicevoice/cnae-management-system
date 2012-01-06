@@ -59,6 +59,9 @@ Logs.prototype.initAuth = function(){
             log.error(err.toString());
             return accept(err.toString(), false);
           }
+          if(!info){
+            return accept('user not found', false);
+          }
           if(info.active===0||info.role>2){
             return accept('permission denied', false);
           }
