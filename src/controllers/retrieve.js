@@ -106,7 +106,7 @@ exports.resetPassword = function(req, res, next){
       password = req.body.changePassword||'',
       con = req.body.changeConfirmation||'';
   if(!verify('password', password)){
-    return next(new Error('密码必须为6～20位'));
+    return next(new Error('密码至少为6位'));
 	}else{
 		if (con && password !== con) {
       return next(new Error('两次密码不一致'));
