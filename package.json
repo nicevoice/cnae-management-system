@@ -6,7 +6,7 @@
 	"description" : "A management system for NAE",
 	"scripts" : 
 	{
-		"test" : "make test"
+		"test" : "make testall"
 	},
 	"keywords" : 
 	[
