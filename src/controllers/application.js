@@ -243,7 +243,7 @@ var fs = require('fs')
           email : req.session.email,
           action : "创建应用",
           recordTime : new Date().format("YYYY-MM-dd hh:mm:ss")
-        }, function(err) {
+        }, function(err, data) {
           if(err) {
             log.error(err.toString());
             createAppEvent.fire("saveRecord", err);
