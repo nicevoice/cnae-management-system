@@ -3,7 +3,9 @@ var config = require('../config'),
     path = require('path'),
     util = require('util'),
     exec = require('child_process').exec,
+    execFile = require('child_process').execFile,
     EventProxy = require('EventProxy.js').EventProxy,
+    Step = require('../lib/step'),
     log = config.logWithFile,
     uploadDir = config.uploadDir
 
@@ -81,11 +83,10 @@ exports.doUpload = function(req, res, next) {
   //check type
   var type = files.upload.type,
       path = files.upload.path;
-  console.log('__________',type);
-  if (!(type === "application/zip" || type==="application/gzip" || type==="application/x-zip-compressed" || type === "application/x-gzip")) {
+  if (!(type === "application/zip" || type==="application/octet-stream" ||
+   type==="application/x-zip-compressed")) {
     return next(new Error("文件格式不正确"));
   }
-  console.log('_________??')
   var tempDir = config.tempDir,
       savePath = uploadDir + '/' + domain + '/';
   //use jscex to do this
@@ -99,13 +100,12 @@ exports.doUpload = function(req, res, next) {
       }
 	  //console.log('mkdir done')
       //uncompress
-      var unCompress;
-      if (type === "gz") {
-        unCompress = 'tar -xf ' + path + ' -C ' + tempDir + '/' + domain;
-      } else {
-        unCompress = 'unzip -oq ' + path + ' -d ' + tempDir + '/' + domain;
+      var unCompress = 'unzip -oq ' + path + ' -d ' + tempDir + '/' + domain;
+      try {
+        var out = $await(execAsync(unCompress));
+      }catch(err){
+        return next (new Error('解压缩失败，请确认上传文件是否正确'));
       }
-      var out = $await(execAsync(unCompress));
 	  //console.log('unCompress done')
       //check if only has a dir
       var files = $await(standard(fs.readdir)(tempDir + '/' + domain));
@@ -165,6 +165,13 @@ exports.doUpload = function(req, res, next) {
   }));
   upload().start();
 }
+
+var gitFilter = function(command){
+  if(/git(\s)+config/.test(command)){
+    return true;
+  }
+  return false;
+}
 exports.gitAction = function(req, res){
   var command = req.body.gitCommand||'',
       domain = req.params.id||'';
@@ -172,8 +179,11 @@ exports.gitAction = function(req, res){
   if(!verify('gitAction', command)){
 	  return res.sendJson({status:"error", msg:"不是有效的git操作"});
 	}
+  if(gitFilter(command)){
+    return res.sendJson({status:"error", msg:"该操作不被允许"});
+  }
   log.info(command + ' ok');
-	cb = function(data){
+	var cb = function(data){
 	  return res.sendJson(data);
 	}
 	if(verify('gitClone', command)){
@@ -191,6 +201,7 @@ exports.gitAction = function(req, res){
 	  doGit(command, domain, cb);
 	}
 }
+
 /***
  *
  * @param {} req
@@ -198,8 +209,9 @@ exports.gitAction = function(req, res){
  */
 exports.doDownload = function(req, res) {
   var domain = req.params.id || '',
-      files = req.body.files.trim().replace(/\.\./g, '') || '',
+      files = req.body.files||'',
       zipDir = uploadDir;
+  files = files.trim().replace(/\.\./g, '');
   //如果没有输入files，则压缩整个文件夹
   log.info(req.session.email + ' download ' + domain);
   if(!files){
@@ -207,7 +219,7 @@ exports.doDownload = function(req, res) {
   }else{
     if(!verify('files', files)){
         log.info(files + 'not pass in download');
-    	res.sendJson({
+    	return res.sendJson({
     	  status:'error',
     	  msg:'错误的文件名或通配符'	
     	})
@@ -224,7 +236,7 @@ exports.doDownload = function(req, res) {
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
-  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "public/download/" + name;	
+  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "/download/" + name;	
   
   var compress = "cd " + zipDir + "&&zip -r " + saveName + " " + files;
   exec(compress, function(err, stdout, stderr) {
@@ -303,7 +315,7 @@ exports.npmInstall = function(req, res) {
   log.info(npmName + ' pass npm check') 
   var domain = req.params.id || '', install = "npm install " + npmName;
   install = 'cd '+ uploadDir + '/' + domain + '&&' + install;
-  exec(install, function(err, npmStdout, npmStderr) {
+  exec(install, {timeout:60000}, function(err, npmStdout, npmStderr) {
     if (err) {
       log.error(err.toString());
       return res.sendJson({
@@ -319,7 +331,7 @@ exports.npmInstall = function(req, res) {
   });
 }
 exports.showMongo = function(req, res) {
-  url = req.url;
+  var url = req.url;
   url = url.slice(0, url.lastIndexOf('/'));
   return res.render("appManageMongo", {
     layout: "layoutApp",
@@ -365,74 +377,78 @@ exports.loadMongoContent = function(req, res) {
     }
   })
 }
-exports.createMongo = function(req, res, next) {
-  var domain = req.params.id || '',
-      url = req.url,
-      email = req.session.email;
+exports.createMongo = function(req, res, next){
+  var domain = req.params.id || '';
+  var url = req.url;
+  var email = req.session.email;
   url = url.slice(0, url.lastIndexOf('/'));
-  findOne(app_basic, {
-    appDomain: domain,
-  }, function(err, data) {
-    if (err) {
-      log.error(err.toString());
-      return next(err);
-    } else {
-
-      if (data.appDbType) { //如果已经创建过数据库
-        return next(new Error("已创建数据库"))
-      } else {
-        var proxy = new EventProxy();
-        proxy.once('dbUser', function(dbUser) {
-          if (dbUser instanceof Error) {
-            return next(dbUser);
-          }
-          var dbName = randomStringNum(12);
-          var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoAllocator.sh " + dbName + " " + dbUser.dbUserName + " " + dbUser.dbPassword;
-          exec(command, function(err, stdout, stderr) { //执行shell脚本，给用户授权对应数据库
-            if (err) {
-              log.error(err.toString());
-              return next(err);
-            } else {
-              update(app_basic, {
-                appDomain: domain
-              }, {
-                $set: {
-                  appDbType: "mongo",
-                  appDbName: dbName
-                }
-              }, function(err) { //更新应用表
-                if (err) {
-                  log.error(err.toString());
-                  return next(err);
-                } else {
-                  return res.redirect(url + "/mongo");
-                }
-              })
-            }
-          })
-        });
-        findOne(user, {
-          email: req.session.email
-        }, {
-          dbUserName: 1,
-          dbPassword: 1
-        }, function(err, data) {
-          if (err) {
-            log.error(err.toString());
-            proxy.fire('dbUser', err);
-          } else {
-            proxy.fire('dbUser', data);
-          }
-        })
+  var dbName = '';
+  Step(function getUser(){
+      findOne(app_basic, {
+        appDomain : domain
+      }, this)
+    },
+    function getDbInfo(err, data){
+      if(err) {
+        log.error(err.toString());
+        return next(err);
       }
+      if(data.appDbType) return next (new Error("已创建数据库"));
+      findOne(user, {
+        email: req.session.email
+      }, {
+        dbUserName: 1,
+        dbPassword: 1
+      }, this);
+    },
+    function execCommand(err, dbUser){
+      if(err) {
+        log.error(err.toString());
+        return next(err);
+      }
+      dbName = randomStringNum(12);
+      var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + 
+      "shells/mongoAllocator.sh ";
+      var args = [dbName, dbUser.dbUserName, dbUser.dbPassword, config.appDbAdmin.userName,
+                  ,config.appDb.port, config.appDbAdmin.password];
+      var command = shPath + ' ' + args.join(' ');
+      exec(command, {timeout : 10000}, this);     
+    },
+    function updateDb(err, data){
+      if(err) {
+        log.error(err.toString());
+        return next(err);
+      }
+      update(app_basic, {
+        appDomain: domain
+      }, {
+        $set: {
+          appDbType: "mongo",
+          appDbName: dbName
+        }
+      }, function(err) { //更新应用表
+        if(err) {
+          log.error(err.toString());
+          return next(err);
+        }
+        return res.redirect(url + "/mongo");
+      })
     }
-  })
+  );
 }
+
 checkQueryString = function(queryString) {
   if (queryString.indexOf("db.") !== 0 && queryString.indexOf("show") !== 0) {
     return false;
   } else {
-    if (queryString.indexOf("db.addUser") === 0 || queryString.indexOf("db.auth") === 0 || queryString.indexOf("db.removeUser") === 0 || queryString.indexOf("db.eval") === 0 || queryString.indexOf("db.dropDatabase") === 0 || queryString.indexOf("db.shoutdownServer") === 0 || queryString.indexOf("db.copyDatabase") === 0 || queryString.indexOf("db.cloneDatabse") === 0) {
+    if (queryString.indexOf("db.addUser") === 0 ||
+        queryString.indexOf("db.auth") === 0 || 
+        queryString.indexOf("db.removeUser") === 0 || 
+        queryString.indexOf("db.eval") === 0 || 
+        queryString.indexOf("db.dropDatabase") === 0 
+        || queryString.indexOf("db.shoutdownServer") === 0 
+        || queryString.indexOf("db.copyDatabase") === 0 
+        || queryString.indexOf("db.cloneDatabse") === 0) {
       return false;
     } else {
       return true;
@@ -471,7 +487,8 @@ exports.queryMongo = function(req, res) {
             msg: "数据库未申请或者数据库类型不是mongoDB"
           });
         }
-        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString;
+        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString + " " + config.appDb.port;
+        console.log(command);
         exec(command, function(err, stdout, stderr) {
           if (err) {
             log.error(err.toString());

@@ -90,4 +90,20 @@ exports.isAdmin = function(req, res, next){
 	res.redirect("/application");
 }
 
+exports.downloadAuth = function(req, res, next){
+	var domain = req.params.name||'';
+	var email = req.session.email||'';
+	domain = domain.slice(0,domain.lastIndexOf('_'));
+	findOne(app_mem, {appDomain: domain.toString(), email:email.toString()},
+	function(err , data){
+		if(err){
+			return res.render("error", {message:"数据库查询错误，请稍后再试"});
+		}else
+			if(!data || data.active===2 || data.role>2){
+				return next(new Error('没有权限进行这个操作'));
+			}
+		next();
+	});	
+}
+
 exports.webCache = require('../lib/webcache')({maxAge:30000});

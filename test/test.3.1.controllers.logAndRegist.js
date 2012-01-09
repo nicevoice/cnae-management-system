@@ -3,6 +3,7 @@ var config = require('../src/config');
 var db = require('../src/models/index');
 var utils = require('./helper/testUtils');
 var cp = require('child_process');
+var path = require('path');
 var clone = utils.clone,
     Request = utils.Request,
     Get = utils.Get,
@@ -17,7 +18,8 @@ var clear = function(done){
   db.app_mem.drop();
   db.app_basic.drop();
   db.records.drop();
-  cp.exec('rm -rf ' + config.github.keyDir+'/* ' + __dirname + '/temp/temp/* ' + __dirname+'/temp/apps/*',  done);
+  cp.exec('rm -rf ' + config.github.keyDir+'/* ' + 
+  __dirname + '/temp/temp/* ' + __dirname+'/temp/apps/* ' + path.dirname(__dirname)+'/src/download/*',  done);
 }
 
 describe('regist controller test', function(){

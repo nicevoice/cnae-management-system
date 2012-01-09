@@ -1,7 +1,9 @@
 var middleware = require('./middleware'),
+    connect = require('connect'),
     hasLogin = middleware.hasLogin,
     checkAuth = middleware.checkAuth,
     checkChangeAuth = middleware.checkChangeAuth,
+    downloadAuth = middleware.downloadAuth,
     switchs = require('../config').switchs,
     labs = switchs.labs,
     nonGit = switchs.nonGit,
@@ -46,6 +48,7 @@ module.exports = function(app){
   app.post("/application/manage/:id/git", hasLogin, checkChangeAuth(2), ctrAppDevelop.gitAction);  //git clone代码
   app.post("/application/manage/:id/upload", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUpload);  //上传代码
   app.post("/application/manage/:id/download", hasLogin, checkChangeAuth(2), ctrAppDevelop.doDownload);  //代码打包下载
+  app.get("/download/:name.zip",hasLogin, downloadAuth, connect.static(require('path').dirname(__dirname)));
   app.get("/application/download/:id.zip", hasLogin, ctrAppDevelop.downloading);
   app.post("/application/manage/:id/npminstall", hasLogin, checkChangeAuth(2), ctrAppDevelop.npmInstall);  //npm install
   app.post("/application/manage/:id/uploadImg", hasLogin, checkChangeAuth(2), ctrAppDevelop.doUploadImg);  //上传接口

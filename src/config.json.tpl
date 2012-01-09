@@ -15,8 +15,12 @@
   "redisPassword":"$$redisPassword$$",
   "appDb":{
     "host":"127.0.0.1",
-    "port":"20088"
+    "port":"$$appDbPort$$"
   }, 
+  "appDbAdmin":{
+    "userName":"$$appDbUserName$$",
+    "password":"$$appDbPassword$$"
+  },
   "md5_secret":"$$md5Secret$$",     ##md5 secret for login
   "session_secret":"$$sessionSecret$$", ##secret for session
   "timeOut":1296000000,

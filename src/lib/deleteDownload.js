@@ -2,12 +2,12 @@ var fs = require("fs"),
     exec = require('child_process').exec,
     log = require("../config").logWithFile,
     tempDir = require("../config").tempDir,
-    delPath = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"public/download/",
+    delPath = __dirname.slice(0, __dirname.lastIndexOf("/")+1)+"download/",
     downloadTime = 5*60*1000,
     delInterval = 1000*10*60;
 
 (function(){
-  exec("rm -rf "+ tempDir + "/*.zip", function(err){
+  exec("rm -rf "+ tempDir + "/*", function(err){
     if(err){
       log.error(err.toString());
     }

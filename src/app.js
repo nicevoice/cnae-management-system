@@ -94,6 +94,6 @@ app.use(function(err, req, res, next){
 });
 
 app.use(function(req, res){
-      res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"});
+      res.render("error", {message:"抱歉，你输入的网址可能不正确，或者该网页不存在。"}, 404);
     });
 module.exports = app;

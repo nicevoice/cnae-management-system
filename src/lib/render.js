@@ -59,7 +59,7 @@ module.exports = function(options) {
     };
 };
 
-function render(view, options) {
+function render(view, options, code) {
     options = options || {};
     options.layout = (!options.layout&&options.layout!==false)?'layout.html':options.layout;
     if(settings.helpers) {
@@ -68,7 +68,7 @@ function render(view, options) {
         }
     }
     if(this._csrf){
-      options._csrf = this._csrf
+      options._csrf = this._csrf;
     }
     var layout = options.layout;
     if(layout){
@@ -98,6 +98,9 @@ function render(view, options) {
         self._render(layout, options, function(err, str) {
             if(err) {
                 return self.req.next(err);
+            }
+            if(code){
+                self.writeHead(code);
             }
             self.end(str);
         });
@@ -139,5 +142,5 @@ function redirect(url){
         url = arguments[1];
     }
     this.writeHead(statusCode, {"Location":url});
-    this.end('redirect');
+    this.end('redirect: '+ url);
 }

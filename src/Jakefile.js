@@ -18,6 +18,10 @@ task('makeconf', function(){
       .replace(/\$\$app_member\$\$/ig, 'member')  
       .replace(/\$\$app_basic\$\$/ig, 'basic')  
       .replace(/\$\$app_record\$\$/ig, 'record')
+      //app db info
+      .replace(/\$\$appDbUserName\$\$/ig, '')
+      .replace(/\$\$appDbPassword\$\$/ig, '')
+      .replace(/\$\$appDbPort\$\$/ig, '20088')
       
       .replace(/\$\$redisPassword\$\$/ig, 'input your redis password')
       
@@ -71,7 +75,11 @@ task('maketestconf', function(){
       .replace(/\$\$app_member\$\$/ig, 'member')  
       .replace(/\$\$app_basic\$\$/ig, 'basic')  
       .replace(/\$\$app_record\$\$/ig, 'record')
-      
+      //app db info
+      .replace(/\$\$appdbUserName\$\$/ig, '')
+      .replace(/\$\$appdbPassword\$\$/ig, '')
+      .replace(/\$\$appDbPort\$\$/ig, '27017')
+
       .replace(/\$\$redisPassword\$\$/ig, '')
       
       .replace(/\$\$md5Secret\$\$/ig, 'input your login secret')//login secret

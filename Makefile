@@ -5,10 +5,12 @@ REPORTER = spec
 
 test:
 	@./node_modules/jake/bin/cli.js -f src/Jakefile.js maketestconf
+	@mv config.test.json ./src/
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
 		--reporter $(REPORTER) --timeout $(TESTTIMEOUT) $(TEST)
 testall:
 	@./node_modules/jake/bin/cli.js -f src/Jakefile.js maketestconf
+	@mv config.test.json ./src/
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
 		--reporter $(REPORTER) --timeout $(TESTTIMEOUT) $(TESTS)
 
