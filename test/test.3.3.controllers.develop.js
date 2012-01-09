@@ -17,12 +17,15 @@ var clone = utils.clone,
 
 var COOKIE='';
 var CSRF='';
-var CSRF_curl='';
-var COOKIE_curl='';
+
+function tplReplace(tpl, params){
+    return tpl.replace(/\$\$.*?\$\$/g, function(data){
+        return params[data];
+    });
+}
 
 describe('user develop manage test', function(){
   before(function(done){
-    var DONE = createDone(2, done);
     app.listen(1130);
     cml.listen(testConf.cmdPort);
     var opt = clone(tpl);
@@ -38,16 +41,8 @@ describe('user develop manage test', function(){
       _csrf : CSRF
       }
       Post(opt, function(res){  //login use http.request
-        DONE();
+        done();
       });
-    })
-    exec('curl -i localhost:1130/login', function(err, stdout){
-      CSRF_curl = /<input type="hidden" name="_csrf" id="_csrf" value="(\w+)">/.exec(stdout)[1];
-      COOKIE_curl = /Set-Cookie:\s?(.*?);/i.exec(stdout)[1];
-      exec('curl -i --cookie '+COOKIE_curl+' --data "_csrf='+CSRF_curl+'&email=dead_horse@qq.com&pwd=test12" localhost:1130/checkLogin', function(err, stdout, stderr){
-        DONE();           
-      })
-
     })
   })
 
@@ -66,11 +61,15 @@ describe('user develop manage test', function(){
   })
 
   describe('#doUpload()', function(){
+    var curlTpl = 'curl -i --user-agent "" --cookie $$COOKIE$$ --form upload=@'+
+        '$$PATH$$ --form _csrf=$$CSRF$$ --form press=submitUpload ' +
+        'http://localhost:1130/application/manage/test/upload';
     it('should upload wrong format', function(done){
-      exec('curl -i --cookie ' + COOKIE_curl + ' --form upload=@'+
-        __dirname + '/temp/test.json --form _csrf=' + CSRF_curl + ' --form press=submitUpload ' +
-        'http://localhost:1130/application/manage/test/upload'
-      , function(err, stdout, stderr){
+      exec(tplReplace(curlTpl, {
+            '$$COOKIE$$': COOKIE,
+            '$$CSRF$$' : CSRF,
+            '$$PATH$$' : __dirname+'/temp/test.json' 
+          }), function(err, stdout, stderr){
         stdout.should.include('文件格式不正确');
         done();
       })

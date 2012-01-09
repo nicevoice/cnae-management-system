@@ -23,7 +23,8 @@ describe('single user management test', function(){
     var opt = clone(tpl);
     opt.path = '/login';
     Get(opt, function(res){
-      CSRF = /<input type="hidden" name="_csrf" id="_csrf" value="(\w+)">/.exec(res.body)[1];
+      var csrfReg = /<input type="hidden" name="_csrf" id="_csrf" value="(\w+)">/;
+      CSRF = csrfReg.exec(res.body)[1];
       opt.headers.cookie = COOKIE = cookie(res.headers['set-cookie']);
       opt.path = '/checkLogin';
       opt.data = {
