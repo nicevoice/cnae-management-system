@@ -49,7 +49,7 @@ exports.cookie = function(cookies){
   for(var i=0, len=cookies.length; i!=len; ++i){
     str += cookies[i].split(';')[0] + ';';
   }
-  return str;
+  return str.slice(0, str.length-1);
 }
 
 exports.tpl = {
