@@ -137,19 +137,19 @@ function removeregTips() {
 }
 
 function upload() {
-  var str = '可能会覆盖之前存在的代码，确定上传吗？';
-  if(!confirm(str))
-    return false;
   var file = $("#getFile").val();
   if(!file) {
     sAlert("警告", "请选择要上传的文件");
     return false;
   }
   var type = file.slice(file.lastIndexOf('.') + 1);
-  if(!(type === 'gz' || type === 'zip')) {
+  if(type !== 'zip') {
     sAlert("警告", "请上传正确的格式");
     return false;
   }
+  var str = '可能会覆盖之前存在的代码，确定上传吗？';
+  if(!confirm(str))
+    return false;
   $("#uploading").css("display", "block");
 }
 

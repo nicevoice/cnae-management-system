@@ -236,7 +236,7 @@ exports.doDownload = function(req, res) {
   //生成压缩包名
   var now = new Date();
   var name = domain + "_" + now.getTime() + ".zip";
-  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "/download/" + name;	
+  var saveName = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "download/" + name;	
   
   var compress = "cd " + zipDir + "&&zip -r " + saveName + " " + files;
   exec(compress, function(err, stdout, stderr) {
