@@ -409,8 +409,8 @@ exports.createMongo = function(req, res, next){
       dbName = randomStringNum(12);
       var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + 
       "shells/mongoAllocator.sh ";
-      var args = [dbName, dbUser.dbUserName, dbUser.dbPassword, config.appDbAdmin.userName,
-                  config.appDbAdmin.password, config.appDb.port];
+      var args = [dbName, dbUser.dbUserName, dbUser.dbPassword, config.appDb.port, config.appDbAdmin.userName,
+                  config.appDbAdmin.password];
       var command = shPath + ' ' + args.join(' ');
       exec(command, {timeout : 10000}, this);     
     },
