@@ -1,7 +1,12 @@
-var fs = require('fs'), rimraf = require('rimraf'), path = require('path'), config = require('../config');
+var fs = require('fs');
+var rimraf = require('rimraf');
+var path = require('path');
+var config = require('../config');
+var Step = require('../lib/step');
 
 const LANG_YES = "y";
 const LANG_NO = "n";
+
 const LANG_SUCCEED = "succeed";
 const LANG_FAILED = "failed";
 const LANG_ERROR = "error";
@@ -17,6 +22,11 @@ function setError(errMsg) {
     return err;
 }
 
+function getPath(domain, pt){
+    var realPath = path.join(ROOT_PATH, domain, pt);
+    var domainPath = path.join(ROOT_PATH, domain)+'/';
+    return realPath.indexOf(domainPath)===0 ? realPath : null;
+}
 exports.index = function(req, res) {
     var domain = req.params.id;
     res.render("editor", {
@@ -33,9 +43,12 @@ exports.listfile = function(req, res) {
         status : LANG_ERROR,
         content : null
     };
-    var dirPath = req.body.dirPath || "";
+    var dirPath = req.body.dirPath || "/";
     var domain = req.params.id;
-    dirPath = path.join(ROOT_PATH, domain, dirPath);
+    dirPath = getPath(domain, dirPath);
+    if(!dirPath){
+        return res.json(setError('permission denied'), 200);
+    }
     fs.readdir(dirPath, function(err, items) {
                 if (err)
                     return res.json(setError("failed to read dir"), 200);
@@ -101,9 +114,12 @@ exports.readfile = function(req, res) {
         status : LANG_ERROR,
         content : null
     };
-    var filePath = req.body.filePath;
+    var filePath = req.body.filePath || '/';
     var domain = req.params.id;
-    filePath = path.join(ROOT_PATH, domain, filePath);
+    filePath = getPath(domain, filePath);
+    if(!filePath){
+        return res.json(setError('permission denied'), 200);
+    }
     fs.readFile(filePath, "utf8", function(err, data) {
                 if (err)
                     return res.json(setError("failed to read file"), 200);
@@ -121,10 +137,13 @@ exports.writefile = function(req, res) {
         status : LANG_ERROR,
         content : null
     };
-    var filePath = req.body.filePath;
-    var content = req.body.content;
+    var filePath = req.body.filePath||'/';
+    var content = req.body.content||'';
     var domain = req.params.id;
-    filePath = path.join(ROOT_PATH, domain, filePath);
+    filePath = getPath(domain, filePath);
+    if(!filePath){
+        return res.json(setError('permission denied'), 200);
+    }
     fs.writeFile(filePath, content, function(err) {
                 if (err)
                     return res.json(setError("failed to write file"), 200);
@@ -147,29 +166,47 @@ exports.writefile = function(req, res) {
  * 重命名文件
  */
 exports.renamefile = function(req, res) {
-    var resMsg = {
-        status : LANG_ERROR
-    };
-    var oriPath = req.body.oriPath; // 文件原路径
-    var newPath = req.body.newPath; // 文件新路径
-    var domain = req.params.id;
-    oriPath = path.join(ROOT_PATH, domain, oriPath);
-    newPath = path.join(ROOT_PATH, domain, newPath);
-    fs.rename(oriPath, newPath, function(err) {
-                if (err)
-                    return res.json(setError("failed to rename file"), 200);
-                // 获取文件最新的stat
-                fs.stat(newPath, function(err, stats) {
-                            if (err)
-                                return res.json(
-                                        setError("failed to get file stats"),
-                                        200);
-                            resMsg.mtime = stats.mtime;
-                            resMsg.status = LANG_SUCCEED;
-                            resMsg.filePath = newPath;
-                            return res.json(resMsg, 200);
-                        });
-            });
+  var resMsg = {
+      status : LANG_ERROR
+  };
+  var oriPath = req.body.oriPath||'/'; // 文件原路径
+  var newPath = req.body.newPath||'/'; // 文件新路径
+  var domain = req.params.id;
+  oriPath = getPath(domain, oriPath);
+  newPath = getPath(domain, newPath);
+  if(!oriPath || !newPath){
+      return res.json(setError('permission denied'), 200);
+  }  
+  Step(
+    function checkExist(){
+      if(oriPath!==newPath){
+        path.exists(newPath, this);
+      }else{
+        return res.json({status:LANG_SUCCEED}, 200);
+      }
+    },
+    function rename(err, exist){
+      if(err||exist){
+        return res.json(setError('rename conflict'), 200);
+      }
+      fs.rename(oriPath, newPath, this);
+    },
+    function getStat(err){
+      if(err){
+        return res.json(setError("failed to rename file"), 200);
+      }
+      fs.stat(newPath, this);
+    },
+    function(err, stats){
+      if(err){
+        return res.json(setError("failed to get file stats"),200);
+      }
+      resMsg.mtime = stats.mtime;
+      resMsg.status = LANG_SUCCEED;
+      resMsg.filePath = newPath;
+      return res.json(resMsg, 200);
+    }
+  ) 
 }
 
 /*
@@ -181,7 +218,10 @@ exports.delfile = function(req, res) {
     };
     var filePath = req.body.filePath;
     var domain = req.params.id;
-    filePath = path.join(ROOT_PATH, domain, filePath);
+    filePath = getPath(domain, filePath);
+    if(!filePath){
+      return res.json(setError('permission denied'), 200);
+    }
     fs.unlink(filePath, function(err) {
                 if (err)
                     return res.json(setError("failed to remove file"), 200);
@@ -199,7 +239,10 @@ exports.mkdir = function(req, res) {
     };
     var dirPath = req.body.dirPath;
     var domain = req.params.id;
-    dirPath = path.join(ROOT_PATH, domain, dirPath);
+    dirPath = getPath(domain, dirPath);
+    if(!dirPath){
+      return res.json(setError('permission denied'), 200);
+    }
     fs.mkdir(dirPath, 0755, function(err) {
                 if (err)
                     return res.json(setError("failed to make dir"), 200);
@@ -217,7 +260,10 @@ exports.deldir = function(req, res) {
     };
     var dirPath = req.body.dirPath;
     var domain = req.params.id;
-    dirPath = path.join(ROOT_PATH, domain, dirPath);
+    dirPath = getPath(domain, dirPath);
+    if(!dirPath){
+      return res.json(setError('permission denied'), 200);
+    }
     rimraf(dirPath, function(err) {
                 if (err)
                     return res.json(setError("failed to remove dir"), 200);
