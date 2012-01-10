@@ -14,6 +14,7 @@ var Logs = function(app, getSession){
   this.proxy = new ep();
   this.io = require('socket.io').listen(app);
   this.io.set('log level', 1); 
+  this.io.set('transports', ['jsonp-polling']);
   this.getSession = getSession;
   this.initEp();
   this.initAuth();
