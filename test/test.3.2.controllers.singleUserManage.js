@@ -454,7 +454,7 @@ describe('single user management test', function(){
     })
     it('should response email err', function(done){
       opt.data.role = '1';
-      opt.data.email = "test3@qq.com";
+      opt.data.email = "test4@qq.com";
       Post(opt, function(res){
         res.body.should.include('该用户未参与此应用');
         done();

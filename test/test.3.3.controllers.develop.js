@@ -267,25 +267,179 @@ describe('user develop manage test', function(){
       opt.data.queryString = 'show collections';
       Post(opt, function(res){
         JSON.parse(res.body).status.should.equal('ok');
+        res.body.should.include('system.index');
         done();
       })
     })
   })
 
-  describe('#newTodo()', function(){
-    var opt = clone(tpl);
-    opt.path = '/application/manage/test/todo/new';
-    it('should new a todo', function(done){
+  describe('#showTodo()', function(){
+    it('should display the right page', function(done){
+      var opt = clone(tpl);
       opt.headers.cookie = COOKIE;
-      opt.data = {
+      opt.path = '/application/manage/test/todo';
+      Get(opt, function(res){
+        res.body.should.include('dead_horse');
+        res.body.should.include('todo');
+        done();
+      })
+    })
+  })
+
+
+  describe('#newTodo()&&#loadTodoContent()', function(){
+    var optNew = clone(tpl);
+    optNew.path = '/application/manage/test/todo/new';
+    var optLoad = clone(tpl);
+    optLoad.path = '/application/manage/test/load_todo';
+    it('should load null', function(done){
+      optLoad.headers.cookie = COOKIE;
+      Get(optLoad, function(res){
+        var result = JSON.parse(res.body);
+        result.content.todos.should.be.empty;
+        result.status.should.equal('ok');
+        done();
+      })
+    })
+    it('should create a todo', function(done){
+      optNew.headers.cookie = COOKIE;
+      optNew.data = {
         title : 'test',
         _csrf : CSRF
       }
-      Post(opt, function(res){
+      Post(optNew, function(res){
         res.should.have.status(302);
         res.headers.location.should.equal('/application/manage/test/todo');
         done();
       })
     })
+    it('should create a todo the same', function(done){
+      Post(optNew, function(res){
+        res.should.have.status(302);
+        res.headers.location.should.equal('/application/manage/test/todo');
+        done();
+      })
+    })
+    it('should load contents', function(done){
+        Get(optLoad, function(res){
+        var result = JSON.parse(res.body);
+        result.content.todos.should.have.length(1);
+        result.content.todos[0].email.should.equal('dead_horse@qq.com');
+        result.content.todos[0].finished.should.equal(0);
+        result.status.should.equal('ok');
+        done();
+      })
+    })
+  })
+
+  describe('#finishTodo()', function(){
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/todo/finish';
+    it('should finish todo', function(done){
+      opt.headers.cookie = COOKIE;
+      opt.data = {
+        _csrf : CSRF,
+        email : 'dead_horse@qq.com',
+        title : 'test'
+      }
+      Post(opt, function(res){
+        res.body.should.equal('{"status":"ok"}');
+        done();
+      })
+    })
+  })
+
+  describe('#recoverTodo()', function(){
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/todo/recover';
+    it('should recover todo', function(done){
+      opt.headers.cookie = COOKIE;
+      opt.data = {
+        _csrf : CSRF,
+        email : 'dead_horse@qq.com',
+        title : 'test'
+      }
+      Post(opt, function(res){
+        res.body.should.equal('{"status":"ok"}');
+        done();
+      })
+    })
+  })
+
+  describe('#deleteTodo()', function(){
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/todo/delete';
+    it('should recover todo', function(done){
+      opt.headers.cookie = COOKIE;
+      opt.data = {
+        _csrf : CSRF,
+        email : 'dead_horse@qq.com',
+        title : 'test'
+      }
+      Post(opt, function(res){
+        res.body.should.equal('{"status":"ok"}');
+        done();
+      })
+    })   
+  })
+
+  describe('#showPackage()', function(){
+    it('should display the right page', function(done){
+      var opt = clone(tpl);
+      opt.path = '/application/manage/test/package';
+      opt.headers.cookie = COOKIE;
+      Get(opt, function(res){
+        res.body.should.include('package.json');
+        res.body.should.include('dead_horse');
+        done();
+      })    
+    })
+  })
+
+  describe('#loadPackage()#setPackage()', function(){
+    var optLoad = clone(tpl);
+    optLoad.path = '/application/manage/test/load_package';
+    var optSet = clone(tpl);
+    optSet.path = '/application/manage/test/submit/package';
+    it('should loadPackage fine', function(done){
+      optLoad.headers.cookie = COOKIE;
+      Get(optLoad, function(res){
+        var result = JSON.parse(res.body);
+        result.appPackage.main.should.equal('./server.js');
+        done();
+      })
+    })
+    it('should set package fine', function(done){
+      optSet.headers.cookie = COOKIE;
+      optSet.data = {
+        _csrf : CSRF,
+        packageStr : '{"name":"test",}'
+      }
+      Post(optSet, function(res){
+        res.body.should.equal('{"status":"ok"}');
+        done();
+      })
+    })
+    it('shoud loadPackage parse error', function(done){
+      Get(optLoad, function(res){
+        var result = JSON.parse(res.body);
+        result.msg.should.include('parse package.json error');
+        done();
+      })
+    })
+    it('shoud loadPackage file not exist', function(done){
+      fs.unlinkSync(__dirname + '/temp/apps/test/package.json');
+      Get(optLoad, function(res){
+        var result = JSON.parse(res.body);
+        result.msg.should.include('package.json not exists');
+        done();
+      })
+    })
+  })
+
+
+  after(function(){
+    app.close();
+    cml.close();
   })
 })
