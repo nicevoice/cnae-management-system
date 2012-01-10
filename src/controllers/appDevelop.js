@@ -455,8 +455,7 @@ checkQueryString = function(queryString) {
     }
   }
 }
-
-exports.queryMongo = function(req, res) {
+exports.queryMongo = function(req, res){
   var domain = req.params.id || '',
       queryString = req.body.queryString.trim() || '';
   if (!checkQueryString(queryString)) {
@@ -468,50 +467,60 @@ exports.queryMongo = function(req, res) {
   queryString = queryString.replace(/\$/g, '\\$').
               replace(/"/g, '\\"');
   queryString = "\"" + queryString + "\"";
-  findOne(user, {
-    email: req.session.email
-  }, function(err, data) { //查找db帐号密码
-    if (err) {
-      log.error(err.toString());
-      return res.sendJson({
-        status: "error",
-        msg: "数据库帐号密码查找失败"
-      });
-    } else {
+  Step(
+    function getUserDbInfo(){
+      findOne(user, {
+        email: req.session.email
+      }, this);    
+    },
+    function getDb(err, userInfo){
+      if(err){
+        log.error(err.toString());
+        return res.sendJson({
+          status : 'error',
+          msg : config.dbError
+        });
+      }
+      this.parallel()(null, userInfo);
       findOne(app_basic, {
-        appDomain: domain
-      }, function(err, appInfos) {
-        if (appInfos.appDbType !== "mongo") {
+              appDomain: domain
+      }, this.parallel());     
+    },
+    function query(err, userInfo, appInfo){
+      if(err){
+        log.error(err.toString());
+         return res.sendJson({
+            status : 'error',
+            msg : config.dbError
+          });
+      }
+      var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh";
+      var args = [appInfo.appDbName, userInfo.dbUserName, userInfo.dbPassword, queryString, config.appDb.port];
+      exec(shPath+' '+args.join(' '), {timeout:10000}, function(err, stdout, stderr){
+        if (err) {
+          log.error(err.toString());
           return res.sendJson({
             status: "error",
-            msg: "数据库未申请或者数据库类型不是mongoDB"
+            msg: "查询数据库失败"
           });
-        }
-        var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh " + appInfos.appDbName + " " + data.dbUserName + " " + data.dbPassword + " " + queryString + " " + config.appDb.port;
-        console.log(command);
-        exec(command, function(err, stdout, stderr) {
-          if (err) {
-            log.error(err.toString());
-            return res.sendJson({
-              status: "error",
-              msg: "查询数据库失败"
-            });
-          } else {
-            var place = stdout.indexOf("1\n");
-            if (place === -1) {
-              stdout = "权限验证错误";
-            } else {
-              stdout = stdout.slice(place + 2, stdout.length - 4) + "\ndone";
-            }
-            return res.sendJson({
-              status: "ok",
-              output: stdout
-            });
+        } else {
+          for(var i=0; i!=3; ++i){
+            stdout = stdout.slice(stdout.indexOf('\n')+1);
           }
-        })
-      });
+          var place = stdout.indexOf('1\n');
+          if (place === -1) {
+            stdout = "权限验证错误";
+          } else {
+            stdout = stdout.slice(place + 2, stdout.length - 4) + "\ndone";
+          }
+          return res.sendJson({
+            status: "ok",
+            output: stdout
+          });
+        }        
+      })
     }
-  })
+  )
 }
 
 exports.showTodo = function(req, res) {

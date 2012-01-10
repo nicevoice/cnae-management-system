@@ -509,7 +509,7 @@ exports.doChangeRole = function(req, res) {
     $set : {
       role : role
     }
-  }, function(err) {
+  }, function(err, data) {
     if(err) {
       if(err.errmsg==='No matching object found'){
         return res.sendJson({
@@ -523,6 +523,12 @@ exports.doChangeRole = function(req, res) {
       msg:"数据库更新失败，请稍后再试"
       });
     } else {
+      if(!data){
+        return res.sendJson({
+          status:'error',
+          msg : '该用户未参与此应用'
+        }) 
+      }
       res.sendJson({
         status:'ok'
       });
