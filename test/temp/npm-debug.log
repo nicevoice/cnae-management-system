@@ -1,0 +1,21 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/home/heyiyu.pt/local/node/bin/npm', 'test' ]
+info using npm@1.0.106
+info using node@v0.6.3
+verbose config file /home/heyiyu.pt/.npmrc
+verbose config file /home/heyiyu.pt/local/node/etc/npmrc
+verbose config file /home/heyiyu.pt/local/node/lib/node_modules/npm/npmrc
+ERR! Error: ENOENT, no such file or directory '/home/heyiyu.pt/cnae/git/cnae-web/test/temp/package.json'
+ERR! Report this *entire* log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Linux 2.6.18-164.el5xen
+ERR! command "node" "/home/heyiyu.pt/local/node/bin/npm" "test"
+ERR! cwd /home/heyiyu.pt/cnae/git/cnae-web/test/temp
+ERR! node -v v0.6.3
+ERR! npm -v 1.0.106
+ERR! path /home/heyiyu.pt/cnae/git/cnae-web/test/temp/package.json
+ERR! code ENOENT
+verbose exit [ 1, true ]
