@@ -6,6 +6,9 @@ desc('Cnode app engine builder');
 task('makeconf', function(){
   var cont = fs.readFileSync(__dirname + '/config.json.tpl');
   var home = path.dirname(__dirname);
+  try{
+    fs.mkdirSync(__dirname+'/download');
+  }catch(err){}
   fs.writeFileSync(
     'config.json',
     cont.toString()
@@ -57,6 +60,15 @@ task('maketestconf', function(){
   var testDir = home + '/test';
   var temp = testDir + '/temp';
 //mkdir
+  try{
+    fs.mkdir(temp+'/apps');
+  }catch(err){}
+  try{
+    fs.mkdir(temp+'/key');
+  }catch(err){}
+  try{
+    fs.mkdir(temp+'/temp');
+  }catch(err){}
   fs.writeFileSync(
     'config.test.json',
     cont.toString()
