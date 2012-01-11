@@ -36,7 +36,7 @@ exports.show = function(req, res){
     //         })(codes, data[i].email);
     //     }
     // })
-    update(user, {}, {$set:{status:0}});
+    //update(user, {}, {$set:{status:0}});
     res.redirect('/userCenter/userInfo');
 };
 /***
