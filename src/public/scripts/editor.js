@@ -7,7 +7,7 @@ var activeFile = -1; // 当前活动文件
 var changeLock = false; // 文件改变锁
 var actionLock = false; // 事件锁
 var editor;
-var socket, on=false;				//socket.io
+var socket;				//socket.io
 
 var setTabAction = function() {
 	$(".tab").live({
@@ -386,6 +386,8 @@ $(function() {
 	// 加载样式
 	setSidebarUI();
 	mouseOnStdDiv();
+    //start socket.io
+    getStd();
 });
 
 window.onbeforeunload = function() {
@@ -435,10 +437,6 @@ addRecord = function(domain, action){
 
 //重启应用
 function restart(){
-    if(!on){
-	    getStd();
-        on = true;
-    }
 	$.ajax({
 		cache:false,
 		type:"post",
@@ -486,7 +484,7 @@ function restart(){
 *  get std
 */
 function getStd(){
-	socket = io.connect('http://'+location.host);
+   socket = io.connect('http://'+location.host);
 	var stdout = $('#stdout'), stderr = $('#stderr');
 	socket.on('message', function(data){
 		var type = data.slice(0, 3), log = data.slice(3);

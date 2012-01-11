@@ -13,8 +13,7 @@ var Logs = function(app, getSession){
   this.appLogs = {};  //stream of app's logs
   this.proxy = new ep();
   this.io = require('socket.io').listen(app);
-  this.io.set('log level', 1); 
-  this.io.set('transports', ['jsonp-polling']);
+  this.io.set('log level', 1);
   this.getSession = getSession;
   this.initEp();
   this.initAuth();
