@@ -4,6 +4,7 @@ var command_line = require('./helper/command_line');
 var http = require('./helper/tb_session_proxy');
 var cp = require('child_process');
 var fs = require('fs');
+var path = require('path');
 var config = require('./config.test');
 var createDone = function(times, done){
   return function(){
@@ -14,9 +15,12 @@ var createDone = function(times, done){
 }
 
 describe('utils', function(){
-  before(function(){
-    cp.exec('cp -rf '+__dirname+'/temp/uploadFile.back.tar.gz ' + __dirname+'/temp/uploadFile.tar.gz', function(){});
-    command_line.listen(config.cmdPort);
+  before(function(done){
+  command_line.listen(config.cmdPort);
+  cp.exec('rm -rf ' + config.github.keyDir+'/* ' + 
+  __dirname + '/temp/temp/* ' + __dirname+'/temp/apps/* ' + 
+  path.dirname(__dirname)+'/src/download/*' + __dirname+'/temp/key/* '+
+  '&& cp '+__dirname+'/temp/uploadFile.back.tar.gz '+ __dirname+'/temp/uploadFile.tar.gz',  done);
   })
   describe('#verify()', function(){
     var regRight = {
@@ -183,7 +187,7 @@ describe('utils', function(){
         fs.readdirSync(config.github.keyDir).should.have.length(3);
         fs.readFileSync(config.github.keyDir+'/config').should.match(/dead_horse@qq.com/);   
         DONE();
-      }, 2000);
+      }, 500);
     })
   }),
 

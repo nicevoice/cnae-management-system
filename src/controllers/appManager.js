@@ -11,6 +11,7 @@ var config = require('../config'),
     app_record = collectionNames.app_record, 
     find = model.find, 
     findOne = model.findOne, 
+    findAndModify = model.findAndModify,
     insert = model.insert, 
     update = model.update, 
     remove = model.remove, 
@@ -397,7 +398,8 @@ exports.deleteCoop = function(req, res) {
   else {
     remove(app_mem, {
       email : email,
-      appDomain : domain
+      appDomain : domain,
+      active : 1
     }, function(err) {
       if(err) {
         log.error(err.toString());
@@ -422,22 +424,25 @@ exports.deleteCoop = function(req, res) {
 exports.agreeCoop = function(req, res) {
   var email = req.body.email || '';
   var domain = req.params.id || '';
-  update(app_mem, {
+  findAndModify(app_mem, {
     appDomain : domain,
     email : email
-  }, {
+  }, [], {
     $set : {
       active : 1,
       role : 3
     }
-  }, function(err) {
-    if(err) {
+  }, function(err, mem) {
+    if(err&&err.errmsg!=='No matching object found') {
       log.error(err.toString());
       return res.sendJson({
     status:'error',
     msg:'数据库更新失败，请稍后再试'
       });
     } else {
+      if(!mem){
+        return res.sendJson({status:'error', msg:'wrong email'})
+      }
       var nickName = email.split('@')[0], agreeInfo = req.session.nickName + '( ' + req.session.email + ' )同意了您对项目"' + domain + '"的参与申请。';
       mails.push({
         sender :mail.sender,
@@ -466,7 +471,8 @@ exports.refuseCoop = function(req, res) {
   var reason = req.body.reason || '';
   remove(app_mem, {
     appDomain : domain,
-    email : email
+    email : email,
+    active : 0
   }, function(err) {
     if(err) {
       log.error(err.toString());

@@ -35,7 +35,7 @@ Logs.prototype.initAuth = function(){
         _self.getSession(data.sessionId, function(err, session){
           if(err || !session){
             proxy.unbind();
-            return accept(err.toString(), false);
+            return accept(err?err.toString():'no session', false);
           }else{
             data.session = session;
             proxy.fire('session_got');
@@ -90,12 +90,10 @@ Logs.prototype.initConn = function(){
       //_self.createLogSocket(hs.appDomain);
     }
     socket.join(hs.appDomain);
-var sstdout = _self.appLogs[hs.appDomain].stdout;
-    //console.log(hs.appDomain, sstdout);
 
     socket.on('message', function(msg){
       if(msg.indexOf('restart')===0){
-        _self.destroyLogSocket([msg.slice(7)]);
+        _self.appLogs[msg.slice(8)].reConn = 5;
       }
     })
     //some socket disconnect
@@ -114,6 +112,7 @@ var sstdout = _self.appLogs[hs.appDomain].stdout;
 Logs.prototype.destroyLogSocket = function(appDomain){
   this.appLogs[appDomain].stdout.end();
   this.appLogs[appDomain].stderr.end();
+  this.appLogs[appDomain].reConn = 0;
 }
 Logs.prototype._getLog = function(action, appDomain){
   var _self = this;
@@ -128,8 +127,11 @@ Logs.prototype._getLog = function(action, appDomain){
   })
   socket.on('close', function(data){
     //console.log('close');
-    if(_self.appLogs[appDomain]&&_self.appLogs[appDomain].nums>0){
-      _self.appLogs[appDomain][action.slice(0,6)] = _self._getLog(action, appDomain);
+    var appLog = _self.appLogs[appDomain];
+    if(appLog&&appLog.nums>0&&appLog.reConn>0){
+      console.log(appLog.reConn);
+        --appLog.reConn;
+        appLog[action.slice(0,6)] = _self._getLog(action, appDomain);
     }
   })
   return socket;

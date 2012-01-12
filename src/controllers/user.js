@@ -196,7 +196,7 @@ exports.githubInfo = function(req, res){
         });
     }else{
       if(!data){
-        return res.sendJson({
+          return res.sendJson({
           status:"error",
           msg:"未找到此用户"
         });

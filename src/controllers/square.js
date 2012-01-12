@@ -261,6 +261,7 @@ exports.apply = function(req, res){
   })
   findOne(app_mem, {
     appDomain: domain,
+    appName:appName,
     email: email
   }, function(err, data){
     if (err) {
@@ -295,7 +296,7 @@ exports.apply = function(req, res){
         msg: "数据获取错误"
       });
     }
-    else {
+    else {  
       if (!data || data.length === 0) {
         applyEvent.fire("checkOwn", {
           status: "ok"

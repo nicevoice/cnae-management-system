@@ -394,7 +394,7 @@ describe('single user management test', function(){
       })
     })
     it('should response ok', function(done){
-      opt.data.inviteEmail = 'user@qq.com'
+      opt.data.inviteEmail = 'user1@qq.com'
       Post(opt, function(res){
         res.body.should.include('"status":"ok"');
         done();
@@ -462,7 +462,7 @@ describe('single user management test', function(){
     })
     it('should response ok', function(done){
        opt.data.role = '2';
-      opt.data.email = "user@qq.com";
+      opt.data.email = "user1@qq.com";
       Post(opt, function(res){
         res.body.should.include('ok');
         done();

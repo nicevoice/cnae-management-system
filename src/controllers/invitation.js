@@ -96,7 +96,7 @@ exports.generateInviteCode = function(req, res){
 exports.sendInviteCode = function(req, res){
 	var title = mail.inviteMailTitle||'',
 		content = mail.inviteMailContent||'',
-		qs = urlMoudle.parse(req.url, true).query||{};
+		qs = urlMoudle.parse(req.url, true).query||{},
 		email = qs.email||'',
 		code = qs.code||'';
 	if(!verify('email', email)){

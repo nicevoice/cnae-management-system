@@ -36,9 +36,9 @@ module.exports = function(app){
   app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), ctrAppManager.doAppmng);  //修改应用信息
   if (!labs) {
     app.post("/application/manage/:id/coopmng", hasLogin, checkChangeAuth(0), ctrAppManager.doCoopmng); //发出邀请
-    app.post("/application/mamage/:id/deleteCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.deleteCoop); //删除协作者
-    app.post("/application/mamage/:id/agreeCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.agreeCoop); //同意协作请求
-    app.post("/application/mamage/:id/refuseCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.refuseCoop); //拒绝协作请求
+    app.post("/application/manage/:id/deleteCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.deleteCoop); //删除协作者
+    app.post("/application/manage/:id/agreeCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.agreeCoop); //同意协作请求
+    app.post("/application/manage/:id/refuseCoop", hasLogin, checkAuth, checkChangeAuth(0), ctrAppManager.refuseCoop); //拒绝协作请求
     app.post("/application/manage/:id/changeRole", hasLogin, checkChangeAuth(0), ctrAppManager.doChangeRole); //更改协作者权限
   }
   app.post("/application/manage/:id/addRecord", hasLogin, checkAuth, ctrAppManager.addRecord);  //添加应用管理记录

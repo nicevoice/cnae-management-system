@@ -251,7 +251,7 @@ function deleteCoop() {
   $.ajax({
     cache : false,
     type : "POST",
-    url : "/application/mamage/" + infos[1] + "/deleteCoop",
+    url : "/application/manage/" + infos[1] + "/deleteCoop",
     dataType : "json",
     data : {
       email : infos[0],
@@ -280,7 +280,7 @@ function agreeCoop() {
   $.ajax({
     cache : false,
     type : "POST",
-    url : "/application/mamage/" + infos[1] + "/agreeCoop",
+    url : "/application/manage/" + infos[1] + "/agreeCoop",
     dataType : "json",
     data : {
       email : infos[0],
@@ -323,7 +323,7 @@ function refuseCoop() {
   $.ajax({
     cache : false,
     type : "POST",
-    url : "/application/mamage/" + infos[1] + "/refuseCoop",
+    url : "/application/manage/" + infos[1] + "/refuseCoop",
     dataType : "json",
     data : {
       email : infos[0],

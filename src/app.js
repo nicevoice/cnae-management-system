@@ -24,7 +24,12 @@ app.use(connect.favicon());
 //app.use(connect.staticCache());
 app.use(connect.static(__dirname+'/public', {maxAge: 3600000 * 24 * 365}));
 //session和cookie
-var sessionStore = new RedisStore({pass:config.redisPassword});
+var sessionStore;
+if(process.env.NODE_ENV==='test'){
+  sessionStore = new connect.session.MemoryStore();
+}else{
+  sessionStore = new RedisStore({pass:config.redisPassword||''});
+}
 app.use(connect.cookieParser());
 app.use(connect.session({
     secret: config.session_secret,

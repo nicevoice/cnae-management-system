@@ -437,6 +437,7 @@ addRecord = function(domain, action){
 
 //重启应用
 function restart(){
+	socket.send('restart '+DOMAIN);
 	$.ajax({
 		cache:false,
 		type:"post",

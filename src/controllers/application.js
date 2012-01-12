@@ -2,7 +2,10 @@ var fs = require('fs')
   , config = require('../config')
   , exec  = require('child_process').exec
   , log = config.logWithFile
-  //models
+  , urlMoudle = require('url')
+  , EventProxy = require('EventProxy.js').EventProxy
+  , uploadDir = config.uploadDir
+    //models
   , model = require('../models/index')
   , collectionNames = config.dbInfo.collections
   , app_mem = collectionNames.app_member
@@ -11,14 +14,12 @@ var fs = require('fs')
   , user = collectionNames.user
   , find = model.find
   , findOne = model.findOne
+  , findAndModify = model.findAndModify
   , insert = model.insert
   , remove = model.remove
   , update = model.update
   , count = model.count
-  , urlMoudle = require('url')
-  , EventProxy = require('EventProxy.js').EventProxy
 
-  , uploadDir = config.uploadDir
   //utils
   , utils = require('../lib/utils')
   , onOff = utils.onOff
@@ -430,31 +431,35 @@ var fs = require('fs')
         done : false
       });
     else {
-      update(app_mem, {
+      findAndModify(app_mem, {
         appDomain : domain,
         email : req.session.email
-      }, {
+      },[], {
         $set : {
           active : 1
         }
-      }, function(err) {
-        if(err) {
+      }, function(err, app) {
+        if(err&&err.errmsg!=='No matching object found') {
           log.error(err.toString());
-          res.sendJson({
+          return res.sendJson({
             done : false
           });
-        } else {
-          res.sendJson({
-            done : true
-          });
-          insert(app_record, {
-            appDomain : domain,
-            email : req.session.email,
-            action : "接受邀请",
-            recordTime : new Date().format("YYYY-MM-dd hh:mm:ss")
-          }, function() {
-          });
         }
+        if(!app){
+          return res.sendJson({
+            done:false
+          })
+        }
+        res.sendJson({
+          done : true
+        });
+        insert(app_record, {
+          appDomain : domain,
+          email : req.session.email,
+          action : "接受邀请",
+          recordTime : new Date().format("YYYY-MM-dd hh:mm:ss")
+        }, function() {
+        });
       })
     }
   }
