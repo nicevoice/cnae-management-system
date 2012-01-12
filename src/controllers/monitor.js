@@ -183,7 +183,7 @@ exports.stop = function(req, res, next){
 exports.query = function(req, res) {
     var queryString = req.body.queryString.trim() || '';
     queryString = "\"" + queryString + "\"";
-    var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/checkDb.sh " + " " + queryString;
+    var command = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/checkDb.sh " + " " + queryString + " " + config.dbInfo.userName + ' ' + config.dbInfo.password;
     exec(command, function(err, stdout, stderr) {
         if(err) {
             log.error(err.toString());
