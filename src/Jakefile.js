@@ -26,16 +26,15 @@ task('makeconf', function(){
       .replace(/\$\$appDbPassword\$\$/ig, '')
       .replace(/\$\$appDbPort\$\$/ig, '20088')
       
-      .replace(/\$\$redisPassword\$\$/ig, 'input your redis password')
+      .replace(/\$\$redisPassword\$\$/ig, '')
       
       .replace(/\$\$md5Secret\$\$/ig, 'input your login secret')//login secret
       .replace(/\$\$sessionSecret\$\$/ig, 'input your session secret')//session secret
 
       .replace(/\$\$domain\$\$/ig, 'cnodejs.net') //domain
-      .replace(/\$\$__dir\$\$/ig, home)  //root dir
 
-      .replace(/\$\$smtpuser\$\$/ig, 'input your gmail')  //smtp
-      .replace(/\$\$smtppass\$\$/ig, 'input your gmail password')
+      .replace(/\$\$mailUser\$\$/ig, '')  //smtp
+      .replace(/\$\$mailPasswrod\$\$/ig, '')
 
       .replace(/\$\$uploadDir\$\$/ig, path.dirname(home)+'/cnode-app-engine/apps')//apps dir
       .replace(/\$\$tempDir\$\$/ig, home+'/temp')//temp dir
@@ -50,8 +49,8 @@ task('makeconf', function(){
       .replace(/\$\$tbSecret\$\$/ig, 'input tb secret')
 
       //git dirs
-      .replace(/\$\$keyDir\$\$/ig, '/home/heyiyu.pt/.ssh/nae/id_rsa_')
-      .replace(/\$\$configDir\$\$/ig, '/home/heyiyu.pt/.ssh/config')
+      .replace(/\$\$githubKeyDir\$\$/ig, '/home/heyiyu.pt/.ssh/nae/id_rsa_')
+      .replace(/\$\$githubConfig\$\$/ig, '/home/heyiyu.pt/.ssh/config')
   );
 });
 task('maketestconf', function(){
@@ -92,13 +91,13 @@ task('maketestconf', function(){
       .replace(/\$\$sessionSecret\$\$/ig, 'input your session secret')//session secret
 
       .replace(/\$\$domain\$\$/ig, 'cnodejs.net') //domain
-      .replace(/\$\$__dir\$\$/ig, home)  //root dir
 
-      .replace(/\$\$smtpuser\$\$/ig, 'input your gmail')  //smtp
-      .replace(/\$\$smtppass\$\$/ig, 'input your gmail password')
+      .replace(/\$\$mailUser\$\$/ig, 'input your gmail')  //smtp
+      .replace(/\$\$mailPassword\$\$/ig, 'input your gmail password')
 
       .replace(/\$\$uploadDir\$\$/ig, temp+'/apps')//apps dir
       .replace(/\$\$tempDir\$\$/ig, temp+'/temp')//temp dir
+
       .replace(/\$\$slabs\$\$/ig, 'false')
       .replace(/\$\$sdebug\$\$/ig, 'true')
       .replace(/\$\$sdaily\$\$/ig, 'false')
@@ -110,12 +109,12 @@ task('maketestconf', function(){
 
       .replace(/\$\$gitKey\$\$/ig, temp+'/key/id_rsa_')
       .replace(/\$\$gitConfig\$\$/ig, temp+'/key/config')
-      .replace(/\$\$shells\$\$/, home+'/src/shells')
   );
 });
 task('cleanup', function(){
   try {
     fs.unlinkSync('config.json');
+    fs.unlikSync('config.test.json');
   } catch(e) {
 
   }

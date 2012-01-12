@@ -129,8 +129,8 @@ Logs.prototype._getLog = function(action, appDomain){
     //console.log('close');
     var appLog = _self.appLogs[appDomain];
     if(appLog&&appLog.nums>0&&appLog.reConn>0){
-      console.log(appLog.reConn);
         --appLog.reConn;
+        log.info('reConnect time '+ (5-appLog.reConn));
         appLog[action.slice(0,6)] = _self._getLog(action, appDomain);
     }
   })

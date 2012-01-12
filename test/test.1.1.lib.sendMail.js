@@ -3,19 +3,19 @@
   , path = require('path')
   , mails = sendMail.mails
   , mailEvent =sendMail.mailEvent
-  , mail = JSON.parse(fs.readFileSync(path.dirname(__dirname)+'/src/config.test.json').toString()).mail;
+  , mail = require('../src/config').mail;
 
   var email = "dead_horse@qq.com";
   var nick = email.split('@')[0];
 
 var contents = [
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.coopMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.inviteMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.retrieveMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.applyMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.agreeMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.refuseMailContentPath, 'utf8'),
-  fs.readFileSync(path.dirname(__dirname)+'/src/'+mail.registMailContentPath, 'utf8')
+  mail.coopMailContent,
+  mail.inviteMailContent,
+  mail.retrieveMailContent,
+  mail.applyMailContent,
+  mail.agreeMailContent,
+  mail.refuseMailContent,
+  mail.registMailContent,
 ];
 var titles = [
   mail.coopMailTitle,
