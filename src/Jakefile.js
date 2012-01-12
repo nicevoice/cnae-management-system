@@ -49,8 +49,8 @@ task('makeconf', function(){
       .replace(/\$\$tbSecret\$\$/ig, 'input tb secret')
 
       //git dirs
-      .replace(/\$\$githubKeyDir\$\$/ig, '/home/heyiyu.pt/.ssh/nae/id_rsa_')
-      .replace(/\$\$githubConfig\$\$/ig, '/home/heyiyu.pt/.ssh/config')
+      .replace(/\$\$githubKeyDir\$\$/ig, '/home/admin/.ssh/nae/id_rsa_')
+      .replace(/\$\$githubConfig\$\$/ig, '/home/admin/.ssh/config')
   );
 });
 task('maketestconf', function(){
