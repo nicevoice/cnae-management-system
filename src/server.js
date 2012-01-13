@@ -6,13 +6,12 @@ var app = require('./app');
 var config = require('./config');
 var path = require('path');
 if(cluster.isMaster){
-  fs.writeFileSync(path.dirname(config.logPath)+'/worker.num', '1');
   if(config.switchs.debug){
     app.listen(config.port);
     console.log("server start listen on "+config.port+' by '+process.pid);       
   }else{
     var num = Math.ceil(require('os').cpus().length/2);//cpu的一半
-    //num = 1;
+    num = 1;
     var workers = {}, started_success = 0;
     var start = false, stop = false;
     var i=0;
