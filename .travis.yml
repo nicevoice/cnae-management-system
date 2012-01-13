@@ -1,5 +1,3 @@
-before_script:
-  - mongo naeweb_test
 language: node_js
 node_js:
   - 0.6
