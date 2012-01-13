@@ -1,4 +1,4 @@
-# CNAE Management Web System base on [Nodejs](http://nodejs.org).   
+# CNAE Management Web System base on [Nodejs](http://nodejs.org). [![Build Status](https://secure.travis-ci.org/dead-horse/cnae-management-system.png)](http://travis-ci.org/dead-horse/cnae-management-system)   
  * 基于connect的网站。结合于node app engine一起，提供一个Node.js的在线应用托管平台。网站地址[NAE](http://cnodejs.net)   
     
 ## Requires:  

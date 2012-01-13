@@ -62,7 +62,7 @@ function(req, res){
 });
 if(process.env.NODE_ENV!=='test'){
   app.use(connect.logger({ 
-    stream : fs.createWriteStream(config.reqLogPath+'.worker'+config.token),
+    stream : fs.createWriteStream(config.reqLogPath),
     format: ':email | :remote-addr | :date | :response-time | :method | :url | :body'
   }));
 }

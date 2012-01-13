@@ -107,8 +107,8 @@ task('maketestconf', function(){
       .replace(/\$\$labsPort\$\$/ig, '1129')  
       .replace(/\$\$tbSecret\$\$/ig, 'input tb secret')
 
-      .replace(/\$\$gitKey\$\$/ig, temp+'/key/id_rsa_')
-      .replace(/\$\$gitConfig\$\$/ig, temp+'/key/config')
+      .replace(/\$\$githubKeyDir\$\$/ig, temp+'/key/id_rsa_')
+      .replace(/\$\$githubConfig\$\$/ig, temp+'/key/config')
   );
 });
 task('cleanup', function(){
