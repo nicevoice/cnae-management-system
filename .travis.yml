@@ -1,5 +1,5 @@
-require 'mongo'
-Mongo::Connection.new('localhost').db('cnaeweb_test')
+before_script:
+  - mongo naeweb_test
 language: node_js
 node_js:
   - 0.6
