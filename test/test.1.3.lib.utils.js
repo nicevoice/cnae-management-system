@@ -187,7 +187,7 @@ describe('utils', function(){
         fs.readdirSync(config.github.keyDir).should.have.length(3);
         fs.readFileSync(config.github.keyDir+'/config').should.match(/dead_horse@qq.com/);   
         DONE();
-      }, 500);
+      }, 2000);
     })
   }),
 
