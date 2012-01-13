@@ -155,7 +155,8 @@ describe('utils', function(){
     it('should get json ok', function(done){
       options.path = '/json';
       utils.httpReq(options, function(data){
-        data.should.be.json;
+        data.status.should.equal('ok');
+        console.log(data);
         done();
       })  
     });
@@ -180,15 +181,15 @@ describe('utils', function(){
     it('should add github work fine', function(done){
       var DONE = createDone(2, done);
       utils.addGithub('dead_horse@qq.com', '281102972@qq.com', function(err, data){
+        console.log('___________',data);
         data.status.should.equal('ok');
-        DONE();
-      })
-      setTimeout(function(){
-        fs.readdirSync(config.github.keyDir).should.have.length(3);
-        fs.readFileSync(config.github.keyDir+'/config').should.match(/dead_horse@qq.com/);   
-        DONE();
-      }, 2000);
+        setTimeout(function(){
+          fs.readdirSync(config.github.keyDir).should.have.length(3);
+          fs.readFileSync(config.github.keyDir+'/config').should.match(/dead_horse@qq.com/);   
+          done();
+      }, 500);
     })
+      })
   }),
 
   describe('#upload', function(){

@@ -82,6 +82,7 @@ describe('user develop manage test', function(){
           }), function(err, stdout, stderr){
           stdout.should.include('/application/manage/test/sum');
           var files = fs.readdirSync(__dirname+'/temp/apps/test/');
+          console.log(files);
           files.should.have.length(4);
           files.should.include('zip.js');
           done();

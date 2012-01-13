@@ -116,7 +116,7 @@ var root_dir = pathutil.dirname(pathutil.dirname(__dirname))
 
 //log
 if(process.env.NODE_ENV==='test'){
-  config.logWithFile = log.create(log.INFO);
+  config.logWithFile = log.create(log.TRACE);
 }else{
   var root = pathutil.dirname(__dirname);
   config.logWithFile = log.create(log.ERROR, {file:root+'/logs/system.log'});

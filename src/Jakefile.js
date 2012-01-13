@@ -60,13 +60,16 @@ task('maketestconf', function(){
   var temp = testDir + '/temp';
 //mkdir
   try{
-    fs.mkdir(temp+'/apps');
+    fs.mkdirSync(__dirname+'/download');
   }catch(err){}
   try{
-    fs.mkdir(temp+'/key');
+    fs.mkdirSync(temp+'/apps');
   }catch(err){}
   try{
-    fs.mkdir(temp+'/temp');
+    fs.mkdirSync(temp+'/key');
+  }catch(err){}
+  try{
+    fs.mkdirSync(temp+'/temp');
   }catch(err){}
   fs.writeFileSync(
     'config.test.json',
