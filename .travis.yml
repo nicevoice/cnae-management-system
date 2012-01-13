@@ -1,7 +1,7 @@
+require 'mongo'
+Mongo::Connection.new('localhost').db('cnaeweb_test')
 language: node_js
 node_js:
   - 0.6
-#mongo
-require 'mongo'
-Mongo::Connection.new('localhost').db('cnaeweb_test')
+
 
