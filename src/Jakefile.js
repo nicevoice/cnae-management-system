@@ -60,13 +60,16 @@ task('maketestconf', function(){
   var temp = testDir + '/temp';
 //mkdir
   try{
-    fs.mkdir(temp+'/apps');
+    fs.mkdirSync(__dirname+'/download');
   }catch(err){}
   try{
-    fs.mkdir(temp+'/key');
+    fs.mkdirSync(temp+'/apps');
   }catch(err){}
   try{
-    fs.mkdir(temp+'/temp');
+    fs.mkdirSync(temp+'/key');
+  }catch(err){}
+  try{
+    fs.mkdirSync(temp+'/temp');
   }catch(err){}
   fs.writeFileSync(
     'config.test.json',
@@ -107,8 +110,8 @@ task('maketestconf', function(){
       .replace(/\$\$labsPort\$\$/ig, '1129')  
       .replace(/\$\$tbSecret\$\$/ig, 'input tb secret')
 
-      .replace(/\$\$gitKey\$\$/ig, temp+'/key/id_rsa_')
-      .replace(/\$\$gitConfig\$\$/ig, temp+'/key/config')
+      .replace(/\$\$githubKeyDir\$\$/ig, temp+'/key/id_rsa_')
+      .replace(/\$\$githubConfig\$\$/ig, temp+'/key/config')
   );
 });
 task('cleanup', function(){

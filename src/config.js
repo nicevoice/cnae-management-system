@@ -84,6 +84,7 @@ var config = {
   "sender":"NAE <admin@cnodejs.com>"
   },
   "maxInviteCode":5,
+  "logPath": pathutil.dirname(__dirname)+'/logs/',
   "uploadDir":cI.uploadDir||tempFile,
   "tempDir":cI.tempDir||tempFile,
   "socketPort":1128,
@@ -115,13 +116,10 @@ var root_dir = pathutil.dirname(pathutil.dirname(__dirname))
 
 //log
 if(process.env.NODE_ENV==='test'){
-  config.logWithFile = log.create(log.INFO);
+  config.logWithFile = log.create(log.TRACE);
 }else{
   var root = pathutil.dirname(__dirname);
-  var numPath = root+'/logs/worker.num';
-  var token = config.token = fs.readFileSync(numPath, 'utf8');
-  config.logWithFile = log.create(log.ERROR, {file:root+'/logs/system.log.worker'+token});
-  fs.writeFileSync(numPath, parseInt(token)+1);
+  config.logWithFile = log.create(log.ERROR, {file:root+'/logs/system.log'});
   config.reqLogPath = root + '/logs/requests.log';
 }
 

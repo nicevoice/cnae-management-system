@@ -1,7 +1,7 @@
 TEST = test/test.3.*.js
 TESTS = test/*.js
-TESTTIMEOUT = 25000
-REPORTER = dot 
+TESTTIMEOUT = 5000
+REPORTER = spec 
 
 test:
 	@./node_modules/jake/bin/cli.js -f src/Jakefile.js maketestconf
