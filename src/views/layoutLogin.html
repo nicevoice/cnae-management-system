@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <title><%=config.site_name%></title>
-<link href="/styles/reset.css?v=1.0.1" rel="stylesheet" type="text/css" />
-<link href="/styles/global.css?v=1.0.1" rel="stylesheet" type="text/css" />
+<link href="/styles/reset.css?v=<%= config.staticVersion %>" rel="stylesheet" type="text/css" />
+<link href="/styles/global.css?v=<%= config.staticVersion %>" rel="stylesheet" type="text/css" />
 <script src="/scripts/jquery-1.6.2.min.js?v=1.0.1" type="text/javascript"></script>
-<script src="/scripts/global.js?v=1.0.2" type="text/javascript"></script>
+<script src="/scripts/global.js?v=<%= config.staticVersion %>" type="text/javascript"></script>
 <script type="text/javascript">
 (function() {
 	var c = document.createElement('script'); c.type = 'text/javascript'; c.async = true;

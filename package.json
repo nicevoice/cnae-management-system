@@ -19,7 +19,7 @@
 	},
 	"dependencies":{
 		"ejs": ">=0.6.1",
-		"EventProxy.js": ">=0.0.4",
+		"eventproxy": ">=0.0.4",
 		"mongoskin":">=0.2.3",
 		"redis":">=0.7.1",
 		"rimraf":">=1.0.9",

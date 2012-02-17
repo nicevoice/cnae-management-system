@@ -88,6 +88,8 @@ var config = {
   "uploadDir":cI.uploadDir||tempFile,
   "tempDir":cI.tempDir||tempFile,
   "socketPort":1128,
+  "socketPortOnline":1129,
+  "naeClientVersion":"1.1",
   "monitor":{
     "host":"127.0.0.1",
     "port":"1127"
@@ -106,7 +108,9 @@ var config = {
     "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",
     "tplConfig":"#$email$\nHost $token$.github.com\n Hostname Github.com\n User git\n IdentityFile $file$\n"
   },
-  "dbError":"数据库错误，请稍后再试"
+  "dbError":"数据库错误，请稍后再试",
+  //static version
+  "staticVersion" : "1.1"
 }
 
 var root_dir = pathutil.dirname(pathutil.dirname(__dirname))

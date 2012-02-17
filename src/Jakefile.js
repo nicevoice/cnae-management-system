@@ -107,7 +107,7 @@ task('maketestconf', function(){
       .replace(/\$\$snoGit\$\$/ig, 'false')
 
       .replace(/\$\$labsHost\$\$/ig, 'localhost') //labs info
-      .replace(/\$\$labsPort\$\$/ig, '1129')  
+      .replace(/\$\$labsPort\$\$/ig, '1333')  
       .replace(/\$\$tbSecret\$\$/ig, 'input tb secret')
 
       .replace(/\$\$githubKeyDir\$\$/ig, temp+'/key/id_rsa_')

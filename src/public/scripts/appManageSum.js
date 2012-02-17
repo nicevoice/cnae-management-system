@@ -31,7 +31,7 @@ function bindButtons() {
         });
       } else {
         $("#controlApp").click(controlApp);
-        $("#controlAppRestart").click(restart);
+        $("#pubApp").click(pubApp);
       }
     }
   });
@@ -139,7 +139,7 @@ function setStatus() {
       appButtonName = "";
       //显示button的名字
       //填入域名信息
-      if(!status.ports || status.ports.length == 0) {
+      if(!status.running) {
         appDomains = '<a href="http://' + status.appDomain + '" target="_blank">' + status.appDomain + '</a> <span class="redText">未启用</sapn>';
       } else {
         for(var i = 0, len = status.ports.length; i < len; ++i) {
@@ -150,6 +150,9 @@ function setStatus() {
             port = ":" + port;
           }
           appDomains += '<a href="http://' + status.appDomain + port + '" target="_blank">' + status.appDomain  + port + '</a><br />';
+        }
+        if(status.ports.length===0){
+          appDomains = '<a href="http://' + status.appDomain + '" target="_blank">' + status.appDomain + '</a> <span class="redText">未监听端口</sapn>';
         }
       }
       //填入是否启用信息
@@ -202,7 +205,8 @@ function controlApp() {
     dataType : "json",
     data : {
       action : action,
-      _csrf : _csrf
+      _csrf : _csrf,
+      type : 'online'
     },
     error : function() {
     },
@@ -220,6 +224,36 @@ function controlApp() {
         sAlert("警告", data.msg);
       }
     }
+  })
+}
+
+function pubApp() {
+  var str = '发布应用将会覆盖当前线上程序，确认要发布么？';
+  if (!confirm(str)) {
+    return false;
+  }
+  $.ajax({
+    cache : false,
+    type : "post",
+    url : "/application/manage/" + domain + "/controlApp",
+    dataType : "json",
+    data : {
+      _csrf : _csrf,
+      action : "pub",
+      type : "online"
+    },
+    error : function() {},
+    success : function(data){
+      if(data.status === "ok") {
+        setStatus();
+        sAlert("", "应用已发布并重启");
+        $("#controlApp").val("下线");
+        stateDes.html("已启用");
+        addRecord(domain, "应用发布");
+      } else {
+        sAlert("警告", data.msg);
+      }
+    }      
   })
 }
 

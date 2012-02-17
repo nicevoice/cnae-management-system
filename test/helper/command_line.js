@@ -8,7 +8,8 @@ var cmds = {
 	stdout : true,
 	stderr : true,
 	stdoutpipe : true,
-	stderrpipe : true
+	stderrpipe : true,
+	pub : true
 }
 function cmd(client){
 	function onError(msg, code){
@@ -75,9 +76,12 @@ function cmd(client){
 				onOk('App "'+ command.app +'" restart ok.'); return;
 			case 'status' :
 				onStatus();return;
+			case 'pub' : 
+				onOk('App "'+ command.app +'" restart ok.'); return;
 			}
 		}
 	client.on('data', onData);	
 }
 
-module.exports = net.createServer(cmd);
+exports.dev = net.createServer(cmd);
+exports.online = net.createServer(cmd);

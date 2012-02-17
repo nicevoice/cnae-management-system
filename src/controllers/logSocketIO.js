@@ -121,7 +121,7 @@ Logs.prototype._getLog = function(action, appDomain){
         log.error(e.message);
         socket.destroy();
   });
-  socket.write('{"cmd":"'+action+'", "app":"'+appDomain+'"}\n');
+  socket.write('{"cmd":"'+action+'", "app":"'+appDomain+'", "v":"'+ config.naeClientVersion+'"}\n');
   socket.on('data', function(data){
     _self.proxy.fire(action, {appDomain:appDomain, data:data});
   })

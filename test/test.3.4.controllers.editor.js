@@ -27,7 +27,7 @@ function tplReplace(tpl, params){
 describe('editor test', function(){
   before(function(done){
     app.listen(1130);
-    cml.listen(testConf.cmdPort);
+    cml.dev.listen(testConf.cmdPort);
     var opt = clone(tpl);
     opt.path = '/login';
     Get(opt, function(res){
@@ -347,6 +347,6 @@ describe('editor test', function(){
 
   after(function(){
     app.close();
-    cml.close();
+    cml.dev.close();
   })
 })

@@ -12,12 +12,12 @@
 	<script src="/scripts/jquery-1.6.2.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/scripts/ace/ace.js"></script>
-	<script src="/scripts/global.js?v=1.0.4"></script>
-	<script src="/scripts/editor.config.js"></script>
-	<script src="/scripts/editor.cookie.js?v=0.0.1"></script>
-	<script src="/scripts/editor.querytool.js?v=0.0.2"></script>
-	<script src="/scripts/editor.console.js?v=0.0.4"></script>
-	<script src="/scripts/editor.js?v=1.4.0"></script>
+	<script src="/scripts/global.js?v=<%= config.staticVersion %>"></script>
+	<script src="/scripts/editor.config.js?v=<%= config.staticVersion %>"></script>
+	<script src="/scripts/editor.cookie.js?v=<%= config.staticVersion %>"></script>
+	<script src="/scripts/editor.querytool.js?v=<%= config.staticVersion %>"></script>
+	<script src="/scripts/editor.console.js?v=<%= config.staticVersion %>"></script>
+	<script src="/scripts/editor.js?v=<%= config.staticVersion %>"></script>
 	<script src="/scripts/jquery.form.js"></script>
 </head>
 
@@ -25,7 +25,7 @@
 <div id="sidebar">
     <div id="app-info">
         <%if(config.switchs.labs===false){%>
-        <p class="item">应用：<span id="appname"><a href="http://<%=domain%>.cnodejs.net" target="_blank" title="点击访问"><%=domain%></a></span></p>
+        <p class="item">应用：<span id="appname"><a href="http://<%=domain%>.dev.cnodejs.net" target="_blank" title="点击访问"><%=domain%></a></span></p>
         <%}else{%>
         <p class="item">应用：<span id="appname"><%=domain%></span></p>
         <%}%>

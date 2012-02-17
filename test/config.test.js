@@ -1,7 +1,8 @@
 var config = {
 	cmdPort :1128,
+	cmdPortOnline : 1129,
 	labs:{
-		port:1129,
+		port:1333,
 		path:'/developers/checkUser.do',
 		secret : 'input tb secret'
 	},

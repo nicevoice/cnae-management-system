@@ -16,7 +16,8 @@ var createDone = function(times, done){
 
 describe('utils', function(){
   before(function(done){
-  command_line.listen(config.cmdPort);
+  command_line.dev.listen(config.cmdPort);
+  command_line.online.listen(config.cmdPortOnline);
   cp.exec('rm -rf ' + config.github.keyDir+'/* ' + 
   __dirname + '/temp/temp/* ' + __dirname+'/temp/apps/* ' + 
   path.dirname(__dirname)+'/src/download/*' + __dirname+'/temp/key/* '+
@@ -149,7 +150,7 @@ describe('utils', function(){
   describe('#httpReq()', function(){
     var options = {
       host:'localhost',
-      port:'1129',
+      port:config.labs.port,
       method:'get'
     }
     it('should get json ok', function(done){
@@ -181,7 +182,6 @@ describe('utils', function(){
     it('should add github work fine', function(done){
       var DONE = createDone(2, done);
       utils.addGithub('dead_horse@qq.com', '281102972@qq.com', function(err, data){
-        console.log('___________',data);
         data.status.should.equal('ok');
         setTimeout(function(){
           fs.readdirSync(config.github.keyDir).should.have.length(3);
@@ -203,7 +203,7 @@ describe('utils', function(){
   })
 
   after(function(){
-    command_line.close();
+    command_line.dev.close();
     http.close();
     cp.exec('rm -rf ' + config.github.keyDir+'/* ' + __dirname+'/temp/temp/*', function(){})
   })

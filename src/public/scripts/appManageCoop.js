@@ -241,7 +241,7 @@ function getEmails(){
 
 //删除成员
 function deleteCoop() {
-  str = '删除用户将清空该用户对这个应用的一切数据，确定要删除吗？';
+  var str = '删除用户将清空该用户对这个应用的一切数据，确定要删除吗？';
   if(!confirm(str))
     return false;
   var infos = $(this).attr("id").split("#");

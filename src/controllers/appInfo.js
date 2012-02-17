@@ -40,14 +40,17 @@ var onOff = require('../lib/utils').onOff
 
 exports.doControlApp = function(req, res){
 	var domain = req.params.id,
-		action = req.body.action;
-		if(action!=="start"&&action!=="stop"&&action!=="restart"){
+		action = req.body.action,
+    type = req.body.type || 'dev';
+		if(action!=="start"&&action!=="stop"&&action!=="restart"&&action!=="pub"){
 		  return res.sendJson({status:"error", msg:"命令错误"});
 		}
+    console.log(123);
   log.info(req.session.email + " " + domain + " " + action);
+  var port = type==='online' ? config.socketPortOnline : config.socketPort;
 	onOff(action, domain, function(data){
 		res.sendJson( data);
-	})
+	}, port);
 }
 
 exports.getStatus = function(req, res){
@@ -73,5 +76,5 @@ exports.getStatus = function(req, res){
       });
     }
     return res.sendJson(status);
-  })
+  }, config.socketPortOnline)
 }

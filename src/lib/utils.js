@@ -10,7 +10,7 @@ var crypto = require('crypto'),
     labsConf = config.labsConf,
     tempDir = config.tempDir,
     uploadDir = config.uploadDir,
-    port = config.socketPort;
+    portOnline = config.socketPortOnline;
 /**
  * 验证
  */
@@ -123,7 +123,8 @@ exports.checkTBSession = function(req, cb) {
 /**
  * socket to nae
  */
-exports.onOff = function(action, name, callback) {
+exports.onOff = function(action, name, callback, port) {
+  port = port || config.socketPort; // default is dev
   var socket = net.createConnection(port);
   socket.on('error', function(e) {
     log.error(e.message);
@@ -132,7 +133,7 @@ exports.onOff = function(action, name, callback) {
       msg: e.message
     });
   });
-  socket.write('{"cmd":"' + action + '", "app":"' + name + '"}\n');
+  socket.write('{"cmd":"' + action + '", "app":"' + name + '", "v":"'+ config.naeClientVersion+'"}\n');
   socket.on('data', function(data) {
     data = "" + data;
     try {
@@ -151,13 +152,13 @@ exports.onOff = function(action, name, callback) {
 
 var NEWLINE = '\n';  //\n
 exports.getLog = function(action, name, num, callback){
-    var socket = net.createConnection(port);
+    var socket = net.createConnection(portOnline);
     socket.on('error',function(e){
         log.error(e.message);
         socket.destroy();
          callback("");
     });
-    socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'"}\n');
+    socket.write('{"cmd":"'+action+'", "app":"'+name+'", "size":"'+num+'", "v":"'+ config.naeClientVersion+'"}\n');
     var buf = "", length = -1, head;
     socket.on('data', function(data){
       buf += data;
@@ -304,6 +305,7 @@ exports.addGithub = function(email, githubEmail, cb) {
   var token = exports.getRandomStringNum(20),
       github = config.github;
   exec(github.genKey + " " + githubEmail + " " + github.keyDir + token, function(err, stdout, stderr) {
+    console.log(arguments);
     if (err) {
       return cb(err);
     }
