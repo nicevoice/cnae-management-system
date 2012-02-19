@@ -33,6 +33,7 @@
   "mailPassword":"$$mailPasswrod$$",
 
   "uploadDir":"$$uploadDir$$",
+  "onlineDir":"$$onlineDir$$",
   "tempDir" : "$$tempDir$$",
 
   "admins":["dead_horse@qq.com"],

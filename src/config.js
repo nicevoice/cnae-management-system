@@ -86,6 +86,7 @@ var config = {
   "maxInviteCode":5,
   "logPath": pathutil.dirname(__dirname)+'/logs/',
   "uploadDir":cI.uploadDir||tempFile,
+  "onlineDir": cI.onlineDir || tempFile,
   "tempDir":cI.tempDir||tempFile,
   "socketPort":1128,
   "socketPortOnline":1129,
@@ -110,7 +111,7 @@ var config = {
   },
   "dbError":"数据库错误，请稍后再试",
   //static version
-  "staticVersion" : "1.1"
+  "staticVersion" : "1.1.1"
 }
 
 var root_dir = pathutil.dirname(pathutil.dirname(__dirname))

@@ -333,8 +333,8 @@ var fs = require('fs')
           });
         } else {
           var deleteEvent = new EventProxy();
-          deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", function() {
-            if(!arguments[0] || !arguments[1] || !arguments[2] || !arguments[3] || !arguments[4])
+          deleteEvent.assign("deletedBasic", "deletedMem", "deletedRecords", "deleteDir", "deleteDb", "deleteDirOnline", function() {
+            if(!arguments[0] || !arguments[1] || !arguments[2] || !arguments[3] || !arguments[4] || !arguments[5])
               return res.sendJson({
                 status : "error",
                 msg : "删除应用错误"
@@ -414,6 +414,16 @@ var fs = require('fs')
                 deleteEvent.fire("deleteDir", true);
               }
             });
+          });
+          onOff("stop", delDomain, function() {
+            exec('rm -rf ' + config.onlineDir + "/" + delDomain, function(err) {
+              if(err) {
+                log.error(err.toString());
+                deleteEvent.fire("deleteDirOnline", false);
+              } else {
+                deleteEvent.fire("deleteDirOnline", true);
+              }
+            }, config.socketPortOnline);
           });
         }
       })

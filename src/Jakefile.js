@@ -37,6 +37,7 @@ task('makeconf', function(){
       .replace(/\$\$mailPasswrod\$\$/ig, '')
 
       .replace(/\$\$uploadDir\$\$/ig, path.dirname(home)+'/cnode-app-engine/apps')//apps dir
+      .replace(/\$\$onlineDir\$\$/ig, path.dirname(home)+'/cnode-app-engine/apps_online')//apps dir
       .replace(/\$\$tempDir\$\$/ig, home+'/temp')//temp dir
 
       .replace(/\$\$slabs\$\$/ig, 'false')
@@ -99,6 +100,7 @@ task('maketestconf', function(){
       .replace(/\$\$mailPassword\$\$/ig, 'input your gmail password')
 
       .replace(/\$\$uploadDir\$\$/ig, temp+'/apps')//apps dir
+      .replace(/\$\$onlineDir\$\$/ig, temp+'/apps')//apps dir
       .replace(/\$\$tempDir\$\$/ig, temp+'/temp')//temp dir
 
       .replace(/\$\$slabs\$\$/ig, 'false')
