@@ -221,6 +221,9 @@ function controlApp() {
           addRecord(domain, "应用下线");
         }
       } else {
+        if(data.msg.indexOf('Cannot find module')===0){
+          data.msg = "请先发布您的应用";
+        }
         sAlert("警告", data.msg);
       }
     }
@@ -255,62 +258,4 @@ function pubApp() {
       }
     }      
   })
-}
-
-function restart() {
-  var stateDes = $("#appStateDes");
-  var action = "restart";
-  if(!run){
-    action = "start";
-  }
-  $.ajax({
-    cache : false,
-    type : "post",
-    url : "/application/manage/" + domain + "/controlApp",
-    dataType : "json",
-    data : {
-      action : action,
-      _csrf : _csrf
-    },
-    error : function() {
-    },
-    success : function(data) {
-      if(data.status !== "ok") {
-        if(data.code == 202) {//not found错误，则改为上线
-          $.ajax({
-            cache : false,
-            type : "post",
-            url : "/application/manage/" + domain + "/controlApp",
-            dataType : "json",
-            data : {
-              action : "start",
-              _csrf : _csrf
-            },
-            error : function() {
-              sAlert("警告", "操作失败");
-            },
-            success : function(data) {
-              if(data.status === "ok") {
-                setStatus();
-                sAlert("", "应用已重启");
-                $("#controlApp").val("下线");
-                stateDes.html("已启用");
-                addRecord(domain, "应用重启");
-              } else {
-                sAlert("警告", data.msg);
-              }
-            }
-          })
-        } else {
-          sAlert("警告", data.msg);
-        }
-      } else {
-        setStatus();
-        sAlert("", "应用已重启");
-        $("#controlApp").val("下线");
-        stateDes.html("已启用");
-        addRecord(domain, "应用重启");
-      }
-    }
-  });
 }
