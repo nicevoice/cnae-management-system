@@ -45,7 +45,6 @@ exports.doControlApp = function(req, res){
 		if(action!=="start"&&action!=="stop"&&action!=="restart"&&action!=="pub"){
 		  return res.sendJson({status:"error", msg:"命令错误"});
 		}
-    console.log(123);
   log.info(req.session.email + " " + domain + " " + action);
   var port = type==='online' ? config.socketPortOnline : config.socketPort;
 	onOff(action, domain, function(data){
