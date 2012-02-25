@@ -636,3 +636,58 @@ exports.addRecord = function(req, res) {
   }, function() {
   });
 }
+
+//notify settings
+exports.showNotify = function(req, res, next) {
+  var url = req.url;
+  url = url.slice(0, url.lastIndexOf('/'));
+  var appDomain = url.slice(url.lastIndexOf('/')+1);
+  findOne(app_mem, {appDomain:appDomain, email:req.session.email},
+   function(err, mem){
+    if(err){
+      log.error(err.toString());
+      return next(err);
+    }
+    if(!mem){
+      return next(new Error("user not found"));
+    }
+    return res.render("appManageNotify", {
+      layout : "layoutApp",
+      url : url,
+      nickName : req.session.nickName,
+      email : req.session.email,
+      notifyLevel : mem.notifyLevel || 0
+    });
+  })
+};
+
+exports.changeLevel = function(req, res){
+  var level = req.body.level || 0;
+  var domain = req.params.id || "";
+  findAndModify(app_mem, {
+    email : req.session.email,
+    appDomain : domain
+  }, [], {
+    $set : {
+      notifyLevel : level
+    }
+  }, function(err, data) {
+    if(err) {
+      if(err.errmsg==='No matching object found'){
+        return res.sendJson({
+          status:'error',
+          msg : '该用户未参与此应用'
+        })
+      }
+      log.error(err.toString());
+      res.sendJson({
+      status:"error",
+      msg:"数据库更新失败，请稍后再试"
+      });
+    } else {
+      res.sendJson({
+        status : "ok"
+      });
+    }
+  });
+}

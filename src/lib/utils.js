@@ -260,9 +260,9 @@ var httpReq = exports.httpReq = function(options, callback, type) {
     /**
      * 生成github公私钥，更新配置文件
      */
-function tplReplace(tpl, params) {
+var tplReplace = exports.tplReplace = function(tpl, params) {
   return tpl.replace(/\$.*?\$/g, function(data) {
-    return params[data];
+    return params[data]||data;
   });
 }
 var arrConfig = [];

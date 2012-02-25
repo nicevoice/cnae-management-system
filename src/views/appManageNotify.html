@@ -1,0 +1,46 @@
+<div class="subTitle">
+  <img src="/images/arrow.gif"></img>
+  <span id="app-name"></span>
+  <img src="/images/arrow.gif"></img>
+  通知设置
+</div>
+<div class=" subContent">
+  <p><strong>邮件通知:</strong><img src="/images/tips.gif" title="应用状态发生变动（重启，宕机）时发送邮件通知"></p>
+  <div id="emailSetting">
+    <p><input type="radio" name="emailNotify" value=0 <%= notifyLevel==0?"checked":"" %>> 发送所有变更信息
+    <img src="/images/help.gif" title="应用每次重启和宕机时发送通知"></p>
+    <p><input type="radio" name="emailNotify" value=10 <%= notifyLevel==10?"checked":"" %>> 发送应用报警信息
+    <img src="/images/help.gif" title="仅当应用宕机（超出限定内存等因素）时发送通知"></p>
+    <p><input type="radio" name="emailNotify" value=100 <%= notifyLevel==100?"checked":"" %>> 不发送任何的信息
+    <img src="/images/help.gif" title="任何时候都不发送通知"></p>
+  </div>
+</div>
+
+<script>
+var url = location.href;
+url = url.slice(0, url.lastIndexOf('/'));
+var domain = url.slice(url.lastIndexOf('/') + 1);
+
+$(function(){
+  $(":radio").click(function(){
+    $.ajax({
+      cache : false,
+      url : "/application/manage/" + domain + "/changeLevel",
+      dataType : "json",
+      type : "post",
+      data : {
+        _csrf : _csrf,
+        level : this.value
+      },
+      error : function() {},
+      success : function(data){
+        if(data.status === "ok"){
+          sAlert("", "修改成功");
+        }else{
+          sAlert("警告", data.msg);
+        }
+      }
+    })
+  })
+})
+</script>

@@ -52,6 +52,9 @@ task('makeconf', function(){
       //git dirs
       .replace(/\$\$githubKeyDir\$\$/ig, '/home/admin/.ssh/nae/id_rsa_')
       .replace(/\$\$githubConfig\$\$/ig, '/home/admin/.ssh/config')
+
+      //command line
+      .replace(/\$\$warnPsw\$\$/ig, 'input_your_psw')
   );
 });
 task('maketestconf', function(){
@@ -114,6 +117,8 @@ task('maketestconf', function(){
 
       .replace(/\$\$githubKeyDir\$\$/ig, temp+'/key/id_rsa_')
       .replace(/\$\$githubConfig\$\$/ig, temp+'/key/config')
+
+      .replace(/\$\$warnPsw\$\$/ig, '123')
   );
 });
 task('cleanup', function(){

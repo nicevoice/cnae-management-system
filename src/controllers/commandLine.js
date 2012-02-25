@@ -1,21 +1,28 @@
 var config = require('../config'),
     log = config.logWithFile,
     urlMoudle = require('url'),
-    
+    step = require('../lib/step.js'),
     
     //utils
     utils = require('../lib/utils'),
     md5 = utils.hex_md5,
     getRandomString = utils.getRandomString,
     verify = utils.verify,
-    
+    tplReplace = utils.tplReplace,
     
     //model
     model = require('../models/index'),
     findOne = model.findOne,
+    find = model.find,
     update = model.update,
     user = config.dbInfo.collections.user,
-    app_mem = config.dbInfo.collections.app_member;
+    app_mem = config.dbInfo.collections.app_member,
+
+    //email
+    sendMail = require('../lib/sendMail'),
+    mails = sendMail.mails,
+    mailEvent =sendMail.mailEvent,
+    mail = config.mail;
 
 var sendResult = function(res, status, code, msg) {
     return res.sendJson({
@@ -128,4 +135,66 @@ exports.checkAuth = function(req, res) {
       }
     })
   }
+}
+//msg of warn
+var message = {
+  1 : "成功重启。",
+  2 : "重启失败。",
+  11 : "内存超出，应用重启。"
+}
+exports.sendEmail = function(req, res, next){
+  var queryString = urlMoudle.parse(req.url, true).query;
+  var appDomain = decodeURIComponent(queryString.app || '');
+  var psw = decodeURIComponent(queryString.psw || '');
+  var msg = parseInt(decodeURIComponent(queryString.msg || ''));
+  //check params
+  if(!psw || psw !== config.commandLine.warnPsw || !appDomain || !msg){
+    return sendResult(res, "error", 1, "T_T");
+  }
+  //check db
+  step(
+    function getUsers(app){
+      find(app_mem, {"appDomain" : appDomain, "active" : 1}, 
+      {"email" : 1, "appName" : 1, "notifyLevel" : 1}, this);
+    },
+    function send(err, users){
+      if(err){
+        return sendResult(res, "error", 2, "system error:database error");
+      } 
+      if(users.length===0){
+        return sendResult(res, "error", 3, "Wrong app domain");
+      }
+      //get appName
+      var appName = users[0].appName || '';
+      //get all the emails
+      var tos = [];
+      for(var i=0, len=users.length; i!=len; ++i){
+        var level = users[i].notifyLevel||0;
+        if(level>msg){
+          continue;
+        }
+        var email = users[i].email;
+        var nick = email.split('@')[0];
+        tos.push(nick + "<" + email + ">");
+      }
+      if(tos.length === 0){
+        return res.sendJson({status:"ok", msg:"All users were ignored"})
+      }
+      tos = tos.join(', ');
+      //send emails to these users
+      mails.push({
+        sender: mail.sender,
+        to : tos,
+        subject: mail.warnMailTitle,
+        html: tplReplace(mail.warnMailContent, {
+          "$appDomain$" : appDomain,
+          "$appName$" : appName,
+          "$msg$" : message[msg]
+        }),
+        debug: true
+      });
+      mailEvent.fire("getMail");
+      res.sendJson({status:"ok", msg:"All users were notified"});
+    }
+  )
 }

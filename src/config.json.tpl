@@ -56,5 +56,9 @@
 	  "loginPathDaily":"https://login.daily.taobao.net/member/login.jhtml?f=top&redirect_url=http://nae.labs.daily.taobao.net:2012/checkLogin"
   },
   "githubKeyDir":"$$githubKeyDir$$",
-  "githubConfig":"$$githubConfig$$"
+  "githubConfig":"$$githubConfig$$",
+
+  "commandLine":{ ##命令行参数
+    "warnPsw" : "$$warnPsw$$" ##warn email psw
+  }
 }

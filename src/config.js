@@ -52,7 +52,7 @@ var config = {
   "mail":{
   "coopMailTitle":"Node App Engine协作邀请函",
   "coopMailContent":'<body><p>您好！</p><p>您的NAE社区项目参与申请已被创建者通过。'+
-                    '请到<a href="http://cnodejs.net">cnodejs.net</a>查看。如果无法打开链接，请复制到浏览器打开。</p></body>',
+                    '请到<a href="http://cnodejs.net" target="_blank">cnodejs.net</a>查看。如果无法打开链接，请复制到浏览器打开。</p></body>',
   "inviteMailTitle":"Node App Engine邀请码",
   "inviteMailContent":'<p>您好！</p><p>您收到了cnode app engine社区的邀请码，请点击链接注册。'
                      +'如果无法打开链接，请复制到浏览器打开。</p>',
@@ -61,7 +61,7 @@ var config = {
                         '<p>请在24小时内点击以下链接重置您的密码：(如果您没有申请找回密码，请忽略此邮件。)</p></body>',
   "applyMailTitle":"Node App Engine项目参与申请",
   "applyMailContent":'<p>您好！</p><p>您的NAE社区项目收到了社区成员的参与申请。请到'+
-                     '<a href="http://cnodejs.net/application/manage/$domain$/coopmng">cnodejs.net/application/manage/$domain$/coopmng</a>'+
+                     '<a href="http://cnodejs.net/application/manage/$domain$/coopmng" target="_blank">cnodejs.net/application/manage/$domain$/coopmng</a>'+
                      '对应应用的成员管理栏查看。如果无法打开链接，请复制到浏览器打开。</p>',
   "agreeMailTitle":"Node App Engine项目参与申请成功",
   "agreeMailContent":'<body><p>您好！</p><p>您的NAE社区项目参与申请已被创建者通过。'+
@@ -72,6 +72,10 @@ var config = {
   "registMailTitle":"欢迎注册NAE",
   "registMailContent":'<body><p>您好！</p><p>您的NAE帐号已成功注册，'+
                       '请点击下列链接激活并登录您的帐号。如无法打开链接，请复制到浏览器打开。</p></body>',
+  "warnMailTitle":"Node App Engine应用状态通知",
+  "warnMailContent":'<body><p>您好！</p><p>您的NAE社区项目状态发生变动:</p><p>应用$appName$(子域名:$appDomain$)$msg$</p>' + 
+        '<p>点击此链接可以调整邮件通知级别：<a href="http://cnodejs.net/application/manage/$appDomain$/changeLevel" target="_blank">' + 
+        'http://cnodejs.net/application/manage/$appDomain$/changeLevel</a></p></body>',
   "admin":"heyiyu.deadhorse@gmail.com",
   "smtp":{
     "host":"smtp.gmail.com",
@@ -111,7 +115,10 @@ var config = {
   },
   "dbError":"数据库错误，请稍后再试",
   //static version
-  "staticVersion" : "1.1.1"
+  "staticVersion" : "1.1.2",
+  "commandLine":{
+    "warnPsw":cI.commandLine.warnPsw||''
+  }
 }
 
 var root_dir = pathutil.dirname(pathutil.dirname(__dirname))

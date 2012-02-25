@@ -32,6 +32,8 @@ module.exports = function(app){
     app.get("/application/manage/:id/load_coopmng", hasLogin, checkAuth, ctrAppManager.loadCoopmng);
     app.get("/application/manage/:id/mnglog", hasLogin, checkAuth, ctrAppManager.mnglog);
     app.get("/application/manage/:id/load_mnglog", hasLogin, checkAuth, ctrAppManager.loadMnglog);
+    app.get("/application/manage/:id/notify", hasLogin, checkAuth, ctrAppManager.showNotify);
+    app.post("/application/manage/:id/changeLevel", hasLogin, checkAuth, ctrAppManager.changeLevel);
   }  
   app.post("/application/manage/:id/appmng", hasLogin, checkChangeAuth(1), ctrAppManager.doAppmng);  //修改应用信息
   if (!labs) {
@@ -71,6 +73,6 @@ module.exports = function(app){
  //应用调优
   app.get("/application/manage/:id/applog", hasLogin, checkAuth, ctrAppOptimization.applog);
   app.post("/application/manage/:id/getStdOutput", hasLogin, checkAuth, ctrAppOptimization.getStdOutput);  //获取标准输出/错误
-  //
+  //load app
   app.get("/application/manage/:id/load_allapp", hasLogin, ctrAppManager.getAllApps);
 }

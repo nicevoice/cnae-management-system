@@ -9,4 +9,5 @@ module.exports = function(app) {
   }
   app.get('/commandline/token', ctrCommandLine.getToken);
   app.get('/commandline/permission', ctrCommandLine.checkAuth);
+  app.get('/commandline/warn', ctrCommandLine.sendEmail);
 }
