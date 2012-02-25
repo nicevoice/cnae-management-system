@@ -262,7 +262,7 @@ var httpReq = exports.httpReq = function(options, callback, type) {
      */
 var tplReplace = exports.tplReplace = function(tpl, params) {
   return tpl.replace(/\$.*?\$/g, function(data) {
-    return params[data]||data;
+    return params[data];
   });
 }
 var arrConfig = [];

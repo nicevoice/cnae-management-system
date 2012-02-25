@@ -74,8 +74,8 @@ var config = {
                       '请点击下列链接激活并登录您的帐号。如无法打开链接，请复制到浏览器打开。</p></body>',
   "warnMailTitle":"Node App Engine应用状态通知",
   "warnMailContent":'<body><p>您好！</p><p>您的NAE社区项目状态发生变动:</p><p>应用$appName$(子域名:$appDomain$)$msg$</p>' + 
-        '<p>点击此链接可以调整邮件通知级别：<a href="http://cnodejs.net/application/manage/$appDomain$/changeLevel" target="_blank">' + 
-        'http://cnodejs.net/application/manage/$appDomain$/changeLevel</a></p></body>',
+        '<p>点击此链接可以调整邮件通知级别：<a href="http://cnodejs.net/application/manage/$appDomain$/notify" target="_blank">' + 
+        'http://cnodejs.net/application/manage/$appDomain$/notify</a></p></body>',
   "admin":"heyiyu.deadhorse@gmail.com",
   "smtp":{
     "host":"smtp.gmail.com",
