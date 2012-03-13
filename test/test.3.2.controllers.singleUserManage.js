@@ -494,7 +494,7 @@ describe('single user management test', function(){
       })
     })
   })
-    /***
+  /***
   *  appOptimization test
   */
   describe('#applog()', function(){
@@ -534,6 +534,37 @@ describe('single user management test', function(){
     })
   })
 
+  /**
+   * change notify level test
+   */
+  describe('#showNotify()', function(){
+    it('should display the right page', function(done){
+      var opt = clone(tpl);
+      opt.headers.cookie = COOKIE;
+      opt.path = '/application/manage/test/notify';
+      Get(opt, function(res){
+        res.body.should.include('邮件通知');
+        res.body.should.include('dead_horse');
+        done();
+      })
+    })
+  })
+
+  describe('#changeLevel()', function() {
+    var opt = clone(tpl);
+    opt.path = '/application/manage/test/changeLevel';
+    it('should response ok', function(done) {
+      opt.headers.cookie = COOKIE;      
+      opt.data = {
+        _csrf : CSRF,
+        level : 10
+      }
+      Post(opt, function(res) {
+        JSON.parse(res.body).status.should.equal('ok');
+        done();
+      })
+    })
+  })
   after(function(){
     app.close();
     cml.dev.close();
