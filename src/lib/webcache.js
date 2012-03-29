@@ -37,7 +37,6 @@ Cache.prototype.setex = function(key, time, value){
     v:value,
     t:time
   }
-  console.log(time);
 }
 Cache.prototype.get = function(key, cb){
   if(this.cache[key]&&this.cache[key].v){

@@ -385,7 +385,7 @@ describe('userCenter test', function(){
       opt.path = '/square';
       opt.headers.cookie = COOKIE;
       Get(opt, function(res){
-        res.body.should.include('最新应用');
+        res.body.should.include('所有应用');
         res.body.should.include('dead_horse');
         done();
       })

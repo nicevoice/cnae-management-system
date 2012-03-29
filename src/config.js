@@ -26,6 +26,12 @@ var config = {
   },
   //nae-web redis passwor
   "redisPassword":cI.redisPassword||"",
+  "redis" : cI.redis || {
+    "pass" : "",
+    "server" : "127.0.0.1:6379",
+    "debug" : false,
+    "speedFirst" : true
+  },
   //nae apps db infos
   "appDb":cI.appDb||{
     "host":"127.0.0.1",
@@ -137,7 +143,7 @@ if(process.env.NODE_ENV==='test'){
 
 //组装dbUrl
 var dbInfo = config.dbInfo;
-config.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+"/"+dbInfo.name;
+config.db_url = dbInfo.userName+":"+dbInfo.password+"@"+dbInfo.host+":"+dbInfo.port+"/"+dbInfo.name;
 
 
 //邮件内链接（邀请、激活、申请）

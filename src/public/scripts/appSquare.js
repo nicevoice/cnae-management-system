@@ -12,6 +12,12 @@ $(function(){
   }
   getMore();
   $("#getMore").click(getMore);
+  $("#search").click(search);
+  $("#query").keydown(function(e) {
+    if(e.keyCode === 13) {
+      search();
+    }
+  })
 })
 
 function getMore(){
@@ -36,6 +42,35 @@ function getMore(){
     }
   });
 }
+
+function search(){
+  $("#all-apps").html('');
+  $("#getMore").html("加载中...");
+  $.ajax({
+    type:"get",
+    url:"/square/get/apps",
+    data:{query:$("#query").val().trim(), isQuery:'true'},
+    dataType:"json",
+    error:function(){
+      $("#getMore").html("获取失败，请稍后再试");
+    },
+    success:function(data){
+      if (data.status === "ok") {
+        if (!data.apps || data.apps.length===0) {
+          sAlert('', '抱歉，未找到此应用');
+        } else {
+          render(data.apps);
+        }
+        $("#getMore").hide();
+      }
+      else{
+        $("#getMore").hide();
+        sAlert('', '抱歉，未找到此应用');
+      }
+    }
+  });
+}
+
 function render(data){
   var html="";
   for(var i=0, len=data.length; i<len; ++i){

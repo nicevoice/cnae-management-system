@@ -13,7 +13,12 @@
      } 
   },
 
-  "redisPassword":"$$redisPassword$$",
+  "redis" : {
+    "pass" : "$$redisPass$$",
+    "server" : $$redisServer$$,
+    "debug" : $$redisDebug$$,
+    "speedFirst" : $$redisSpeedFirst$$
+  }
   
   "appDb":{
     "host":"127.0.0.1",

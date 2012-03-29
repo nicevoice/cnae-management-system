@@ -35,7 +35,12 @@ exports.showSquare = function(req, res){
  * get square app infos
  */
 exports.getSquareInfo = function(req, res) {
-  var queryString = urlMoudle.parse(req.url, true).query, skip = queryString.skip || '', limit = queryString.limit || '', nickName=queryString.nickName || '';
+  var queryString = urlMoudle.parse(req.url, true).query, 
+  skip = decodeURIComponent(queryString.skip || '').trim(), 
+  limit = decodeURIComponent(queryString.limit || '').trim(), 
+  nickName=decodeURIComponent(queryString.nickName || '').trim(),
+  query = decodeURIComponent(queryString.query || '').trim(),
+  isQuery = decodeURIComponent(queryString.isQuery || 'false').trim();
   //regist proxy
   var proxy = new EventProxy();
   var apps = [];//存放最终数据
@@ -90,19 +95,21 @@ exports.getSquareInfo = function(req, res) {
   //get apps
   var _getApps = function(ownDomain){
     var selector = {}, options = {};
-    if(ownDomain){
+    if(typeof ownDomain === 'object'){
       selector = {
         appDomain:{$in:ownDomain}
       }
       options = {
         sort: [['appCreateDate', -1]]       
       }
-    }else{
+    }else if(isQuery === 'true') {
+      selector = {appName : new RegExp(ownDomain)}
+    } else {
       options = {//找出最新的limit个应用
         sort : [['appCreateDate', -1]],
         skip : skip,
         limit : limit
-      }
+      }      
     }
     find(app_basic, selector, options, function(err, data) {
       if(err) {
@@ -203,8 +210,8 @@ exports.getSquareInfo = function(req, res) {
     _getEmail();
     proxy.once('email_gotten', _getAppDomain);
     proxy.once('appDomain_gotten', _getApps);
-  }else{
-    _getApps();
+  }else {
+    _getApps(query);
   }
   proxy.once('apps_gotten', _getMems);
   proxy.once('creator_gotten', _getCreatorInfo);
@@ -315,4 +322,11 @@ exports.showPersonalSquare = function(req, res){
   var nickName = req.url.slice(req.url.lastIndexOf("/")+1)||'';
   return res.render("personalSquare.html", {layout:"layoutMain", email:req.session.email, 
   nickName:req.session.nickName, ownerNickName:nickName});
+}
+
+exports.search = function(req, res, next) {
+  var appName = req.body.searchName || '';
+  if(!appName) {
+
+  }
 }

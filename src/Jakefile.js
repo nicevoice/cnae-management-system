@@ -27,6 +27,9 @@ task('makeconf', function(){
       .replace(/\$\$appDbPort\$\$/ig, '20088')
       
       .replace(/\$\$redisPassword\$\$/ig, '')
+      .replace(/\$\$redisServer\$\$/ig, '["127.0.0.1:6379"]')
+      .replace(/\$\$redisDebug\$\$/ig, 'false')
+      .replace(/\$\$redisSpeedFirst\$\$/ig, 'true')
       
       .replace(/\$\$md5Secret\$\$/ig, 'input your login secret')//login secret
       .replace(/\$\$sessionSecret\$\$/ig, 'input your session secret')//session secret
@@ -93,6 +96,9 @@ task('maketestconf', function(){
       .replace(/\$\$appDbPort\$\$/ig, '27017')
 
       .replace(/\$\$redisPassword\$\$/ig, '')
+      .replace(/\$\$redisServer\$\$/ig, 'input your redis server')
+      .replace(/\$\$redisDebug\$\$/ig, 'false')
+      .replace(/\$\$redisSpeedFirst\$\$/ig, 'true')
       
       .replace(/\$\$md5Secret\$\$/ig, 'input your login secret')//login secret
       .replace(/\$\$sessionSecret\$\$/ig, 'input your session secret')//session secret

@@ -6,7 +6,7 @@ var config = require('./config'),
     ejs = require('ejs'),
     fs = require('fs'),
     basename = require('path').basename,
-    RedisStore = require('connect-redis')(connect);
+    RedisStore = require('connect-mredis')(connect);
 if(!config.switchs.debug) {
     // patch net module for connect to proxy
     require('./lib/net_patch');
@@ -28,7 +28,7 @@ var sessionStore;
 if(process.env.NODE_ENV==='test'){
   sessionStore = new connect.session.MemoryStore();
 }else{
-  sessionStore = new RedisStore({pass:config.redisPassword||''});
+  sessionStore = new RedisStore(config.redis);
 }
 app.use(connect.cookieParser());
 app.use(connect.session({
