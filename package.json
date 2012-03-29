@@ -24,7 +24,8 @@
 		"redis":">=0.7.1",
 		"rimraf":">=1.0.9",
 		"socket.io" : ">=0.8.7",
-		"jake" : ">=0.1.22"
+		"jake" : ">=0.1.22",
+                "connect-mredis" : ">=1.0.6"
 	},
 	"devDependencies" : {
 		"should" : ">=0.4.2",
