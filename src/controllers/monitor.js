@@ -224,8 +224,11 @@ exports.addBlack = function(req, res) {
     }
   }, function(err, data) {
     if (err) {
-      log.error(err.toString());
-      return res,sendJson({status:'error', msg:err.toString()});   
+      if (err.toString().indexOf('No matching object found') < 0) {
+        log.error(err.toString());
+        return res.sendJson({status:'error', msg:err.toString()});   
+      } 
+      return res.sendJson({status:'error', msg:'未找到此用户'});
     }
     if (!data) {
       return res.sendJson({status:'error', msg:'未找到此用户'});
@@ -245,8 +248,11 @@ exports.delBlack = function(req, res) {
     }
   }, function(err, data) {
     if (err) {
-      log.error(err.toString());
-      return res,sendJson({status:'error', msg:err.toString()});   
+      if (err.toString().indexOf('No matching object found') < 0) {
+        log.error(err.toString());
+        return res.sendJson({status:'error', msg:err.toString()});   
+      } 
+      return res.sendJson({status:'error', msg:'未找到此用户'});
     }
     if (!data) {
       return res.sendJson({status:'error', msg:'未找到此用户'});
