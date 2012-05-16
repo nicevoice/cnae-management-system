@@ -50,7 +50,8 @@ exports.getToken = function(req, res) {
   }
   findOne(user, {
     email: email,
-    password: md5(password + config.md5_secret)
+    password: md5(password + config.md5_secret),
+    status: 0
   }, function(err, result) {
     if (err) {
       log.error(err.toString());

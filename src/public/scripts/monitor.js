@@ -35,7 +35,7 @@ function loadInfo(){
       }
     }
   });
-  showGrid();
+  //showGrid();
 }
 var tplDbInfo = '<table id="info-table">'+
 			  '<tr><td>注册用户数:$userNum$</td></tr>'+
@@ -47,8 +47,61 @@ function renderAdminInfo(content){
         '$appNum$':content.appNum,
         '$appInfo$':content.appInfo  
         }));
+  var blackLists = [];
+  var forbids = content.forbids;
+  for (var l = forbids.length; l--; ) {
+    blackLists.push(forbids[l].email);
+  }
+  $('#blackLists').html(blackLists.join(', '));
 }
 
+$('#addBlack').click(function() {
+  var name = $('#blackName').val() || '';
+  if (!name) {
+    return;
+  }
+  $.ajax({
+    type: 'post',
+    dataType:'json',
+    url: '/monitor/blacklist/add',
+    data:{
+      _csrf:_csrf,
+      name: name
+    },
+    success: function(data){
+      if (data.status === 'ok') {
+        window.location.reload();
+      } else {
+        sAlert('警告', data.msg);
+      }
+    }
+  });
+});
+
+$('#delBlack').click(function() {
+  var name = $('#blackName').val() || '';
+  if (!name) {
+    return;
+  }
+  $.ajax({
+    type: 'post',
+    dataType:'json',
+    url: '/monitor/blacklist/del',
+    data:{
+      _csrf:_csrf,
+      name: name
+    },
+    success: function(data){
+      if (data.status === 'ok') {
+        window.location.reload();
+      } else {
+        sAlert('警告', data.msg);
+      }
+    }
+  });
+});
+
+/*
 function dateFormat(ts) {
 	var date = new Date();
 	date.setTime(ts);
@@ -192,7 +245,7 @@ $('input.opt').live('click', function(event){
 		}
 	});
 });
-
+*/
 queryDb = function() {
   var queryString = $("#queryString").val().trim() || '';
   if(!queryString) {

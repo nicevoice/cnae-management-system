@@ -46,6 +46,8 @@ exports.checkLogin = function(req, res, next){
       }
       if(item.status===1){
          return res.sendJson({status:'error', warn:'notActive'});
+      } if (item.status===2) {
+        return res.sendJson({satatus:'error', warn:'forbid'});
       }
       if(item.password!==md5(password.toString()+config.md5_secret)){
          return res.sendJson({status:'error', warn:'passErr'});   
