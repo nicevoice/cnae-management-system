@@ -138,9 +138,12 @@ exports.checkAuth = function(req, res) {
 }
 //msg of warn
 var message = {
-  1 : "成功重启。",
-  2 : "重启失败。",
-  11 : "内存超出，应用重启。"
+  1 : "内存占用过多，系统重启app。",
+  2 : "内存占用过多，系统重启app失败。请检查app，并手动重启app。",
+  11 : "内存占用过多，系统关闭app。请优化app，并手动启动app。",
+  21 : "CPU占用过多，系统重启app。",
+  22 : "CPU占用过多，系统重启app失败。请检查app，并手动重启app。",
+  23 : "CPU占用过多，系统关闭app，请优化app，并手动启动app。"
 }
 exports.sendEmail = function(req, res, next){
   var queryString = urlMoudle.parse(req.url, true).query;
