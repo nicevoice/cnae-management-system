@@ -35,7 +35,8 @@
       switch(data.warn){
         case 'emailErr': $('#loginWarn').html('邮箱不正确'); break;
         case 'passErr' : $('#loginWarn').html('密码不正确'); break;
-        case 'notActive' : $('#loginWarn').html('此帐号尚未激活<a id="resend" href="javascript:void(0);">发送激活邮件</a>'); 
+        case 'notActive' : $('#loginWarn').html('此帐号尚未激活<a id="resend" href="javascript:void(0);">发送激活邮件</a>');break; 
+        case 'forbid' : $('#loginWarn').html('帐号被冻结'); break;
         email = $('#email').val();
         $('#resend').bind('click', resend);break;
       }

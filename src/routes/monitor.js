@@ -16,5 +16,7 @@ module.exports = function(app) {
     app.post("/monitor/app/:appname/run", hasLogin, isAdmin, ctrMonitor.run);
     app.post("/monitor/app/:appname/stop", hasLogin, isAdmin, ctrMonitor.stop);
     app.post("/monitor/database", hasLogin, isAdmin, ctrMonitor.query);
+    app.post("/monitor/blacklist/add", hasLogin, isAdmin, ctrMonitor.addBlack);
+    app.post("/monitor/blacklist/del", hasLogin, isAdmin, ctrMonitor.delBlack);
   }
 }
