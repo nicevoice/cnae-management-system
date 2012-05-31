@@ -6,12 +6,12 @@
 </div>
 <div id="body">
 	<div class="page-title-sub"></div>
-    <form action="checkRegist" method="post">
+    <form action="/checkRegist" method="post">
     	<div id="form-submit">
         	<div style="float:left;width:700px;">
             	<fieldset>
 	            	<legend style="color:#555;">填写注册信息</legend>
-	            	    <input type="hidden" value="<%=_csrf%>" id="_csrf">
+	            	    <input type="hidden" name = "_csrf"value="<%=_csrf%>" id="_csrf">
                     <div class="field-group">
                         <label class="required title" for="newUserName"><span style="color:red;">*</span> Email:</label>
                         <input type="text" name="newEmail" id="newEmail" tabindex="1" class="input1" style="width:250px" value="<%=email||''%>">
@@ -84,7 +84,7 @@
                     -->
                 </fieldset>
                 <div style="text-align:right;" id="div-submit">
-                    <span id="btn-submit"><input type="button" class="btn1" id="submit" value="注册"></span>
+                    <span id="btn-submit"><input type="submit" class="btn1" value="注册" id="submit"></span>
                     <span id="loading-submit"><img src="/images/ajax_loader.gif"></span>
                 </div>
             </div>

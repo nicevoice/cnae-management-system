@@ -102,6 +102,7 @@ function submit(){
     if(!tagE||!tagN||!tagP||!tagC){
         return false;
     }
+/*
     $.post('/checkRegist', {
         newEmail : $('#newEmail').val(),
         newUserName : $('#newUserName').val(),
@@ -109,7 +110,7 @@ function submit(){
         passwordCon : $('#passwordCon').val(),
         inviteCode : $('#inviteCode').val(),
         _csrf : $('#_csrf').val()
-    }, fillWarn, 'json');
+    }, fillWarn, 'json');*/
 }
 function fillWarn(data){
     if(data.status!=='ok'){
