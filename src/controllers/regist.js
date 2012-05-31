@@ -68,26 +68,17 @@ exports.checkRegist = function(req, res, next){
   , code = req.body.inviteCode||'';
   var checkEventProxy = new EventProxy();
   //检查用户输入合法性
-  if(!verify('email', userEmail)){
-    return res.sendJson({status:'error', warn:'emailErr'});
-    }
-  if(!userNickName){
-    return res.sendJson({status:'error', warn:'noNick'});
+  if(!verify('email', userEmail) || !userNickName || !verify('name', userNickName) || userPassword!==userPasswordCon || !verify('password', userPassword)){
+    return res.render('error', {message: '错误的注册信息'});
   }
-  if(!verify('name', userNickName))
-    return res.sendJson({status:'error', warn:'nickErr'});
-  if(userPassword != userPasswordCon)
-    return res.sendJson({status:'error', warn:'diffPass'});
-  if(!verify('password', userPassword))
-    return res.sendJson({status:'error', warn:'passErr'});
   //检查是否数据库中已经存在
   checkEventProxy.assign("checkName", "checkEmail", "checkCode", function(goodName, goodEmail, goodCode){
-    if(!goodName)
-          return res.sendJson({status:'error', warn:'nickUsed'});
-    if(!goodEmail)
-          return res.sendJson({status:'error', warn:'emailUsed'});
-    if(!goodCode)
-          return res.sendJson({status:'error', warn:'codeErr'});
+    if(!goodName || !goodEmail) {
+      return res.render('error', {message: '重复的email或者昵称'});
+    } 
+    if(!goodCode) {
+      return res.render('error', {message: '邀请码不正确'});
+    }
     else{
         var codes = [];
         for(var i=0,len=config.maxInviteCode; i!=len; ++i){
@@ -117,9 +108,9 @@ exports.checkRegist = function(req, res, next){
           var host = userEmail.slice(userEmail.indexOf('@')+1);
           dns.resolve4('mail.' + host, function(err, data){
             if(data){
-              return res.sendJson({status:'ok', target:'/registTips?host=mail.'+host});
+              return res.redirect('/registTips?host=mail.'+host);
             }else{
-              return res.sendJson({status:'ok', target:'/registTips?host=www.'+host});
+              return res.redirect('/registTips?host=www.'+host);
             }
           })
         }
@@ -189,12 +180,12 @@ exports.checkEmail = function(req, res){
   findOne(user, {email:userEmail}, function(err, data){
     if(err){
       log.error(err.toString());
-      res.sendJson( {});
+      return res.sendJson( {});
     }else{
       if(data){
-      res.sendJson( {warn:"该邮箱已经被注册"});
+      return res.sendJson( {warn:"该邮箱已经被注册"});
       }else{
-      res.sendJson( {});
+      return res.sendJson( {});
       }
     }
   });
