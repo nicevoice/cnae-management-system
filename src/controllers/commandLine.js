@@ -50,8 +50,7 @@ exports.getToken = function(req, res) {
   }
   findOne(user, {
     email: email,
-    password: md5(password + config.md5_secret),
-    status: 0
+    password: md5(password + config.md5_secret)
   }, function(err, result) {
     if (err) {
       log.error(err.toString());
@@ -59,6 +58,9 @@ exports.getToken = function(req, res) {
     } else {
       if (!result || result.length === 0) {
         return sendResult(res, 'error', 5, "wrong email or password");
+      }
+      if (result.status && result.status!==0) {
+        return sendResult(res, 'error', 6, "Account abnormal");
       }
       var newToken = getRandomString(30);
       update(user, {
