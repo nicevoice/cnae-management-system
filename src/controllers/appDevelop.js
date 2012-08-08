@@ -342,19 +342,33 @@ exports.showMongo = function(req, res) {
 
 exports.loadMongoContent = function(req, res) {
   var domain = req.params.id || '';
-  findOne(app_basic, {
-    appDomain: domain
-  }, function(err, data) {
-    if (err) {
-      log.error(err.toString());
-      return res.sendJson({
-        status: "error",
-        msg: config.dbError
-      });
-    } else {
+  Step(function getAppOwner() {
+      findOne(app_mem, {
+        appDomain: domain,
+        role: 0
+      }, this);
+    }, function getDbUserInfo(err, data) {
+      if (err) {
+        log.error(err,toString());
+        return res.sendJson({
+          status: "error",
+          msg: config.dbError
+        });
+      }
       findOne(user, {
-        email: req.session.email
-      }, function(err, user) {
+          email: data.email
+        }, this);
+    }, function getAppInfo(err, user) {
+      if (err) {
+        log.error(err.toString());
+        return res.sendJson({
+          status: "error",
+          msg: config.dbError
+        });
+      }
+      findOne(app_basic, {
+        appDomain: domain
+      }, function(err, data) {
         if (err) {
           log.error(err.toString());
           return res.sendJson({
@@ -374,7 +388,7 @@ exports.loadMongoContent = function(req, res) {
         });
       });
     }
-  })
+  );
 }
 exports.createMongo = function(req, res, next){
   var domain = req.params.id || '';
@@ -384,17 +398,21 @@ exports.createMongo = function(req, res, next){
   var dbName = '';
   Step(function getUser(){
       findOne(app_basic, {
-        appDomain : domain
-      }, this)
+        appDomain: domain
+      }, this.parallel());
+      findOne(app_mem, {
+        appDomain: domain,
+        role: 0
+      }, this.parallel());
     },
-    function getDbInfo(err, data){
+    function getDbInfo(err, appInfo, appOwner){
       if(err) {
         log.error(err.toString());
         return next(err);
       }
-      if(data.appDbType) return next (new Error("已创建数据库"));
+      if(appInfo.appDbType) return next (new Error("已创建数据库"));
       findOne(user, {
-        email: req.session.email
+        email: appOwner.email 
       }, {
         dbUserName: 1,
         dbPassword: 1
@@ -408,8 +426,8 @@ exports.createMongo = function(req, res, next){
       dbName = randomStringNum(12);
       var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + 
       "shells/mongoAllocator.sh ";
-      var args = [dbName, dbUser.dbUserName, dbUser.dbPassword, config.appDb.port, config.appDbAdmin.userName,
-                  config.appDbAdmin.password];
+      var args = [dbName, dbUser.dbUserName, dbUser.dbPassword, config.appDb.host, config.appDb.port,
+       config.appDbAdmin.userName, config.appDbAdmin.password];
       var command = shPath + ' ' + args.join(' ');
       exec(command, {timeout : 10000}, this);     
     },
@@ -467,25 +485,29 @@ exports.queryMongo = function(req, res){
               replace(/"/g, '\\"');
   queryString = "\"" + queryString + "\"";
   Step(
-    function getUserDbInfo(){
-      findOne(user, {
-        email: req.session.email
-      }, this);    
+    function getAppInfo() {
+      findOne(app_basic, {
+        appDomain: domain        
+      }, this.parallel());
+      findOne(app_mem, {
+        appDomain: domain,
+        role: 0
+      }, this.parallel());
     },
-    function getDb(err, userInfo){
-      if(err){
+    function getUserDbInfo(err, appInfo, appOwner) {
+      if (err) {
         log.error(err.toString());
         return res.sendJson({
-          status : 'error',
-          msg : config.dbError
+          status: 'error',
+          msg: config.dbError
         });
       }
-      this.parallel()(null, userInfo);
-      findOne(app_basic, {
-              appDomain: domain
-      }, this.parallel());     
+      this.parallel()(null, appInfo);
+      findOne(user, {
+        email: appOwner.email
+      }, this.parallel());
     },
-    function query(err, userInfo, appInfo){
+    function query(err, appInfo, userInfo){
       if(err){
         log.error(err.toString());
          return res.sendJson({
@@ -494,7 +516,8 @@ exports.queryMongo = function(req, res){
           });
       }
       var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoQuery.sh";
-      var args = [appInfo.appDbName, userInfo.dbUserName, userInfo.dbPassword, queryString, config.appDb.port];
+      var args = [appInfo.appDbName, userInfo.dbUserName, userInfo.dbPassword,
+       queryString, config.appDb.host, config.appDb.port];
       exec(shPath+' '+args.join(' '), {timeout:10000}, function(err, stdout, stderr){
         if (err) {
           log.error(err.toString());

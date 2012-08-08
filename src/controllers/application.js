@@ -374,7 +374,8 @@ var fs = require('fs')
               deleteEvent.fire("deleteDb", true);
             } else {
               var shPath = __dirname.slice(0, __dirname.lastIndexOf("/") + 1) + "shells/mongoDeletor.sh";
-              var args = [data.appDbName, config.appDb.port, config.appDbAdmin.userName, config.appDb.password];
+              var args = [data.appDbName, config.appDb.host, 
+              config.appDb.port, config.appDbAdmin.userName, config.appDb.password];
               exec(shPath + ' ' + args.join(' '), {timeout:10000}, function(err) {
                 if(err) {
                   log.error(err.toString());
