@@ -49,6 +49,9 @@ Logs.prototype.initAuth = function(){
     //get auth form database
     var checkAuth = function(){
       var referer = data.headers.referer;
+      if (!referer) {
+       return accept('permission denied', false); 
+      }
       var arr = referer.match(/editor\/(\w+)/);
       data.appDomain = arr && arr[1];
       findOne(app_mem, {
