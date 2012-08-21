@@ -19,7 +19,6 @@
 	},
 	"dependencies":{
 		"ejs": ">=0.6.1",
-		"eventproxy": ">=0.0.4",
 		"mongoskin":">=0.2.3",
 		"redis":">=0.7.1",
 		"rimraf":">=1.0.9",
@@ -36,6 +35,7 @@
 		"connect-redis",
 		"nodemailer",
 		"mongoskin",
-		"http_patch"
+		"http_patch",
+                "EventProxy.js"
 	]
 }
