@@ -186,7 +186,7 @@ exports.gitAction = function(req, res){
 	var cb = function(data){
 	  return res.sendJson(data);
 	}
-	if(verify('gitClone', command)){
+	if(verify('gitClone', command) || verify('gitRemote', command)){
 		findOne(user, {email:req.session.email}, function(err, data){
 			if(err){
 				log.error(err.toString());
@@ -195,7 +195,7 @@ exports.gitAction = function(req, res){
 			if(data.github&&data.github.token){
 	  		command = command.replace('@', '@'+data.github.token+'.');	//如果是clone需要权限的，就加上token
 	  	}
-	  	doGit(command, domain, cb, true);
+	  	doGit(command, domain, cb, verify('gitClone', command));
 	  })
 	}else{
 	  doGit(command, domain, cb);

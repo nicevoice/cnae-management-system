@@ -27,7 +27,8 @@ var regs = {
   imgSource: /^(https?\:\/\/|www\.)([A-Za-z0-9_\-]+\.)+[A-Za-z]{2,4}(:(\d)+)?(\/[\w\d\/=\?%\-\&_~`@\[\]\:\+\#]*([^<>\'\"\n])*)?(\.jpg|\.png|\.bmp|\.jpeg|\.gif)$/,
   files: /^[\w\u4E00-\u9FA5\ \=\+\#\/\^\%\,\~\-\_\.\*\?\[\]]+$/,
   gitAction: /^git[^|&]+$/,
-  gitClone: /^git +clone/
+  gitClone: /^git +clone/,
+  gitRemote: /^git +remote/
 };
 exports.verify = function(type, str) {
   return regs[type].test(str);
@@ -305,7 +306,6 @@ exports.addGithub = function(email, githubEmail, cb) {
   var token = exports.getRandomStringNum(20),
       github = config.github;
   exec(github.genKey + " " + githubEmail + " " + github.keyDir + token, function(err, stdout, stderr) {
-    console.log(arguments);
     if (err) {
       return cb(err);
     }

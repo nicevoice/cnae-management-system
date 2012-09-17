@@ -64,7 +64,7 @@ exports.getSquareInfo = function(req, res) {
           _errorHandle(err);
         }else{
           if(!owner){
-            return rees.sendJson({
+            return res.sendJson({
             status:"error",
             msg:"未找到该用户"
           });

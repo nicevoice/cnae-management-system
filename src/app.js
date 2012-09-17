@@ -6,7 +6,8 @@ var config = require('./config'),
     ejs = require('ejs'),
     fs = require('fs'),
     basename = require('path').basename,
-    RedisStore = require('connect-mredis')(connect);
+    RedisStore = require('connect-mredis')(connect),
+    pJoin = require('path').join;
 if(!config.switchs.debug) {
     // patch net module for connect to proxy
     require('./lib/net_patch');
@@ -37,7 +38,9 @@ app.use(connect.session({
 }));
 
 //post
-app.use(connect.bodyParser());
+app.use(connect.bodyParser({
+  uploadDir: pJoin(__dirname, '../temp')
+}));
 app.use(connect.csrf());
 //render power by ejs
 app.use(render({

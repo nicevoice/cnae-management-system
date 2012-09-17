@@ -213,7 +213,6 @@ exports.query = function(req, res) {
 }
 
 exports.addBlack = function(req, res) {
-  console.log(req.body);
   var email = req.body.name || '';
   if (!email) {
     return res.sendJson({status:'error', msg:'empty name'});

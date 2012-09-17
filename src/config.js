@@ -116,7 +116,7 @@ var config = {
   "github":{
     "keyDir":cI.githubKeyDir||tempFile,
     "config":cI.githubConfig||tempFile,
-    "genKey":"$HOME/cnae/git/cnae-web/src/shells/genKey.sh",
+    "genKey":__dirname + "/shells/genKey.sh",
     "tplConfig":"#$email$\nHost $token$.github.com\n Hostname Github.com\n User git\n IdentityFile $file$\n"
   },
   "dbError":"数据库错误，请稍后再试",
