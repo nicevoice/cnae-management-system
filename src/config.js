@@ -93,7 +93,7 @@ var config = {
   },
   "sender":"NAE <admin@cnodejs.com>"
   },
-  "maxInviteCode":5,
+  "maxInviteCode":0,
   "logPath": pathutil.dirname(__dirname)+'/logs/',
   "uploadDir":cI.uploadDir||tempFile,
   "onlineDir": cI.onlineDir || tempFile,
