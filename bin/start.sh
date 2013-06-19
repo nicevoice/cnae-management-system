@@ -15,5 +15,3 @@ cd ../../
 nohup node ./src/server >> ./logs/cnae-web-nohup.log 2>&1 &
 cd $HOME/.ssh
 test ! -d nae && mkdir -p nae
-sleep 3 
-curl localhost:2014/status
